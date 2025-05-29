@@ -2,6 +2,7 @@ import React from "react";
 import { Button as MaterialButton, ButtonProps as MUIButtonProps } from "@mui/material";
 import { SerializedStyles } from "@emotion/react";
 import { Link } from "react-router-dom";
+import { MAIN_COLOR } from "../../Layout/layoutVariables";
 
 export interface ButtonProps extends MUIButtonProps {
   css?: (SerializedStyles | false)[] | SerializedStyles;
@@ -19,7 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   variant = "contained",
   color = "primary",
   className,
-  size = "medium",
+  size = "large",
   to,
   external = false,
   component,
@@ -53,6 +54,9 @@ const Button: React.FC<ButtonProps> = ({
       component={ComponentType}
       {...componentProps}
       {...rest}
+      sx={{
+        background: MAIN_COLOR
+      }}
     >
       {children}
     </MaterialButton>

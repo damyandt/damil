@@ -1,9 +1,10 @@
 import { Typography } from "@mui/material"
 
-const MyDashboardPage = () => {
+const Dashboard = () => {
+    
     return (
         <Typography>works</Typography>
     )
 }
 
-export default MyDashboardPage
+export default Dashboard

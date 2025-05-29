@@ -1,25 +1,14 @@
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
-import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
 import { LeftNavList } from "../layoutVariables";
 import BallotOutlinedIcon from "@mui/icons-material/BallotOutlined";
-import CastConnectedIcon from "@mui/icons-material/CastConnected";
-import ClassIcon from "@mui/icons-material/Class";
-import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import LocalAtmOutlinedIcon from "@mui/icons-material/LocalAtmOutlined";
-import ElectricBoltOutlinedIcon from "@mui/icons-material/ElectricBoltOutlined";
-import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
-import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
-import SyncOutlinedIcon from "@mui/icons-material/SyncOutlined";
-import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import BarChartIcon from '@mui/icons-material/BarChart';
 
 enum LEFT_NAV_SECTION {
   "Home" = "Home",
   "DAMIL Analytics" = "DAMIL Analytics",
+  "DAMIL Gyms" = "DAMIL Gyms",
 }
 
 type LeftNavMenu = {
@@ -49,9 +38,9 @@ export const NAV_DAMIL_ANALYTICS: LeftNavMenu = {
       disabled: false,
       nested: [
         {
-          text: "Fitness visit count",
-          url: "/DAMIL-Analytics/Production-KPIs",
-          Icon: PrecisionManufacturingIcon,
+          text: "Gym Visits",
+          url: "/DAMIL-Analytics/Visits",
+          Icon: BarChartIcon,
           disabled: false,
         },
         {
@@ -62,6 +51,18 @@ export const NAV_DAMIL_ANALYTICS: LeftNavMenu = {
         },
       ],
     },
-    
+
+  ],
+};
+
+export const NAV_DAMIL_GYMS: LeftNavMenu = {
+  title: LEFT_NAV_SECTION["DAMIL Gyms"],
+  list: [
+    {
+      text: "Register",
+      url: '/DAMIL-Gyms/Register',
+      Icon: AppRegistrationIcon,
+      disabled: false,
+    }
   ],
 };

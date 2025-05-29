@@ -15,7 +15,7 @@ import Logout from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
 import { css, SerializedStyles } from "@emotion/react";
 import { Theme, useTheme } from '@mui/material/styles';
-import { TOP_NAV_PADDING, TOP_NAV_SPACING_WITH_SITE_CONTENT, TOP_RIGHT_NAV_HEIGHT } from "../layoutVariables";
+import { MAIN_COLOR, TOP_NAV_PADDING, TOP_NAV_SPACING_WITH_SITE_CONTENT, TOP_RIGHT_NAV_HEIGHT } from "../layoutVariables";
 import cssComponentsStyles from "../../Global/Styles/components";
 import cssLayoutStyles from "../../Global/Styles/layout";
 import AccountMenu from "./AccountMenu";
@@ -64,7 +64,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
         <AppBar position="fixed" sx={styles.appBar}>
             <Toolbar sx={styles.toolbar} disableGutters >
                 <Stack
-                    sx={{display: 'flex', justifyContent: 'space-between', width: "100%"}}
+                    sx={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}
                     spacing={4}
                     justifyContent="space-between"
                     alignItems="center"
@@ -76,6 +76,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
                             size="large"
                             aria-label="site menu"
                             onClick={() => setOpenLeftNav((prev) => !prev)}
+                            sx={{ color: MAIN_COLOR }}
                         >
                             <MenuIcon />
                         </IconButton>

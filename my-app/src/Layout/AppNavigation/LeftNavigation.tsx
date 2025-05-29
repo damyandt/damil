@@ -1,20 +1,16 @@
 import { SerializedStyles, css } from "@emotion/react";
 import { Box, Divider, Drawer } from "@mui/material";
-import {
-    LEFT_NAV_WIDTH,
-    // LeftNavSingleItem,
-    TOP_NAV_SPACING_WITH_SITE_CONTENT,
-} from "../layoutVariables";
+import { LEFT_NAV_WIDTH, TOP_NAV_SPACING_WITH_SITE_CONTENT } from "../layoutVariables";
 import LeftNavListMenu from "./LeftNavListMenu";
-import { useTranslatedNav } from "../../Global/Hooks/useTranslatedNav"; 
-
+import { useTranslatedNav } from "../../Global/Hooks/useTranslatedNav";
+import { NAV_DAMIL_GYMS } from "./leftNavData";
 
 const cssStyles = (openLeftNav: boolean) => ({
     drawer: css({
-        width: openLeftNav ? LEFT_NAV_WIDTH : 0,
+        width: openLeftNav ? LEFT_NAV_WIDTH : "30em",
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-            width: LEFT_NAV_WIDTH,
+            width: openLeftNav ? LEFT_NAV_WIDTH : "30em",
             boxSizing: "border-box",
             border: "none",
         },
@@ -40,7 +36,6 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
     setOpenLeftNav,
     mobileLeftNav,
 }) => {
-    // const { setAuthedUser } = useAuthedContext();
     const styles = { ...cssStyles(openLeftNav) };
     const {
         NAV_DAMIL_HOME,
@@ -50,9 +45,8 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
     const handleClose = () => {
         setOpenLeftNav(false);
         window.dispatchEvent(new Event("resize"));
+        console.log("dada")
     };
-
-    // console.log(NAV_GIANT_ANALYTICS)
 
     return (
         <Drawer
@@ -67,17 +61,23 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
                 <>
                     <LeftNavListMenu
                         navList={NAV_DAMIL_HOME.list}
-                        listTitle=""
+                        listTitle="Home"
                     />
-                    <Divider />
+                    <Divider variant="middle" />
                     <LeftNavListMenu
                         navList={NAV_DAMIL_ANALYTICS.list}
                         listTitle={NAV_DAMIL_ANALYTICS.title}
+                    />
+                    <Divider variant="middle" />
+                    <LeftNavListMenu
+                        navList={NAV_DAMIL_GYMS.list}
+                        listTitle={NAV_DAMIL_GYMS.title}
                     />
 
                 </>
             </Box>
         </Drawer>
+
     );
 };
 
