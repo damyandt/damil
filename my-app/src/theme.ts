@@ -30,7 +30,7 @@ declare module "@mui/material/styles" {
   }
 
   interface PaletteOptions {
-    customColors: {
+    customColors?: {
       greyText?: string;
       darkGrey?: string;
       darkBackgroundColor?: string;
@@ -40,7 +40,7 @@ declare module "@mui/material/styles" {
   }
 
   interface Palette {
-    customColors: {
+    customColors?: {
       greyText?: string;
       darkGrey?: string;
       darkBackgroundColor?: string;
@@ -242,7 +242,9 @@ const theme = (mode: PaletteMode) => {
         fontSize: "1rem",
         lineHeight: 1.66,
         color:
-          mode === "light" ? staticThemeColors.grey[900] : staticThemeColors.grey[400],
+          mode === "light"
+            ? staticThemeColors.grey[900]
+            : staticThemeColors.grey[400],
       },
     },
     shape: {

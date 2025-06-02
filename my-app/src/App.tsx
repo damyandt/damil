@@ -1,13 +1,16 @@
 import { Box } from "@mui/material";
 import { RouterProvider } from "react-router-dom";
 import appRouter from "./Layout/Router/AppRouter";
+import GuestLayout from "./Layout/GuestLayout";
 
 const App: React.FC = () => {
-  return (
-    <Box component="main">
-      <RouterProvider router={appRouter} />
-    </Box>
-  );
+  // return (
+  //   <Box component="main">
+  //     <RouterProvider router={appRouter} />
+  //   </Box>
+  // );
+
+  return <GuestLayout />;
 };
 
 export default App;

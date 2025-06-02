@@ -1,5 +1,8 @@
 import React from "react";
-import { Button as MaterialButton, ButtonProps as MUIButtonProps } from "@mui/material";
+import {
+  Button as MaterialButton,
+  ButtonProps as MUIButtonProps,
+} from "@mui/material";
 import { SerializedStyles } from "@emotion/react";
 import { Link } from "react-router-dom";
 import { MAIN_COLOR } from "../../Layout/layoutVariables";
@@ -55,7 +58,7 @@ const Button: React.FC<ButtonProps> = ({
       {...componentProps}
       {...rest}
       sx={{
-        background: MAIN_COLOR
+        background: MAIN_COLOR,
       }}
     >
       {children}
