@@ -9,7 +9,7 @@ import { Gym } from "../pages/usersPages/userTypes";
 export const COOKIE_ACCESS_TOKEN = "accessToken";
 export const COOKIE_REFRESH_TOKEN = "refreshToken";
 
-const API_ENDPOINT = `/api/${process.env.REACT_APP_VERSION}/`;
+const API_ENDPOINT = `/api/v1/`;
 
 export type ResponseError = {
   detail: string;
@@ -25,7 +25,7 @@ export type Query = {
   multipartCustomKey?: string;
   responseType?: "json" | "blob";
   dontAppendEndpointBase?: boolean;
-  triggerDownload?: boolean
+  triggerDownload?: boolean;
 };
 export type CallApiParams = {
   query: Query;
@@ -33,7 +33,6 @@ export type CallApiParams = {
     setAuthedUser: React.Dispatch<React.SetStateAction<Gym | null>>;
   } | null;
 };
-
 
 /**
  * "query" contains the information needed to make the back-end request.
@@ -43,8 +42,8 @@ export type CallApiParams = {
  * been made once and this is the second call to it.
  */
 const callApi = async <T>(
-  params: CallApiParams,
-  requestIsReMade: boolean = false
+  params: CallApiParams
+  // requestIsReMade: boolean = false
 ): Promise<T> => {
   const { query, auth } = params;
   const {
@@ -56,11 +55,15 @@ const callApi = async <T>(
     multipartForm,
     returnJson = true,
     dontAppendEndpointBase,
-    triggerDownload, // 🔥 NEW FLAG
+    triggerDownload,
   } = query;
 
-  const endpointToUse = dontAppendEndpointBase ? "" : endpointBase || API_ENDPOINT;
+  // const endpointToUse = dontAppendEndpointBase
+  //   ? ""
+  //   : endpointBase || API_ENDPOINT;
+  const endpointToUse = "https://fitmanage-b0bb9372ef38.herokuapp.com/api/v1/";
   let response: Response;
+  console.log(endpointToUse);
 
   if (method === "GET" || method === "DELETE") {
     let input: string = "";
@@ -160,9 +163,7 @@ const callApi = async <T>(
           iframe.width = "80%";
           iframe.height = "80%";
           previewContainer.appendChild(iframe);
-        }
-
-        else if (contentType?.includes("image")) {
+        } else if (contentType?.includes("image")) {
           fileURL = URL.createObjectURL(blob);
           const img = document.createElement("img");
           img.src = fileURL;
@@ -216,6 +217,5 @@ const callApi = async <T>(
     return response as T;
   }
 };
-
 
 export default callApi;

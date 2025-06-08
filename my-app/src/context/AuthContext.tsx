@@ -1,0 +1,83 @@
+import { createContext, JSX, useContext, useEffect, useState } from "react";
+import { getCookie } from "../Global/Utils/commonFunctions";
+import callApi, { COOKIE_REFRESH_TOKEN } from "../API/callApi";
+import { Gym } from "../pages/usersPages/userTypes";
+import { getQueryUsersGetCurrentUser } from "../Auth/API/apiAuthGetQueries";
+import { handleFetchUserAccessToken } from "./authContextUtils";
+
+export type GetQueryUsersGetCurrentUserSnippet = { user: Gym };
+interface UserContextType {
+  authedUser: Gym | null;
+  setAuthedUser: (value: React.SetStateAction<Gym | null>) => void;
+  setUserSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const UserContext = createContext<UserContextType>({} as UserContextType);
+
+interface AuthContextProps {
+  children: JSX.Element | JSX.Element[];
+}
+
+const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
+  const [authedUser, setAuthedUser] = useState<Gym | null>(null);
+  const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (authedUser === null && userSignedIn) {
+      setUserSignedIn(false);
+    } else if (authedUser !== null && !userSignedIn) {
+      setUserSignedIn(true);
+    }
+  }, [authedUser?.id]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!authedUser?.id) {
+          await checkIfUserIsSignedIn();
+        }
+      } catch (err) {
+        console.log("Authed user error");
+      }
+    })();
+  }, [userSignedIn]);
+
+  const checkIfUserIsSignedIn = async () => {
+    const refreshToken = getCookie(COOKIE_REFRESH_TOKEN);
+    console.log(refreshToken);
+    if (refreshToken) {
+      // 1. fetch the accessToken and save it as a cookie
+      // await handleFetchUserAccessToken(refreshToken);
+
+      // 2. fetch and save userData
+      const signedInUser = await callApi<GetQueryUsersGetCurrentUserSnippet>({
+        query: getQueryUsersGetCurrentUser(),
+        auth: { setAuthedUser },
+      });
+      console.log(signedInUser);
+
+      setAuthedUser({
+        ...signedInUser.user,
+      });
+
+      return signedInUser.user;
+    }
+    console.log(authedUser);
+  };
+
+  return (
+    <UserContext.Provider
+      value={{
+        authedUser,
+        setAuthedUser,
+        setUserSignedIn,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
+};
+
+export default AuthContext;
+
+export const useAuthedContext = (): UserContextType => useContext(UserContext);

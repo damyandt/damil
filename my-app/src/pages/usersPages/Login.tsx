@@ -12,16 +12,70 @@ import {
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import TextField from "../../components/TextField";
 import { MAIN_COLOR } from "../../Layout/layoutVariables";
-
+import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
+import { postLogin } from "./api/postQuery";
+import { jwtDecode } from "jwt-decode";
+import { getCookie, setCookie } from "../../Global/Utils/commonFunctions";
+import { useAuthedContext } from "../../context/AuthContext";
+export type DecodedJWTToken = {
+  sub: string;
+  exp: number;
+};
+export type SetCookieParams = {
+  name: string;
+  value: string;
+  exp: number;
+  path?: string;
+  sameSite: "none" | "lax" | "strict";
+  secure: boolean;
+};
 const LoginPage = () => {
   const [showPasswordField, setShowPasswordField] = useState(false);
-
+  const [formData, setFormData] = useState<any>({
+    email: "",
+    password: "",
+  });
+  const { authedUser } = useAuthedContext();
+  console.log(authedUser);
   const handleNextClick = () => {
     setShowPasswordField(true);
   };
 
-  const handleLogin = () => {
-    console.log("Login initiated");
+  const handleLogin = async () => {
+    try {
+      const user = await callApi<any>({
+        query: postLogin(formData),
+        auth: null,
+      });
+
+      console.log("Login success:", user);
+      if (user) {
+        const refresh_token = user.token;
+        const decodedRefreshToken: DecodedJWTToken = jwtDecode(refresh_token);
+
+        // save the refresh_token as a cookie
+        const refreshCookie: SetCookieParams = {
+          name: COOKIE_REFRESH_TOKEN,
+          value: refresh_token,
+          exp: decodedRefreshToken.exp,
+          sameSite: "strict",
+          secure: true,
+        };
+        console.log(refreshCookie);
+        setCookie(refreshCookie);
+      } else if (user.detail) {
+        throw new Error(user.detail);
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
+  const handleChange = (field: string, value: any) => {
+    setFormData((prev: any) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
   return (
@@ -61,6 +115,7 @@ const LoginPage = () => {
           placeholder="Email or Phone Number"
           fullWidth
           onKeyDown={(e) => e.key === "Enter" && handleNextClick()}
+          onChange={(e) => handleChange("email", e.target.value)}
           InputProps={{
             endAdornment: !showPasswordField && (
               <InputAdornment position="end">
@@ -81,6 +136,7 @@ const LoginPage = () => {
             placeholder="Password"
             fullWidth
             type="password"
+            onChange={(e) => handleChange("password", e.target.value)}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">

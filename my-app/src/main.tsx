@@ -5,6 +5,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from "@mui/material";
 import LanguageProvider from "./context/LanguageContext";
 import { MAIN_COLOR } from "./Layout/layoutVariables";
+import AuthContext from "./context/AuthContext";
 
 const theme = createTheme({
   palette: {
@@ -22,10 +23,12 @@ const rootElement = document.getElementById("root");
 if (rootElement) {
   createRoot(rootElement).render(
     <ThemeProvider theme={theme}>
-      <LanguageProvider>
-        <CssBaseline />
-        <App />
-      </LanguageProvider>
+      <AuthContext>
+        <LanguageProvider>
+          <CssBaseline />
+          <App />
+        </LanguageProvider>
+      </AuthContext>
     </ThemeProvider>
   );
 } else {
