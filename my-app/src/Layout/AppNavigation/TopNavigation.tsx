@@ -19,6 +19,7 @@ import { MAIN_COLOR, TOP_NAV_PADDING, TOP_NAV_SPACING_WITH_SITE_CONTENT, TOP_RIG
 import cssComponentsStyles from "../../Global/Styles/components";
 import cssLayoutStyles from "../../Global/Styles/layout";
 import AccountMenu from "./AccountMenu";
+import { handleUserSignOut } from "../../context/authContextUtils";
 
 
 interface TopNavigationProps {
@@ -57,9 +58,6 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
         ...cssComponentsStyles(theme),
     };
 
-    const handleUserSignOut = () => {
-        console.log("works")
-    }
     return (
         <AppBar position="fixed" sx={styles.appBar}>
             <Toolbar sx={styles.toolbar} disableGutters >
@@ -89,7 +87,6 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
 
                         <Stack alignItems="center">
                             <IconButton aria-label="open help menu"
-                            //  onClick={console.log("dsad")}
                             >
                                 <HelpIcon />
                             </IconButton>

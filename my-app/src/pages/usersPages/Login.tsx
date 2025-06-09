@@ -14,8 +14,8 @@ import TextField from "../../components/TextField";
 import { MAIN_COLOR } from "../../Layout/layoutVariables";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
 import { postLogin } from "./api/postQuery";
-import { jwtDecode } from "jwt-decode";
-import { getCookie, setCookie } from "../../Global/Utils/commonFunctions";
+import { jwtDecode } from "jwt-decode"
+import { setCookie } from "../../Global/Utils/commonFunctions";
 import { useAuthedContext } from "../../context/AuthContext";
 export type DecodedJWTToken = {
   sub: string;
@@ -35,8 +35,8 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
-  const { authedUser } = useAuthedContext();
-  console.log(authedUser);
+  const { setUserSignedIn } = useAuthedContext();
+
   const handleNextClick = () => {
     setShowPasswordField(true);
   };
@@ -61,8 +61,9 @@ const LoginPage = () => {
           sameSite: "strict",
           secure: true,
         };
-        console.log(refreshCookie);
+
         setCookie(refreshCookie);
+        setUserSignedIn(true)
       } else if (user.detail) {
         throw new Error(user.detail);
       }

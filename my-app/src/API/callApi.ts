@@ -1,15 +1,11 @@
-// import { COOKIE_REFRESH_TOKEN } from "../Global/Constants/commonConstants";
-// import { getCookie } from "../Global/Utils/commonFunctions";
-
-// import {
-//   handleFetchUserAccessToken,
-//   handleUserSignOut,
-// } from "../context/authContextUtils";
+import {
+  handleFetchUserAccessToken,
+  handleUserSignOut,
+} from "../context/authContextUtils";
+import { getCookie } from "../Global/Utils/commonFunctions";
 import { Gym } from "../pages/usersPages/userTypes";
 export const COOKIE_ACCESS_TOKEN = "accessToken";
 export const COOKIE_REFRESH_TOKEN = "refreshToken";
-
-const API_ENDPOINT = `/api/v1/`;
 
 export type ResponseError = {
   detail: string;
@@ -42,7 +38,7 @@ export type CallApiParams = {
  * been made once and this is the second call to it.
  */
 const callApi = async <T>(
-  params: CallApiParams
+  params: CallApiParams,
   // requestIsReMade: boolean = false
 ): Promise<T> => {
   const { query, auth } = params;
@@ -50,17 +46,12 @@ const callApi = async <T>(
     endpoint,
     method,
     variables,
-    endpointBase,
     receiveErrorMessage,
     multipartForm,
     returnJson = true,
-    dontAppendEndpointBase,
     triggerDownload,
   } = query;
 
-  // const endpointToUse = dontAppendEndpointBase
-  //   ? ""
-  //   : endpointBase || API_ENDPOINT;
   const endpointToUse = "https://fitmanage-b0bb9372ef38.herokuapp.com/api/v1/";
   let response: Response;
   console.log(endpointToUse);
@@ -73,7 +64,7 @@ const callApi = async <T>(
     }
 
     const url = `${endpointToUse}${endpoint}${input}`;
-    response = await fetch(url, { method });
+    response = await fetch(url, { method, credentials: "include" });
 
     // 🔽 Handle download if requested
     if (triggerDownload && response.ok) {
