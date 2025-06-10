@@ -38,7 +38,7 @@ export type CallApiParams = {
  * been made once and this is the second call to it.
  */
 const callApi = async <T>(
-  params: CallApiParams,
+  params: CallApiParams
   // requestIsReMade: boolean = false
 ): Promise<T> => {
   const { query, auth } = params;
@@ -58,13 +58,22 @@ const callApi = async <T>(
 
   if (method === "GET" || method === "DELETE") {
     let input: string = "";
+    const accessToken = getCookie(COOKIE_ACCESS_TOKEN);
+
     if (variables) {
       const params = new URLSearchParams(variables).toString();
       input = `?${params}`;
     }
 
     const url = `${endpointToUse}${endpoint}${input}`;
-    response = await fetch(url, { method, credentials: "include" });
+    response = await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
+      credentials: "include",
+    });
 
     // 🔽 Handle download if requested
     if (triggerDownload && response.ok) {

@@ -49,12 +49,11 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
       // 1. fetch the accessToken and save it as a cookie
       await handleFetchUserAccessToken(refreshToken);
       // 2. fetch and save userData
-      // const signedInUser = await callApi<any>({
-      //   query: getQueryUsersGetCurrentUser(),
-      //   auth: { setAuthedUser },
-      // });
-      // console.log(signedInUser);
-
+      const signedInUser = await callApi<any>({
+        query: getQueryUsersGetCurrentUser(),
+        auth: { setAuthedUser },
+      });
+      console.log(signedInUser);
 
       // setAuthedUser({
       //   ...signedInUser.user,
@@ -69,8 +68,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         city: "DA",
         password: "da",
       });
-      return { name: 'Damyan' };
-
+      return { name: "Damyan" };
     }
   };
 
