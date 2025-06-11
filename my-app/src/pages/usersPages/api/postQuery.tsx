@@ -4,5 +4,10 @@ export const postLogin = (input: any): Query => ({
   endpoint: `auth/login`,
   method: "POST",
   variables: input,
-  //   endpointBase: "https://fitmanage-b0bb9372ef38.herokuapp.com/api/v1/",
+});
+
+export const validateEmail = (input: any): Query => ({
+  endpoint: `auth/validate-email`,
+  method: "POST",
+  variables: input,
 });

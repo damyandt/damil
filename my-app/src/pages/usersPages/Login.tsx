@@ -8,13 +8,17 @@ import {
   IconButton,
   Link,
   Collapse,
+  Grid,
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import EditIcon from "@mui/icons-material/Edit";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import TextField from "../../components/TextField";
 import { MAIN_COLOR } from "../../Layout/layoutVariables";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
-import { postLogin } from "./api/postQuery";
-import { jwtDecode } from "jwt-decode"
+import { postLogin, validateEmail } from "./api/postQuery";
+import { jwtDecode } from "jwt-decode";
 import { setCookie } from "../../Global/Utils/commonFunctions";
 import { useAuthedContext } from "../../context/AuthContext";
 export type DecodedJWTToken = {
@@ -30,18 +34,38 @@ export type SetCookieParams = {
   secure: boolean;
 };
 const LoginPage = () => {
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showPasswordField, setShowPasswordField] = useState(false);
+  const [disableEmail, setDisableEmail] = useState<boolean>(false);
   const [formData, setFormData] = useState<any>({
     email: "",
     password: "",
   });
   const { setUserSignedIn } = useAuthedContext();
 
-  const handleNextClick = () => {
-    setShowPasswordField(true);
+  const handleNextClick = async () => {
+    try {
+      if (!validator(true)) {
+        console.warn("Form validation failed");
+        return;
+      }
+      await callApi<any>({
+        query: validateEmail(formData.email),
+        auth: null,
+      });
+      setShowPasswordField(true);
+      setDisableEmail(true);
+    } catch (error) {
+      console.error("Invalid email:", error);
+      setErrors({ email: "Email not found. Please check and try again." });
+    }
   };
 
   const handleLogin = async () => {
+    if (!validator(false)) {
+      console.warn("Form validation failed");
+      return;
+    }
     try {
       const user = await callApi<any>({
         query: postLogin(formData),
@@ -63,12 +87,15 @@ const LoginPage = () => {
         };
 
         setCookie(refreshCookie);
-        setUserSignedIn(true)
+        setUserSignedIn(true);
       } else if (user.detail) {
         throw new Error(user.detail);
       }
     } catch (error) {
       console.error("Login failed:", error);
+      setErrors({
+        password: "Wrong password. Please double-check and try again.",
+      });
     }
   };
 
@@ -77,7 +104,36 @@ const LoginPage = () => {
       ...prev,
       [field]: value,
     }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [field]: "",
+    }));
   };
+
+  const validator = (onlyEmial: boolean) => {
+    const newErrors: { [key: string]: string } = {};
+    if (
+      formData.email === undefined ||
+      formData.email === null ||
+      formData.email === ""
+    ) {
+      newErrors[`email`] = "This field is required";
+    }
+
+    if (
+      formData.password === undefined ||
+      formData.password === null ||
+      formData.password === ""
+    ) {
+      !onlyEmial && (newErrors[`password`] = "This field is required");
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => setShowPassword((prev) => !prev);
 
   return (
     <Box
@@ -111,55 +167,99 @@ const LoginPage = () => {
         <Typography variant="h6" fontWeight={500} sx={{ color: MAIN_COLOR }}>
           Sign in
         </Typography>
-
-        <TextField
-          placeholder="Email or Phone Number"
-          fullWidth
-          onKeyDown={(e) => e.key === "Enter" && handleNextClick()}
-          onChange={(e) => handleChange("email", e.target.value)}
-          InputProps={{
-            endAdornment: !showPasswordField && (
-              <InputAdornment position="end">
-                <IconButton edge="end" onClick={handleNextClick}>
-                  <ArrowForwardIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-            sx: {
-              borderRadius: 1.7,
-              backgroundColor: "#fff",
-            },
-          }}
-        />
-
-        <Collapse in={showPasswordField}>
-          <TextField
-            placeholder="Password"
-            fullWidth
-            type="password"
-            onChange={(e) => handleChange("password", e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton edge="end" onClick={handleLogin}>
-                    <ArrowForwardIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-              sx: {
-                borderRadius: 1.7,
-                backgroundColor: "#fff",
-              },
-            }}
-          />
-        </Collapse>
-
+        <Grid container spacing={0}>
+          <Grid size={12}>
+            <TextField
+              disabled={disableEmail}
+              placeholder="Email or Phone Number"
+              fullWidth
+              error={!!errors["email"]}
+              helperText={errors["email"] || " "}
+              onKeyDown={(e) => e.key === "Enter" && handleNextClick()}
+              onChange={(e) => handleChange("email", e.target.value)}
+              InputProps={{
+                endAdornment: !showPasswordField ? (
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      onClick={handleNextClick}
+                      size="small"
+                    >
+                      <ArrowForwardIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ) : (
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      onClick={() => {
+                        setDisableEmail(false);
+                        setShowPasswordField(false);
+                      }}
+                      size="small"
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                sx: {
+                  borderRadius: 1.7,
+                  backgroundColor: "#fff",
+                },
+              }}
+            />
+          </Grid>
+          <Grid size={12}>
+            <Collapse in={showPasswordField}>
+              <TextField
+                placeholder="Password"
+                fullWidth
+                type={showPassword ? "text" : "password"}
+                error={!!errors["password"]}
+                helperText={errors["password"] || " "}
+                onChange={(e) => handleChange("password", e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <Box sx={{ display: "flex", gap: 0, padding: 0 }}>
+                      <InputAdornment
+                        position="start"
+                        sx={{ margin: "0", paddingLeft: "0" }}
+                      >
+                        <IconButton
+                          onClick={toggleShowPassword}
+                          edge="start"
+                          tabIndex={-1}
+                          size="small"
+                          sx={{ mr: -0.5 }}
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                      <InputAdornment position="end" sx={{ ml: 0 }}>
+                        <IconButton
+                          edge="end"
+                          onClick={handleLogin}
+                          size="small"
+                        >
+                          <ArrowForwardIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    </Box>
+                  ),
+                  sx: {
+                    borderRadius: 1.7,
+                    backgroundColor: "#fff",
+                  },
+                }}
+              />
+            </Collapse>
+          </Grid>
+        </Grid>
         <FormControlLabel
           control={<Checkbox />}
           label="Remember me"
           sx={{ alignSelf: "flex-center", mt: 1 }}
         />
-
         <Typography variant="body2">
           Forgot your password?{" "}
           <Link href="#" underline="hover">
