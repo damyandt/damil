@@ -26,9 +26,7 @@ export const handleFetchUserAccessToken = async (
       auth: null,
     });
     const accessToken = response.accessToken;
-    const refreshToken1 = response.refreshToken;
     const decodedToken: DecodedJWTToken = jwtDecode(accessToken);
-    const decodedToken1: DecodedJWTToken = jwtDecode(accessToken);
     const accessCookie: SetCookieParams = {
       name: COOKIE_ACCESS_TOKEN,
       value: accessToken,
@@ -36,16 +34,8 @@ export const handleFetchUserAccessToken = async (
       sameSite: "strict",
       secure: true,
     };
-    const refreshCookie: SetCookieParams = {
-      name: COOKIE_REFRESH_TOKEN,
-      value: refreshToken1,
-      exp: decodedToken1.exp,
-      sameSite: "strict",
-      secure: true,
-    };
 
     setCookie(accessCookie);
-    setCookie(refreshCookie);
 
     return accessToken;
   }
