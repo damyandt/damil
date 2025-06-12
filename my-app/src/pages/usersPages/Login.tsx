@@ -76,14 +76,11 @@ const LoginPage = () => {
       console.log("Login success:", user);
       if (user) {
         const refresh_token = user.refreshToken;
-        const access_token = user.accessToken;
 
-        const decodedRefreshToken: DecodedJWTToken = jwtDecode(access_token);
-        // save the refresh_token as a cookie
         const refreshCookie: SetCookieParams = {
           name: COOKIE_REFRESH_TOKEN,
           value: refresh_token,
-          exp: decodedRefreshToken.exp,
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
           sameSite: "strict",
           secure: true,
         };
