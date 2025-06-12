@@ -44,7 +44,6 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
 
   const checkIfUserIsSignedIn = async () => {
     const refreshToken = getCookie(COOKIE_REFRESH_TOKEN);
-
     if (refreshToken) {
       // 1. fetch the accessToken and save it as a cookie
       await handleFetchUserAccessToken(refreshToken);
@@ -53,22 +52,12 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         query: getQueryUsersGetCurrentUser(),
         auth: { setAuthedUser },
       });
-      console.log(signedInUser);
 
-      // setAuthedUser({
-      //   ...signedInUser.user,
-      // });
-
-      // return signedInUser.user;
       setAuthedUser({
-        email: "string",
-        name: "string",
-        phone: "string",
-        address: "",
-        city: "DA",
-        password: "da",
+        ...signedInUser,
       });
-      return { name: "Damyan" };
+
+      return;
     }
   };
 

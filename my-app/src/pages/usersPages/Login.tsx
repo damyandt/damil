@@ -19,7 +19,7 @@ import { MAIN_COLOR } from "../../Layout/layoutVariables";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
 import { postLogin, validateEmail } from "./api/postQuery";
 import { jwtDecode } from "jwt-decode";
-import { setCookie } from "../../Global/Utils/commonFunctions";
+import { getCookie, setCookie } from "../../Global/Utils/commonFunctions";
 import { useAuthedContext } from "../../context/AuthContext";
 export type DecodedJWTToken = {
   sub: string;
@@ -37,6 +37,7 @@ const LoginPage = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showPasswordField, setShowPasswordField] = useState(false);
   const [disableEmail, setDisableEmail] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [formData, setFormData] = useState<any>({
     email: "",
     password: "",
@@ -74,9 +75,10 @@ const LoginPage = () => {
 
       console.log("Login success:", user);
       if (user) {
-        const refresh_token = user.token;
-        const decodedRefreshToken: DecodedJWTToken = jwtDecode(refresh_token);
+        const refresh_token = user.refreshToken;
+        const access_token = user.accessToken;
 
+        const decodedRefreshToken: DecodedJWTToken = jwtDecode(access_token);
         // save the refresh_token as a cookie
         const refreshCookie: SetCookieParams = {
           name: COOKIE_REFRESH_TOKEN,
@@ -131,7 +133,6 @@ const LoginPage = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  const [showPassword, setShowPassword] = useState(false);
 
   const toggleShowPassword = () => setShowPassword((prev) => !prev);
 
