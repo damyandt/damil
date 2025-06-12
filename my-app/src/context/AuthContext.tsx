@@ -10,6 +10,7 @@ interface UserContextType {
   authedUser: Gym | null;
   setAuthedUser: (value: React.SetStateAction<Gym | null>) => void;
   setUserSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  authedUserLoading: boolean;
 }
 
 const UserContext = createContext<UserContextType>({} as UserContextType);
@@ -21,6 +22,7 @@ interface AuthContextProps {
 const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
   const [authedUser, setAuthedUser] = useState<Gym | null>(null);
   const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (authedUser === null && userSignedIn) {
@@ -34,11 +36,13 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
     (async () => {
       try {
         if (!authedUser?.id) {
+          setLoading(true);
           await checkIfUserIsSignedIn();
         }
       } catch (err) {
         console.log("Authed user error");
       }
+      setLoading(false);
     })();
   }, [userSignedIn]);
 
@@ -67,6 +71,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         authedUser,
         setAuthedUser,
         setUserSignedIn,
+        authedUserLoading: loading,
       }}
     >
       {children}
