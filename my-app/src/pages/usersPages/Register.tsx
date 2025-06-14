@@ -1,122 +1,422 @@
-import { Box, Stack, Typography } from "@mui/material";
-import { useState } from "react";
-import { Gym } from "./userTypes";
+import * as React from "react";
+import Backdrop from "@mui/material/Backdrop";
+import {
+  Typography,
+  Box,
+  InputAdornment,
+  IconButton,
+  Grid,
+  Modal,
+  Tooltip,
+} from "@mui/material";
+import { useSpring, animated } from "@react-spring/web";
+import MuiLink from "@mui/material/Link";
+import { Link as RouterLink } from "react-router-dom";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import TextField from "../../components/TextField";
-import Button from "../../components/MaterialUI/Button";
+import { MAIN_COLOR } from "../../Layout/layoutVariables";
+import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
+import { codeVerification, postRegister } from "./api/postQuery";
+import { useAuthedContext } from "../../context/AuthContext";
+import { setCookie } from "../../Global/Utils/commonFunctions";
+
+export interface FadeProps {
+  children: React.ReactElement<any>;
+  in?: boolean;
+  onClick?: any;
+  onEnter?: (node: HTMLElement, isAppearing: boolean) => void;
+  onExited?: (node: HTMLElement, isAppearing: boolean) => void;
+  ownerState?: any;
+}
+
+export type DecodedJWTToken = {
+  sub: string;
+  exp: number;
+};
+
+export type SetCookieParams = {
+  name: string;
+  value: string;
+  exp: number;
+  path?: string;
+  sameSite: "none" | "lax" | "strict";
+  secure: boolean;
+};
 
 const RegisterPage = () => {
-  const [formData, setFormData] = useState<Gym>({
+  const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
+  const [showPassword, setShowPassword] = React.useState<boolean>(false);
+  // const [userResponce, setUserResponce] = React.useState<any>();
+  const [openModal, setOpenModal] = React.useState<boolean>(false);
+  const [resendCooldown, setResendCooldown] = React.useState(0);
+  const [verificationCode, setCode] = React.useState("");
+  const [formData, setFormData] = React.useState<any>({
     email: "",
-    name: "",
-    phone: "",
-    address: "",
-    city: "",
     password: "",
   });
+  const { setUserSignedIn } = useAuthedContext();
 
-  const [errors, setErrors] = useState<Partial<Gym>>({});
-
-  const handleChange = (field: keyof Gym, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-
-    setErrors((prev) => {
-      if (!prev[field]) return prev;
-      const newErrors = { ...prev };
-      delete newErrors[field];
-      return newErrors;
-    });
+  const handleRegister = async () => {
+    if (!validator(false)) {
+      console.warn("Form validation failed");
+      return;
+    }
+    try {
+      await callApi<any>({
+        query: postRegister(formData),
+        auth: null,
+      });
+      setOpenModal(true);
+    } catch (error) {
+      console.error("Register failed:", error);
+    }
   };
 
-  const validateForm = () => {
-    const newErrors: Partial<Gym> = {};
-    Object.entries(formData).forEach(([key, value]) => {
-      if (!value) newErrors[key as keyof Gym] = "Required";
+  const handleChange = (field: string, value: any) => {
+    setFormData((prev: any) => ({
+      ...prev,
+      [field]: value,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [field]: "",
+    }));
+  };
+
+  const validator = (onlyEmial: boolean) => {
+    const newErrors: { [key: string]: string } = {};
+    const fields: string[] = [
+      "username",
+      "email",
+      "password",
+      "confirmPassword",
+    ];
+
+    fields.map((el: string) => {
+      if (
+        formData[el] === undefined ||
+        formData[el] === null ||
+        formData[el] === ""
+      ) {
+        newErrors[el] = "This field is required";
+      }
     });
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    if (!validateForm()) {
-      console.warn("Form validation failed");
-      e.preventDefault();
-
-      return;
+  const handleResend = () => {
+    if (resendCooldown === 0) {
+      console.log("Code resent!");
+      localStorage.setItem("lastResendTimestamp", Date.now().toString());
+      setResendCooldown(60);
     }
-    e.preventDefault();
   };
 
+  React.useEffect(() => {
+    const lastResend = localStorage.getItem("lastResendTimestamp");
+    if (lastResend) {
+      const secondsPassed = Math.floor(
+        (Date.now() - Number(lastResend)) / 1000
+      );
+      const remaining = 60 - secondsPassed;
+      if (remaining > 0) {
+        setResendCooldown(remaining);
+      }
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setInterval(() => {
+        setResendCooldown((prev) => prev - 1);
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [resendCooldown]);
+
+  const handleSubmitVerificationCode = async () => {
+    try {
+      const user = await callApi<any>({
+        query: codeVerification(verificationCode),
+        auth: null,
+      });
+      if (user) {
+        const refresh_token = user.refreshToken;
+
+        const refreshCookie: SetCookieParams = {
+          name: COOKIE_REFRESH_TOKEN,
+          value: refresh_token,
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
+          sameSite: "strict",
+          secure: true,
+        };
+
+        setCookie(refreshCookie);
+        setUserSignedIn(true);
+      } else if (user.detail) {
+        throw new Error(user.detail);
+      }
+    } catch (error) {
+      console.error("Register failed:", error);
+    }
+
+    console.log("Register success");
+  };
   return (
-    <Box sx={{ maxWidth: 500, mx: "auto", mt: 5 }}>
-      <Typography variant="h4" mb={2}>
-        Register Gym
-      </Typography>
+    <>
+      <Box
+        sx={{
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#fff",
+          textAlign: "center",
+          backgroundImage: 'url("/login.jpg")',
+          backgroundSize: "cover",
+          backgroundRepeat: "repeat",
+          backgroundPosition: "center",
+        }}
+      >
+        <Typography variant="h3" fontWeight={600} mb={4}>
+          Make new Profile
+        </Typography>
 
-      <form onSubmit={handleSubmit}>
-        <Stack spacing={0.1}>
-          <TextField
-            label="Email"
-            value={formData.email}
-            onChange={(e) => handleChange("email", e.target.value)}
-            fullWidth
-            error={!!errors.email}
-            helperText={errors.email || " "}
-          />
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: 400,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <Typography variant="h6" fontWeight={500} sx={{ color: MAIN_COLOR }}>
+            Sign up
+          </Typography>
+          <Grid container spacing={0}>
+            <Grid size={12}>
+              <TextField
+                fullWidth
+                placeholder="Username"
+                error={!!errors["username"]}
+                helperText={errors["username"] || " "}
+                onChange={(e) => handleChange("username", e.target.value)}
+              />
+            </Grid>
+            <Grid size={12}>
+              <TextField
+                fullWidth
+                placeholder="Email"
+                error={!!errors["email"]}
+                helperText={errors["email"] || " "}
+                onChange={(e) => handleChange("email", e.target.value)}
+              />
+            </Grid>
+            <Grid size={12}>
+              <TextField
+                placeholder="Password"
+                fullWidth
+                type={showPassword ? "text" : "password"}
+                error={!!errors["password"]}
+                helperText={errors["password"] || " "}
+                onChange={(e) => handleChange("password", e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <Box sx={{ display: "flex", gap: 0, padding: 0 }}>
+                      <InputAdornment
+                        position="start"
+                        sx={{ margin: "0", paddingLeft: "0" }}
+                      >
+                        <IconButton
+                          onClick={() => setShowPassword((prev) => !prev)}
+                          edge="start"
+                          tabIndex={-1}
+                          size="small"
+                          sx={{ mr: -0.5 }}
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    </Box>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid size={12}>
+              <TextField
+                placeholder="Repeat Password"
+                fullWidth
+                type={showPassword ? "text" : "password"}
+                error={!!errors["confirmPassword"]}
+                helperText={errors["confirmPassword"] || " "}
+                onChange={(e) =>
+                  handleChange("confirmPassword", e.target.value)
+                }
+                InputProps={{
+                  endAdornment: (
+                    <Box sx={{ display: "flex", gap: 0, padding: 0 }}>
+                      <InputAdornment position="end" sx={{ ml: 0 }}>
+                        <IconButton
+                          edge="end"
+                          onClick={() => {
+                            handleRegister();
+                          }}
+                          size="small"
+                        >
+                          <ArrowForwardIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    </Box>
+                  ),
+                }}
+              />
+            </Grid>
+          </Grid>
 
-          <TextField
-            label="Name"
-            value={formData.name}
-            onChange={(e) => handleChange("name", e.target.value)}
-            fullWidth
-            error={!!errors.name}
-            helperText={errors.name || " "}
-          />
+          <Typography variant="body2">
+            {"You already have an Account? "}
+            <MuiLink component={RouterLink} to="/login" underline="hover">
+              Login Here
+            </MuiLink>
+          </Typography>
+        </Box>
+      </Box>
+      <Modal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        aria-labelledby="verification-modal-title"
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            TransitionComponent: Fade,
+          },
+        }}
+      >
+        <Fade in={openModal}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 450,
+              bgcolor: "background.paper",
+              borderRadius: 3,
+              boxShadow: 10,
+              p: 4,
+              display: "flex",
+              flexDirection: "column",
+              gap: 3,
+            }}
+          >
+            <Typography
+              id="verification-modal-title"
+              variant="h5"
+              fontWeight="bold"
+            >
+              Verify Your Email
+            </Typography>
 
-          <TextField
-            label="Phone"
-            value={formData.phone}
-            onChange={(e) => handleChange("phone", e.target.value)}
-            fullWidth
-            error={!!errors.phone}
-            helperText={errors.phone || " "}
-          />
+            <Typography variant="body2" color="text.secondary">
+              Please enter the 6-digit code sent to your email address.
+            </Typography>
 
-          <TextField
-            label="Address"
-            value={formData.address}
-            onChange={(e) => handleChange("address", e.target.value)}
-            fullWidth
-            error={!!errors.address}
-            helperText={errors.address || " "}
-          />
+            <TextField
+              placeholder="Enter code"
+              fullWidth
+              value={verificationCode || ""}
+              error={!!errors["verificationCode"]}
+              helperText={errors["verificationCode"] || " "}
+              onChange={(e) => setCode(e.target.value)}
+            />
 
-          <TextField
-            label="City"
-            value={formData.city}
-            onChange={(e) => handleChange("city", e.target.value)}
-            fullWidth
-            error={!!errors.city}
-            helperText={errors.city || " "}
-          />
-
-          <TextField
-            label="Password"
-            type="password"
-            value={formData.password}
-            onChange={(e) => handleChange("password", e.target.value)}
-            fullWidth
-            error={!!errors.password}
-            helperText={errors.password || " "}
-          />
-
-          <Button type="submit" fullWidth>
-            Register
-          </Button>
-        </Stack>
-      </form>
-    </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Tooltip
+                title={
+                  resendCooldown === 0
+                    ? "Click to Resend Code"
+                    : `Wait ${resendCooldown}s before you try again!`
+                }
+                sx={{ ml: 2 }}
+              >
+                <Typography
+                  variant="body2"
+                  onClick={handleResend}
+                  sx={{
+                    textDecoration: "underline",
+                    "&:hover": {
+                      cursor: "pointer",
+                      color: resendCooldown === 0 ? "primary.main" : "",
+                    },
+                  }}
+                >
+                  Resend Code
+                </Typography>
+              </Tooltip>
+              <IconButton
+                onClick={handleSubmitVerificationCode}
+                sx={{
+                  bgcolor: "primary.main",
+                  color: "#fff",
+                  "&:hover": { bgcolor: "primary.dark" },
+                }}
+              >
+                <ArrowForwardIcon />
+              </IconButton>
+            </Box>
+          </Box>
+        </Fade>
+      </Modal>
+    </>
   );
 };
 
 export default RegisterPage;
+
+export const Fade = React.forwardRef<HTMLDivElement, FadeProps>(
+  function Fade(props, ref) {
+    const {
+      children,
+      in: open,
+      onClick,
+      onEnter,
+      onExited,
+      ownerState,
+      ...other
+    } = props;
+    const style = useSpring({
+      from: { opacity: 0 },
+      to: { opacity: open ? 1 : 0 },
+      onStart: () => {
+        if (open && onEnter) {
+          onEnter(null as any, true);
+        }
+      },
+      onRest: () => {
+        if (!open && onExited) {
+          onExited(null as any, true);
+        }
+      },
+    });
+    return (
+      <animated.div ref={ref} style={style} {...other}>
+        {React.cloneElement(children, { onClick })}
+      </animated.div>
+    );
+  }
+);

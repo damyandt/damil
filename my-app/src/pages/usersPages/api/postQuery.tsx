@@ -6,8 +6,19 @@ export const postLogin = (input: any): Query => ({
   variables: input,
 });
 
+export const postRegister = (input: any): Query => ({
+  endpoint: `auth/register`,
+  method: "POST",
+  variables: input,
+});
+
 export const validateEmail = (input: any): Query => ({
   endpoint: `auth/validate-email`,
+  method: "POST",
+  variables: input,
+});
+export const codeVerification = (input: any): Query => ({
+  endpoint: `auth/verify`,
   method: "POST",
   variables: input,
 });

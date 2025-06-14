@@ -12,13 +12,13 @@ const App: React.FC = () => {
     return <LoadingScreen />;
   }
 
-  if (authedUser) {
-    return (
-      <Box component="main">
-        <RouterProvider router={appRouter} />
-      </Box>
-    );
-  }
+  // if (authedUser) {
+  return (
+    <Box component="main">
+      <RouterProvider router={appRouter} />
+    </Box>
+  );
+  // }
 
   return <GuestLayout />;
 };

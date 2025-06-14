@@ -1,9 +1,11 @@
 export type Gym = {
+  username: string;
   email: string;
-  name: string;
-  phone: string;
-  address: string;
-  city: string;
-  password: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  created_at?: Date;
+  members_count?: number;
+  gym_members?: number;
   id?: string;
 };
