@@ -41,7 +41,7 @@ const callApi = async <T>(
   params: CallApiParams
   // requestIsReMade: boolean = false
 ): Promise<T> => {
-  const { query, auth } = params;
+  const { query } = params;
   const {
     endpoint,
     method,
@@ -54,7 +54,6 @@ const callApi = async <T>(
 
   const endpointToUse = "https://fitmanage-b0bb9372ef38.herokuapp.com/api/v1/";
   let response: Response;
-  console.log(endpointToUse);
 
   if (method === "GET" || method === "DELETE") {
     let input: string = "";

@@ -48,10 +48,9 @@ export type SetCookieParams = {
 const RegisterPage = () => {
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
-  // const [userResponce, setUserResponce] = React.useState<any>();
   const [openModal, setOpenModal] = React.useState<boolean>(false);
-  const [resendCooldown, setResendCooldown] = React.useState(0);
-  const [verificationCode, setCode] = React.useState("");
+  const [resendCooldown, setResendCooldown] = React.useState<number>(0);
+  const [verificationCode, setCode] = React.useState<string>("");
   const [formData, setFormData] = React.useState<any>({
     email: "",
     password: "",
