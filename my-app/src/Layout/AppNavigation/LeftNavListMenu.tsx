@@ -27,9 +27,7 @@ interface LeftNavListMenuProps {
   alertMessage?: string | null;
 }
 
-const LeftNavListMenu: React.FC<LeftNavListMenuProps> = ({
-  navList,
-}) => {
+const LeftNavListMenu: React.FC<LeftNavListMenuProps> = ({ navList }) => {
   const location = useLocation();
   return (
     <List component="nav">
@@ -54,7 +52,7 @@ export default LeftNavListMenu;
 interface NavItemProps extends LeftNavSingleItem {
   listTitle?: string;
   isAlreadyOpen: boolean;
-  marginLeft?: boolean
+  marginLeft?: boolean;
   currentPath?: string;
 }
 
@@ -66,56 +64,51 @@ const NavItem: React.FC<NavItemProps> = ({
   isAlreadyOpen,
   disabled,
   marginLeft,
-  currentPath
+  currentPath,
 }) => {
   const location = useLocation();
   const [open, setOpen] = useState<boolean>(isAlreadyOpen);
   const handleItemIconClick = () => {
     setOpen(!open);
   };
-  console.log(url)
-  console.log(currentPath)
+  console.log(url);
+  console.log(currentPath);
   const isSelected = url === location.pathname;
   const itemIconButtonProps = {
     ...(url ? { component: Link, to: url } : { onClick: handleItemIconClick }),
   };
 
   return (
-    <Box
-      component="div"
-    >
-
+    <Box component="div">
       <Box component="div">
         <ListItemButton
           {...itemIconButtonProps}
           disabled={disabled}
           selected={isSelected}
           sx={{
-            ...(marginLeft ? { paddingLeft: '2em' } : {}),
-            '&:hover': {
+            ...(marginLeft ? { paddingLeft: "2em" } : {}),
+            "&:hover": {
               backgroundColor: MAIN_COLOR + "20",
             },
-            '&.Mui-selected': {
+            "&.Mui-selected": {
               backgroundColor: MAIN_COLOR + "20",
               color: MAIN_COLOR,
-              '& .MuiListItemIcon-root': {
+              "& .MuiListItemIcon-root": {
                 color: MAIN_COLOR,
               },
             },
-            '& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible': {
-              backgroundColor: MAIN_COLOR,
+            "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
+              backgroundColor: MAIN_COLOR + "20",
             },
-            borderRadius: '1em',
-            margin: '0 1em'
+            borderRadius: "1em",
+            margin: "0.1em 1em",
           }}
-
         >
           <ListItemIcon>
             <Icon />
           </ListItemIcon>
           <ListItemText primary={text} />
           {nested ? <>{open ? <ExpandLess /> : <ExpandMore />}</> : null}
-
         </ListItemButton>
 
         {nested ? (
@@ -129,12 +122,12 @@ const NavItem: React.FC<NavItemProps> = ({
                 nested={nestedItem.nested}
                 Icon={nestedItem.Icon}
                 disabled={nestedItem.disabled}
-                isAlreadyOpen={false} />
-
+                isAlreadyOpen={false}
+              />
             ))}
           </Collapse>
         ) : null}
       </Box>
-    </Box >
+    </Box>
   );
 };

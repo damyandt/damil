@@ -1,9 +1,12 @@
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { LeftNavList } from "../layoutVariables";
 import BallotOutlinedIcon from "@mui/icons-material/BallotOutlined";
-import LocalAtmOutlinedIcon from "@mui/icons-material/LocalAtmOutlined";
-import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
-import BarChartIcon from '@mui/icons-material/BarChart';
+import CardMembershipIcon from "@mui/icons-material/CardMembership";
+import PieChartIcon from "@mui/icons-material/PieChart";
+import FlagIcon from "@mui/icons-material/Flag";
+import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 
 enum LEFT_NAV_SECTION {
   "Home" = "Home",
@@ -38,20 +41,37 @@ export const NAV_DAMIL_ANALYTICS: LeftNavMenu = {
       disabled: false,
       nested: [
         {
+          text: "Overview",
+          url: "/DAMIL-Analytics/Overview",
+          Icon: DashboardIcon,
+          disabled: false,
+        },
+        {
           text: "Gym Visits",
           url: "/DAMIL-Analytics/Visits",
           Icon: BarChartIcon,
           disabled: false,
         },
         {
+          text: "Monthly Goal",
+          url: "/DAMIL-Analytics/Goal",
+          Icon: FlagIcon,
+          disabled: false,
+        },
+        {
+          text: "Age Breakdown",
+          url: "/DAMIL-Analytics/Ages",
+          Icon: PieChartIcon,
+          disabled: false,
+        },
+        {
           text: "Memberships",
-          url: "/DAMIL-Analytics/Financial-KPIs",
-          Icon: LocalAtmOutlinedIcon,
+          url: "/DAMIL-Analytics/Memberships",
+          Icon: CardMembershipIcon,
           disabled: false,
         },
       ],
     },
-
   ],
 };
 
@@ -60,9 +80,9 @@ export const NAV_DAMIL_GYMS: LeftNavMenu = {
   list: [
     {
       text: "Register",
-      url: '/DAMIL-Gyms/Register',
+      url: "/DAMIL-Gyms/Register",
       Icon: AppRegistrationIcon,
       disabled: false,
-    }
+    },
   ],
 };
