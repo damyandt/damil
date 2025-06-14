@@ -1,3 +1,5 @@
+import { SetCookieParams } from "../../Auth/authTypes";
+
 export const compareStringArrayVersions = (
   newItems: string[],
   oldItems: string[]
@@ -32,15 +34,6 @@ export const formatMilliseconds = (milliseconds: number): string => {
   }
 };
 
-// Set a cookie with a given name, value, and expiration date
-export type SetCookieParams = {
-  name: string;
-  value: string;
-  exp: number;
-  path?: string;
-  sameSite: "none" | "lax" | "strict";
-  secure: boolean;
-};
 export const setCookie = (cookie: SetCookieParams) => {
   const { name, value, exp, path, sameSite, secure } = cookie;
   // convert from unix time to UTC string

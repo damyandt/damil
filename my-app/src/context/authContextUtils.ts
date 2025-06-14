@@ -3,13 +3,9 @@ import callApi, {
   COOKIE_ACCESS_TOKEN,
   COOKIE_REFRESH_TOKEN,
 } from "../API/callApi";
-import {
-  deleteCookie,
-  setCookie,
-  SetCookieParams,
-} from "../Global/Utils/commonFunctions";
-import { DecodedJWTToken } from "../pages/usersPages/Login";
+import { deleteCookie, setCookie } from "../Global/Utils/commonFunctions";
 import { postQueryTokenRefresh } from "../Auth/API/apiAuthGetQueries";
+import { DecodedJWTToken, SetCookieParams } from "../Auth/authTypes";
 
 export const handleUserSignOut = () => {
   deleteCookie(COOKIE_ACCESS_TOKEN);

@@ -25,19 +25,7 @@ import { codeVerification, postLogin, validateEmail } from "./api/postQuery";
 import { setCookie } from "../../Global/Utils/commonFunctions";
 import { useAuthedContext } from "../../context/AuthContext";
 import { Fade } from "./Register";
-export type DecodedJWTToken = {
-  sub: string;
-  exp: number;
-};
-
-export type SetCookieParams = {
-  name: string;
-  value: string;
-  exp: number;
-  path?: string;
-  sameSite: "none" | "lax" | "strict";
-  secure: boolean;
-};
+import { SetCookieParams } from "../../Auth/authTypes";
 
 const errorMessages = {
   invalidEmail: "Email not found. Please check and try again.",

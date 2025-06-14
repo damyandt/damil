@@ -21,6 +21,7 @@ import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
 import { codeVerification, postRegister } from "./api/postQuery";
 import { useAuthedContext } from "../../context/AuthContext";
 import { setCookie } from "../../Global/Utils/commonFunctions";
+import { SetCookieParams } from "../../Auth/authTypes";
 
 export interface FadeProps {
   children: React.ReactElement<any>;
@@ -30,20 +31,6 @@ export interface FadeProps {
   onExited?: (node: HTMLElement, isAppearing: boolean) => void;
   ownerState?: any;
 }
-
-export type DecodedJWTToken = {
-  sub: string;
-  exp: number;
-};
-
-export type SetCookieParams = {
-  name: string;
-  value: string;
-  exp: number;
-  path?: string;
-  sameSite: "none" | "lax" | "strict";
-  secure: boolean;
-};
 
 const RegisterPage = () => {
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
