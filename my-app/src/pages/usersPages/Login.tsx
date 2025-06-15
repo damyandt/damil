@@ -28,7 +28,7 @@ import { SetCookieParams } from "../../Auth/authTypes";
 import { Fade } from "../../components/Fade";
 
 const errorMessages = {
-  invalidEmail: "Email not found. Please check and try again.",
+  invalidEmail: "Account with this email does not exists.",
   invalidPassword: "Wrong password. Please double-check and try again.",
   unverified: "Verify email before login.",
   invalidCode: "Invalid code.",
