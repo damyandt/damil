@@ -55,7 +55,6 @@ interface NavItemProps extends LeftNavSingleItem {
   marginLeft?: boolean;
   currentPath?: string;
 }
-
 const NavItem: React.FC<NavItemProps> = ({
   text,
   url,
@@ -67,67 +66,66 @@ const NavItem: React.FC<NavItemProps> = ({
   currentPath,
 }) => {
   const location = useLocation();
-  const [open, setOpen] = useState<boolean>(isAlreadyOpen);
-  const handleItemIconClick = () => {
-    setOpen(!open);
+  const hasCurrentPath = (
+    nestedItems: LeftNavSingleItem[] = [],
+    path: string
+  ): boolean => {
+    return nestedItems.some(
+      (item) => item.url === path || hasCurrentPath(item.nested || [], path)
+    );
   };
-  console.log(url);
-  console.log(currentPath);
+
+  const [open, setOpen] = useState<boolean>(
+    isAlreadyOpen || hasCurrentPath(nested, currentPath ?? "")
+  );
+
   const isSelected = url === location.pathname;
   const itemIconButtonProps = {
-    ...(url ? { component: Link, to: url } : { onClick: handleItemIconClick }),
+    ...(url ? { component: Link, to: url } : { onClick: () => setOpen(!open) }),
   };
 
   return (
     <Box component="div">
-      <Box component="div">
-        <ListItemButton
-          {...itemIconButtonProps}
-          disabled={disabled}
-          selected={isSelected}
-          sx={{
-            ...(marginLeft ? { paddingLeft: "2em" } : {}),
-            "&:hover": {
-              backgroundColor: MAIN_COLOR + "20",
-            },
-            "&.Mui-selected": {
-              backgroundColor: MAIN_COLOR + "20",
-              color: MAIN_COLOR,
-              "& .MuiListItemIcon-root": {
-                color: MAIN_COLOR,
-              },
-            },
-            "& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible": {
-              backgroundColor: MAIN_COLOR + "20",
-            },
-            borderRadius: "1em",
-            margin: "0.1em 1em",
-          }}
-        >
-          <ListItemIcon>
-            <Icon />
-          </ListItemIcon>
-          <ListItemText primary={text} />
-          {nested ? <>{open ? <ExpandLess /> : <ExpandMore />}</> : null}
-        </ListItemButton>
+      <ListItemButton
+        {...itemIconButtonProps}
+        disabled={disabled}
+        selected={isSelected}
+        sx={{
+          ...(marginLeft ? { paddingLeft: "2em" } : {}),
+          "&:hover": { backgroundColor: MAIN_COLOR + "20" },
+          "&.Mui-selected": {
+            backgroundColor: MAIN_COLOR + "20",
+            color: MAIN_COLOR,
+            "& .MuiListItemIcon-root": { color: MAIN_COLOR },
+          },
+          borderRadius: "1em",
+          margin: "0.1em 1em",
+        }}
+      >
+        <ListItemIcon>
+          <Icon />
+        </ListItemIcon>
+        <ListItemText primary={text} />
+        {nested ? open ? <ExpandLess /> : <ExpandMore /> : null}
+      </ListItemButton>
 
-        {nested ? (
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            {nested.map((nestedItem, index) => (
-              <NavItem
-                marginLeft={true}
-                key={`parent-item-${nestedItem.url}-${index}`}
-                text={nestedItem.text}
-                url={nestedItem.url}
-                nested={nestedItem.nested}
-                Icon={nestedItem.Icon}
-                disabled={nestedItem.disabled}
-                isAlreadyOpen={false}
-              />
-            ))}
-          </Collapse>
-        ) : null}
-      </Box>
+      {nested && (
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          {nested.map((nestedItem, index) => (
+            <NavItem
+              marginLeft={true}
+              key={`parent-item-${nestedItem.url}-${index}`}
+              text={nestedItem.text}
+              url={nestedItem.url}
+              nested={nestedItem.nested}
+              Icon={nestedItem.Icon}
+              disabled={nestedItem.disabled}
+              isAlreadyOpen={false}
+              currentPath={currentPath}
+            />
+          ))}
+        </Collapse>
+      )}
     </Box>
   );
 };

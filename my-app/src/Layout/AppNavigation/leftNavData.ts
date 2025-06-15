@@ -7,11 +7,15 @@ import FlagIcon from "@mui/icons-material/Flag";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import GroupsIcon from "@mui/icons-material/Groups";
 
 enum LEFT_NAV_SECTION {
   "Home" = "Home",
   "DAMIL Analytics" = "DAMIL Analytics",
   "DAMIL Gyms" = "DAMIL Gyms",
+  "DAMIL Access Control" = "DAMIL Access Control",
 }
 
 type LeftNavMenu = {
@@ -83,6 +87,32 @@ export const NAV_DAMIL_GYMS: LeftNavMenu = {
       url: "/DAMIL-Gyms/Register",
       Icon: AppRegistrationIcon,
       disabled: false,
+    },
+  ],
+};
+
+export const NAV_DAMIL_ACCESS_CONTROL: LeftNavMenu = {
+  title: LEFT_NAV_SECTION["DAMIL Access Control"],
+  list: [
+    {
+      text: "Access Controll",
+      url: null,
+      Icon: MeetingRoomIcon,
+      disabled: false,
+      nested: [
+        {
+          text: "Clients",
+          url: "/DAMIL-Access-Control/All-Clients",
+          Icon: PersonAddAlt1Icon,
+          disabled: false,
+        },
+        {
+          text: "Daily Visitors",
+          url: "/DAMIL-Access-Control/Daily-Visitors",
+          Icon: GroupsIcon,
+          disabled: false,
+        },
+      ],
     },
   ],
 };

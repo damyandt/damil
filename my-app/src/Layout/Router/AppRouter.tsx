@@ -7,12 +7,24 @@ import GoalMembersGaugeChart from "../../pages/Analystics/Goal";
 import AgeDistributionChart from "../../pages/Analystics/AgeChart";
 import Memberships from "../../pages/Analystics/Memberships";
 import OverviewPage from "../../pages/Analystics/Overview";
+import ClientsPage from "../../pages/Access Control/Clients";
+import DailyVisitors from "../../pages/Access Control/DailyVisitors";
 
 export default createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
+      {
+        path: "/DAMIL-Gyms/Register",
+        element: <RegisterPage />,
+      },
+      {
+        path: "*",
+        element: <PageNotFound />,
+      },
+
+      // Analystics
       {
         path: "/DAMIL-Analytics/Overview",
         element: <OverviewPage />,
@@ -33,13 +45,15 @@ export default createBrowserRouter([
         path: "/DAMIL-Analytics/Memberships",
         element: <Memberships />,
       },
+
+      //Access Control
       {
-        path: "/DAMIL-Gyms/Register",
-        element: <RegisterPage />,
+        path: "/DAMIL-Access-Control/All-Clients",
+        element: <ClientsPage />,
       },
       {
-        path: "*",
-        element: <PageNotFound />,
+        path: "/DAMIL-Access-Control/Daily-Visitors",
+        element: <DailyVisitors />,
       },
     ],
   },

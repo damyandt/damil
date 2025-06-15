@@ -27,7 +27,7 @@ import { useAuthedContext } from "../../context/AuthContext";
 import { SetCookieParams } from "../../Auth/authTypes";
 import { Fade } from "../../components/Fade";
 
-const errorMessages = {
+export const errorMessages = {
   invalidEmail: "Account with this email does not exists.",
   invalidPassword: "Wrong password. Please double-check and try again.",
   unverified: "Verify email before login.",
@@ -156,9 +156,14 @@ const LoginPage = () => {
   };
 
   const handleSubmitVerificationCode = async () => {
+    console.log("predi");
+
     try {
       const responce = await callApi<any>({
-        query: codeVerification(verificationCode),
+        query: codeVerification({
+          verificationCode: verificationCode,
+          email: formData.email,
+        }),
         auth: null,
       });
 
@@ -167,13 +172,12 @@ const LoginPage = () => {
           verificationCode: errorMessages.invalidCode,
         });
       }
-
-      handleLogin();
     } catch (error) {
       console.error("Register failed:", error);
     }
+    handleLogin();
+    setOpenModal(false);
   };
-
   return (
     <>
       <Box

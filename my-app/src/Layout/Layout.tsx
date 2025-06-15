@@ -1,6 +1,6 @@
-import { Box, Theme, useMediaQuery } from "@mui/material";
+import { Box, IconButton, Theme, useMediaQuery } from "@mui/material";
 import TopNavigation from "./AppNavigation/TopNavigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LeftNavigation from "./AppNavigation/LeftNavigation";
 import { css, SerializedStyles } from "@emotion/react";
 import {
@@ -9,10 +9,13 @@ import {
   LEFT_NAV_WIDTH,
   TOP_NAV_SPACING_WITH_SITE_CONTENT,
   AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
+  TOP_RIGHT_NAV_HEIGHT,
 } from "./layoutVariables";
-import { useTheme } from "@mui/material/styles";
+import { alpha, useTheme } from "@mui/material/styles";
 import cssLayoutStyles from "../Global/Styles/layout";
 import { Outlet } from "react-router-dom";
+import NavigateBeforeOutlinedIcon from "@mui/icons-material/NavigateBeforeOutlined";
+import RightNavigation from "./AppNavigation/RightNavigation";
 
 interface AuthLayoutProps {
   css?: SerializedStyles[] | SerializedStyles;
@@ -22,7 +25,9 @@ interface AuthLayoutProps {
 const cssStyles = (
   theme: Theme,
   leftNavIsOpen: boolean,
-  mobileLeftNav: boolean
+  mobileLeftNav: boolean,
+  isRightNavVisible: React.ReactNode | null,
+  extraRightNavMenu: React.ReactNode | null
 ) => ({
   contentContainer: css({
     backgroundColor:
@@ -30,10 +35,25 @@ const cssStyles = (
         ? AUTH_LAYOUT_BACKGROUND_COLOR
         : AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
   }),
-
+  floatingArrowButton: css({
+    position: "fixed",
+    right: isRightNavVisible ? theme.spacing(8) : theme.spacing(1),
+    top: "50%",
+    transform: "translateY(-50%)",
+    backgroundColor:
+      theme.palette.mode === "light"
+        ? alpha(theme.palette.grey[100], 0.6)
+        : alpha(theme.palette.grey[900], 0.3),
+    borderRadius: "50%",
+    zIndex: theme.zIndex.drawer + 2,
+  }),
+  arrowToggleRightMenu: css({
+    transform: isRightNavVisible ? "rotate(180deg)" : "rotate(0deg)",
+  }),
   outletContainer: css({
     marginTop: TOP_NAV_SPACING_WITH_SITE_CONTENT,
-    marginRight: 0,
+    marginRight:
+      isRightNavVisible && extraRightNavMenu ? TOP_RIGHT_NAV_HEIGHT : 0,
     minHeight: `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT})`,
     flexGrow: 1,
     position: "relative",
@@ -66,14 +86,31 @@ const cssStyles = (
     }),
   }),
 });
+
 const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
   const theme = useTheme();
   const lgMediaQuery = useMediaQuery("(max-width:1199px)");
+  const smMediaQuery = useMediaQuery("(max-width:599px)");
+  const [isRightNavVisible, setIsRightNavVisible] = useState<boolean>(true);
+  const [extraRightNavMenu, setExtraRightNavMenu] =
+    useState<React.ReactNode | null>(null);
   const [openLeftNav, setOpenLeftNav] = useState<boolean>(!lgMediaQuery);
   const styles = {
-    ...cssStyles(theme, openLeftNav, lgMediaQuery),
+    ...cssStyles(
+      theme,
+      openLeftNav,
+      lgMediaQuery,
+      isRightNavVisible,
+      extraRightNavMenu
+    ),
     ...cssLayoutStyles,
   };
+  useEffect(() => {
+    if (extraRightNavMenu && !isRightNavVisible) {
+      setIsRightNavVisible(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   return (
     <Box
@@ -87,9 +124,24 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
         setOpenLeftNav={setOpenLeftNav}
         mobileLeftNav={lgMediaQuery}
       />
+      {extraRightNavMenu ? (
+        <IconButton
+          onClick={() => setIsRightNavVisible((state) => !state)}
+          sx={styles.floatingArrowButton}
+        >
+          <NavigateBeforeOutlinedIcon sx={styles.arrowToggleRightMenu} />
+        </IconButton>
+      ) : null}
+
+      {isRightNavVisible ? (
+        <RightNavigation
+          extraMenu={extraRightNavMenu}
+          isRightNavVisible={isRightNavVisible}
+        />
+      ) : null}
 
       <Box sx={styles.outletContainer} component="main">
-        <Outlet context={{ openLeftNav }} />
+        <Outlet context={{ openLeftNav, setExtraRightNavMenu, smMediaQuery }} />
       </Box>
     </Box>
   );

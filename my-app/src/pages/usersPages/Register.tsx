@@ -22,21 +22,25 @@ import { useAuthedContext } from "../../context/AuthContext";
 import { setCookie } from "../../Global/Utils/commonFunctions";
 import { SetCookieParams } from "../../Auth/authTypes";
 import { Fade } from "../../components/Fade";
+import { errorMessages } from "./Login";
 
 const RegisterPage = () => {
+  const { setUserSignedIn } = useAuthedContext();
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
+  const [responce, setResponce] = React.useState<any>();
   const [openModal, setOpenModal] = React.useState<boolean>(false);
   const [resendCooldown, setResendCooldown] = React.useState<number>(0);
   const [verificationCode, setCode] = React.useState<string>("");
   const [formData, setFormData] = React.useState<any>({
+    username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
-  const { setUserSignedIn } = useAuthedContext();
 
   const handleRegister = async () => {
-    if (!validator(false)) {
+    if (!validator()) {
       console.warn("Form validation failed");
       return;
     }
@@ -63,7 +67,7 @@ const RegisterPage = () => {
     }));
   };
 
-  const validator = (onlyEmial: boolean) => {
+  const validator = () => {
     const newErrors: { [key: string]: string } = {};
     const fields: string[] = [
       "username",
@@ -118,30 +122,35 @@ const RegisterPage = () => {
   }, [resendCooldown]);
 
   const handleSubmitVerificationCode = async () => {
+    let responce;
     try {
-      const user = await callApi<any>({
-        query: codeVerification(verificationCode),
+      responce = await callApi<any>({
+        query: codeVerification({
+          verificationCode: verificationCode,
+          email: formData.email,
+        }),
         auth: null,
       });
-      if (user) {
-        const refresh_token = user.refreshToken;
-
-        const refreshCookie: SetCookieParams = {
-          name: COOKIE_REFRESH_TOKEN,
-          value: refresh_token,
-          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
-          sameSite: "strict",
-          secure: true,
-        };
-
-        setCookie(refreshCookie);
-        setUserSignedIn(true);
-      } else if (user.detail) {
-        throw new Error(user.detail);
-      }
     } catch (error) {
       console.error("Register failed:", error);
     }
+    if (responce.message === errorMessages.invalidCode) {
+      return setErrors({
+        verificationCode: errorMessages.invalidCode,
+      });
+    }
+    const refresh_token = responce.refreshToken;
+
+    const refreshCookie: SetCookieParams = {
+      name: COOKIE_REFRESH_TOKEN,
+      value: refresh_token,
+      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
+      sameSite: "strict",
+      secure: true,
+    };
+
+    setCookie(refreshCookie);
+    setUserSignedIn(true);
 
     console.log("Register success");
   };
