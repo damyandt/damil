@@ -24,8 +24,8 @@ import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
 import { codeVerification, postLogin, validateEmail } from "./api/postQuery";
 import { setCookie } from "../../Global/Utils/commonFunctions";
 import { useAuthedContext } from "../../context/AuthContext";
-import { Fade } from "./Register";
 import { SetCookieParams } from "../../Auth/authTypes";
+import { Fade } from "../../components/Fade";
 
 const errorMessages = {
   invalidEmail: "Email not found. Please check and try again.",

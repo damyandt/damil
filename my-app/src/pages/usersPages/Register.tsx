@@ -9,7 +9,6 @@ import {
   Modal,
   Tooltip,
 } from "@mui/material";
-import { useSpring, animated } from "@react-spring/web";
 import MuiLink from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -22,15 +21,7 @@ import { codeVerification, postRegister } from "./api/postQuery";
 import { useAuthedContext } from "../../context/AuthContext";
 import { setCookie } from "../../Global/Utils/commonFunctions";
 import { SetCookieParams } from "../../Auth/authTypes";
-
-export interface FadeProps {
-  children: React.ReactElement<any>;
-  in?: boolean;
-  onClick?: any;
-  onEnter?: (node: HTMLElement, isAppearing: boolean) => void;
-  onExited?: (node: HTMLElement, isAppearing: boolean) => void;
-  ownerState?: any;
-}
+import { Fade } from "../../components/Fade";
 
 const RegisterPage = () => {
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
@@ -373,36 +364,3 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
-
-export const Fade = React.forwardRef<HTMLDivElement, FadeProps>(
-  function Fade(props, ref) {
-    const {
-      children,
-      in: open,
-      onClick,
-      onEnter,
-      onExited,
-      ownerState,
-      ...other
-    } = props;
-    const style = useSpring({
-      from: { opacity: 0 },
-      to: { opacity: open ? 1 : 0 },
-      onStart: () => {
-        if (open && onEnter) {
-          onEnter(null as any, true);
-        }
-      },
-      onRest: () => {
-        if (!open && onExited) {
-          onExited(null as any, true);
-        }
-      },
-    });
-    return (
-      <animated.div ref={ref} style={style} {...other}>
-        {React.cloneElement(children, { onClick })}
-      </animated.div>
-    );
-  }
-);
