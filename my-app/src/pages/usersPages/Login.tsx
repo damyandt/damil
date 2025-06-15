@@ -163,10 +163,9 @@ const LoginPage = () => {
       });
 
       if (responce.message === errorMessages.invalidCode) {
-        setErrors({
+        return setErrors({
           verificationCode: errorMessages.invalidCode,
         });
-      } else if (responce.message === "Account verified successufully.") {
       }
 
       handleLogin();

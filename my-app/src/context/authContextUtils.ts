@@ -7,9 +7,10 @@ import { deleteCookie, setCookie } from "../Global/Utils/commonFunctions";
 import { postQueryTokenRefresh } from "../Auth/API/apiAuthGetQueries";
 import { DecodedJWTToken, SetCookieParams } from "../Auth/authTypes";
 
-export const handleUserSignOut = () => {
+export const handleUserSignOut = (navigate: (path: string) => void) => {
   deleteCookie(COOKIE_ACCESS_TOKEN);
   deleteCookie(COOKIE_REFRESH_TOKEN);
+  navigate("/");
   window.location.reload();
 };
 

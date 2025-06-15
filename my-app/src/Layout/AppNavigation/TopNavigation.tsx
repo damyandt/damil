@@ -4,7 +4,6 @@ import {
   IconButton,
   Stack,
   Toolbar,
-  Typography,
   MenuItem,
   ListItemIcon,
 } from "@mui/material";
@@ -12,7 +11,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import HelpIcon from "@mui/icons-material/Help";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Logout from "@mui/icons-material/Logout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { css, SerializedStyles } from "@emotion/react";
 import { Theme, useTheme } from "@mui/material/styles";
 import {
@@ -54,6 +53,7 @@ const cssStyles = (theme: Theme) => ({
 
 const TopNavigation: React.FC<TopNavigationProps> = ({ setOpenLeftNav }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const styles = {
     ...cssStyles(theme),
     ...cssLayoutStyles,
@@ -97,7 +97,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({ setOpenLeftNav }) => {
               </Link>
               <Divider />
               <MenuItem
-                onClick={handleUserSignOut}
+                onClick={() => handleUserSignOut(navigate)}
                 sx={[styles.userMenu, styles.hoverItem]}
               >
                 <ListItemIcon>
