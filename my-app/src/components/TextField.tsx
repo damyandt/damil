@@ -50,6 +50,9 @@ const TextField: React.FC<TextFieldProps> = ({
           },
         },
       }}
+      InputLabelProps={{
+        shrink: numberField ? true : undefined,
+      }}
       fullWidth={fullWidth}
       variant="outlined"
     />

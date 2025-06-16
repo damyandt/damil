@@ -17,18 +17,18 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import TextField from "../../components/TextField";
 import { MAIN_COLOR } from "../../Layout/layoutVariables";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
-import { codeVerification, postRegister } from "./api/postQuery";
+import { codeVerification, postRegister, validateEmail } from "./api/postQuery";
 import { useAuthedContext } from "../../context/AuthContext";
 import { setCookie } from "../../Global/Utils/commonFunctions";
 import { SetCookieParams } from "../../Auth/authTypes";
 import { Fade } from "../../components/Fade";
 import { errorMessages } from "./Login";
+import { Password } from "@mui/icons-material";
 
 const RegisterPage = () => {
   const { setUserSignedIn } = useAuthedContext();
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
-  const [responce, setResponce] = React.useState<any>();
   const [openModal, setOpenModal] = React.useState<boolean>(false);
   const [resendCooldown, setResendCooldown] = React.useState<number>(0);
   const [verificationCode, setCode] = React.useState<string>("");
@@ -40,12 +40,12 @@ const RegisterPage = () => {
   });
 
   const handleRegister = async () => {
-    if (!validator()) {
+    if (!validator(false)) {
       console.warn("Form validation failed");
       return;
     }
     try {
-      await callApi<any>({
+      const responce = await callApi<any>({
         query: postRegister(formData),
         auth: null,
       });
@@ -67,24 +67,93 @@ const RegisterPage = () => {
     }));
   };
 
-  const validator = () => {
-    const newErrors: { [key: string]: string } = {};
-    const fields: string[] = [
-      "username",
-      "email",
-      "password",
-      "confirmPassword",
-    ];
+  React.useEffect(() => {
+    const delayDebounce = setTimeout(async () => {
+      if (formData.email) {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (formData.email && !emailPattern.test(formData.email)) {
+          return setErrors((prev) => ({
+            ...prev,
+            email: "Please enter a valid email address.",
+          }));
+        }
+        const responce = await callApi<any>({
+          query: validateEmail(formData.email),
+          auth: null,
+        });
 
-    fields.map((el: string) => {
-      if (
-        formData[el] === undefined ||
-        formData[el] === null ||
-        formData[el] === ""
-      ) {
-        newErrors[el] = "This field is required";
+        if (responce.message !== errorMessages.invalidEmail) {
+          return setErrors((prev) => ({
+            ...prev,
+            email: "Account with this email already exist!",
+          }));
+        }
       }
-    });
+    }, 700);
+
+    return () => clearTimeout(delayDebounce);
+  }, [formData.email]);
+
+  React.useEffect(() => {
+    const delayDebounce = setTimeout(async () => {
+      if (formData.password) {
+        if (formData.password.length < 8) {
+          return setErrors((prev) => ({
+            ...prev,
+            password: "Password must be at least 8 characters.",
+          }));
+        }
+      }
+    }, 700);
+    return () => clearTimeout(delayDebounce);
+  }, [formData.password]);
+
+  React.useEffect(() => {
+    const delayDebounce = setTimeout(async () => {
+      if (formData.confirmPassword) {
+        if (formData.confirmPassword !== formData.password) {
+          return setErrors((prev) => ({
+            ...prev,
+            confirmPassword: "Passwords do not match.",
+          }));
+        }
+      }
+    }, 700);
+    return () => clearTimeout(delayDebounce);
+  }, [formData.confirmPassword]);
+
+  const validator = (isVerificationCode: boolean) => {
+    const newErrors: { [key: string]: string } = {};
+    if (!isVerificationCode) {
+      const fields: string[] = [
+        "username",
+        "email",
+        "password",
+        "confirmPassword",
+      ];
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (formData.email && !emailPattern.test(formData.email)) {
+        newErrors["email"] = "Please enter a valid email address.";
+      }
+      fields.map((el: string) => {
+        if (
+          formData[el] === undefined ||
+          formData[el] === null ||
+          formData[el] === ""
+        ) {
+          newErrors[el] = "This field is required";
+        }
+      });
+
+      formData.password.length < 8 &&
+        (newErrors["password"] = "Password must be at least 8 characters.");
+
+      formData.password !== formData.confirmPassword &&
+        (newErrors["confirmPassword"] = "Passwords do not match.");
+    } else {
+      verificationCode.length !== 6 &&
+        (newErrors["verificationCode"] = "Verification Code must be.");
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -132,7 +201,7 @@ const RegisterPage = () => {
         auth: null,
       });
     } catch (error) {
-      console.error("Register failed:", error);
+      console.log("Register failed:", error);
     }
     if (responce.message === errorMessages.invalidCode) {
       return setErrors({
@@ -187,32 +256,29 @@ const RegisterPage = () => {
           <Typography variant="h6" fontWeight={500} sx={{ color: MAIN_COLOR }}>
             Sign up
           </Typography>
-          <Grid container spacing={0}>
+          <Grid container spacing={2}>
             <Grid size={12}>
               <TextField
                 fullWidth
-                placeholder="Username"
+                label={errors["username"] || "Username"}
                 error={!!errors["username"]}
-                helperText={errors["username"] || " "}
                 onChange={(e) => handleChange("username", e.target.value)}
               />
             </Grid>
             <Grid size={12}>
               <TextField
                 fullWidth
-                placeholder="Email"
+                label={errors["email"] || "Email"}
                 error={!!errors["email"]}
-                helperText={errors["email"] || " "}
                 onChange={(e) => handleChange("email", e.target.value)}
               />
             </Grid>
             <Grid size={12}>
               <TextField
-                placeholder="Password"
+                label={errors["password"] || "Password"}
                 fullWidth
                 type={showPassword ? "text" : "password"}
                 error={!!errors["password"]}
-                helperText={errors["password"] || " "}
                 onChange={(e) => handleChange("password", e.target.value)}
                 InputProps={{
                   endAdornment: (
@@ -238,11 +304,10 @@ const RegisterPage = () => {
             </Grid>
             <Grid size={12}>
               <TextField
-                placeholder="Repeat Password"
+                label={errors["confirmPassword"] || "Repeat Password"}
                 fullWidth
                 type={showPassword ? "text" : "password"}
                 error={!!errors["confirmPassword"]}
-                helperText={errors["confirmPassword"] || " "}
                 onChange={(e) =>
                   handleChange("confirmPassword", e.target.value)
                 }

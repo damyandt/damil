@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Typography,
   Box,
@@ -74,6 +74,23 @@ const LoginPage = () => {
       });
     }
   };
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(async () => {
+      if (formData.email) {
+        const responce = await callApi<any>({
+          query: validateEmail(formData.email),
+          auth: null,
+        });
+
+        if (responce.message === errorMessages.invalidEmail) {
+          return setErrors({ email: errorMessages.invalidEmail });
+        }
+      }
+    }, 700); // 500ms debounce
+
+    return () => clearTimeout(delayDebounce);
+  }, [formData.email]);
 
   const handleLogin = async () => {
     if (!validator(false)) {
@@ -211,14 +228,13 @@ const LoginPage = () => {
           <Typography variant="h6" fontWeight={500} sx={{ color: MAIN_COLOR }}>
             Sign in
           </Typography>
-          <Grid container spacing={0}>
+          <Grid container spacing={2}>
             <Grid size={12}>
               <TextField
-                disabled={disableEmail}
-                placeholder="Email or Phone Number"
                 fullWidth
+                disabled={disableEmail}
+                label={errors["email"] || "Email"}
                 error={!!errors["email"]}
-                helperText={errors["email"] || " "}
                 onKeyDown={(e) => e.key === "Enter" && handleNextClick()}
                 onChange={(e) => handleChange("email", e.target.value)}
                 InputProps={{
@@ -252,11 +268,10 @@ const LoginPage = () => {
             <Grid size={12}>
               <Collapse in={showPasswordField}>
                 <TextField
-                  placeholder="Password"
                   fullWidth
+                  label={errors["password"] || "Password"}
                   type={showPassword ? "text" : "password"}
                   error={!!errors["password"]}
-                  helperText={errors["password"] || " "}
                   onChange={(e) => handleChange("password", e.target.value)}
                   InputProps={{
                     endAdornment: (
