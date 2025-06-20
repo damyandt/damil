@@ -24,6 +24,7 @@ import { SetCookieParams } from "../../Auth/authTypes";
 import { Fade } from "../../components/Fade";
 import { errorMessages } from "./Login";
 import { Password } from "@mui/icons-material";
+import Button from "../../components/MaterialUI/Button";
 
 const RegisterPage = () => {
   const { setUserSignedIn } = useAuthedContext();
@@ -77,17 +78,21 @@ const RegisterPage = () => {
             email: "Please enter a valid email address.",
           }));
         }
-        const responce = await callApi<any>({
-          query: validateEmail(formData.email),
-          auth: null,
-        });
-
-        if (responce.message !== errorMessages.invalidEmail) {
+        try {
+          await callApi<any>({
+            query: validateEmail(formData.email),
+            auth: null,
+          });
+        } catch (err) {
           return setErrors((prev) => ({
             ...prev,
             email: "Account with this email already exist!",
           }));
         }
+
+        // if (!!responce.message) {
+
+        // }
       }
     }, 700);
 
@@ -141,7 +146,8 @@ const RegisterPage = () => {
           formData[el] === null ||
           formData[el] === ""
         ) {
-          newErrors[el] = "This field is required";
+          newErrors[el] =
+            `${el.charAt(0).toUpperCase() + el.slice(1)} is Required`;
         }
       });
 
