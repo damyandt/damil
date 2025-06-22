@@ -61,7 +61,7 @@ const LoginPage = () => {
         auth: null,
       });
 
-      if (responce.message === errorMessages.invalidEmail) {
+      if (responce.success === false) {
         return setErrors({ email: errorMessages.invalidEmail });
       }
 
@@ -121,8 +121,8 @@ const LoginPage = () => {
       };
 
       setCookie(refreshCookie);
+      setUserSignedIn(false);
       setUserSignedIn(true);
-      console.log("Login success");
     } catch (error) {
       console.error("Login failed:", error);
       setErrors({
@@ -173,8 +173,11 @@ const LoginPage = () => {
   };
 
   const handleSubmitVerificationCode = async () => {
-    console.log("predi");
-
+    if (verificationCode.length !== 6) {
+      setErrors({ verificationCode: "Verification Code must be 6 digits." });
+      console.warn("Form validation failed!");
+      return;
+    }
     try {
       const responce = await callApi<any>({
         query: codeVerification({
@@ -183,17 +186,14 @@ const LoginPage = () => {
         }),
         auth: null,
       });
-
-      if (responce.message === errorMessages.invalidCode) {
-        return setErrors({
-          verificationCode: errorMessages.invalidCode,
-        });
+      if (responce.success === true) {
+        handleLogin();
+      } else {
+        setErrors(responce.validationErrors);
       }
     } catch (error) {
-      console.error("Register failed:", error);
+      console.log("Verification failed:", error);
     }
-    handleLogin();
-    setOpenModal(false);
   };
 
   return (

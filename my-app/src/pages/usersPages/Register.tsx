@@ -17,14 +17,11 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import TextField from "../../components/TextField";
 import { MAIN_COLOR } from "../../Layout/layoutVariables";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
-import { codeVerification, postRegister, validateEmail } from "./api/postQuery";
+import { codeVerification, postLogin, postRegister } from "./api/postQuery";
 import { useAuthedContext } from "../../context/AuthContext";
 import { setCookie } from "../../Global/Utils/commonFunctions";
 import { SetCookieParams } from "../../Auth/authTypes";
 import { Fade } from "../../components/Fade";
-import { errorMessages } from "./Login";
-import { Password } from "@mui/icons-material";
-import Button from "../../components/MaterialUI/Button";
 
 const RegisterPage = () => {
   const { setUserSignedIn } = useAuthedContext();
@@ -42,7 +39,7 @@ const RegisterPage = () => {
 
   const handleRegister = async () => {
     if (!validator(false)) {
-      console.warn("Form validation failed");
+      console.warn("Form validation failed!");
       return;
     }
     try {
@@ -50,7 +47,11 @@ const RegisterPage = () => {
         query: postRegister(formData),
         auth: null,
       });
-      setOpenModal(true);
+      if (responce.success === false) {
+        setErrors(responce.validationErrors);
+      } else if (responce.success === true) {
+        setOpenModal(true);
+      }
     } catch (error) {
       console.error("Register failed:", error);
     }
@@ -78,20 +79,19 @@ const RegisterPage = () => {
             email: "Please enter a valid email address.",
           }));
         }
-        try {
-          await callApi<any>({
-            query: validateEmail(formData.email),
-            auth: null,
-          });
-        } catch (err) {
-          return setErrors((prev) => ({
-            ...prev,
-            email: "Account with this email already exist!",
-          }));
-        }
-
-        // if (!!responce.message) {
-
+        // try {
+        //   const res = await callApi<any>({
+        //     query: validateEmail(formData.email),
+        //     auth: null,
+        //   });
+        //   if (res.success === true) {
+        //     return setErrors((prev) => ({
+        //       ...prev,
+        //       email: "Account with this email already exist!",
+        //     }));
+        //   }
+        // } catch (err) {
+        //   console.log(err);
         // }
       }
     }, 700);
@@ -130,12 +130,7 @@ const RegisterPage = () => {
   const validator = (isVerificationCode: boolean) => {
     const newErrors: { [key: string]: string } = {};
     if (!isVerificationCode) {
-      const fields: string[] = [
-        "username",
-        "email",
-        "password",
-        "confirmPassword",
-      ];
+      const fields: string[] = ["username", "email", "password"];
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (formData.email && !emailPattern.test(formData.email)) {
         newErrors["email"] = "Please enter a valid email address.";
@@ -153,12 +148,13 @@ const RegisterPage = () => {
 
       formData.password.length < 8 &&
         (newErrors["password"] = "Password must be at least 8 characters.");
-
-      formData.password !== formData.confirmPassword &&
+      formData.confirmPassword.length === 0 &&
+        (newErrors["confirmPassword"] = "Confirm Password is Required");
+      formData.confirmPassword !== formData.password &&
         (newErrors["confirmPassword"] = "Passwords do not match.");
     } else {
       verificationCode.length !== 6 &&
-        (newErrors["verificationCode"] = "Verification Code must be.");
+        (newErrors["verificationCode"] = "Verification Code must be 6 digits.");
     }
 
     setErrors(newErrors);
@@ -197,38 +193,47 @@ const RegisterPage = () => {
   }, [resendCooldown]);
 
   const handleSubmitVerificationCode = async () => {
-    let responce;
+    if (!validator(true)) {
+      console.warn("Form validation failed!");
+      return;
+    }
     try {
-      responce = await callApi<any>({
+      const responce = await callApi<any>({
         query: codeVerification({
           verificationCode: verificationCode,
           email: formData.email,
         }),
         auth: null,
       });
+      if (responce.success === true) {
+        const responce = await callApi<any>({
+          query: postLogin({
+            email: formData.email,
+            password: formData.password,
+          }),
+          auth: null,
+        });
+
+        const refresh_token = responce.refreshToken;
+        const refreshCookie: SetCookieParams = {
+          name: COOKIE_REFRESH_TOKEN,
+          value: refresh_token,
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
+          sameSite: "strict",
+          secure: true,
+        };
+
+        setCookie(refreshCookie);
+        setUserSignedIn(false);
+        setUserSignedIn(true);
+      } else {
+        setErrors(responce.validationErrors);
+      }
     } catch (error) {
-      console.log("Register failed:", error);
+      console.log("Verification failed:", error);
     }
-    if (responce.message === errorMessages.invalidCode) {
-      return setErrors({
-        verificationCode: errorMessages.invalidCode,
-      });
-    }
-    const refresh_token = responce.refreshToken;
-
-    const refreshCookie: SetCookieParams = {
-      name: COOKIE_REFRESH_TOKEN,
-      value: refresh_token,
-      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
-      sameSite: "strict",
-      secure: true,
-    };
-
-    setCookie(refreshCookie);
-    setUserSignedIn(true);
-
-    console.log("Register success");
   };
+
   return (
     <>
       <Box
@@ -310,7 +315,7 @@ const RegisterPage = () => {
             </Grid>
             <Grid size={12}>
               <TextField
-                label={errors["confirmPassword"] || "Repeat Password"}
+                label={errors["confirmPassword"] || "Confirm Password"}
                 fullWidth
                 type={showPassword ? "text" : "password"}
                 error={!!errors["confirmPassword"]}
