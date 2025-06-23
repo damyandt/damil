@@ -50,14 +50,26 @@ const cssStyles = (
   arrowToggleRightMenu: css({
     transform: isRightNavVisible ? "rotate(180deg)" : "rotate(0deg)",
   }),
+  new: css({
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
+    zIndex: 1,
+  }),
   outletContainer: css({
-    marginTop: TOP_NAV_SPACING_WITH_SITE_CONTENT,
     marginRight:
       isRightNavVisible && extraRightNavMenu ? TOP_RIGHT_NAV_HEIGHT : 0,
-    minHeight: `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT})`,
+    minHeight: `100vh`,
     flexGrow: 1,
     position: "relative",
     padding: AUTH_LAYOUT_PADDING,
+    // backgroundImage: 'url("/login.jpg")',
+    // backgroundSize: "cover",
+    // backgroundRepeat: "repeat",
+    // backgroundPosition: "center",
     backgroundColor:
       theme.palette.mode === "light"
         ? AUTH_LAYOUT_BACKGROUND_COLOR
@@ -75,7 +87,7 @@ const cssStyles = (
           duration: theme.transitions.duration.leavingScreen,
         }),
       ].join(", "),
-      marginLeft: 0,
+      marginLeft: "5em",
       ...(leftNavIsOpen && {
         transition: theme.transitions.create("margin", {
           easing: theme.transitions.easing.easeOut,
@@ -118,7 +130,7 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
       className={className}
       sx={[styles.flexColumn, styles.contentContainer]}
     >
-      <TopNavigation setOpenLeftNav={setOpenLeftNav} />
+      {/* <TopNavigation setOpenLeftNav={setOpenLeftNav} /> */}
       <LeftNavigation
         openLeftNav={openLeftNav}
         setOpenLeftNav={setOpenLeftNav}
@@ -141,7 +153,12 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
       ) : null}
 
       <Box sx={styles.outletContainer} component="main">
-        <Outlet context={{ openLeftNav, setExtraRightNavMenu, smMediaQuery }} />
+        <Box component="div" sx={styles.new}></Box>
+        <Box sx={{ position: "relative", zIndex: 2 }}>
+          <Outlet
+            context={{ openLeftNav, setExtraRightNavMenu, smMediaQuery }}
+          />
+        </Box>
       </Box>
     </Box>
   );

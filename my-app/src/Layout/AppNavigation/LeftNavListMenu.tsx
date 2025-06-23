@@ -25,6 +25,7 @@ interface LeftNavListMenuProps {
   favourites?: string[];
   formStatus?: FormStatuses;
   alertMessage?: string | null;
+  collapsed?: boolean;
 }
 
 const LeftNavListMenu: React.FC<LeftNavListMenuProps> = ({ navList }) => {

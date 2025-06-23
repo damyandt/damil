@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout";
-import PageNotFound from "../../pages/PageNotFound";
 import RegisterPage from "../../pages/usersPages/Register";
 import GymVisitsChart from "../../pages/Analystics/GymVisitsChart";
 import GoalMembersGaugeChart from "../../pages/Analystics/Goal";
@@ -9,6 +8,7 @@ import Memberships from "../../pages/Analystics/Memberships";
 import OverviewPage from "../../pages/Analystics/Overview";
 import ClientsPage from "../../pages/Access Control/Clients";
 import DailyVisitors from "../../pages/Access Control/DailyVisitors";
+import PageNotFound from "../../pages/PageNotFound";
 
 export default createBrowserRouter([
   {
