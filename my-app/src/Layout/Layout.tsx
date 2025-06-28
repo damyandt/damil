@@ -40,6 +40,7 @@ const cssStyles = (
     right: isRightNavVisible ? theme.spacing(8) : theme.spacing(1),
     top: "50%",
     transform: "translateY(-50%)",
+    transition: "transform 0.4s ease, right 0.4s ease",
     backgroundColor:
       theme.palette.mode === "light"
         ? alpha(theme.palette.grey[100], 0.6)
@@ -49,6 +50,7 @@ const cssStyles = (
   }),
   arrowToggleRightMenu: css({
     transform: isRightNavVisible ? "rotate(180deg)" : "rotate(0deg)",
+    transition: "transform 0.4s ease",
   }),
   new: css({
     position: "absolute",
@@ -60,39 +62,23 @@ const cssStyles = (
     zIndex: 1,
   }),
   outletContainer: css({
+    marginTop: TOP_NAV_SPACING_WITH_SITE_CONTENT,
     marginRight:
       isRightNavVisible && extraRightNavMenu ? TOP_RIGHT_NAV_HEIGHT : 0,
-    minHeight: `100vh`,
+    minHeight: `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT})`,
     flexGrow: 1,
     position: "relative",
     padding: AUTH_LAYOUT_PADDING,
-    // backgroundImage: 'url("/login.jpg")',
-    // backgroundSize: "cover",
-    // backgroundRepeat: "repeat",
-    // backgroundPosition: "center",
     backgroundColor:
       theme.palette.mode === "light"
         ? AUTH_LAYOUT_BACKGROUND_COLOR
         : AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
-
     // if mobile view -> don't have transition
     ...(!mobileLeftNav && {
-      transition: [
-        theme.transitions.create("marginRight", {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-        theme.transitions.create("margin", {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-      ].join(", "),
-      marginLeft: "5em",
+      transition: "marginRight 0.4s ease, margin 0.4s ease",
+      marginLeft: "6.5em",
       ...(leftNavIsOpen && {
-        transition: theme.transitions.create("margin", {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
+        transition: "margin 0.4s ease",
         marginLeft: LEFT_NAV_WIDTH,
       }),
     }),
@@ -121,7 +107,6 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
     if (extraRightNavMenu && !isRightNavVisible) {
       setIsRightNavVisible(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   return (
@@ -130,7 +115,10 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
       className={className}
       sx={[styles.flexColumn, styles.contentContainer]}
     >
-      {/* <TopNavigation setOpenLeftNav={setOpenLeftNav} /> */}
+      <TopNavigation
+        setOpenLeftNav={setOpenLeftNav}
+        openLeftNav={openLeftNav}
+      />
       <LeftNavigation
         openLeftNav={openLeftNav}
         setOpenLeftNav={setOpenLeftNav}
@@ -145,15 +133,12 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
         </IconButton>
       ) : null}
 
-      {isRightNavVisible ? (
-        <RightNavigation
-          extraMenu={extraRightNavMenu}
-          isRightNavVisible={isRightNavVisible}
-        />
-      ) : null}
+      <RightNavigation
+        extraMenu={extraRightNavMenu}
+        isRightNavVisible={isRightNavVisible}
+      />
 
       <Box sx={styles.outletContainer} component="main">
-        <Box component="div" sx={styles.new}></Box>
         <Box sx={{ position: "relative", zIndex: 2 }}>
           <Outlet
             context={{ openLeftNav, setExtraRightNavMenu, smMediaQuery }}

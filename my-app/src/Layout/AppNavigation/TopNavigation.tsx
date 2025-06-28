@@ -27,6 +27,7 @@ import { handleUserSignOut } from "../../context/authContextUtils";
 interface TopNavigationProps {
   css?: SerializedStyles[] | SerializedStyles;
   setOpenLeftNav: React.Dispatch<React.SetStateAction<boolean>>;
+  openLeftNav: boolean;
 }
 
 const cssStyles = (theme: Theme) => ({
@@ -42,6 +43,7 @@ const cssStyles = (theme: Theme) => ({
     padding: TOP_NAV_PADDING,
     paddingTop: theme.spacing(4.7),
     minHeight: `${TOP_RIGHT_NAV_HEIGHT} !important`,
+    paddingLeft: "1.2em",
   }),
   userMenu: css({ padding: "1rem 3rem" }),
   userMenuLink: css({
@@ -50,7 +52,10 @@ const cssStyles = (theme: Theme) => ({
   }),
 });
 
-const TopNavigation: React.FC<TopNavigationProps> = ({ setOpenLeftNav }) => {
+const TopNavigation: React.FC<TopNavigationProps> = ({
+  setOpenLeftNav,
+  openLeftNav,
+}) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const styles = {
@@ -73,7 +78,15 @@ const TopNavigation: React.FC<TopNavigationProps> = ({ setOpenLeftNav }) => {
           alignItems="center"
           direction="row"
         >
-          <Stack spacing={4} alignItems="center" direction="row">
+          <Stack
+            spacing={4}
+            alignItems="center"
+            direction="row"
+            sx={{
+              paddingLeft: !openLeftNav ? "1em" : "0",
+              transition: "padding-left 0.4s ease",
+            }}
+          >
             <IconButton
               size="large"
               aria-label="site menu"

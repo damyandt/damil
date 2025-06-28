@@ -13,20 +13,15 @@ const cssStyles = (theme: Theme, isVisible: boolean) => ({
     position: "fixed",
     top: TOP_NAV_SPACING_WITH_SITE_CONTENT,
     right: 0,
-    width: TOP_RIGHT_NAV_HEIGHT,
+    width: isVisible ? TOP_RIGHT_NAV_HEIGHT : 0,
     height: `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT})`,
     background: theme.palette.common.white,
     zIndex: theme.zIndex.drawer + 1,
-    padding: RIGHT_NAV_PADDING,
-    display: "flex",
+    padding: isVisible ? RIGHT_NAV_PADDING : 0,
     flexDirection: "column",
     justifyContent: "flex-start",
     gap: theme.spacing(2),
-    opacity: isVisible ? 1 : 0,
-    transition: theme.transitions.create("opacity", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
+    transition: "width 0.4s ease, padding 0.4s ease",
   }),
 });
 
@@ -43,11 +38,16 @@ const RightNavigation: React.FC<RightNavigationProps> = ({
   const theme = useTheme();
   const styles = cssStyles(theme, isRightNavVisible);
 
-  if (!extraMenu) return null;
+  // if (!extraMenu) return null;
 
   return (
     <Box component="div" sx={styles.rightNavContainer}>
-      <Stack direction="column">{extraMenu}</Stack>
+      <Stack
+        direction="column"
+        sx={!isRightNavVisible ? { display: "none" } : {}}
+      >
+        {extraMenu}
+      </Stack>
     </Box>
   );
 };

@@ -4,6 +4,7 @@ import {
   ListItemIcon,
   ListItemText,
   Box,
+  Tooltip,
 } from "@mui/material";
 import { useState } from "react";
 import { SerializedStyles } from "@emotion/react";
@@ -26,14 +27,19 @@ interface LeftNavListMenuProps {
   formStatus?: FormStatuses;
   alertMessage?: string | null;
   collapsed?: boolean;
+  openLeftNav: boolean;
 }
 
-const LeftNavListMenu: React.FC<LeftNavListMenuProps> = ({ navList }) => {
+const LeftNavListMenu: React.FC<LeftNavListMenuProps> = ({
+  navList,
+  openLeftNav,
+}) => {
   const location = useLocation();
   return (
     <List component="nav">
       {navList.map((item, index) => (
         <NavItem
+          openLeftNav={openLeftNav}
           key={`parent-item${index}-${item.text}`}
           text={item.text}
           url={item.url}
@@ -55,6 +61,7 @@ interface NavItemProps extends LeftNavSingleItem {
   isAlreadyOpen: boolean;
   marginLeft?: boolean;
   currentPath?: string;
+  openLeftNav: boolean;
 }
 const NavItem: React.FC<NavItemProps> = ({
   text,
@@ -65,6 +72,7 @@ const NavItem: React.FC<NavItemProps> = ({
   disabled,
   marginLeft,
   currentPath,
+  openLeftNav,
 }) => {
   const location = useLocation();
   const hasCurrentPath = (
@@ -92,7 +100,7 @@ const NavItem: React.FC<NavItemProps> = ({
         disabled={disabled}
         selected={isSelected}
         sx={{
-          ...(marginLeft ? { paddingLeft: "2em" } : {}),
+          ...(openLeftNav && marginLeft ? { paddingLeft: "2em" } : {}),
           "&:hover": { backgroundColor: MAIN_COLOR + "20" },
           "&.Mui-selected": {
             backgroundColor: MAIN_COLOR + "20",
@@ -103,13 +111,64 @@ const NavItem: React.FC<NavItemProps> = ({
           margin: "0.1em 1em",
         }}
       >
-        <ListItemIcon>
-          <Icon />
-        </ListItemIcon>
-        <ListItemText primary={text} />
-        {nested ? open ? <ExpandLess /> : <ExpandMore /> : null}
-      </ListItemButton>
+        <Box
+          sx={
+            openLeftNav
+              ? {
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  alignContent: "center",
+                  alignItems: "center",
+                  transition: "flex-direction 10s ease-in-out",
+                }
+              : {
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  alignContent: "center",
+                  transition: "flex-direction 10s ease-in-out",
+                }
+          }
+        >
+          <Tooltip
+            title={openLeftNav ? "" : text}
+            placement="right"
+            componentsProps={{
+              tooltip: {
+                sx: {
+                  bgcolor: MAIN_COLOR,
+                  color: "#fff",
+                  fontSize: 13,
+                  borderRadius: 0.5,
+                  boxShadow: 10,
+                  px: 1.5,
+                  py: 0.5,
+                },
+              },
+            }}
+          >
+            <ListItemIcon sx={{ alignItems: "center", minHeight: "2em" }}>
+              <Icon />
+            </ListItemIcon>
+          </Tooltip>
 
+          <ListItemText
+            primary={text}
+            sx={!openLeftNav ? { display: "none" } : {}}
+          />
+
+          {openLeftNav && nested ? (
+            <ExpandMore
+              sx={{
+                transform: open ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "transform 0.4s ease",
+              }}
+            />
+          ) : null}
+        </Box>
+      </ListItemButton>
       {nested && (
         <Collapse in={open} timeout="auto" unmountOnExit>
           {nested.map((nestedItem, index) => (
@@ -123,6 +182,7 @@ const NavItem: React.FC<NavItemProps> = ({
               disabled={nestedItem.disabled}
               isAlreadyOpen={false}
               currentPath={currentPath}
+              openLeftNav={openLeftNav}
             />
           ))}
         </Collapse>
