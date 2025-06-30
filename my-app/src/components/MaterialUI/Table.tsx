@@ -83,7 +83,11 @@ const TableComponent = <T extends object>({
           <TableHead>
             <TableRow>
               {columns.map((col) => (
-                <TableCell key={col.key as string} align={col.align || "left"}>
+                <TableCell
+                  key={col.key as string}
+                  align={col.align || "left"}
+                  sx={{ fontWeight: "bold" }}
+                >
                   {col.label}
                 </TableCell>
               ))}
