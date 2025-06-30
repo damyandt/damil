@@ -30,15 +30,21 @@ interface TopNavigationProps {
   openLeftNav: boolean;
 }
 
-const cssStyles = (theme: Theme) => ({
+const cssStyles = (theme: Theme, openLeftNav: boolean) => ({
   appBar: css({
     height: TOP_RIGHT_NAV_HEIGHT,
-    boxShadow: "none",
-    zIndex: theme.zIndex.drawer + 1,
+    borderRadius: !openLeftNav ? "20px" : 0,
+    boxShadow: !openLeftNav ? "0 4px 6px rgba(0, 0, 0, 0.1)" : "none",
+    zIndex: theme.zIndex.drawer + 2,
     background: theme.palette.common.white,
     paddingBottom: TOP_NAV_SPACING_WITH_SITE_CONTENT,
+    margin: !openLeftNav ? "1em" : 0,
+    transition:
+      "margin 0.4s ease, border-radius 0.4s ease, box-shadow 0.4s ease",
+    width: "-webkit-fill-available",
   }),
   toolbar: css({
+    borderRadius: "12px",
     background: theme.palette.common.white,
     padding: TOP_NAV_PADDING,
     paddingTop: theme.spacing(4.7),
@@ -59,7 +65,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
   const theme = useTheme();
   const navigate = useNavigate();
   const styles = {
-    ...cssStyles(theme),
+    ...cssStyles(theme, openLeftNav),
     ...cssLayoutStyles,
     ...cssComponentsStyles(theme),
   };

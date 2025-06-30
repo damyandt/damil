@@ -21,15 +21,17 @@ const cssStyles = (openLeftNav: boolean) => ({
       overflowX: "hidden",
       backgroundColor: "#f5f5f5",
       margin: !openLeftNav ? "1em" : 0,
-      height: !openLeftNav ? "96%" : "100%",
+      height: "-webkit-fill-available",
       transition: "margin 0.4s ease, height 0.4s ease, width 0.4s ease",
+      boxShadow: !openLeftNav ? "0 4px 6px rgba(0, 0, 0, 0.1)" : "none",
+      borderRadius: !openLeftNav ? "20px" : 0,
+      marginTop: `calc(${TOP_NAV_SPACING_WITH_SITE_CONTENT} + ${!openLeftNav ? "2em" : "0px"})`,
     },
   }),
   leftNavContent: css({
     backgroundColor: "#fff",
     borderRadius: !openLeftNav ? "20px" : 0,
-    transition: "borderRadius 0.4s ease",
-    marginTop: TOP_NAV_SPACING_WITH_SITE_CONTENT,
+    transition: "borderRadius 0.4s ease, margin-top 0.4s ease",
     overflow: "auto",
     height: "100%",
   }),
@@ -42,14 +44,12 @@ const cssStyles = (openLeftNav: boolean) => ({
 
 interface LeftNavigationProps {
   css?: SerializedStyles[] | SerializedStyles;
-  className?: string;
   openLeftNav: boolean;
   setOpenLeftNav: React.Dispatch<React.SetStateAction<boolean>>;
   mobileLeftNav: boolean;
 }
 
 const LeftNavigation: React.FC<LeftNavigationProps> = ({
-  className,
   openLeftNav,
   setOpenLeftNav,
   mobileLeftNav,
@@ -64,7 +64,6 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
 
   return (
     <Drawer
-      className={className}
       sx={styles.drawer}
       anchor="left"
       open={mobileLeftNav ? openLeftNav : true}
@@ -72,31 +71,29 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
       variant={mobileLeftNav ? "temporary" : "persistent"}
     >
       <Box component="div" sx={styles.leftNavContent}>
-        <>
-          <LeftNavListMenu
-            navList={NAV_DAMIL_HOME.list}
-            listTitle="Home"
-            openLeftNav={openLeftNav}
-          />
-          <Divider variant="middle" />
-          <LeftNavListMenu
-            navList={NAV_DAMIL_ACCESS_CONTROL.list}
-            listTitle={NAV_DAMIL_ACCESS_CONTROL.title}
-            openLeftNav={openLeftNav}
-          />
-          <Divider variant="middle" />
-          <LeftNavListMenu
-            navList={NAV_DAMIL_ANALYTICS.list}
-            listTitle={NAV_DAMIL_ANALYTICS.title}
-            openLeftNav={openLeftNav}
-          />
-          <Divider variant="middle" />
-          <LeftNavListMenu
-            navList={NAV_DAMIL_GYMS.list}
-            listTitle={NAV_DAMIL_GYMS.title}
-            openLeftNav={openLeftNav}
-          />
-        </>
+        <LeftNavListMenu
+          navList={NAV_DAMIL_HOME.list}
+          listTitle="Home"
+          openLeftNav={openLeftNav}
+        />
+        <Divider variant="middle" />
+        <LeftNavListMenu
+          navList={NAV_DAMIL_ACCESS_CONTROL.list}
+          listTitle={NAV_DAMIL_ACCESS_CONTROL.title}
+          openLeftNav={openLeftNav}
+        />
+        <Divider variant="middle" />
+        <LeftNavListMenu
+          navList={NAV_DAMIL_ANALYTICS.list}
+          listTitle={NAV_DAMIL_ANALYTICS.title}
+          openLeftNav={openLeftNav}
+        />
+        <Divider variant="middle" />
+        <LeftNavListMenu
+          navList={NAV_DAMIL_GYMS.list}
+          listTitle={NAV_DAMIL_GYMS.title}
+          openLeftNav={openLeftNav}
+        />
       </Box>
     </Drawer>
   );

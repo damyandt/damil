@@ -57,7 +57,7 @@ const LoginPage = () => {
       }
 
       const responce = await callApi<any>({
-        query: validateEmail(formData.email),
+        query: validateEmail({ email: formData.email }),
         auth: null,
       });
 
@@ -75,22 +75,22 @@ const LoginPage = () => {
     }
   };
 
-  useEffect(() => {
-    const delayDebounce = setTimeout(async () => {
-      if (formData.email) {
-        const responce = await callApi<any>({
-          query: validateEmail(formData.email),
-          auth: null,
-        });
+  // useEffect(() => {
+  //   const delayDebounce = setTimeout(async () => {
+  //     if (formData.email) {
+  //       const responce = await callApi<any>({
+  //         query: validateEmail({ email: formData.email }),
+  //         auth: null,
+  //       });
+  //       console.log(responce);
+  //       // if (responce.validationErrors) {
+  //       //   return setErrors({ email: responce.validationErrors.account });
+  //       // }
+  //     }
+  //   }, 700);
 
-        if (responce.message === errorMessages.invalidEmail) {
-          return setErrors({ email: errorMessages.invalidEmail });
-        }
-      }
-    }, 700); // 500ms debounce
-
-    return () => clearTimeout(delayDebounce);
-  }, [formData.email]);
+  //   return () => clearTimeout(delayDebounce);
+  // }, [formData.email]);
 
   const handleLogin = async () => {
     if (!validator(false)) {

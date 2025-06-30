@@ -1,6 +1,5 @@
 import {
   Link,
-  Navigate,
   Route,
   createBrowserRouter,
   createRoutesFromElements,

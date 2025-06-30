@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { SerializedStyles } from "@emotion/react";
-import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Link, useLocation } from "react-router-dom";
 import { LeftNavList, LeftNavSingleItem, MAIN_COLOR } from "../layoutVariables";
@@ -101,6 +100,7 @@ const NavItem: React.FC<NavItemProps> = ({
         selected={isSelected}
         sx={{
           ...(openLeftNav && marginLeft ? { paddingLeft: "2em" } : {}),
+          transition: "padding-left 0.4s ease",
           "&:hover": { backgroundColor: MAIN_COLOR + "20" },
           "&.Mui-selected": {
             backgroundColor: MAIN_COLOR + "20",
@@ -112,25 +112,14 @@ const NavItem: React.FC<NavItemProps> = ({
         }}
       >
         <Box
-          sx={
-            openLeftNav
-              ? {
-                  display: "flex",
-                  justifyContent: "space-between",
-                  width: "100%",
-                  alignContent: "center",
-                  alignItems: "center",
-                  transition: "flex-direction 10s ease-in-out",
-                }
-              : {
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  width: "100%",
-                  alignContent: "center",
-                  transition: "flex-direction 10s ease-in-out",
-                }
-          }
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            alignContent: "center",
+            alignItems: "center",
+            transition: "flex-direction 10s ease-in-out",
+          }}
         >
           <Tooltip
             title={openLeftNav ? "" : text}

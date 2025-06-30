@@ -62,9 +62,16 @@ const cssStyles = (
     zIndex: 1,
   }),
   outletContainer: css({
-    marginTop: TOP_NAV_SPACING_WITH_SITE_CONTENT,
-    marginRight:
-      isRightNavVisible && extraRightNavMenu ? TOP_RIGHT_NAV_HEIGHT : 0,
+    marginTop: leftNavIsOpen
+      ? TOP_NAV_SPACING_WITH_SITE_CONTENT
+      : `calc(${TOP_NAV_SPACING_WITH_SITE_CONTENT} + 1em)`,
+    marginRight: leftNavIsOpen
+      ? isRightNavVisible && extraRightNavMenu
+        ? TOP_RIGHT_NAV_HEIGHT
+        : 0
+      : isRightNavVisible && extraRightNavMenu
+        ? `calc(${TOP_RIGHT_NAV_HEIGHT} + 1em)`
+        : 0,
     minHeight: `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT})`,
     flexGrow: 1,
     position: "relative",
@@ -75,7 +82,7 @@ const cssStyles = (
         : AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
     // if mobile view -> don't have transition
     ...(!mobileLeftNav && {
-      transition: "marginRight 0.4s ease, margin 0.4s ease",
+      transition: "margin 0.4s ease",
       marginLeft: "6.5em",
       ...(leftNavIsOpen && {
         transition: "margin 0.4s ease",
@@ -136,6 +143,7 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
       <RightNavigation
         extraMenu={extraRightNavMenu}
         isRightNavVisible={isRightNavVisible}
+        openLeftNav={openLeftNav}
       />
 
       <Box sx={styles.outletContainer} component="main">

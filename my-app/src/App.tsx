@@ -8,17 +8,17 @@ import LoadingScreen from "./components/LoadingPage";
 const App: React.FC = () => {
   const { authedUser, authedUserLoading } = useAuthedContext();
 
-  if (authedUserLoading) {
-    return <LoadingScreen />;
-  }
+  // if (authedUserLoading) {
+  //   return <LoadingScreen />;
+  // }
 
-  if (authedUser) {
-    return (
-      <Box component="main">
-        <RouterProvider router={appRouter} />
-      </Box>
-    );
-  }
+  // if (authedUser) {
+  return (
+    <Box component="main">
+      <RouterProvider router={appRouter} />
+    </Box>
+  );
+  // }
 
   return <GuestLayout />;
 };

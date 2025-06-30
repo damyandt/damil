@@ -10,11 +10,11 @@ import AuthContext from "./context/AuthContext";
 const theme = createTheme({
   palette: {
     primary: {
-      main: MAIN_COLOR, // Apple's blue or any other primary color
+      main: MAIN_COLOR,
     },
   },
   shape: {
-    borderRadius: 12, // Optional: rounder component corners
+    borderRadius: 12,
   },
 });
 
