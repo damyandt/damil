@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { useLanguageContext } from "../../../context/LanguageContext";
-import { IconButton, Stack, Tooltip } from "@mui/material";
+import { Grow, IconButton, Stack, Tooltip } from "@mui/material";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import ClientForm from "./ClientForm";
 import CustomModal from "../../MaterialUI/Modal";
@@ -36,10 +36,14 @@ const ClientsRightMenu: React.FC<InvoiceRightMenuProps> = ({
       <CustomModal
         open={!!modalTitle}
         onClose={() => setModalTitle(null)}
-        title="Add new Client"
-        // maxWidth={modalTitle === "Create new Invoice" ? "lg" : "sm"}
+        title="Add New Client"
+        width={"lg"}
       >
-        <ClientForm />
+        <Grow in={!!modalTitle} timeout={1000}>
+          <div>
+            <ClientForm onClose={() => setModalTitle(null)} />
+          </div>
+        </Grow>
       </CustomModal>
     </>
   );

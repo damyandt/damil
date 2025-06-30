@@ -5,117 +5,87 @@ import { useEffect, useState } from "react";
 import ClientsRightMenu from "../../components/PageComponents/AccessControl/ClientsRightMenu";
 
 type Client = {
-  name: string;
-  birthday: string; // ISO date format or string
-  egn: string;
-  last_visit: string; // ISO date format or readable string
+  first_name: string;
+  last_name: string;
+  phone: string;
+  email: string;
+  subscription?: string;
 };
 
 const columns: Column<Client>[] = [
-  { label: "Name", key: "name" },
-  { label: "Birthday", key: "birthday", align: "right" },
-  { label: "EGN", key: "egn", align: "right" },
-  { label: "Last Visit", key: "last_visit", align: "right" },
+  { label: "First Name", key: "first_name" },
+  { label: "Last Name", key: "last_name" },
+  { label: "Phone", key: "phone" },
+  { label: "Subscription", key: "subscription", align: "center" },
+  // { label: "Email", key: "email", align: "right" },
 ];
 
 const allRows: Client[] = [
   {
-    name: "Damyan Todorov",
-    birthday: "2004-15-10",
-    egn: "9205123456",
-    last_visit: "2025-06-13",
+    first_name: "Damyan",
+    last_name: "Todorov",
+    phone: "0888123456",
+    email: "damyan.todorov@example.com",
+    subscription: "monthly",
   },
   {
-    name: "Iliyan Todorov",
-    birthday: "1992-05-12",
-    egn: "9205123456",
-    last_visit: "2025-06-13",
+    first_name: "Iliyan",
+    last_name: "Todorov",
+    phone: "0888456789",
+    email: "iliyan.todorov@example.com",
+    subscription: "-",
   },
   {
-    name: "Donika Boteva",
-    birthday: "1992-05-12",
-    egn: "9205123456",
-    last_visit: "2025-06-13",
+    first_name: "Donika",
+    last_name: "Boteva",
+    phone: "0899123456",
+    email: "donika.boteva@example.com",
+    subscription: "yearly",
   },
   {
-    name: "Maria Georgieva",
-    birthday: "1988-11-23",
-    egn: "8811237890",
-    last_visit: "2025-06-14",
+    first_name: "Maria",
+    last_name: "Georgieva",
+    phone: "0888123777",
+    email: "maria.georgieva@example.com",
+    subscription: "monthly",
   },
   {
-    name: "Stefan Dimitrov",
-    birthday: "2001-04-03",
-    egn: "0104031122",
-    last_visit: "2025-06-15",
+    first_name: "Stefan",
+    last_name: "Dimitrov",
+    phone: "0888888888",
+    email: "stefan.dimitrov@example.com",
+    subscription: "monthly",
   },
   {
-    name: "Sasho Petrov",
-    birthday: "1992-05-12",
-    egn: "9205123456",
-    last_visit: "2025-06-13",
+    first_name: "Sasho",
+    last_name: "Petrov",
+    phone: "0888777666",
+    email: "sasho.petrov@example.com",
+    subscription: "-",
   },
   {
-    name: "Petq Georgieva",
-    birthday: "1988-11-23",
-    egn: "8811237890",
-    last_visit: "2025-06-14",
+    first_name: "Petya",
+    last_name: "Georgieva",
+    phone: "0899333444",
+    email: "petya.georgieva@example.com",
+    subscription: "yearly",
   },
   {
-    name: "Stefan Dimitrov",
-    birthday: "2001-04-03",
-    egn: "0104031122",
-    last_visit: "2025-06-15",
+    first_name: "Nikolay",
+    last_name: "Ivanov",
+    phone: "0899123123",
+    email: "nikolay.ivanov@example.com",
+    subscription: "monthly",
   },
   {
-    name: "Nikolay Ivanov",
-    birthday: "1990-02-28",
-    egn: "9002284567",
-    last_visit: "2025-06-12",
-  },
-  {
-    name: "Ivan Petrov",
-    birthday: "1992-05-12",
-    egn: "9205123456",
-    last_visit: "2025-06-13",
-  },
-  {
-    name: "Maria Georgieva",
-    birthday: "1988-11-23",
-    egn: "8811237890",
-    last_visit: "2025-06-14",
-  },
-  {
-    name: "Stefan Dimitrov",
-    birthday: "2001-04-03",
-    egn: "0104031122",
-    last_visit: "2025-06-15",
-  },
-  {
-    name: "Sasho Petrov",
-    birthday: "1992-05-12",
-    egn: "9205123456",
-    last_visit: "2025-06-13",
-  },
-  {
-    name: "Petq Georgieva",
-    birthday: "1988-11-23",
-    egn: "8811237890",
-    last_visit: "2025-06-14",
-  },
-  {
-    name: "Stefan Dimitrov",
-    birthday: "2001-04-03",
-    egn: "0104031122",
-    last_visit: "2025-06-15",
-  },
-  {
-    name: "Nikolay Ivanov",
-    birthday: "1990-02-28",
-    egn: "9002284567",
-    last_visit: "2025-06-12",
+    first_name: "Ivan",
+    last_name: "Petrov",
+    phone: "0888123999",
+    email: "ivan.petrov@example.com",
+    subscription: "monthly",
   },
 ];
+
 export type AppRouterProps = {
   openLeftNav: boolean;
   setExtraRightNavMenu: React.Dispatch<React.SetStateAction<React.ReactNode>>;
@@ -124,7 +94,7 @@ export type AppRouterProps = {
   unsavedChanges: boolean;
   setUnsavedChanges: React.Dispatch<React.SetStateAction<boolean>>;
 };
-const rowsPerPage = 9;
+const rowsPerPage = 8;
 
 const ClientsPage = () => {
   const [refreshTable, setRefreshTable] = useState<boolean>(false);

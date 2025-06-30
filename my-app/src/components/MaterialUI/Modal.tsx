@@ -1,7 +1,6 @@
 // components/CustomModal.tsx
 import {
   Modal,
-  Fade,
   Backdrop,
   Box,
   Typography,
@@ -28,37 +27,34 @@ const CustomModal: React.FC<CustomModalProps> = ({
       closeAfterTransition
       aria-labelledby="custom-modal-title"
       slots={{ backdrop: Backdrop }}
-      slotProps={{ backdrop: { TransitionComponent: Fade } }}
     >
-      <Fade in={open}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width,
-            bgcolor: "background.paper",
-            borderRadius: 3,
-            boxShadow: 10,
-            p: 4,
-            display: "flex",
-            flexDirection: "column",
-            gap: 3,
-          }}
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width,
+          bgcolor: "background.paper",
+          borderRadius: 3,
+          boxShadow: 10,
+          p: 4,
+          display: "flex",
+          flexDirection: "column",
+          gap: 3,
+        }}
+      >
+        <Typography
+          id="custom-modal-title"
+          variant="h5"
+          fontWeight="bold"
+          textAlign="center"
         >
-          <Typography
-            id="custom-modal-title"
-            variant="h5"
-            fontWeight="bold"
-            textAlign="center"
-          >
-            {title}
-          </Typography>
+          {title}
+        </Typography>
 
-          {children}
-        </Box>
-      </Fade>
+        {children}
+      </Box>
     </Modal>
   );
 };

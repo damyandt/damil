@@ -13,10 +13,11 @@ export const postRegister = (input: any): Query => ({
 });
 
 export const validateEmail = (input: any): Query => ({
-  endpoint: `auth/validate-email`,
+  endpoint: `auth/validate_email`,
   method: "POST",
   variables: input,
 });
+
 export const codeVerification = (input: any): Query => ({
   endpoint: `auth/verify`,
   method: "POST",

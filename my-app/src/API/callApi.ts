@@ -1,7 +1,3 @@
-import {
-  handleFetchUserAccessToken,
-  handleUserSignOut,
-} from "../context/authContextUtils";
 import { getCookie } from "../Global/Utils/commonFunctions";
 import { Gym } from "../pages/usersPages/userTypes";
 export const COOKIE_ACCESS_TOKEN = "accessToken";
@@ -54,10 +50,9 @@ const callApi = async <T>(
 
   const endpointToUse = "https://fitmanage-b0bb9372ef38.herokuapp.com/api/v1/";
   let response: Response;
-
+  const accessToken = getCookie(COOKIE_ACCESS_TOKEN);
   if (method === "GET" || method === "DELETE") {
     let input: string = "";
-    const accessToken = getCookie(COOKIE_ACCESS_TOKEN);
 
     if (variables) {
       const params = new URLSearchParams(variables).toString();
@@ -113,12 +108,19 @@ const callApi = async <T>(
 
       response = await fetch(`${endpointToUse}${endpoint}`, {
         method: method,
+        headers: {
+          "Content-Type": "application/json",
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
         body: formData,
       });
     } else {
       response = await fetch(`${endpointToUse}${endpoint}`, {
         method: method,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
         ...(variables && { body: JSON.stringify(variables) }),
       });
     }
@@ -131,7 +133,10 @@ const callApi = async <T>(
 
     response = await fetch(`${endpointToUse}${endpoint}`, {
       method: method,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
       body: responseBody,
     });
 

@@ -6,7 +6,7 @@ export const getQueryUsersGetCurrentUser = (): Query => ({
 });
 
 export const postQueryTokenRefresh = (input: any): Query => ({
-  endpoint: "auth/refreshToken",
+  endpoint: "auth/refresh_token",
   method: "POST",
   variables: input,
 });

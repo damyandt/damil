@@ -5,7 +5,6 @@ import {
 import { NumericFormat, NumericFormatProps } from "react-number-format";
 import React from "react";
 import { SerializedStyles } from "@emotion/react";
-import { MAIN_COLOR } from "../Layout/layoutVariables";
 
 interface TextFieldProps extends StandardTextFieldProps {
   css?: SerializedStyles[] | SerializedStyles;
@@ -41,7 +40,7 @@ const TextField: React.FC<TextFieldProps> = ({
         ...InputProps,
         inputComponent: numberField ? (NumberFormatField as any) : undefined,
         sx: {
-          borderRadius: 2,
+          borderRadius: 1,
           backgroundColor: "#f9f9f9",
 
           "&.Mui-error .MuiOutlinedInput-notchedOutline": {

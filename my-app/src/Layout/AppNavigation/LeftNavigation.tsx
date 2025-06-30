@@ -20,6 +20,7 @@ const cssStyles = (openLeftNav: boolean) => ({
       border: "none",
       overflowX: "hidden",
       backgroundColor: "#f5f5f5",
+      // margin: "1em",
       margin: !openLeftNav ? "1em" : 0,
       height: "-webkit-fill-available",
       transition: "margin 0.4s ease, height 0.4s ease, width 0.4s ease",

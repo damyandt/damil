@@ -20,7 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
   disabled = false,
-  variant = "contained",
+  variant = "outlined",
   color = "primary",
   className,
   size = "large",
@@ -58,7 +58,8 @@ const Button: React.FC<ButtonProps> = ({
       {...componentProps}
       {...rest}
       sx={{
-        background: MAIN_COLOR,
+        borderWidth: 2,
+        backgroundColor: "#f9f9f9",
       }}
     >
       {children}
