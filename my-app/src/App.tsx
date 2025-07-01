@@ -9,7 +9,7 @@ import { useEffect } from "react";
 const App: React.FC = () => {
   const { authedUser, authedUserLoading } = useAuthedContext();
   useEffect(() => {
-    document.body.style.backgroundColor = "#f5f5f5";
+    document.body.style.backgroundColor = "#f0f2f5";
   }, []);
   if (authedUserLoading) {
     return <LoadingScreen />;

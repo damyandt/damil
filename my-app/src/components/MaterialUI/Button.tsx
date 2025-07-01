@@ -5,7 +5,6 @@ import {
 } from "@mui/material";
 import { SerializedStyles } from "@emotion/react";
 import { Link } from "react-router-dom";
-import { MAIN_COLOR } from "../../Layout/layoutVariables";
 
 export interface ButtonProps extends MUIButtonProps {
   css?: (SerializedStyles | false)[] | SerializedStyles;

@@ -30,7 +30,7 @@ const cssStyles = (
   extraRightNavMenu: React.ReactNode | null
 ) => ({
   contentContainer: css({
-    backgroundColor:
+    background:
       theme.palette.mode === "light"
         ? AUTH_LAYOUT_BACKGROUND_COLOR
         : AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
@@ -62,9 +62,7 @@ const cssStyles = (
     zIndex: 1,
   }),
   outletContainer: css({
-    marginTop: leftNavIsOpen
-      ? TOP_NAV_SPACING_WITH_SITE_CONTENT
-      : `calc(${TOP_NAV_SPACING_WITH_SITE_CONTENT} + 1em)`,
+    marginTop: `calc(${TOP_NAV_SPACING_WITH_SITE_CONTENT} + 1em)`,
     marginRight: leftNavIsOpen
       ? isRightNavVisible && extraRightNavMenu
         ? TOP_RIGHT_NAV_HEIGHT
@@ -72,7 +70,7 @@ const cssStyles = (
       : isRightNavVisible && extraRightNavMenu
         ? `calc(${TOP_RIGHT_NAV_HEIGHT} + 1em)`
         : 0,
-    minHeight: `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT})`,
+    height: `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 1em)`,
     flexGrow: 1,
     position: "relative",
     padding: AUTH_LAYOUT_PADDING,
@@ -147,7 +145,17 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
       />
 
       <Box sx={styles.outletContainer} component="main">
-        <Box sx={{ position: "relative", zIndex: 2 }}>
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            overflow: "scroll",
+            height: openLeftNav
+              ? `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 4em)`
+              : `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 3em)`,
+            borderRadius: "20px",
+          }}
+        >
           <Outlet
             context={{ openLeftNav, setExtraRightNavMenu, smMediaQuery }}
           />

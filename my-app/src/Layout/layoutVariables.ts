@@ -8,7 +8,7 @@ export const RIGHT_NAV_PADDING = "12px";
 export const TOP_NAV_SPACING_WITH_SITE_CONTENT = `calc(${TOP_RIGHT_NAV_HEIGHT} + ${TOP_NAV_PADDING})`;
 export const LEFT_NAV_WIDTH = "350px";
 export const AUTH_LAYOUT_PADDING = "14px";
-export const AUTH_LAYOUT_BACKGROUND_COLOR = "#f5f5f5f5";
+export const AUTH_LAYOUT_BACKGROUND_COLOR = "#f0f2f5";
 export const AUTH_LAYOUT_DARK_BACKGROUND_COLOR = "#313131";
 
 export type LeftNavSingleItem = {

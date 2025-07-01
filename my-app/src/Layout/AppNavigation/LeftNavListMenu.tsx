@@ -13,6 +13,7 @@ import { Link, useLocation } from "react-router-dom";
 import { LeftNavList, LeftNavSingleItem, MAIN_COLOR } from "../layoutVariables";
 import Collapse from "../../components/MaterialUI/Collapse";
 import { FormStatuses } from "../../Global/Types/commonTypes";
+import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
 
 interface LeftNavListMenuProps {
   css?: SerializedStyles[] | SerializedStyles;
@@ -118,30 +119,13 @@ const NavItem: React.FC<NavItemProps> = ({
             width: "100%",
             alignContent: "center",
             alignItems: "center",
-            transition: "flex-direction 10s ease-in-out",
           }}
         >
-          <Tooltip
-            title={openLeftNav ? "" : text}
-            placement="right"
-            componentsProps={{
-              tooltip: {
-                sx: {
-                  bgcolor: MAIN_COLOR,
-                  color: "#fff",
-                  fontSize: 13,
-                  borderRadius: 0.5,
-                  boxShadow: 10,
-                  px: 1.5,
-                  py: 0.5,
-                },
-              },
-            }}
-          >
+          <CustomTooltip title={openLeftNav ? "" : text} placement="right">
             <ListItemIcon sx={{ alignItems: "center", minHeight: "2em" }}>
               <Icon />
             </ListItemIcon>
-          </Tooltip>
+          </CustomTooltip>
 
           <ListItemText
             primary={text}

@@ -33,12 +33,12 @@ interface TopNavigationProps {
 const cssStyles = (theme: Theme, openLeftNav: boolean) => ({
   appBar: css({
     height: TOP_RIGHT_NAV_HEIGHT,
-    borderRadius: !openLeftNav ? "20px" : 0,
-    boxShadow: !openLeftNav ? "0 4px 6px rgba(0, 0, 0, 0.1)" : "none",
+    borderRadius: !openLeftNav ? "20px" : "0 0 20px 20px",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
     zIndex: theme.zIndex.drawer + 2,
     background: theme.palette.common.white,
     paddingBottom: TOP_NAV_SPACING_WITH_SITE_CONTENT,
-    margin: !openLeftNav ? "1em" : 0,
+    margin: !openLeftNav ? "1em" : "0 1em 1em 1em",
     transition:
       "margin 0.4s ease, border-radius 0.4s ease, box-shadow 0.4s ease",
     width: "-webkit-fill-available",
@@ -89,8 +89,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
             alignItems="center"
             direction="row"
             sx={{
-              paddingLeft: !openLeftNav ? "1em" : "0",
-              transition: "padding-left 0.4s ease",
+              paddingLeft: "0.1em",
             }}
           >
             <IconButton

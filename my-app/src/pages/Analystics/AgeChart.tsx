@@ -30,6 +30,9 @@ const AgeDistributionChart: React.FC<GAgeChartProps> = ({ height }) => {
       top: "10%",
       bottom: "10%",
       containLabel: true,
+      itemStyle: {
+        borderRadius: "20px",
+      },
     },
     title: {
       textStyle: {
@@ -58,7 +61,7 @@ const AgeDistributionChart: React.FC<GAgeChartProps> = ({ height }) => {
         avoidLabelOverlap: false,
         padAngle: 5,
         itemStyle: {
-          borderRadius: 10,
+          borderRadius: "20px",
         },
         label: {
           show: false,

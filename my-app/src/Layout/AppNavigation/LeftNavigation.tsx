@@ -19,14 +19,14 @@ const cssStyles = (openLeftNav: boolean) => ({
       boxSizing: "border-box",
       border: "none",
       overflowX: "hidden",
-      backgroundColor: "#f5f5f5",
-      // margin: "1em",
-      margin: !openLeftNav ? "1em" : 0,
+      backgroundColor: "#f0f2f5",
+      margin: !openLeftNav ? "1em" : "0 1em 2em 0",
       height: "-webkit-fill-available",
-      transition: "margin 0.4s ease, height 0.4s ease, width 0.4s ease",
-      boxShadow: !openLeftNav ? "0 4px 6px rgba(0, 0, 0, 0.1)" : "none",
-      borderRadius: !openLeftNav ? "20px" : 0,
-      marginTop: `calc(${TOP_NAV_SPACING_WITH_SITE_CONTENT} + ${!openLeftNav ? "2em" : "0px"})`,
+      transition:
+        "margin 0.4s ease, height 0.4s ease, width 0.4s ease, border-radius 0.4s ease",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      borderRadius: !openLeftNav ? "20px" : "0 20px 20px 0",
+      marginTop: `calc(${TOP_NAV_SPACING_WITH_SITE_CONTENT} + 2em)`,
     },
   }),
   leftNavContent: css({
@@ -71,30 +71,38 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
       onClose={handleClose}
       variant={mobileLeftNav ? "temporary" : "persistent"}
     >
-      <Box component="div" sx={styles.leftNavContent}>
-        <LeftNavListMenu
-          navList={NAV_DAMIL_HOME.list}
-          listTitle="Home"
-          openLeftNav={openLeftNav}
-        />
-        <Divider variant="middle" />
-        <LeftNavListMenu
-          navList={NAV_DAMIL_ACCESS_CONTROL.list}
-          listTitle={NAV_DAMIL_ACCESS_CONTROL.title}
-          openLeftNav={openLeftNav}
-        />
-        <Divider variant="middle" />
-        <LeftNavListMenu
-          navList={NAV_DAMIL_ANALYTICS.list}
-          listTitle={NAV_DAMIL_ANALYTICS.title}
-          openLeftNav={openLeftNav}
-        />
-        <Divider variant="middle" />
-        <LeftNavListMenu
-          navList={NAV_DAMIL_GYMS.list}
-          listTitle={NAV_DAMIL_GYMS.title}
-          openLeftNav={openLeftNav}
-        />
+      <Box
+        sx={{
+          paddingY: "2em",
+          height: "-webkit-fill-available",
+          backgroundColor: "#fff",
+        }}
+      >
+        <Box component="div" sx={styles.leftNavContent}>
+          <LeftNavListMenu
+            navList={NAV_DAMIL_HOME.list}
+            listTitle="Home"
+            openLeftNav={openLeftNav}
+          />
+          <Divider variant="middle" />
+          <LeftNavListMenu
+            navList={NAV_DAMIL_ACCESS_CONTROL.list}
+            listTitle={NAV_DAMIL_ACCESS_CONTROL.title}
+            openLeftNav={openLeftNav}
+          />
+          <Divider variant="middle" />
+          <LeftNavListMenu
+            navList={NAV_DAMIL_ANALYTICS.list}
+            listTitle={NAV_DAMIL_ANALYTICS.title}
+            openLeftNav={openLeftNav}
+          />
+          <Divider variant="middle" />
+          <LeftNavListMenu
+            navList={NAV_DAMIL_GYMS.list}
+            listTitle={NAV_DAMIL_GYMS.title}
+            openLeftNav={openLeftNav}
+          />
+        </Box>
       </Box>
     </Drawer>
   );

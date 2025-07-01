@@ -91,7 +91,7 @@ const getTypographyAdjustments = (theme: Theme) => ({
 
 const staticThemeColors = {
   grey: {
-    50: "#F5F5F5",
+    50: "#F0F2F5",
     100: "#EAEAEA",
     200: "#D5D5D5",
     300: "#CACACA",

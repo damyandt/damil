@@ -5,6 +5,7 @@ import { Grow, IconButton, Stack, Tooltip } from "@mui/material";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import ClientForm from "./ClientForm";
 import CustomModal from "../../MaterialUI/Modal";
+import CustomTooltip from "../../MaterialUI/CustomTooltip";
 
 interface InvoiceRightMenuProps {
   setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,14 +23,14 @@ const ClientsRightMenu: React.FC<InvoiceRightMenuProps> = ({
     <>
       <Stack alignItems="center">
         <Stack alignItems="center">
-          <Tooltip title={t("Add")}>
+          <CustomTooltip title={t("Add")}>
             <IconButton
               aria-label="add new widget"
               onClick={() => setModalTitle("Add new Client")}
             >
               <AddOutlinedIcon />
             </IconButton>
-          </Tooltip>
+          </CustomTooltip>
         </Stack>
       </Stack>
 

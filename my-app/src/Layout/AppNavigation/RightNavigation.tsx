@@ -15,9 +15,8 @@ const cssStyles = (
   openLeftNav: boolean
 ) => ({
   rightNavContainer: css({
-    borderRadius: !openLeftNav ? "20px" : 0,
-    margin: !openLeftNav ? "1em" : 0,
-    marginTop: !openLeftNav ? "2em" : "0",
+    borderRadius: !openLeftNav ? "20px" : "20px 0 0 20px",
+    margin: !openLeftNav ? "2em 1em 1em 1em" : "2em 0 2em 1em ",
     position: "fixed",
     top: TOP_NAV_SPACING_WITH_SITE_CONTENT,
     right: 0,
@@ -30,8 +29,8 @@ const cssStyles = (
     gap: theme.spacing(2),
     height: "-webkit-fill-available",
     transition:
-      "box-shadow 0.4s ease, margin 0.4s ease, width 0.4s ease, padding 0.4s ease, border-radius 0.4s ease",
-    boxShadow: !openLeftNav ? "0 4px 6px rgba(0, 0, 0, 0.1)" : "none",
+      "margin 0.4s ease, width 0.4s ease, padding 0.4s ease, border-radius 0.4s ease",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
   }),
 });
 
