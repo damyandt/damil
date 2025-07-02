@@ -42,7 +42,10 @@ const ClientsRightMenu: React.FC<InvoiceRightMenuProps> = ({
       >
         <Grow in={!!modalTitle} timeout={1000}>
           <div>
-            <ClientForm onClose={() => setModalTitle(null)} />
+            <ClientForm
+              onClose={() => setModalTitle(null)}
+              setRefreshTable={setRefreshTable}
+            />
           </div>
         </Grow>
       </CustomModal>

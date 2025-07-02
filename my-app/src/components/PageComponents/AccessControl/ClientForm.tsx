@@ -8,8 +8,12 @@ import { postQueryAddClient } from "./postQueries";
 import { useAuthedContext } from "../../../context/AuthContext";
 interface ClientFormProps {
   onClose: () => void;
+  setRefreshTable: any;
 }
-const ClientForm: React.FC<ClientFormProps> = ({ onClose }) => {
+const ClientForm: React.FC<ClientFormProps> = ({
+  onClose,
+  setRefreshTable,
+}) => {
   const { setAuthedUser } = useAuthedContext();
   const [form, setForm] = useState({
     firstName: "",
@@ -47,14 +51,10 @@ const ClientForm: React.FC<ClientFormProps> = ({ onClose }) => {
         auth: { setAuthedUser },
       });
       console.log(responce);
-      // if (responce.success === false) {
-      //   return setErrors({ email: errorMessages.invalidEmail });
-      // }
+      setRefreshTable((prev: any) => !prev);
+      onClose();
     } catch (error) {
       console.error("Failed:", error);
-      // setErrors({
-      //   email: errorMessages.internalServerError,
-      // });
     }
 
     console.log("Submitted:", form);

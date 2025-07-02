@@ -71,6 +71,7 @@ const cssStyles = (
         ? `calc(${TOP_RIGHT_NAV_HEIGHT} + 1em)`
         : 0,
     height: `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 1em)`,
+
     flexGrow: 1,
     position: "relative",
     padding: AUTH_LAYOUT_PADDING,
@@ -149,16 +150,29 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
           sx={{
             position: "relative",
             zIndex: 2,
-            overflow: "scroll",
             height: openLeftNav
               ? `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 4em)`
               : `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 3em)`,
             borderRadius: "20px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+            backgroundColor: "#fff",
+            boxSizing: "border-box",
+            padding: "1em",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
-          <Outlet
-            context={{ openLeftNav, setExtraRightNavMenu, smMediaQuery }}
-          />
+          <Box
+            sx={{
+              overflow: "auto",
+              flexGrow: 1,
+              minHeight: 0,
+            }}
+          >
+            <Outlet
+              context={{ openLeftNav, setExtraRightNavMenu, smMediaQuery }}
+            />
+          </Box>
         </Box>
       </Box>
     </Box>

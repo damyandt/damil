@@ -21,8 +21,8 @@ import {
 
 // Column type
 export type Column<T> = {
-  label: string;
-  key: keyof T;
+  header: string;
+  field: keyof T;
   align?: "left" | "right" | "center";
 };
 
@@ -30,10 +30,7 @@ export type Column<T> = {
 export type TableProps<T extends object> = {
   columns: Column<T>[];
   rows: T[];
-  configurations: {
-    count: number;
-    rowsPerPage: number;
-  };
+  configurations: any;
 };
 
 const TableComponent = <T extends object>({
@@ -42,13 +39,13 @@ const TableComponent = <T extends object>({
   configurations,
 }: TableProps<T>) => {
   const theme = useTheme();
-  const { count, rowsPerPage } = configurations;
   const [page, setPage] = useState<number>(0);
 
   const onPageChange = (newPage: number) => {
     setPage(newPage);
   };
-
+  const rowsPerPage = configurations.pagination.pageSize;
+  console.log(rowsPerPage);
   const paginatedRows = rows.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
@@ -73,22 +70,39 @@ const TableComponent = <T extends object>({
   };
 
   const handleLastPageButtonClick = () => {
-    onPageChange(Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+    onPageChange(Math.max(0, Math.ceil(rows.length / rowsPerPage) - 1));
   };
 
   return (
     <>
-      <TableContainer component={Paper}>
-        <MuiTable sx={{ minWidth: 650 }}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          border: "1px solid rgba(0, 0, 0, 0.1)",
+          backgroundColor: "#f5f5f5",
+          borderRadius: 2,
+          overflow: "hidden", // optional: prevents double borders from child elements
+        }}
+      >
+        <MuiTable
+          sx={{
+            minWidth: 650,
+            borderCollapse: "collapse",
+
+            "& tbody tr:last-of-type td": {
+              borderBottom: "none", // <-- removes bottom border from last row
+            },
+          }}
+        >
           <TableHead>
             <TableRow>
               {columns.map((col) => (
                 <TableCell
-                  key={col.key as string}
+                  key={col.field as string}
                   align={col.align || "left"}
                   sx={{ fontWeight: "bold" }}
                 >
-                  {col.label}
+                  {col.header}
                 </TableCell>
               ))}
             </TableRow>
@@ -98,10 +112,10 @@ const TableComponent = <T extends object>({
               <TableRow key={rowIndex}>
                 {columns.map((col) => (
                   <TableCell
-                    key={col.key as string}
+                    key={col.field as string}
                     align={col.align || "left"}
                   >
-                    {String(row[col.key])}
+                    {String(row[col.field])}
                   </TableCell>
                 ))}
               </TableRow>
@@ -137,11 +151,11 @@ const TableComponent = <T extends object>({
           )}
         </IconButton>
         <Typography variant="body2" sx={{ minWidth: 60, textAlign: "center" }}>
-          Page {page + 1} of {Math.max(1, Math.ceil(count / rowsPerPage))}
+          Page {page + 1} of {Math.max(1, Math.ceil(rows.length / rowsPerPage))}
         </Typography>
         <IconButton
           onClick={handleNextButtonClick}
-          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          disabled={page >= Math.ceil(rows.length / rowsPerPage) - 1}
           aria-label="next page"
         >
           {theme.direction === "rtl" ? (
@@ -153,7 +167,7 @@ const TableComponent = <T extends object>({
 
         <IconButton
           onClick={handleLastPageButtonClick}
-          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          disabled={page >= Math.ceil(rows.length / rowsPerPage) - 1}
           aria-label="last page"
         >
           {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}

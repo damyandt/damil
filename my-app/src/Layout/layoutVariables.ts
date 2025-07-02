@@ -27,6 +27,4 @@ export type AppRouterProps = {
   setExtraRightNavMenu: React.Dispatch<React.SetStateAction<React.ReactNode>>;
   setExtraTopNavMenu: React.Dispatch<React.SetStateAction<React.ReactNode>>;
   smMediaQuery: boolean;
-  unsavedChanges: boolean;
-  setUnsavedChanges: React.Dispatch<React.SetStateAction<boolean>>;
 };

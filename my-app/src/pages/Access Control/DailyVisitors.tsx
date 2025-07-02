@@ -9,10 +9,10 @@ type Client = {
 };
 
 const columns: Column<Client>[] = [
-  { label: "Name", key: "name" },
-  { label: "Birthday", key: "birthday", align: "right" },
-  { label: "EGN", key: "egn", align: "right" },
-  { label: "Last Visit", key: "last_visit", align: "right" },
+  { header: "Name", field: "name" },
+  { header: "Birthday", field: "birthday", align: "right" },
+  { header: "EGN", field: "egn", align: "right" },
+  { header: "Last Visit", field: "last_visit", align: "right" },
 ];
 
 const allRows: Client[] = [
@@ -102,8 +102,6 @@ const allRows: Client[] = [
   },
 ];
 
-const rowsPerPage = 9;
-
 const DailyVisitors = () => {
   const today = new Date();
   const year = today.getFullYear();
@@ -111,7 +109,14 @@ const DailyVisitors = () => {
   const day = String(today.getDate()).padStart(2, "0");
   const customFormat = `${year}-${month}-${day}`;
   return (
-    <Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        height: "100%",
+      }}
+    >
       <Typography variant="h5" sx={{ textAlign: "center", margin: "1em auto" }}>
         All Visitors for Today({customFormat})
       </Typography>
@@ -119,8 +124,11 @@ const DailyVisitors = () => {
         columns={columns}
         rows={allRows}
         configurations={{
-          count: allRows.length,
-          rowsPerPage,
+          title: "Gym Members",
+          sortable: true,
+          pagination: {
+            pageSize: 7,
+          },
         }}
       />
     </Box>
