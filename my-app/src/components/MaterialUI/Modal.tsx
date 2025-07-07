@@ -1,4 +1,3 @@
-// components/CustomModal.tsx
 import {
   Modal,
   Backdrop,
