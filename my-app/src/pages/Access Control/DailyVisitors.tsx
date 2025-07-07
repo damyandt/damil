@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import TableComponent, { Column } from "../../components/MaterialUI/Table";
+import TableComponent from "../../components/MaterialUI/Table";
 
 type Client = {
   name: string;
@@ -8,7 +8,7 @@ type Client = {
   last_visit: string; // ISO date format or readable string
 };
 
-const columns: Column<Client>[] = [
+const columns: any = [
   { header: "Name", field: "name" },
   { header: "Birthday", field: "birthday", align: "right" },
   { header: "EGN", field: "egn", align: "right" },
@@ -124,8 +124,6 @@ const DailyVisitors = () => {
         columns={columns}
         rows={allRows}
         configurations={{
-          title: "Gym Members",
-          sortable: true,
           pagination: {
             pageSize: 7,
           },

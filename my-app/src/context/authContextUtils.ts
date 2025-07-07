@@ -19,7 +19,7 @@ export const handleFetchUserAccessToken = async (
 ) => {
   if (refreshToken) {
     const response = await callApi<any>({
-      query: postQueryTokenRefresh(refreshToken),
+      query: postQueryTokenRefresh({ token: refreshToken }),
       auth: null,
     });
     const accessToken = response.accessToken;

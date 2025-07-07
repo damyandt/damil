@@ -85,6 +85,7 @@ const ClientsPage = () => {
             columns={tableData.columns}
             rows={tableData.rows}
             configurations={tableData.config}
+            setRefreshTable={setRefreshTable}
           />
         </Box>
       )}

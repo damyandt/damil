@@ -30,6 +30,7 @@ const cssStyles = (
   extraRightNavMenu: React.ReactNode | null
 ) => ({
   contentContainer: css({
+    overflow: "hidden",
     background:
       theme.palette.mode === "light"
         ? AUTH_LAYOUT_BACKGROUND_COLOR
@@ -150,7 +151,10 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
           sx={{
             position: "relative",
             zIndex: 2,
-            height: openLeftNav
+            maxHeight: openLeftNav
+              ? `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 4em)`
+              : `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 3em)`,
+            minHeight: openLeftNav
               ? `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 4em)`
               : `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 3em)`,
             borderRadius: "20px",

@@ -1,7 +1,7 @@
 import { Query } from "../../../API/callApi";
 
 export const postQueryAddClient = (input: any): Query => ({
-  endpoint: `gym/add_member`,
+  endpoint: `gym/members`,
   method: "POST",
   variables: input,
 });

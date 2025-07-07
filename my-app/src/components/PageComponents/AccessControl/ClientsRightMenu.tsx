@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAuthedContext } from "../../../context/AuthContext";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import { Grow, IconButton, Stack, Tooltip } from "@mui/material";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -14,11 +13,9 @@ interface InvoiceRightMenuProps {
 const ClientsRightMenu: React.FC<InvoiceRightMenuProps> = ({
   setRefreshTable,
 }) => {
-  // const { setAuthedUser } = useAuthedContext();
   const { t } = useLanguageContext();
 
   const [modalTitle, setModalTitle] = useState<any | null>(null);
-  console.log(modalTitle);
   return (
     <>
       <Stack alignItems="center">

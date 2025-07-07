@@ -96,7 +96,6 @@ const AgeDistributionChart: React.FC<GAgeChartProps> = ({ height }) => {
       style={{
         height: `${height}vh`,
         width: "100%",
-        // backgroundColor: "#f5f5f5",
       }}
     />
   );

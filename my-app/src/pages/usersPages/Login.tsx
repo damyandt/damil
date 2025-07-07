@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Typography,
   Box,
@@ -44,6 +44,7 @@ const LoginPage = () => {
   const [verificationCode, setVerificationCode] = useState<string>("");
   const [disableEmail, setDisableEmail] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState<any>({
     email: "",
     password: "",
@@ -67,6 +68,9 @@ const LoginPage = () => {
 
       setShowPasswordField(true);
       setDisableEmail(true);
+      setTimeout(() => {
+        passwordInputRef.current?.focus();
+      }, 100);
     } catch (error) {
       console.error("Failed:", error);
       setErrors({
@@ -74,23 +78,6 @@ const LoginPage = () => {
       });
     }
   };
-
-  // useEffect(() => {
-  //   const delayDebounce = setTimeout(async () => {
-  //     if (formData.email) {
-  //       const responce = await callApi<any>({
-  //         query: validateEmail({ email: formData.email }),
-  //         auth: null,
-  //       });
-  //       console.log(responce);
-  //       // if (responce.validationErrors) {
-  //       //   return setErrors({ email: responce.validationErrors.account });
-  //       // }
-  //     }
-  //   }, 700);
-
-  //   return () => clearTimeout(delayDebounce);
-  // }, [formData.email]);
 
   const handleLogin = async () => {
     if (!validator(false)) {
@@ -274,6 +261,7 @@ const LoginPage = () => {
                   type={showPassword ? "text" : "password"}
                   error={!!errors["password"]}
                   onChange={(e) => handleChange("password", e.target.value)}
+                  inputRef={passwordInputRef}
                   InputProps={{
                     endAdornment: (
                       <Box sx={{ display: "flex", gap: 0, padding: 0 }}>
