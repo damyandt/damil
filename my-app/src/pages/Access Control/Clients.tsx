@@ -9,9 +9,9 @@ import { useAuthedContext } from "../../context/AuthContext";
 import { FormStatuses } from "../../Global/Types/commonTypes";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 
-type Client = {
-  first_name: string;
-  last_name: string;
+export type Client = {
+  firstName: string;
+  lastName: string;
   phone: string;
   email: string;
   subscription?: string;

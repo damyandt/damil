@@ -6,6 +6,7 @@ import TextField from "../../TextField";
 import callApi from "../../../API/callApi";
 import { postQueryAddClient } from "./postQueries";
 import { useAuthedContext } from "../../../context/AuthContext";
+import { Client } from "../../../pages/Access Control/Clients";
 interface ClientFormProps {
   onClose: () => void;
   setRefreshTable: any;
@@ -15,7 +16,7 @@ const ClientForm: React.FC<ClientFormProps> = ({
   setRefreshTable,
 }) => {
   const { setAuthedUser } = useAuthedContext();
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<Client>({
     firstName: "",
     lastName: "",
     email: "",
