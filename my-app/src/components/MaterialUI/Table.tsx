@@ -28,7 +28,7 @@ import UndoIcon from "@mui/icons-material/Undo";
 import InfoIcon from "@mui/icons-material/Info";
 import { useAuthedContext } from "../../context/AuthContext";
 import callApi from "../../API/callApi";
-import { deleteQueryAction } from "../ComponetsQueries";
+import { deleteQueryAction } from "../API/componentsQueries";
 
 export type Column = {
   header: string;
