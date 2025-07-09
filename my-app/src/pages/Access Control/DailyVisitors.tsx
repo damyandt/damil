@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import TableComponent from "../../components/MaterialUI/Table";
+import TableComponent from "../../components/MaterialUI/Table/Table";
 
 type Client = {
   name: string;

@@ -8,11 +8,9 @@ import {
   TableRow,
   IconButton,
   Box,
-  useTheme,
   Typography,
-  Menu,
-  MenuItem,
   LinearProgress,
+  useTheme,
 } from "@mui/material";
 import {
   FirstPage as FirstPageIcon,
@@ -20,20 +18,18 @@ import {
   KeyboardArrowLeft,
   KeyboardArrowRight,
 } from "@mui/icons-material";
-import CustomTooltip from "./CustomTooltip";
+import CustomTooltip from "../CustomTooltip";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import UndoIcon from "@mui/icons-material/Undo";
-import InfoIcon from "@mui/icons-material/Info";
-import { useAuthedContext } from "../../context/AuthContext";
-import callApi from "../../API/callApi";
-import { deleteQueryAction } from "../API/componentsQueries";
+import CellRenderer from "./CellRenderer";
+import { DeleteUndo } from "./DeleteAction";
+import { MenuActions } from "./MenuActions";
+import PaginationControls from "./PaginationControls";
 
 export type Column = {
   header: string;
   field: any;
   align?: "left" | "right" | "center";
+  type?: string;
 };
 
 export type TableProps = {
@@ -50,7 +46,6 @@ const TableComponent = ({
   setRefreshTable,
 }: TableProps) => {
   const theme = useTheme();
-  const { setAuthedUser } = useAuthedContext();
   const [page, setPage] = useState<number>(0);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
@@ -63,10 +58,6 @@ const TableComponent = ({
     setSelectedRow(row);
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedRow(null);
-  };
   const onPageChange = (newPage: number) => {
     setPage(newPage);
   };
@@ -95,61 +86,6 @@ const TableComponent = ({
 
   const handleLastPageButtonClick = () => {
     onPageChange(Math.max(0, Math.ceil(rows.length / rowsPerPage) - 1));
-  };
-
-  const handleDeleteClick = (row: any) => {
-    const id = row.id;
-
-    if (deleteQueue[id]) return;
-
-    const timerId = setInterval(() => {
-      setDeleteQueue((prev) => {
-        const progress = prev[id]?.progress || 0;
-        if (progress >= 108) {
-          clearInterval(timerId);
-          sendDelete(row);
-          const newQueue = { ...prev };
-          delete newQueue[id];
-          return newQueue;
-        }
-        return {
-          ...prev,
-          [id]: { progress: progress + 2, timerId },
-        };
-      });
-    }, 100);
-  };
-
-  const handleUndo = (id: string) => {
-    if (deleteQueue[id]) {
-      clearInterval(deleteQueue[id].timerId);
-      setDeleteQueue((prev) => {
-        const newQueue = { ...prev };
-        delete newQueue[id];
-        return newQueue;
-      });
-    }
-  };
-
-  const sendDelete = async (row: any) => {
-    const id = row.id;
-    const urlConfig = configurations.actions?.find(
-      (el: { id: string }) => el.id === "delete"
-    );
-
-    if (!urlConfig) return;
-
-    const url = urlConfig.url.split("{")[0];
-    try {
-      await callApi<any>({
-        query: deleteQueryAction(url, id),
-        auth: { setAuthedUser },
-      });
-
-      setRefreshTable?.((prev) => !prev);
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   const isRowDeleting = (id: string) => !!deleteQueue[id];
@@ -216,31 +152,22 @@ const TableComponent = ({
                   }}
                 >
                   {columns.map((col) => (
-                    <TableCell key={col.field} align={col.align || "left"}>
-                      {String(row[col.field])}
-                    </TableCell>
+                    <CellRenderer
+                      key={col.field}
+                      value={row[col.field]}
+                      dataType={"string"}
+                      align={col.align}
+                    />
                   ))}
 
                   {configurations.actions && (
                     <TableCell align="right">
                       {isDeleting ? (
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 1,
-                            justifyContent: "flex-end",
-                          }}
-                        >
-                          <CustomTooltip title="Undo" placement="left">
-                            <IconButton
-                              size="small"
-                              onClick={() => handleUndo(row.id)}
-                            >
-                              <UndoIcon />
-                            </IconButton>
-                          </CustomTooltip>
-                        </Box>
+                        <DeleteUndo
+                          deleteQueue={deleteQueue}
+                          setDeleteQueue={setDeleteQueue}
+                          rowId={row.id}
+                        />
                       ) : (
                         <CustomTooltip title="Show Actions" placement="left">
                           <IconButton
@@ -277,76 +204,23 @@ const TableComponent = ({
           </TableBody>
         </MuiTable>
       </TableContainer>
-      <Menu
+
+      <MenuActions
+        setDeleteQueue={setDeleteQueue}
+        deleteQueue={deleteQueue}
+        configurations={configurations}
+        setRefreshTable={setRefreshTable}
+        selectedRow={selectedRow}
         anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-        MenuListProps={{
-          sx: {
-            display: "flex",
-            flexDirection: "row",
-            padding: "1em",
-            margin: 0,
-          },
-        }}
-      >
-        <MenuItem
-          sx={{
-            padding: 0,
-            "&:hover": { backgroundColor: "#fff", cursor: "none" },
-          }}
-        >
-          <CustomTooltip title="Edit" placement="bottom">
-            <IconButton
-              onClick={() => {
-                console.log("Edit", selectedRow);
-                handleMenuClose();
-              }}
-            >
-              <EditIcon fontSize="small" />
-            </IconButton>
-          </CustomTooltip>
-        </MenuItem>
-
-        <MenuItem
-          sx={{
-            padding: 0,
-            "&:hover": { backgroundColor: "#fff", cursor: "none" },
-          }}
-        >
-          <CustomTooltip title="Delete" placement="bottom">
-            <IconButton
-              onClick={() => {
-                handleDeleteClick(selectedRow);
-                handleMenuClose();
-              }}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </CustomTooltip>
-        </MenuItem>
-        <MenuItem
-          sx={{
-            padding: 0,
-            "&:hover": { backgroundColor: "#fff", cursor: "none" },
-          }}
-        >
-          <CustomTooltip title="Details" placement="bottom">
-            <IconButton
-              onClick={() => {
-                console.log("Details", selectedRow);
-                handleMenuClose();
-              }}
-            >
-              <InfoIcon fontSize="small" />
-            </IconButton>
-          </CustomTooltip>
-        </MenuItem>
-      </Menu>
-
-      <Box
+        setSelectedRow={setSelectedRow}
+        setAnchorEl={setAnchorEl}
+      />
+      <PaginationControls
+        currentPage={page}
+        totalPages={1}
+        onPageChange={(newPage) => setPage(newPage)}
+      />
+      {/* <Box
         sx={{
           display: "flex",
           justifyContent: "flex-end",
@@ -394,7 +268,7 @@ const TableComponent = ({
         >
           {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
         </IconButton>
-      </Box>
+      </Box> */}
     </>
   );
 };

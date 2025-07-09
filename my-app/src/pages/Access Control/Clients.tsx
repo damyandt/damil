@@ -1,5 +1,7 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
-import TableComponent, { Column } from "../../components/MaterialUI/Table";
+import TableComponent, {
+  Column,
+} from "../../components/MaterialUI/Table/Table";
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ClientsRightMenu from "../../components/PageComponents/AccessControl/ClientsRightMenu";
