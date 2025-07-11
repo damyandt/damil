@@ -7,17 +7,8 @@ import {
   TableHead,
   TableRow,
   IconButton,
-  Box,
-  Typography,
   LinearProgress,
-  useTheme,
 } from "@mui/material";
-import {
-  FirstPage as FirstPageIcon,
-  LastPage as LastPageIcon,
-  KeyboardArrowLeft,
-  KeyboardArrowRight,
-} from "@mui/icons-material";
 import CustomTooltip from "../CustomTooltip";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CellRenderer from "./CellRenderer";
@@ -30,6 +21,7 @@ export type Column = {
   field: any;
   align?: "left" | "right" | "center";
   type?: string;
+  styles?: any;
 };
 
 export type TableProps = {
@@ -45,8 +37,6 @@ const TableComponent = ({
   configurations,
   setRefreshTable,
 }: TableProps) => {
-  const theme = useTheme();
-  const [page, setPage] = useState<number>(0);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [deleteQueue, setDeleteQueue] = useState<{
@@ -57,36 +47,14 @@ const TableComponent = ({
     setAnchorEl(event.currentTarget);
     setSelectedRow(row);
   };
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 6;
+  const totalPages = Math.ceil(rows.length / rowsPerPage);
 
-  const onPageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-  const rowsPerPage = configurations.pagination.pageSize;
   const paginatedRows = rows.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+    (page - 1) * rowsPerPage,
+    page * rowsPerPage
   );
-
-  const handleFirstPageButtonClick = (
-    e: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    e.preventDefault();
-    onPageChange(0);
-  };
-
-  const handleBackButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    onPageChange(page - 1);
-  };
-
-  const handleNextButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    onPageChange(page + 1);
-  };
-
-  const handleLastPageButtonClick = () => {
-    onPageChange(Math.max(0, Math.ceil(rows.length / rowsPerPage) - 1));
-  };
 
   const isRowDeleting = (id: string) => !!deleteQueue[id];
 
@@ -217,7 +185,7 @@ const TableComponent = ({
       />
       <PaginationControls
         currentPage={page}
-        totalPages={1}
+        totalPages={Math.ceil(rows.length / rowsPerPage)}
         onPageChange={(newPage) => setPage(newPage)}
       />
       {/* <Box

@@ -52,8 +52,8 @@ const ClientsPage = () => {
         query: getClientsTable(),
         auth: { setAuthedUser },
       });
-
-      setTableData(data);
+      console.log(data.data);
+      setTableData(data.data);
     } catch (err) {
       console.log(err);
     }

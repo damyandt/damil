@@ -1,4 +1,4 @@
-import { TableCell } from "@mui/material";
+import { Box, TableCell } from "@mui/material";
 
 type CellRendererProps = {
   value: any;
@@ -11,7 +11,7 @@ const CellRenderer = ({
   dataType,
   align = "left",
 }: CellRendererProps) => {
-  let displayValue = String(value);
+  let displayValue: React.ReactNode = String(value);
   let style: any = {};
 
   switch (dataType) {
@@ -24,15 +24,36 @@ const CellRenderer = ({
       style.color = "#1976d2"; // Blue
       break;
 
-    case "string":
-      if (displayValue.toLowerCase() === "active") {
-        style.color = "green";
-        style.fontWeight = 600;
-      } else if (displayValue.toLowerCase() === "inactive") {
-        style.color = "red";
-        style.fontWeight = 600;
+    case "string": {
+      if (
+        String(displayValue).toLowerCase() === "active" ||
+        String(displayValue).toLowerCase() === "inactive"
+      ) {
+        const isActive = String(displayValue).toLowerCase() === "active";
+        console.log;
+        displayValue = (
+          <Box
+            sx={{
+              display: "inline-block",
+              padding: "0.5em 1em",
+              border: "1px solid",
+              borderRadius: "20px",
+              fontWeight: 600,
+              fontSize: "0.75rem",
+              color: isActive ? "green" : "red",
+              borderColor: isActive ? "green" : "red",
+              backgroundColor: isActive ? "#e6ffe6" : "#ffe6e6",
+              textTransform: "capitalize",
+            }}
+          >
+            {isActive ? "Active" : "Inactive"}
+          </Box>
+        );
+        // Clear TableCell style for this case
+        style = {};
       }
       break;
+    }
 
     case "date":
       try {
