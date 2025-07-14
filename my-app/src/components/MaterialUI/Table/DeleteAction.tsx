@@ -47,17 +47,6 @@ export const DeleteAction = ({
     }, 100);
   };
 
-  const handleUndo = (id: string) => {
-    if (deleteQueue[id]) {
-      clearInterval(deleteQueue[id].timerId);
-      setDeleteQueue((prev: any) => {
-        const newQueue = { ...prev };
-        delete newQueue[id];
-        return newQueue;
-      });
-    }
-  };
-
   const sendDelete = async (row: any) => {
     const id = row.id;
     const urlConfig = configurations.actions?.find(

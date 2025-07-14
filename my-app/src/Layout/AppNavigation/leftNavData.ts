@@ -4,18 +4,20 @@ import BallotOutlinedIcon from "@mui/icons-material/BallotOutlined";
 import CardMembershipIcon from "@mui/icons-material/CardMembership";
 import PieChartIcon from "@mui/icons-material/PieChart";
 import FlagIcon from "@mui/icons-material/Flag";
-import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import GroupsIcon from "@mui/icons-material/Groups";
+import GroupIcon from "@mui/icons-material/Group";
+import BadgeIcon from "@mui/icons-material/Badge";
 
 enum LEFT_NAV_SECTION {
   "Home" = "Home",
   "DAMIL Analytics" = "DAMIL Analytics",
   "DAMIL Gyms" = "DAMIL Gyms",
   "DAMIL Access Control" = "DAMIL Access Control",
+  "DAMIL Employees" = "DAMIL Employees",
 }
 
 type LeftNavMenu = {
@@ -79,18 +81,6 @@ export const NAV_DAMIL_ANALYTICS: LeftNavMenu = {
   ],
 };
 
-export const NAV_DAMIL_GYMS: LeftNavMenu = {
-  title: LEFT_NAV_SECTION["DAMIL Gyms"],
-  list: [
-    {
-      text: "Register",
-      url: "/DAMIL-Gyms/Register",
-      Icon: AppRegistrationIcon,
-      disabled: false,
-    },
-  ],
-};
-
 export const NAV_DAMIL_ACCESS_CONTROL: LeftNavMenu = {
   title: LEFT_NAV_SECTION["DAMIL Access Control"],
   list: [
@@ -110,6 +100,26 @@ export const NAV_DAMIL_ACCESS_CONTROL: LeftNavMenu = {
           text: "Daily Visitors",
           url: "/DAMIL-Access-Control/Daily-Visitors",
           Icon: GroupsIcon,
+          disabled: false,
+        },
+      ],
+    },
+  ],
+};
+
+export const NAV_DAMIL_EMPLOYEES: LeftNavMenu = {
+  title: LEFT_NAV_SECTION["DAMIL Access Control"],
+  list: [
+    {
+      text: "Employees",
+      url: null,
+      Icon: BadgeIcon,
+      disabled: false,
+      nested: [
+        {
+          text: "All Employees",
+          url: "/DAMIL-Employees/All",
+          Icon: GroupIcon,
           disabled: false,
         },
       ],

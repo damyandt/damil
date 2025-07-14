@@ -9,16 +9,13 @@ import OverviewPage from "../../pages/Analystics/Overview";
 import ClientsPage from "../../pages/Access Control/Clients";
 import DailyVisitors from "../../pages/Access Control/DailyVisitors";
 import PageNotFound from "../../pages/PageNotFound";
+import EmployeesPage from "../../pages/Employees/EmployeesPage";
 
 export default createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
-      {
-        path: "/DAMIL-Gyms/Register",
-        element: <RegisterPage />,
-      },
       {
         path: "*",
         element: <PageNotFound />,
@@ -54,6 +51,12 @@ export default createBrowserRouter([
       {
         path: "/DAMIL-Access-Control/Daily-Visitors",
         element: <DailyVisitors />,
+      },
+
+      // Personal
+      {
+        path: "/DAMIL-Employees/All",
+        element: <EmployeesPage />,
       },
     ],
   },

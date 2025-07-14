@@ -71,16 +71,6 @@ export const MenuActions = ({
           "&:hover": { backgroundColor: "#fff", cursor: "none" },
         }}
       >
-        {/* <CustomTooltip title="Delete" placement="bottom">
-            <IconButton
-              onClick={() => {
-                handleDeleteClick(selectedRow);
-                handleMenuClose();
-              }}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </CustomTooltip> */}
         <DeleteAction
           setDeleteQueue={setDeleteQueue}
           deleteQueue={deleteQueue}

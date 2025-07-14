@@ -49,8 +49,6 @@ const TableComponent = ({
   };
   const [page, setPage] = useState(1);
   const rowsPerPage = 6;
-  const totalPages = Math.ceil(rows.length / rowsPerPage);
-
   const paginatedRows = rows.slice(
     (page - 1) * rowsPerPage,
     page * rowsPerPage
@@ -188,55 +186,6 @@ const TableComponent = ({
         totalPages={Math.ceil(rows.length / rowsPerPage)}
         onPageChange={(newPage) => setPage(newPage)}
       />
-      {/* <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          p: 2,
-        }}
-      >
-        <IconButton
-          onClick={handleFirstPageButtonClick}
-          disabled={page === 0}
-          aria-label="first page"
-        >
-          {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
-        </IconButton>
-        <IconButton
-          onClick={handleBackButtonClick}
-          disabled={page === 0}
-          aria-label="previous page"
-        >
-          {theme.direction === "rtl" ? (
-            <KeyboardArrowRight />
-          ) : (
-            <KeyboardArrowLeft />
-          )}
-        </IconButton>
-        <Typography variant="body2" sx={{ minWidth: 60, textAlign: "center" }}>
-          Page {page + 1} of {Math.max(1, Math.ceil(rows.length / rowsPerPage))}
-        </Typography>
-        <IconButton
-          onClick={handleNextButtonClick}
-          disabled={page >= Math.ceil(rows.length / rowsPerPage) - 1}
-          aria-label="next page"
-        >
-          {theme.direction === "rtl" ? (
-            <KeyboardArrowLeft />
-          ) : (
-            <KeyboardArrowRight />
-          )}
-        </IconButton>
-
-        <IconButton
-          onClick={handleLastPageButtonClick}
-          disabled={page >= Math.ceil(rows.length / rowsPerPage) - 1}
-          aria-label="last page"
-        >
-          {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
-        </IconButton>
-      </Box> */}
     </>
   );
 };
