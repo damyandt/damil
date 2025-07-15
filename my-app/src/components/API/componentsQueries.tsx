@@ -1,6 +1,6 @@
 import { Query } from "../../API/callApi";
 
-export const deleteQueryAction = (url: string, id: string): Query => ({
-  endpoint: `${url}${id}`,
+export const deleteQueryAction = (url: string): Query => ({
+  endpoint: url,
   method: "DELETE",
 });

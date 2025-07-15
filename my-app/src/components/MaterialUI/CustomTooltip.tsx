@@ -1,4 +1,4 @@
-import { Tooltip, tooltipClasses, TooltipProps } from "@mui/material";
+import { Box, Tooltip, tooltipClasses, TooltipProps } from "@mui/material";
 import React from "react";
 import { MAIN_COLOR } from "../../Layout/layoutVariables";
 
@@ -36,7 +36,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
         },
       }}
     >
-      {children}
+      <Box component="div">{children}</Box>
     </Tooltip>
   );
 };

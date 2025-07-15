@@ -40,9 +40,7 @@ const TextField: React.FC<TextFieldProps> = ({
         ...InputProps,
         inputComponent: numberField ? (NumberFormatField as any) : undefined,
         sx: {
-          borderRadius: 1,
-          backgroundColor: "#f9f9f9",
-
+          borderRadius: 0.5,
           "&.Mui-error .MuiOutlinedInput-notchedOutline": {
             borderColor: "error.main",
             borderWidth: "1.8px",

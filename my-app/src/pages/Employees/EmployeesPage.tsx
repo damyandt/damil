@@ -1,7 +1,5 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
-import TableComponent, {
-  Column,
-} from "../../components/MaterialUI/Table/Table";
+import { Box, CircularProgress } from "@mui/material";
+import TableComponent from "../../components/MaterialUI/Table/Table";
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ClientsRightMenu from "../../components/PageComponents/AccessControl/ClientsRightMenu";
@@ -10,6 +8,7 @@ import { useAuthedContext } from "../../context/AuthContext";
 import { FormStatuses } from "../../Global/Types/commonTypes";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { getEmployees } from "./API/getQueries";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 export type Client = {
   firstName: string;
@@ -20,8 +19,9 @@ export type Client = {
 };
 
 const EmployeesPage = () => {
+  const { t } = useLanguageContext();
   const [refreshTable, setRefreshTable] = useState<boolean>(false);
-  const [tableData, setTableData] = useState<any>(null);
+  const [tableData, setTableData] = useState<any>({});
   const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
   const { setAuthedUser } = useAuthedContext();
   const { smMediaQuery, setExtraRightNavMenu } =
@@ -37,14 +37,17 @@ const EmployeesPage = () => {
       setExtraRightNavMenu(null);
     } else {
       setExtraRightNavMenu(
-        <ClientsRightMenu setRefreshTable={setRefreshTable} />
+        <ClientsRightMenu
+          setRefreshTable={setRefreshTable}
+          columns={tableData.columns ?? []}
+        />
       );
     }
 
     return () => {
       setExtraRightNavMenu(null);
     };
-  }, [smMediaQuery]);
+  }, [smMediaQuery, tableData]);
 
   const fetchData = async () => {
     try {
@@ -77,17 +80,12 @@ const EmployeesPage = () => {
         </Box>
       ) : (
         <Box>
-          <Typography
-            variant="h5"
-            sx={{ textAlign: "center", margin: "1em auto" }}
-          >
-            All Registered Clients
-          </Typography>
           <TableComponent
             columns={tableData.columns}
             rows={tableData.rows}
             configurations={tableData.config}
             setRefreshTable={setRefreshTable}
+            title={t("All Employees")}
           />
         </Box>
       )}

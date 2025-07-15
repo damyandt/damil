@@ -4,6 +4,7 @@ import {
   Box,
   Typography,
   ModalProps as MuiModalProps,
+  Grow,
 } from "@mui/material";
 
 interface CustomModalProps extends Pick<MuiModalProps, "open" | "onClose"> {
@@ -25,7 +26,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
       onClose={onClose}
       closeAfterTransition
       aria-labelledby="custom-modal-title"
-      slots={{ backdrop: Backdrop }}
+      // slots={{ backdrop: Backdrop }}
     >
       <Box
         sx={{
@@ -43,16 +44,20 @@ const CustomModal: React.FC<CustomModalProps> = ({
           gap: 3,
         }}
       >
-        <Typography
-          id="custom-modal-title"
-          variant="h5"
-          fontWeight="bold"
-          textAlign="center"
-        >
-          {title}
-        </Typography>
+        <Grow in={!!open} timeout={500}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            <Typography
+              id="custom-modal-title"
+              variant="h5"
+              fontWeight="bold"
+              textAlign="center"
+            >
+              {title}
+            </Typography>
 
-        {children}
+            {children}
+          </Box>
+        </Grow>
       </Box>
     </Modal>
   );

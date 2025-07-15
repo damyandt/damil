@@ -1,11 +1,11 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import TableComponent from "../../components/MaterialUI/Table/Table";
 
 type Client = {
   name: string;
-  birthday: string; // ISO date format or string
+  birthday: string;
   egn: string;
-  last_visit: string; // ISO date format or readable string
+  last_visit: string;
 };
 
 const columns: any = [
@@ -117,9 +117,6 @@ const DailyVisitors = () => {
         height: "100%",
       }}
     >
-      <Typography variant="h5" sx={{ textAlign: "center", margin: "1em auto" }}>
-        All Visitors for Today({customFormat})
-      </Typography>
       <TableComponent
         columns={columns}
         rows={allRows}
@@ -128,6 +125,7 @@ const DailyVisitors = () => {
             pageSize: 7,
           },
         }}
+        title={`All Visitors for Today(${customFormat})`}
       />
     </Box>
   );

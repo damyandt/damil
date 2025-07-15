@@ -26,19 +26,36 @@ export const DeleteAction = ({
   const { setAuthedUser } = useAuthedContext();
   const handleDeleteClick = (row: any) => {
     const id = row.id;
-
     if (deleteQueue[id]) return;
+
+    let deleteTasks: Promise<void>[] = [];
 
     const timerId = setInterval(() => {
       setDeleteQueue((prev: any) => {
         const progress = prev[id]?.progress || 0;
         if (progress >= 108) {
           clearInterval(timerId);
-          sendDelete(row);
+
+          const deletePromise = sendDelete(row);
+          deleteTasks.push(deletePromise);
+
           const newQueue = { ...prev };
           delete newQueue[id];
+
+          deletePromise.finally(() => {
+            setTimeout(() => {
+              setDeleteQueue((current: any) => {
+                if (Object.keys(current).length === 0) {
+                  setRefreshTable?.((prev: any) => !prev);
+                }
+                return current;
+              });
+            }, 100);
+          });
+
           return newQueue;
         }
+
         return {
           ...prev,
           [id]: { progress: progress + 2, timerId },
@@ -47,7 +64,7 @@ export const DeleteAction = ({
     }, 100);
   };
 
-  const sendDelete = async (row: any) => {
+  const sendDelete = async (row: any): Promise<void> => {
     const id = row.id;
     const urlConfig = configurations.actions?.find(
       (el: { id: string }) => el.id === "delete"
@@ -55,16 +72,16 @@ export const DeleteAction = ({
 
     if (!urlConfig) return;
 
-    const url = urlConfig.url.split("{")[0];
+    const rawUrl = urlConfig.url.replace("{id}", id);
+    const url = rawUrl.startsWith("/") ? rawUrl.slice(1) : rawUrl;
+
     try {
       await callApi<any>({
-        query: deleteQueryAction(url, id),
+        query: deleteQueryAction(url),
         auth: { setAuthedUser },
       });
-
-      setRefreshTable?.((prev: any) => !prev);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

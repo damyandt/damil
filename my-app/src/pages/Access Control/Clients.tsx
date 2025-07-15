@@ -1,7 +1,5 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
-import TableComponent, {
-  Column,
-} from "../../components/MaterialUI/Table/Table";
+import { Box, CircularProgress } from "@mui/material";
+import TableComponent from "../../components/MaterialUI/Table/Table";
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ClientsRightMenu from "../../components/PageComponents/AccessControl/ClientsRightMenu";
@@ -10,6 +8,7 @@ import { getClientsTable } from "./API/getQueries";
 import { useAuthedContext } from "../../context/AuthContext";
 import { FormStatuses } from "../../Global/Types/commonTypes";
 import { AppRouterProps } from "../../Layout/layoutVariables";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 export type Client = {
   firstName: string;
@@ -20,8 +19,9 @@ export type Client = {
 };
 
 const ClientsPage = () => {
+  const { t } = useLanguageContext();
   const [refreshTable, setRefreshTable] = useState<boolean>(false);
-  const [tableData, setTableData] = useState<any>(null);
+  const [tableData, setTableData] = useState<any>({});
   const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
   const { setAuthedUser } = useAuthedContext();
   const { smMediaQuery, setExtraRightNavMenu } =
@@ -36,15 +36,20 @@ const ClientsPage = () => {
     if (smMediaQuery) {
       setExtraRightNavMenu(null);
     } else {
+      console.log(tableData.columns);
+
       setExtraRightNavMenu(
-        <ClientsRightMenu setRefreshTable={setRefreshTable} />
+        <ClientsRightMenu
+          setRefreshTable={setRefreshTable}
+          columns={tableData.columns ?? []}
+        />
       );
     }
 
     return () => {
       setExtraRightNavMenu(null);
     };
-  }, [smMediaQuery]);
+  }, [smMediaQuery, tableData]);
 
   const fetchData = async () => {
     try {
@@ -52,7 +57,6 @@ const ClientsPage = () => {
         query: getClientsTable(),
         auth: { setAuthedUser },
       });
-      console.log(data.data);
       setTableData(data.data);
     } catch (err) {
       console.log(err);
@@ -77,17 +81,12 @@ const ClientsPage = () => {
         </Box>
       ) : (
         <Box>
-          <Typography
-            variant="h5"
-            sx={{ textAlign: "center", margin: "1em auto" }}
-          >
-            All Registered Clients
-          </Typography>
           <TableComponent
             columns={tableData.columns}
             rows={tableData.rows}
             configurations={tableData.config}
             setRefreshTable={setRefreshTable}
+            title={t("All Registered Clients")}
           />
         </Box>
       )}

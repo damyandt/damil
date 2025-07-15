@@ -8,6 +8,10 @@ import {
   TableRow,
   IconButton,
   LinearProgress,
+  Typography,
+  Grid,
+  InputAdornment,
+  MenuItem,
 } from "@mui/material";
 import CustomTooltip from "../CustomTooltip";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -15,6 +19,8 @@ import CellRenderer from "./CellRenderer";
 import { DeleteUndo } from "./DeleteAction";
 import { MenuActions } from "./MenuActions";
 import PaginationControls from "./PaginationControls";
+import TextField from "../../TextField";
+import SearchIcon from "@mui/icons-material/Search";
 
 export type Column = {
   header: string;
@@ -29,6 +35,7 @@ export type TableProps = {
   rows: any;
   configurations: any;
   setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
+  title: string;
 };
 
 const TableComponent = ({
@@ -36,28 +43,117 @@ const TableComponent = ({
   rows,
   configurations,
   setRefreshTable,
+  title,
 }: TableProps) => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [deleteQueue, setDeleteQueue] = useState<{
     [key: string]: { progress: number; timerId: any };
   }>({});
-
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(7);
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, row: any) => {
     setAnchorEl(event.currentTarget);
     setSelectedRow(row);
   };
-  const [page, setPage] = useState(1);
-  const rowsPerPage = 6;
-  const paginatedRows = rows.slice(
+  const filteredRows = rows.filter((row: any) =>
+    Object.values(row).some((value) =>
+      value?.toString().toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+
+  const paginatedRows = filteredRows.slice(
     (page - 1) * rowsPerPage,
     page * rowsPerPage
   );
 
   const isRowDeleting = (id: string) => !!deleteQueue[id];
-
   return (
     <>
+      <Grid container spacing={2} alignItems={"center"} py={2}>
+        <Grid size={3}>
+          <TextField
+            size="small"
+            label="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            sx={{ width: "250px", backgroundColor: "#fff" }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid size={6}>
+          <Typography variant="h5" sx={{ textAlign: "center", flexGrow: 1 }}>
+            {title}
+          </Typography>
+        </Grid>
+
+        <Grid size={1} alignItems="right">
+          <TextField
+            select
+            size="small"
+            label="Rows"
+            value={rowsPerPage}
+            onChange={(e) => {
+              setPage(1);
+              setRowsPerPage(parseInt(e.target.value, 10));
+            }}
+          >
+            {[5, 7, 10, 15, 20].map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+        {/* {configurations.filters?.map((filter: any) => (
+          <Grid key={filter.field} item xs={2}>
+            <TextField
+              select
+              size="small"
+              label={filter.label}
+              value={filters[filter.field] || ""}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  [filter.field]: e.target.value,
+                }))
+              }
+              fullWidth
+            >
+              <MenuItem value="">All</MenuItem>
+              {filter.options.map((option: string) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+        ))} */}
+        <Grid size={2} alignItems="right">
+          <TextField
+            select
+            size="small"
+            label="Status"
+            value={""}
+            onChange={(e) => {
+              console.log(e.target.value);
+            }}
+          >
+            {["active", "inactive"].map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+      </Grid>
       <TableContainer sx={{ backgroundColor: "#f0f2f5", paddingX: "5px" }}>
         <MuiTable
           sx={{
@@ -84,6 +180,7 @@ const TableComponent = ({
                   key={col.field as string}
                   align={col.align || "left"}
                   sx={{ fontWeight: "400" }}
+                  width={col.header.toLowerCase() === "id" ? 100 : 400}
                 >
                   {col.header}
                 </TableCell>
@@ -183,7 +280,7 @@ const TableComponent = ({
       />
       <PaginationControls
         currentPage={page}
-        totalPages={Math.ceil(rows.length / rowsPerPage)}
+        totalPages={Math.ceil(filteredRows.length / rowsPerPage)}
         onPageChange={(newPage) => setPage(newPage)}
       />
     </>
