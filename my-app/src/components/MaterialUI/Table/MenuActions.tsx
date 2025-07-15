@@ -1,9 +1,9 @@
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { DeleteAction } from "./DeleteAction";
 import CustomTooltip from "../CustomTooltip";
-import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
-import { useState } from "react";
+import { EditAction } from "./EditAction";
+import { DetailsAction } from "./DetailsAction";
 
 type MenuActionsProps = {
   setDeleteQueue: any;
@@ -14,6 +14,7 @@ type MenuActionsProps = {
   anchorEl: any;
   setSelectedRow: any;
   setAnchorEl: any;
+  columns: any;
 };
 
 export const MenuActions = ({
@@ -25,12 +26,14 @@ export const MenuActions = ({
   anchorEl,
   setSelectedRow,
   setAnchorEl,
+  columns,
 }: MenuActionsProps) => {
   const handleMenuClose = () => {
     setAnchorEl(null);
     setSelectedRow(null);
   };
-
+  const editAction =
+    configurations?.actions.find((el: any) => el.id === "edit") ?? "";
   return (
     <Menu
       anchorEl={anchorEl}
@@ -53,16 +56,11 @@ export const MenuActions = ({
           "&:hover": { backgroundColor: "#fff", cursor: "none" },
         }}
       >
-        <CustomTooltip title="Edit" placement="bottom">
-          <IconButton
-            onClick={() => {
-              console.log("Edit", selectedRow);
-              handleMenuClose();
-            }}
-          >
-            <EditIcon fontSize="small" />
-          </IconButton>
-        </CustomTooltip>
+        <EditAction
+          columns={columns || []}
+          selectedRow={selectedRow}
+          actionUrl={editAction?.url ?? ""}
+        />
       </MenuItem>
 
       <MenuItem
@@ -86,16 +84,11 @@ export const MenuActions = ({
           "&:hover": { backgroundColor: "#fff", cursor: "none" },
         }}
       >
-        <CustomTooltip title="Details" placement="bottom">
-          <IconButton
-            onClick={() => {
-              console.log("Details", selectedRow);
-              handleMenuClose();
-            }}
-          >
-            <InfoIcon fontSize="small" />
-          </IconButton>
-        </CustomTooltip>
+        <DetailsAction
+          columns={columns || []}
+          selectedRow={selectedRow}
+          actionUrl={editAction?.url ?? ""}
+        />
       </MenuItem>
     </Menu>
   );

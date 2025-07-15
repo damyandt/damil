@@ -32,14 +32,10 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
       </CustomTooltip>
       <Typography
         sx={{
-          fontWeight: 500,
           fontSize: "0.875rem",
-          color: "#333",
           px: 2,
           py: 1,
           border: "1px solid #ccc",
-          borderRadius: "12px",
-          minWidth: "80px",
           textAlign: "center",
         }}
       >

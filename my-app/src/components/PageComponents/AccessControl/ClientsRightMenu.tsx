@@ -38,12 +38,14 @@ const ClientsRightMenu: React.FC<InvoiceRightMenuProps> = ({
         open={!!modalTitle}
         onClose={() => setModalTitle(null)}
         title="Add New Client"
-        width={"lg"}
+        width={"md"}
+        style="create"
+        titleIcon="create"
       >
         {columns.length !== 0 && (
           <CreateForm
             columns={columns}
-            createUrl="gym/members"
+            actionUrl="gym/members"
             setModalTitle={setModalTitle}
           />
         )}

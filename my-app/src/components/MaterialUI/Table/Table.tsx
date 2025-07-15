@@ -277,6 +277,7 @@ const TableComponent = ({
         anchorEl={anchorEl}
         setSelectedRow={setSelectedRow}
         setAnchorEl={setAnchorEl}
+        columns={columns}
       />
       <PaginationControls
         currentPage={page}

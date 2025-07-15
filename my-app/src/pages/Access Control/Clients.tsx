@@ -36,8 +36,6 @@ const ClientsPage = () => {
     if (smMediaQuery) {
       setExtraRightNavMenu(null);
     } else {
-      console.log(tableData.columns);
-
       setExtraRightNavMenu(
         <ClientsRightMenu
           setRefreshTable={setRefreshTable}

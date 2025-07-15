@@ -22,6 +22,10 @@ export const handleFetchUserAccessToken = async (
       query: postQueryTokenRefresh({ token: refreshToken }),
       auth: null,
     });
+    if (response.success) {
+      window.location.href = "/login"; // ⛔ No refresh token: force login
+      return;
+    }
     const accessToken = response.accessToken;
     const decodedToken: DecodedJWTToken = jwtDecode(accessToken);
     const accessCookie: SetCookieParams = {
@@ -35,5 +39,8 @@ export const handleFetchUserAccessToken = async (
     setCookie(accessCookie);
 
     return accessToken;
+  } else {
+    window.location.href = "/login"; // ⛔ No refresh token: force login
+    return;
   }
 };
