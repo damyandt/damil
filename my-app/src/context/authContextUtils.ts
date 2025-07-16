@@ -6,6 +6,7 @@ import callApi, {
 import { deleteCookie, setCookie } from "../Global/Utils/commonFunctions";
 import { postQueryTokenRefresh } from "../Auth/API/apiAuthGetQueries";
 import { DecodedJWTToken, SetCookieParams } from "../Auth/authTypes";
+import { useState } from "react";
 
 export const handleUserSignOut = (navigate: (path: string) => void) => {
   deleteCookie(COOKIE_ACCESS_TOKEN);
@@ -22,10 +23,7 @@ export const handleFetchUserAccessToken = async (
       query: postQueryTokenRefresh({ token: refreshToken }),
       auth: null,
     });
-    if (response.success) {
-      window.location.href = "/login"; // ⛔ No refresh token: force login
-      return;
-    }
+
     const accessToken = response.accessToken;
     const decodedToken: DecodedJWTToken = jwtDecode(accessToken);
     const accessCookie: SetCookieParams = {
@@ -40,7 +38,7 @@ export const handleFetchUserAccessToken = async (
 
     return accessToken;
   } else {
-    window.location.href = "/login"; // ⛔ No refresh token: force login
+    window.location.href = "/login";
     return;
   }
 };

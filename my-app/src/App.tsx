@@ -14,7 +14,6 @@ const App: React.FC = () => {
   if (authedUserLoading) {
     return <LoadingScreen />;
   }
-
   if (authedUser) {
     return (
       <Box component="main">

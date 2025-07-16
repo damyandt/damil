@@ -1,5 +1,5 @@
 import {
-  Link,
+  Navigate,
   Route,
   createBrowserRouter,
   createRoutesFromElements,
@@ -14,7 +14,7 @@ export default createBrowserRouter(
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
-      <Route path="*" element={<Link to="/login" />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </>
   )
 );

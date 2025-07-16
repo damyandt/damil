@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout";
-import RegisterPage from "../../pages/usersPages/Register";
 import GymVisitsChart from "../../pages/Analystics/GymVisitsChart";
 import GoalMembersGaugeChart from "../../pages/Analystics/Goal";
 import AgeDistributionChart from "../../pages/Analystics/AgeChart";
