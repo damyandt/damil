@@ -11,6 +11,7 @@ import DailyVisitors from "../../pages/Access Control/DailyVisitors";
 import PageNotFound from "../../pages/PageNotFound";
 import EmployeesPage from "../../pages/Employees/EmployeesPage";
 import ErrorPage from "./ErrorPage";
+import EmployeeCalendar from "../../pages/Employees/Calender";
 
 export default createBrowserRouter([
   {
@@ -59,6 +60,10 @@ export default createBrowserRouter([
       {
         path: "/DAMIL-Employees/All",
         element: <EmployeesPage />,
+      },
+      {
+        path: "/DAMIL-Employees/Calender",
+        element: <EmployeeCalendar />,
       },
     ],
   },

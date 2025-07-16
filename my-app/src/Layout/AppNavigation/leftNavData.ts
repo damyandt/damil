@@ -11,6 +11,7 @@ import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import GroupsIcon from "@mui/icons-material/Groups";
 import GroupIcon from "@mui/icons-material/Group";
 import BadgeIcon from "@mui/icons-material/Badge";
+import DateRangeIcon from "@mui/icons-material/DateRange";
 
 enum LEFT_NAV_SECTION {
   "Home" = "Home",
@@ -120,6 +121,12 @@ export const NAV_DAMIL_EMPLOYEES: LeftNavMenu = {
           text: "All Employees",
           url: "/DAMIL-Employees/All",
           Icon: GroupIcon,
+          disabled: false,
+        },
+        {
+          text: "Calender",
+          url: "/DAMIL-Employees/Calender",
+          Icon: DateRangeIcon,
           disabled: false,
         },
       ],

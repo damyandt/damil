@@ -52,9 +52,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           display: "flex",
           flexDirection: "column",
           gap: 3,
-          minHeight: "30em",
           justifyContent: "space-between",
-          height: "-webkit-fill-available",
         }}
       >
         <Grow in={!!open} timeout={500}>
@@ -80,7 +78,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
               <Box
                 component="div"
                 textAlign="center"
-                py={10}
+                py={style ? 10 : 3}
                 sx={{
                   display: "flex",
                   justifyContent: "flex-start",
@@ -140,6 +138,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
                 justifyContent: "space-between",
                 height: "-webkit-fill-available",
                 gap: 3,
+                width: "100%",
               }}
             >
               {children}
