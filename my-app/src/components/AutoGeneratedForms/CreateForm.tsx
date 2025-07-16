@@ -14,6 +14,7 @@ interface CreateFormProps {
   setModalTitle?: any;
   selectedRow?: any;
   disabled?: boolean;
+  setAnchorEl?: any;
 }
 
 const CreateForm: React.FC<CreateFormProps> = ({
@@ -23,6 +24,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
   setModalTitle,
   selectedRow,
   disabled,
+  setAnchorEl,
 }) => {
   const [formValues, setFormValues] = useState<Record<string, any>>(
     selectedRow ?? {}
@@ -274,6 +276,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
               color="error"
               onClick={() => {
                 handleClose();
+                setAnchorEl && setAnchorEl(null);
               }}
             >
               {disabled ? t("Close") : t("Cancel")}

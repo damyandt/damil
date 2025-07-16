@@ -10,11 +10,13 @@ import ClientsPage from "../../pages/Access Control/Clients";
 import DailyVisitors from "../../pages/Access Control/DailyVisitors";
 import PageNotFound from "../../pages/PageNotFound";
 import EmployeesPage from "../../pages/Employees/EmployeesPage";
+import ErrorPage from "./ErrorPage";
 
 export default createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
+    errorElement: <ErrorPage />, // 👈 Add this
     children: [
       {
         path: "*",

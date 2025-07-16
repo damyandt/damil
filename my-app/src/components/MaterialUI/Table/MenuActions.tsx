@@ -15,6 +15,8 @@ type MenuActionsProps = {
   setSelectedRow: any;
   setAnchorEl: any;
   columns: any;
+  open: boolean;
+  setOpen: any;
 };
 
 export const MenuActions = ({
@@ -27,13 +29,15 @@ export const MenuActions = ({
   setSelectedRow,
   setAnchorEl,
   columns,
+  open,
+  setOpen,
 }: MenuActionsProps) => {
   const handleMenuClose = () => {
     setAnchorEl(null);
     setSelectedRow(null);
   };
   const editAction =
-    configurations?.actions.find((el: any) => el.id === "edit") ?? "";
+    configurations?.actions?.find((el: any) => el.id === "edit") ?? "";
   return (
     <Menu
       anchorEl={anchorEl}
@@ -43,7 +47,7 @@ export const MenuActions = ({
       transformOrigin={{ vertical: "top", horizontal: "right" }}
       MenuListProps={{
         sx: {
-          display: "flex",
+          display: anchorEl === "closeOnlyAnchor" ? "none" : "flex",
           flexDirection: "row",
           padding: "1em",
           margin: 0,
@@ -60,6 +64,7 @@ export const MenuActions = ({
           columns={columns || []}
           selectedRow={selectedRow}
           actionUrl={editAction?.url ?? ""}
+          setAnchorEl={setAnchorEl}
         />
       </MenuItem>
 
@@ -88,6 +93,9 @@ export const MenuActions = ({
           columns={columns || []}
           selectedRow={selectedRow}
           actionUrl={editAction?.url ?? ""}
+          open={open}
+          setOpen={setOpen}
+          setAnchorEl={setAnchorEl}
         />
       </MenuItem>
     </Menu>

@@ -47,7 +47,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           transform: "translate(-50%, -50%)",
           width: sizeMap[width] || width,
           bgcolor: "background.paper",
-          borderRadius: 3,
+          borderRadius: 1,
           boxShadow: 10,
           display: "flex",
           flexDirection: "column",
@@ -72,15 +72,13 @@ const CustomModal: React.FC<CustomModalProps> = ({
                       backgroundSize: "cover",
                       backgroundRepeat: "repeat",
                       backgroundPosition: "center 27%",
-                      borderRadius: 3,
+                      borderRadius: 1,
                     }
                   : {}
               }
             >
-              <Typography
-                id="custom-modal-title"
-                variant="h5"
-                fontWeight="bold"
+              <Box
+                component="div"
                 textAlign="center"
                 py={10}
                 sx={{
@@ -93,14 +91,17 @@ const CustomModal: React.FC<CustomModalProps> = ({
               >
                 <Box
                   sx={{
-                    backgroundColor: "#fff",
-                    border: "1px dotted #000",
+                    alignItems: "center",
+                    border: "2px solid #fff",
                     paddingY: 1,
-                    paddingX: 3,
+                    paddingX: 4,
                     height: "auto",
                     display: "flex",
                     borderRadius: 1,
                     gap: 2,
+                    backgroundColor: "rgba(255, 255, 255, 0.4)",
+                    backdropFilter: "blur(5px)",
+                    WebkitBackdropFilter: "blur(5px)",
                   }}
                 >
                   {titleIcon === "info" && (
@@ -115,9 +116,20 @@ const CustomModal: React.FC<CustomModalProps> = ({
                   {titleIcon === "edit" && (
                     <EditIcon fontSize="large" color="primary" />
                   )}
-                  {title}
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      color: "rgba(0, 0, 0, 0.75)",
+                      fontWeight: 600,
+                      letterSpacing: 0.5,
+                      textTransform: "capitalize",
+                      textShadow: "0 1px 2px rgba(255, 255, 255, 0.3)", // optional glow for contrast
+                    }}
+                  >
+                    {title}
+                  </Typography>
                 </Box>
-              </Typography>
+              </Box>
             </Box>
 
             <Box

@@ -9,12 +9,14 @@ type EditActionProps = {
   selectedRow: any;
   columns: any;
   actionUrl: string;
+  setAnchorEl: any;
 };
 
 export const EditAction = ({
   selectedRow,
   columns,
   actionUrl,
+  setAnchorEl,
 }: EditActionProps) => {
   const { t } = useLanguageContext();
 
@@ -25,6 +27,7 @@ export const EditAction = ({
         <IconButton
           onClick={() => {
             setOpen(true);
+            setAnchorEl("closeOnlyAnchor");
           }}
         >
           <EditIcon fontSize="small" />
@@ -35,7 +38,7 @@ export const EditAction = ({
         open={!!open}
         onClose={() => setOpen(false)}
         title={t("Edit")}
-        width={"md"}
+        width={"lg"}
         style="edit"
         titleIcon="edit"
       >

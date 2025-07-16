@@ -38,7 +38,7 @@ const ClientsRightMenu: React.FC<InvoiceRightMenuProps> = ({
         open={!!modalTitle}
         onClose={() => setModalTitle(null)}
         title="Add New Client"
-        width={"md"}
+        width={"lg"}
         style="create"
         titleIcon="create"
       >

@@ -262,6 +262,9 @@ const LoginPage = () => {
                   error={!!errors["password"]}
                   onChange={(e) => handleChange("password", e.target.value)}
                   inputRef={passwordInputRef}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleLogin();
+                  }}
                   InputProps={{
                     endAdornment: (
                       <Box sx={{ display: "flex", gap: 0, padding: 0 }}>

@@ -45,8 +45,11 @@ const TableComponent = ({
   setRefreshTable,
   title,
 }: TableProps) => {
+  const [openDetails, setOpenDetails] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<
+    null | HTMLElement | "closeOnlyAnchor"
+  >(null);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [deleteQueue, setDeleteQueue] = useState<{
     [key: string]: { progress: number; timerId: any };
@@ -199,6 +202,17 @@ const TableComponent = ({
 
               return (
                 <TableRow
+                  onClick={() => {
+                    if (
+                      configurations.actions?.find(
+                        (action: any) => action.id === "details"
+                      )
+                    ) {
+                      setOpenDetails(true);
+                      setAnchorEl("closeOnlyAnchor");
+                      setSelectedRow(row);
+                    }
+                  }}
                   key={row.id}
                   sx={{
                     position: "relative",
@@ -224,7 +238,7 @@ const TableComponent = ({
                   ))}
 
                   {configurations.actions && (
-                    <TableCell align="right">
+                    <TableCell align="right" sx={{ zIndex: 100 }}>
                       {isDeleting ? (
                         <DeleteUndo
                           deleteQueue={deleteQueue}
@@ -235,7 +249,10 @@ const TableComponent = ({
                         <CustomTooltip title="Show Actions" placement="left">
                           <IconButton
                             size="small"
-                            onClick={(e) => handleMenuOpen(e, row)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleMenuOpen(e, row);
+                            }}
                           >
                             <MoreHorizIcon />
                           </IconButton>
@@ -278,6 +295,8 @@ const TableComponent = ({
         setSelectedRow={setSelectedRow}
         setAnchorEl={setAnchorEl}
         columns={columns}
+        open={openDetails}
+        setOpen={setOpenDetails}
       />
       <PaginationControls
         currentPage={page}
