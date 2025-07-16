@@ -1,9 +1,8 @@
-// EmployeeCalendar.tsx
 import { useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, MenuItem, Typography } from "@mui/material";
 import CustomModal from "../../components/MaterialUI/Modal";
 import TextField from "../../components/TextField";
 import Button from "../../components/MaterialUI/Button";
@@ -14,13 +13,38 @@ const EmployeeCalendar = () => {
   const [events, setEvents] = useState<any[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
-  const [reason, setReason] = useState("");
+  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
+
   const calendarRef = useRef<FullCalendar | null>(null);
+  const [formData, setFormData] = useState<any>({
+    title: "",
+    person: "",
+    message: "",
+  });
   const { openLeftNav } = useOutletContext<AppRouterProps>();
+
   const handleDateClick = (arg: any) => {
     setSelectedDate(arg.dateStr);
     setOpen(true);
   };
+
+  useEffect(() => {
+    if (selectedEvent) {
+      setFormData({
+        title: selectedEvent.title || "",
+        person: selectedEvent.extendedProps.person || "",
+        message: selectedEvent.extendedProps.message || "",
+      });
+    } else {
+      setFormData({ title: "", person: "", message: "" });
+    }
+  }, [selectedEvent, selectedDate, open]);
+
+  const handleEventClick = (clickInfo: any) => {
+    setSelectedEvent(clickInfo.event);
+    setOpen(true);
+  };
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (calendarRef.current) {
@@ -31,12 +55,21 @@ const EmployeeCalendar = () => {
     return () => clearTimeout(timeout);
   }, [openLeftNav]);
 
+  const handleChange = (field: string, value: string): void => {
+    setFormData((prev: any) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   const handleSave = () => {
     if (selectedDate) {
       setEvents([
         ...events,
         {
-          title: reason || "Time Off",
+          title: formData.title,
+          person: formData.person,
+          message: formData.message,
           date: selectedDate,
           backgroundColor: "#d32f2f",
           borderColor: "#d32f2f",
@@ -44,9 +77,12 @@ const EmployeeCalendar = () => {
       ]);
     }
     setOpen(false);
-    setReason("");
+    setFormData({
+      title: "",
+      person: "",
+      message: "",
+    });
   };
-
   return (
     <Box sx={{ p: 0 }}>
       <FullCalendar
@@ -55,22 +91,61 @@ const EmployeeCalendar = () => {
         initialView="dayGridMonth"
         events={events}
         dateClick={handleDateClick}
+        eventClick={handleEventClick}
         height="auto"
       />
 
       <CustomModal
-        title="Request Time Off"
+        title="Add Event"
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          setSelectedEvent(null);
+        }}
+        width={"lg"}
       >
         <Grid container spacing={2}>
+          <Grid size={6}>
+            <TextField
+              select
+              fullWidth
+              label="Title"
+              margin="normal"
+              value={formData.title}
+              onChange={(e) => handleChange("title", e.target.value)}
+            >
+              {["Day Off", "Shift Coverage Requests"].map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid size={6}>
+            <TextField
+              select
+              fullWidth
+              label="Person"
+              margin="normal"
+              value={formData.person}
+              onChange={(e) => handleChange("person", e.target.value)}
+            >
+              {["Damyan Todorov", "Iliyan Todorov", "Preslava Todorova"].map(
+                (option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                )
+              )}
+            </TextField>
+          </Grid>
           <Grid size={12}>
             <TextField
               fullWidth
-              label="Reason"
+              label="Message"
               margin="normal"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
+              value={formData.message}
+              onChange={(e) => handleChange("message", e.target.value)}
             />
           </Grid>
         </Grid>
