@@ -158,6 +158,7 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
               ? `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 4em)`
               : `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 3em)`,
             borderRadius: "20px",
+            transition: "min-height 0.4s ease",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
             backgroundColor: "#fff",
             boxSizing: "border-box",
