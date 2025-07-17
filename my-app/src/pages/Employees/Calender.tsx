@@ -8,35 +8,101 @@ import TextField from "../../components/TextField";
 import Button from "../../components/MaterialUI/Button";
 import { useOutletContext } from "react-router-dom";
 import { AppRouterProps } from "../../Layout/layoutVariables";
+import DatePickerComponent from "../../components/DatePicker";
+import dayjs from "dayjs";
 
 const EmployeeCalendar = () => {
   const [events, setEvents] = useState<any[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
-
+  const { openLeftNav } = useOutletContext<AppRouterProps>();
   const calendarRef = useRef<FullCalendar | null>(null);
+  const [diffDays, setDiffDays] = useState<number>(0);
+
   const [formData, setFormData] = useState<any>({
     title: "",
     person: "",
     message: "",
+    period: "",
+    start: dayjs(),
+    end: dayjs(),
   });
-  const { openLeftNav } = useOutletContext<AppRouterProps>();
 
   const handleDateClick = (arg: any) => {
-    setSelectedDate(arg.dateStr);
+    const clickedDate = arg.dateStr;
+    setSelectedDate(clickedDate);
+    setFormData({
+      title: "",
+      person: "",
+      message: "",
+      start: dayjs(clickedDate),
+      end: dayjs(clickedDate),
+    });
     setOpen(true);
   };
+
+  useEffect(() => {
+    if (!formData.start) return;
+
+    const startDate = dayjs(formData.start);
+    let newEnd = startDate;
+
+    switch (formData.period) {
+      case "Day":
+        newEnd = startDate;
+        break;
+      case "Week":
+        newEnd = startDate.add(6, "day");
+        break;
+      case "Month":
+        newEnd = startDate.endOf("month");
+        break;
+      case "Custom":
+        return;
+      default:
+        return;
+    }
+
+    setFormData((prev: any) => ({
+      ...prev,
+      end: newEnd,
+    }));
+  }, [formData.period, formData.start]);
+
+  useEffect(() => {
+    if (!formData.start || !formData.end) return;
+
+    const startDate = dayjs(formData.start);
+    const endDate = dayjs(formData.end);
+    const diffDays = endDate.diff(startDate, "day");
+
+    let newPeriod = "Custom";
+
+    if (diffDays === 0) newPeriod = "Day";
+    else if (diffDays === 6) newPeriod = "Week";
+    else if (endDate.isSame(startDate.endOf("month"), "day"))
+      newPeriod = "Month";
+
+    if (newPeriod !== formData.period) {
+      setFormData((prev: any) => ({
+        ...prev,
+        period: newPeriod,
+      }));
+    }
+  }, [formData.end, formData.start]);
 
   useEffect(() => {
     if (selectedEvent) {
       setFormData({
         title: selectedEvent.title || "",
         person: selectedEvent.extendedProps.person || "",
+        period: "Day",
         message: selectedEvent.extendedProps.message || "",
+        start: dayjs(selectedEvent.dateStr) || null,
+        end: dayjs(selectedEvent.dateStr) || null,
       });
-    } else {
-      setFormData({ title: "", person: "", message: "" });
     }
   }, [selectedEvent, selectedDate, open]);
 
@@ -50,7 +116,7 @@ const EmployeeCalendar = () => {
       if (calendarRef.current) {
         calendarRef.current.getApi().updateSize();
       }
-    }, 400); // adjust delay as needed to match sidebar transition
+    }, 400);
 
     return () => clearTimeout(timeout);
   }, [openLeftNav]);
@@ -63,26 +129,82 @@ const EmployeeCalendar = () => {
   };
 
   const handleSave = () => {
-    if (selectedDate) {
-      setEvents([
-        ...events,
-        {
-          title: formData.title,
-          person: formData.person,
-          message: formData.message,
-          date: selectedDate,
-          backgroundColor: "#d32f2f",
-          borderColor: "#d32f2f",
-        },
-      ]);
+    if (!formData.start || !formData.end) return;
+
+    const startDate = dayjs(formData.start);
+    const endDate = dayjs(formData.end);
+    const diffDays = endDate.diff(startDate, "day");
+    setDiffDays(diffDays);
+    if (diffDays > 5) return setOpenConfirm(true);
+    const dates = [];
+    for (
+      let date = startDate;
+      date.isBefore(endDate) || date.isSame(endDate, "day");
+      date = date.add(1, "day")
+    ) {
+      dates.push(date.format("YYYY-MM-DD"));
     }
+
+    const newEvents = dates.map((date) => ({
+      title: formData.title,
+      person: formData.person,
+      message: formData.message,
+      date: date,
+      backgroundColor: "#d32f2f",
+      borderColor: "#d32f2f",
+    }));
+
+    setEvents([...events, ...newEvents]);
+
     setOpen(false);
     setFormData({
       title: "",
       person: "",
       message: "",
+      period: "",
+      start: dayjs(),
+      end: dayjs(),
     });
   };
+  const handleConfirm = () => {
+    const startDate = dayjs(formData.start);
+    const endDate = dayjs(formData.end);
+    const dates = [];
+    for (
+      let date = startDate;
+      date.isBefore(endDate) || date.isSame(endDate, "day");
+      date = date.add(1, "day")
+    ) {
+      dates.push(date.format("YYYY-MM-DD"));
+    }
+
+    const newEvents = dates.map((date) => ({
+      title: formData.title,
+      person: formData.person,
+      message: formData.message,
+      date: date,
+      backgroundColor: "#d32f2f",
+      borderColor: "#d32f2f",
+    }));
+
+    setEvents([...events, ...newEvents]);
+
+    setOpen(false);
+    setOpenConfirm(false);
+    setFormData({
+      title: "",
+      person: "",
+      message: "",
+      period: "",
+      start: dayjs(),
+      end: dayjs(),
+    });
+  };
+
+  const handleCancelConfirm = () => {
+    setOpenConfirm(false);
+  };
+
   return (
     <Box sx={{ p: 0 }}>
       <FullCalendar
@@ -139,6 +261,37 @@ const EmployeeCalendar = () => {
               )}
             </TextField>
           </Grid>
+          <Grid size={6}>
+            <TextField
+              select
+              fullWidth
+              label="Period"
+              margin="normal"
+              value={formData.period}
+              onChange={(e) => handleChange("period", e.target.value)}
+            >
+              {["Day", "Week", "Month", "Custom"].map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid size={3}>
+            <DatePickerComponent
+              label="Start Date"
+              value={formData.start}
+              onChange={(newValue: any) => handleChange("start", newValue)}
+            />
+          </Grid>
+          <Grid size={3}>
+            <DatePickerComponent
+              label="End Date"
+              value={formData.end}
+              onChange={(newValue: any) => handleChange("end", newValue)}
+            />
+          </Grid>
+
           <Grid size={12}>
             <TextField
               fullWidth
@@ -157,6 +310,30 @@ const EmployeeCalendar = () => {
           </Grid>
           <Grid>
             <Button onClick={handleSave}>Confirm</Button>
+          </Grid>
+        </Grid>
+      </CustomModal>
+      <CustomModal
+        title="Confirm Large Date Range"
+        open={openConfirm}
+        onClose={handleCancelConfirm}
+        width={"md"}
+      >
+        <Box component="div" textAlign={"center"}>
+          <Typography variant="h6">
+            You are setting events for <strong>{diffDays + 1}</strong> days. Are
+            you sure?
+          </Typography>
+        </Box>
+
+        <Grid container spacing={2} justifyContent="flex-end">
+          <Grid>
+            <Button color="error" onClick={handleCancelConfirm}>
+              Cancel
+            </Button>
+          </Grid>
+          <Grid>
+            <Button onClick={handleConfirm}>Confirm</Button>
           </Grid>
         </Grid>
       </CustomModal>

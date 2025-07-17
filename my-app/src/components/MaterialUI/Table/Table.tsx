@@ -21,6 +21,7 @@ import { MenuActions } from "./MenuActions";
 import PaginationControls from "./PaginationControls";
 import TextField from "../../TextField";
 import SearchIcon from "@mui/icons-material/Search";
+import { useLanguageContext } from "../../../context/LanguageContext";
 
 export type Column = {
   header: string;
@@ -39,12 +40,13 @@ export type TableProps = {
 };
 
 const TableComponent = ({
-  columns,
-  rows,
-  configurations,
+  columns = [],
+  rows = [],
+  configurations = {},
   setRefreshTable,
   title,
 }: TableProps) => {
+  const { t } = useLanguageContext();
   const [openDetails, setOpenDetails] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState<
@@ -60,18 +62,19 @@ const TableComponent = ({
     setAnchorEl(event.currentTarget);
     setSelectedRow(row);
   };
-  const filteredRows = rows.filter((row: any) =>
+  const filteredRows = rows?.filter((row: any) =>
     Object.values(row).some((value) =>
       value?.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
 
-  const paginatedRows = filteredRows.slice(
+  const paginatedRows = filteredRows?.slice(
     (page - 1) * rowsPerPage,
     page * rowsPerPage
   );
 
   const isRowDeleting = (id: string) => !!deleteQueue[id];
+
   return (
     <>
       <Grid container spacing={2} alignItems={"center"} py={2}>
@@ -178,7 +181,7 @@ const TableComponent = ({
         >
           <TableHead>
             <TableRow sx={{ backgroundColor: "#ffffff" }}>
-              {columns.map((col) => (
+              {columns?.map((col) => (
                 <TableCell
                   key={col.field as string}
                   align={col.align || "left"}
@@ -196,91 +199,95 @@ const TableComponent = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedRows.map((row: any) => {
-              const isDeleting = isRowDeleting(row.id);
-              const progress = deleteQueue[row.id]?.progress || 0;
+            {paginatedRows.length === 0 ? (
+              <Typography>{t("No Data...")}</Typography>
+            ) : (
+              paginatedRows?.map((row: any) => {
+                const isDeleting = isRowDeleting(row.id);
+                const progress = deleteQueue[row.id]?.progress || 0;
 
-              return (
-                <TableRow
-                  onClick={() => {
-                    if (
-                      configurations.actions?.find(
-                        (action: any) => action.id === "details"
-                      )
-                    ) {
-                      setOpenDetails(true);
-                      setAnchorEl("closeOnlyAnchor");
-                      setSelectedRow(row);
-                    }
-                  }}
-                  key={row.id}
-                  sx={{
-                    position: "relative",
-                    backgroundColor: isDeleting ? "#ffe6e6" : "#fff",
-                    transition: "background-color 0.3s ease",
-                    boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
-                    "&:hover": {
-                      backgroundColor: "#f5f5f5",
-                      cursor: "pointer",
-                      transform: "scale(0.99)",
-                      zIndex: 1,
+                return (
+                  <TableRow
+                    onClick={() => {
+                      if (
+                        configurations.actions?.find(
+                          (action: any) => action.id === "details"
+                        )
+                      ) {
+                        setOpenDetails(true);
+                        setAnchorEl("closeOnlyAnchor");
+                        setSelectedRow(row);
+                      }
+                    }}
+                    key={row.id}
+                    sx={{
                       position: "relative",
-                    },
-                  }}
-                >
-                  {columns.map((col) => (
-                    <CellRenderer
-                      key={col.field}
-                      value={row[col.field]}
-                      dataType={"string"}
-                      align={col.align}
-                    />
-                  ))}
+                      backgroundColor: isDeleting ? "#ffe6e6" : "#fff",
+                      transition: "background-color 0.3s ease",
+                      boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+                      "&:hover": {
+                        backgroundColor: "#f5f5f5",
+                        cursor: "pointer",
+                        transform: "scale(0.99)",
+                        zIndex: 1,
+                        position: "relative",
+                      },
+                    }}
+                  >
+                    {columns.map((col) => (
+                      <CellRenderer
+                        key={col.field}
+                        value={row[col.field]}
+                        dataType={"string"}
+                        align={col.align}
+                      />
+                    ))}
 
-                  {configurations.actions && (
-                    <TableCell align="right" sx={{ zIndex: 100 }}>
-                      {isDeleting ? (
-                        <DeleteUndo
-                          deleteQueue={deleteQueue}
-                          setDeleteQueue={setDeleteQueue}
-                          rowId={row.id}
-                        />
-                      ) : (
-                        <CustomTooltip title="Show Actions" placement="left">
-                          <IconButton
-                            size="small"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleMenuOpen(e, row);
-                            }}
-                          >
-                            <MoreHorizIcon />
-                          </IconButton>
-                        </CustomTooltip>
-                      )}
-                    </TableCell>
-                  )}
+                    {configurations.actions && (
+                      <TableCell align="right" sx={{ zIndex: 100 }}>
+                        {isDeleting ? (
+                          <DeleteUndo
+                            deleteQueue={deleteQueue}
+                            setDeleteQueue={setDeleteQueue}
+                            rowId={row.id}
+                          />
+                        ) : (
+                          <CustomTooltip title="Show Actions" placement="left">
+                            <IconButton
+                              size="small"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleMenuOpen(e, row);
+                              }}
+                            >
+                              <MoreHorizIcon />
+                            </IconButton>
+                          </CustomTooltip>
+                        )}
+                      </TableCell>
+                    )}
 
-                  {isDeleting && (
-                    <LinearProgress
-                      variant="determinate"
-                      value={progress}
-                      sx={{
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0,
-                        width: "100%",
-                        height: 3,
-                        backgroundColor: "#fdd",
-                        "& .MuiLinearProgress-bar": {
-                          backgroundColor: "#d32f2f",
-                        },
-                      }}
-                    />
-                  )}
-                </TableRow>
-              );
-            })}
+                    {isDeleting && (
+                      <LinearProgress
+                        variant="determinate"
+                        value={progress}
+                        sx={{
+                          position: "absolute",
+                          bottom: 0,
+                          left: 0,
+                          width: "100%",
+                          height: 3,
+                          backgroundColor: "#fdd",
+                          "& .MuiLinearProgress-bar": {
+                            backgroundColor: "#d32f2f",
+                          },
+                        }}
+                      />
+                    )}
+                  </TableRow>
+                );
+              })
+            )}
           </TableBody>
         </MuiTable>
       </TableContainer>
