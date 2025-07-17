@@ -22,7 +22,10 @@ export default createBrowserRouter([
         path: "*",
         element: <PageNotFound />,
       },
-
+      {
+        path: "/Home",
+        element: <ClientsPage />,
+      },
       // Analystics
       {
         path: "/DAMIL-Analytics/Overview",

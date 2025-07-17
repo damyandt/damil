@@ -31,7 +31,7 @@ export const NAV_DAMIL_HOME: LeftNavMenu = {
   list: [
     {
       text: "Home",
-      url: "/",
+      url: "/home",
       Icon: HomeOutlinedIcon,
       disabled: false,
     },
