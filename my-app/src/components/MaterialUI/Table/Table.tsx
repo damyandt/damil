@@ -19,7 +19,7 @@ import CellRenderer from "./CellRenderer";
 import { DeleteUndo } from "./DeleteAction";
 import { MenuActions } from "./MenuActions";
 import PaginationControls from "./PaginationControls";
-import TextField from "../../TextField";
+import TextField from "../FormFields/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import { useLanguageContext } from "../../../context/LanguageContext";
 
@@ -27,8 +27,9 @@ export type Column = {
   header: string;
   field: any;
   align?: "left" | "right" | "center";
-  type?: string;
+  type: string;
   styles?: any;
+  dropDownConfig?: any;
 };
 
 export type TableProps = {
@@ -238,7 +239,7 @@ const TableComponent = ({
                       <CellRenderer
                         key={col.field}
                         value={row[col.field]}
-                        dataType={"string"}
+                        dataType={col.type}
                         align={col.align}
                       />
                     ))}

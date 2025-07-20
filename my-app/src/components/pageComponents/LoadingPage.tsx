@@ -1,7 +1,7 @@
 import React from "react";
 import { CircularProgress, Box, Typography, useTheme } from "@mui/material";
-import cssComponentsStyles from "../Global/Styles/components";
-import cssLayoutStyles from "../Global/Styles/layout";
+import cssComponentsStyles from "../../Global/Styles/components";
+import cssLayoutStyles from "../../Global/Styles/layout";
 
 const LoadingScreen: React.FC = () => {
   const theme = useTheme();

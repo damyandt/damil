@@ -3,8 +3,8 @@ import { RouterProvider } from "react-router-dom";
 import appRouter from "./Layout/Router/AppRouter";
 import GuestLayout from "./Layout/GuestLayout";
 import { useAuthedContext } from "./context/AuthContext";
-import LoadingScreen from "./components/LoadingPage";
 import { useEffect } from "react";
+import LoadingScreen from "./components/pageComponents/LoadingPage";
 
 const App: React.FC = () => {
   const { authedUser, authedUserLoading } = useAuthedContext();

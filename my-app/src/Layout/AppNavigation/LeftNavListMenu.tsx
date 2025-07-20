@@ -4,7 +4,6 @@ import {
   ListItemIcon,
   ListItemText,
   Box,
-  Tooltip,
 } from "@mui/material";
 import { useState } from "react";
 import { SerializedStyles } from "@emotion/react";

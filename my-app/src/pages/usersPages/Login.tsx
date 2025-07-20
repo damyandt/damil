@@ -18,14 +18,14 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import EditIcon from "@mui/icons-material/Edit";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import TextField from "../../components/TextField";
+import TextField from "../../components/MaterialUI/FormFields/TextField";
 import { MAIN_COLOR } from "../../Layout/layoutVariables";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
 import { codeVerification, postLogin, validateEmail } from "./api/postQuery";
 import { setCookie } from "../../Global/Utils/commonFunctions";
 import { useAuthedContext } from "../../context/AuthContext";
 import { SetCookieParams } from "../../Auth/authTypes";
-import { Fade } from "../../components/Fade";
+import { Fade } from "../../components/MaterialUI/FormFields/Fade";
 
 export const errorMessages = {
   invalidEmail: "Account with this email does not exists.",

@@ -5,6 +5,7 @@ import { MAIN_COLOR } from "../../Layout/layoutVariables";
 interface CustomTooltipProps extends TooltipProps {
   children: React.ReactElement;
   mainColor?: string;
+  width?: number | string;
 }
 
 const CustomTooltip: React.FC<CustomTooltipProps> = ({
@@ -12,6 +13,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
   title,
   mainColor = MAIN_COLOR,
   placement = "right",
+  width,
   ...rest
 }) => {
   return (
@@ -22,6 +24,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
       componentsProps={{
         tooltip: {
           sx: {
+            width: width ? width : "fit-content",
             bgcolor: mainColor,
             color: "#fff",
             fontSize: 13,

@@ -4,11 +4,11 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Box, Grid, MenuItem, Typography } from "@mui/material";
 import CustomModal from "../../components/MaterialUI/Modal";
-import TextField from "../../components/TextField";
+import TextField from "../../components/MaterialUI/FormFields/TextField";
 import Button from "../../components/MaterialUI/Button";
 import { useOutletContext } from "react-router-dom";
 import { AppRouterProps } from "../../Layout/layoutVariables";
-import DatePickerComponent from "../../components/DatePicker";
+import DatePickerComponent from "../../components/MaterialUI/FormFields/DatePicker";
 import dayjs from "dayjs";
 
 const EmployeeCalendar = () => {

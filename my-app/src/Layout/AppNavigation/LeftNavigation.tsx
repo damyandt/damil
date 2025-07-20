@@ -6,7 +6,7 @@ import {
 } from "../layoutVariables";
 import LeftNavListMenu from "./LeftNavListMenu";
 import { useTranslatedNav } from "../../Global/Hooks/useTranslatedNav";
-import { NAV_DAMIL_ACCESS_CONTROL, NAV_DAMIL_EMPLOYEES } from "./leftNavData";
+import { NAV_DAMIL_ACCESS_CONTROL, NAV_DAMIL_STAFF } from "./leftNavData";
 
 const cssStyles = (openLeftNav: boolean) => ({
   drawer: css({
@@ -92,8 +92,8 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
           />
           <Divider variant="middle" />
           <LeftNavListMenu
-            navList={NAV_DAMIL_EMPLOYEES.list}
-            listTitle={NAV_DAMIL_EMPLOYEES.title}
+            navList={NAV_DAMIL_STAFF.list}
+            listTitle={NAV_DAMIL_STAFF.title}
             openLeftNav={openLeftNav}
           />
           <Divider variant="middle" />

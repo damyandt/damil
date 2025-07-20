@@ -14,14 +14,14 @@ import { Link as RouterLink } from "react-router-dom";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import TextField from "../../components/TextField";
+import TextField from "../../components/MaterialUI/FormFields/TextField";
 import { MAIN_COLOR } from "../../Layout/layoutVariables";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
 import { codeVerification, postLogin, postRegister } from "./api/postQuery";
 import { useAuthedContext } from "../../context/AuthContext";
 import { setCookie } from "../../Global/Utils/commonFunctions";
 import { SetCookieParams } from "../../Auth/authTypes";
-import { Fade } from "../../components/Fade";
+import { Fade } from "../../components/MaterialUI/FormFields/Fade";
 
 const RegisterPage = () => {
   const { setUserSignedIn } = useAuthedContext();

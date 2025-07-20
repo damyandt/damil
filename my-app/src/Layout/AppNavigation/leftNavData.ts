@@ -12,13 +12,15 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import GroupIcon from "@mui/icons-material/Group";
 import BadgeIcon from "@mui/icons-material/Badge";
 import DateRangeIcon from "@mui/icons-material/DateRange";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 enum LEFT_NAV_SECTION {
   "Home" = "Home",
   "DAMIL Analytics" = "DAMIL Analytics",
   "DAMIL Gyms" = "DAMIL Gyms",
   "DAMIL Access Control" = "DAMIL Access Control",
-  "DAMIL Employees" = "DAMIL Employees",
+  "DAMIL Staff Members" = "DAMIL Staff Members",
 }
 
 type LeftNavMenu = {
@@ -31,7 +33,7 @@ export const NAV_DAMIL_HOME: LeftNavMenu = {
   list: [
     {
       text: "Home",
-      url: "/home",
+      url: "/",
       Icon: HomeOutlinedIcon,
       disabled: false,
     },
@@ -108,24 +110,36 @@ export const NAV_DAMIL_ACCESS_CONTROL: LeftNavMenu = {
   ],
 };
 
-export const NAV_DAMIL_EMPLOYEES: LeftNavMenu = {
-  title: LEFT_NAV_SECTION["DAMIL Access Control"],
+export const NAV_DAMIL_STAFF: LeftNavMenu = {
+  title: LEFT_NAV_SECTION["DAMIL Staff Members"],
   list: [
     {
-      text: "Employees",
+      text: "Staff",
       url: null,
       Icon: BadgeIcon,
       disabled: false,
       nested: [
         {
-          text: "All Employees",
-          url: "/DAMIL-Employees/All",
+          text: "Staff Members",
+          url: "/DAMIL-Staff/All",
           Icon: GroupIcon,
           disabled: false,
         },
         {
-          text: "Calender",
-          url: "/DAMIL-Employees/Calender",
+          text: "Staff Roles",
+          url: "/DAMIL-Staff/Roles",
+          Icon: AdminPanelSettingsIcon,
+          disabled: false,
+        },
+        {
+          text: "Staff Shifts",
+          url: "/DAMIL-Staff/Shifts",
+          Icon: AccessTimeIcon,
+          disabled: false,
+        },
+        {
+          text: "Events",
+          url: "/DAMIL-Staff/Events",
           Icon: DateRangeIcon,
           disabled: false,
         },

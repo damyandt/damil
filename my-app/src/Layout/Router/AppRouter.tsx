@@ -8,9 +8,11 @@ import OverviewPage from "../../pages/Analystics/Overview";
 import ClientsPage from "../../pages/Access Control/Clients";
 import DailyVisitors from "../../pages/Access Control/DailyVisitors";
 import PageNotFound from "../../pages/PageNotFound";
-import EmployeesPage from "../../pages/Employees/EmployeesPage";
 import ErrorPage from "./ErrorPage";
-import EmployeeCalendar from "../../pages/Employees/Calender";
+import EmployeeCalendar from "../../pages/Staff/Calender";
+import StaffPage from "../../pages/Staff/StaffMembersPage";
+import StaffRolesPage from "../../pages/Staff/StaffRolesPage";
+import StaffShifts from "../../pages/Staff/Shifts/StaffShifts";
 
 export default createBrowserRouter([
   {
@@ -23,9 +25,10 @@ export default createBrowserRouter([
         element: <PageNotFound />,
       },
       {
-        path: "/Home",
+        path: "/",
         element: <ClientsPage />,
       },
+
       // Analystics
       {
         path: "/DAMIL-Analytics/Overview",
@@ -58,13 +61,21 @@ export default createBrowserRouter([
         element: <DailyVisitors />,
       },
 
-      // Personal
+      // Staff
       {
-        path: "/DAMIL-Employees/All",
-        element: <EmployeesPage />,
+        path: "/DAMIL-Staff/All",
+        element: <StaffPage />,
       },
       {
-        path: "/DAMIL-Employees/Calender",
+        path: "/DAMIL-Staff/Roles",
+        element: <StaffRolesPage />,
+      },
+      {
+        path: "/DAMIL-Staff/Shifts",
+        element: <StaffShifts />,
+      },
+      {
+        path: "/DAMIL-Staff/Events",
         element: <EmployeeCalendar />,
       },
     ],
