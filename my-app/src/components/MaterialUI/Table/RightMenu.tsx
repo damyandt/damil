@@ -13,7 +13,7 @@ interface InvoiceRightMenuProps {
 }
 
 const RightMenu: React.FC<InvoiceRightMenuProps> = ({
-  // setRefreshTable,
+  setRefreshTable,
   columns,
   addNew,
 }) => {
@@ -46,8 +46,9 @@ const RightMenu: React.FC<InvoiceRightMenuProps> = ({
       >
         {addNew && columns.length !== 0 && (
           <CreateForm
+            setRefreshTable={setRefreshTable}
             columns={columns}
-            actionUrl="gym/members"
+            actionUrl="gym-members/members"
             setModalTitle={setModalTitle}
           />
         )}

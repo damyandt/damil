@@ -4,10 +4,12 @@ import {
   Typography,
   ModalProps as MuiModalProps,
   Grow,
+  IconButton,
 } from "@mui/material";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import EditIcon from "@mui/icons-material/Edit";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface CustomModalProps extends Pick<MuiModalProps, "open" | "onClose"> {
   title: string;
@@ -129,7 +131,24 @@ const CustomModal: React.FC<CustomModalProps> = ({
                 </Box>
               </Box>
             </Box>
-
+            <IconButton
+              onClick={() => {
+                onClose && onClose({}, "escapeKeyDown");
+              }}
+              sx={{
+                position: "absolute",
+                top: 20,
+                right: 20,
+                color: "#fff",
+                backgroundColor: "rgba(0,0,0,0.2)",
+                "&:hover": {
+                  backgroundColor: "rgba(0,0,0,0.4)",
+                },
+              }}
+              size="small"
+            >
+              <CloseIcon />
+            </IconButton>
             <Box
               sx={{
                 p: 4,

@@ -10,7 +10,7 @@ import Button from "../MaterialUI/Button";
 interface CreateFormProps {
   columns?: any;
   actionUrl: string;
-  triggerRefetch?: () => void;
+  setRefreshTable: any;
   setModalTitle?: any;
   selectedRow?: any;
   disabled?: boolean;
@@ -20,7 +20,7 @@ interface CreateFormProps {
 const CreateForm: React.FC<CreateFormProps> = ({
   columns,
   actionUrl,
-  triggerRefetch,
+  setRefreshTable,
   setModalTitle,
   selectedRow,
   disabled,
@@ -31,28 +31,29 @@ const CreateForm: React.FC<CreateFormProps> = ({
   );
   const [loading, setLoading] = useState<boolean>(false);
   const [options, setOptions] = useState<any>([
-    {
-      title: "Active",
-      value: "ACTIVE",
-    },
-    {
-      title: "Inactive",
-      value: "INACTIVE",
-    },
-    {
-      title: "Pending",
-      value: "PENDING",
-    },
-    {
-      title: "Canceled",
-      value: "CANCELED",
-    },
+    // {
+    //   title: "Active",
+    //   value: "ACTIVE",
+    // },
+    // {
+    //   title: "Inactive",
+    //   value: "INACTIVE",
+    // },
+    // {
+    //   title: "Pending",
+    //   value: "PENDING",
+    // },
+    // {
+    //   title: "Canceled",
+    //   value: "CANCELED",
+    // },
   ]);
   const [status, setStatus] = useState<"success" | "error" | null>(null);
   const { setAuthedUser } = useAuthedContext();
   const { t } = useLanguageContext();
   const handleClose = (): void => {
     if (!loading) {
+      setRefreshTable?.((prev: any) => !prev);
       setFormValues({});
       setModalTitle(null);
     }
@@ -87,10 +88,9 @@ const CreateForm: React.FC<CreateFormProps> = ({
 
       setStatus("success");
       setLoading(false);
-
       setTimeout(() => {
-        triggerRefetch?.();
-      }, 500);
+        handleClose();
+      }, 1000);
     } catch (error) {
       console.error("Error creating item:", error);
       setStatus("error");
@@ -100,36 +100,11 @@ const CreateForm: React.FC<CreateFormProps> = ({
 
   const fetchOptions = async (url: string) => {
     const cleanedUrl = url.replace(/^\/v1\//, "");
-    console.log(cleanedUrl);
-    // const output = {
-    //   success: true,
-    //   message: "Success",
-    //   errorCode: null,
-    //   data: [
-    //     {
-    //       title: "Active",
-    //       value: "ACTIVE",
-    //     },
-    //     {
-    //       title: "Inactive",
-    //       value: "INACTIVE",
-    //     },
-    //     {
-    //       title: "Pending",
-    //       value: "PENDING",
-    //     },
-    //     {
-    //       title: "Canceled",
-    //       value: "CANCELED",
-    //     },
-    //   ],
-    //   validationErrors: null,
-    // };
-    // setOptions(output.data);
     const options = await callApi<any>({
       query: getQueryOptions(cleanedUrl),
       auth: { setAuthedUser },
     });
+    setOptions(options.data);
   };
 
   const excludedKeys = ["id", "actions", "createdAt", "updatedAt"];
@@ -180,6 +155,32 @@ const CreateForm: React.FC<CreateFormProps> = ({
                         );
 
                       case "enum":
+                        fetchOptions(col.dropDownConfig.url);
+                        return (
+                          <TextField
+                            sx={{ width: "100%" }}
+                            label={col.header}
+                            value={value}
+                            onChange={(e: any) =>
+                              handleChange(col.field, e.target.value)
+                            }
+                            select
+                            fullWidth
+                            disabled={disabled || false}
+                          >
+                            {options?.map(
+                              (option: { title: string; value: string }) => (
+                                <MenuItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  {option.title}
+                                </MenuItem>
+                              )
+                            )}
+                          </TextField>
+                        );
+                      case "dropdown":
                         fetchOptions(col.dropDownConfig.url);
                         return (
                           <TextField

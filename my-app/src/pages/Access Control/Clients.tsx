@@ -82,39 +82,7 @@ const ClientsPage = () => {
         <Box>
           <TableComponent
             columns={tableData.columns}
-            rows={[
-              {
-                id: 1,
-                fullName: "Sophia Miller",
-                subscriptionStatus: "ACTIVE",
-                phone: "+1-555-234-5678",
-              },
-              {
-                id: 2,
-                fullName: "Liam Johnson",
-                subscriptionStatus: "INACTIVE",
-                phone: "+1-555-876-5432",
-              },
-              {
-                id: 3,
-                fullName: "Olivia Brown",
-                subscriptionStatus: "PENDING",
-                phone: "+1-555-321-0987",
-              },
-              {
-                id: 4,
-                fullName: "Noah Davis",
-                subscriptionStatus: "CANCELLED",
-                phone: "+1-555-765-4321",
-              },
-              {
-                id: 5,
-                fullName: "Emma Wilson",
-                subscriptionStatus: "ACTIVE",
-                phone: "+1-555-000-1234",
-              },
-            ]}
-            // rows={tableData.rows}
+            rows={tableData.rows}
             configurations={tableData.config}
             setRefreshTable={setRefreshTable}
             title={t("All Registered Clients")}
