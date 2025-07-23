@@ -75,7 +75,13 @@ const TableComponent = ({
   );
 
   const isRowDeleting = (id: string) => !!deleteQueue[id];
+  const visibleColumns = columns.filter(
+    (col) => configurations.columnsLayoutConfig.columnVisibility[col.field]
+  );
 
+  const createFieldsColumns = columns.filter(
+    (col) => configurations.columnsLayoutConfig.createFields[col.field]
+  );
   return (
     <>
       <Grid container spacing={2} alignItems={"center"} py={2}>
@@ -182,7 +188,7 @@ const TableComponent = ({
         >
           <TableHead>
             <TableRow sx={{ backgroundColor: "#ffffff" }}>
-              {columns?.map((col) => (
+              {visibleColumns?.map((col) => (
                 <TableCell
                   key={col.field as string}
                   align={col.align || "left"}
