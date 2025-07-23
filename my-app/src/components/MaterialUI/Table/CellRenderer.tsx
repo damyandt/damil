@@ -13,7 +13,6 @@ const CellRenderer = ({
 }: CellRendererProps) => {
   let displayValue: React.ReactNode = String(value);
   let style: any = {};
-  console.log(dataType);
   switch (dataType) {
     case "boolean":
       style.color = value ? "green" : "red";
@@ -26,7 +25,6 @@ const CellRenderer = ({
 
     case "enum": {
       const enumValue = String(value).toLowerCase();
-
       const enumStyles: Record<
         string,
         {

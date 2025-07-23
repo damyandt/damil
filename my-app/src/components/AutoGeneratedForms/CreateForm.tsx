@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Grid, MenuItem } from "@mui/material";
 import { useAuthedContext } from "../../context/AuthContext";
 import { useLanguageContext } from "../../context/LanguageContext";
@@ -30,27 +30,47 @@ const CreateForm: React.FC<CreateFormProps> = ({
     selectedRow ?? {}
   );
   const [loading, setLoading] = useState<boolean>(false);
-  const [options, setOptions] = useState<any>([
-    // {
-    //   title: "Active",
-    //   value: "ACTIVE",
-    // },
-    // {
-    //   title: "Inactive",
-    //   value: "INACTIVE",
-    // },
-    // {
-    //   title: "Pending",
-    //   value: "PENDING",
-    // },
-    // {
-    //   title: "Canceled",
-    //   value: "CANCELED",
-    // },
-  ]);
+  const excludedKeys = ["id", "actions", "createdAt", "updatedAt"];
+  const [options, setOptions] = useState<any>([]);
   const [status, setStatus] = useState<"success" | "error" | null>(null);
   const { setAuthedUser } = useAuthedContext();
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const { t } = useLanguageContext();
+
+  useEffect(() => {
+    const fetchAllOptions = async () => {
+      if (!columns) return;
+
+      const optionsMap: Record<string, any[]> = {};
+
+      for (const col of columns) {
+        const isDropdown = col.dropDownConfig?.url;
+        const isEnum = col.enumConfig?.url;
+
+        if (isDropdown || isEnum) {
+          const rawUrl = col.dropDownConfig?.url || col.enumConfig?.url;
+          const url = rawUrl.startsWith("/v1/") ? rawUrl.slice(4) : rawUrl;
+
+          try {
+            const options = await callApi<any>({
+              query: getQueryOptions(url),
+              auth: { setAuthedUser },
+            });
+            options.success && (optionsMap[col.field] = options.data);
+            !options.success &&
+              console.error("Error fetching options for: ", col.field);
+          } catch (error) {
+            console.error("Error fetching options for", col.field, error);
+          }
+        }
+      }
+
+      setOptions(optionsMap);
+    };
+
+    fetchAllOptions();
+  }, [columns, setAuthedUser]);
+
   const handleClose = (): void => {
     if (!loading) {
       setRefreshTable?.((prev: any) => !prev);
@@ -58,6 +78,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
       setModalTitle(null);
     }
   };
+
   const getQueryOptions = (url: string): Query => ({
     endpoint: `${url}`,
     method: "GET",
@@ -73,7 +94,6 @@ const CreateForm: React.FC<CreateFormProps> = ({
   const handleSave = async (): Promise<void> => {
     setLoading(true);
     setStatus(null);
-    console.log(formValues);
     try {
       const query: Query = {
         endpoint: actionUrl,
@@ -81,33 +101,28 @@ const CreateForm: React.FC<CreateFormProps> = ({
         variables: { ...formValues },
       };
 
-      await callApi({
+      const responce = await callApi<any>({
         query,
         auth: { setAuthedUser },
       });
 
-      setStatus("success");
+      responce.success ? setStatus("success") : setStatus("error");
+
+      responce.validationErrors !== null &&
+        setErrors(responce.validationErrors);
+      console.log(responce.validationErrors);
+
       setLoading(false);
-      setTimeout(() => {
-        handleClose();
-      }, 1000);
+      responce.success &&
+        setTimeout(() => {
+          handleClose();
+        }, 1000);
     } catch (error) {
       console.error("Error creating item:", error);
       setStatus("error");
       setLoading(false);
     }
   };
-
-  const fetchOptions = async (url: string) => {
-    const cleanedUrl = url.replace(/^\/v1\//, "");
-    const options = await callApi<any>({
-      query: getQueryOptions(cleanedUrl),
-      auth: { setAuthedUser },
-    });
-    setOptions(options.data);
-  };
-
-  const excludedKeys = ["id", "actions", "createdAt", "updatedAt"];
 
   return (
     <>
@@ -128,13 +143,15 @@ const CreateForm: React.FC<CreateFormProps> = ({
                       case "email":
                         return (
                           <TextField
+                            fullWidth
                             sx={{ width: "100%" }}
                             label={col.header}
                             value={value}
                             onChange={(e: any) =>
                               handleChange(col.field, e.target.value)
                             }
-                            fullWidth
+                            error={!!errors[col.field]}
+                            helperText={errors[col.field] || ""}
                             disabled={disabled || false}
                           />
                         );
@@ -142,6 +159,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
                       case "number":
                         return (
                           <TextField
+                            fullWidth
                             sx={{ width: "100%" }}
                             label={col.header}
                             type="number"
@@ -149,26 +167,28 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             onChange={(e: any) =>
                               handleChange(col.field, e.target.value)
                             }
-                            fullWidth
+                            error={!!errors[col.field]}
+                            helperText={errors[col.field] || " "}
                             disabled={disabled || false}
                           />
                         );
 
                       case "enum":
-                        fetchOptions(col.dropDownConfig.url);
                         return (
                           <TextField
+                            fullWidth
+                            select
                             sx={{ width: "100%" }}
                             label={col.header}
                             value={value}
                             onChange={(e: any) =>
                               handleChange(col.field, e.target.value)
                             }
-                            select
-                            fullWidth
+                            error={!!errors[col.field]}
+                            helperText={errors[col.field] || ""}
                             disabled={disabled || false}
                           >
-                            {options?.map(
+                            {options[col.field]?.map(
                               (option: { title: string; value: string }) => (
                                 <MenuItem
                                   key={option.value}
@@ -181,20 +201,21 @@ const CreateForm: React.FC<CreateFormProps> = ({
                           </TextField>
                         );
                       case "dropdown":
-                        fetchOptions(col.dropDownConfig.url);
                         return (
                           <TextField
+                            fullWidth
+                            select
                             sx={{ width: "100%" }}
                             label={col.header}
                             value={value}
                             onChange={(e: any) =>
                               handleChange(col.field, e.target.value)
                             }
-                            select
-                            fullWidth
+                            error={!!errors[col.field]}
+                            helperText={errors[col.field] || ""}
                             disabled={disabled || false}
                           >
-                            {options?.map(
+                            {options[col.field]?.map(
                               (option: { title: string; value: string }) => (
                                 <MenuItem
                                   key={option.value}
@@ -210,7 +231,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
                       case "date":
                         return (
                           <TextField
-                            disabled={disabled || false}
+                            fullWidth
                             sx={{ width: "100%" }}
                             label={col.header}
                             type="date"
@@ -218,21 +239,25 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             onChange={(e: any) =>
                               handleChange(col.field, e.target.value)
                             }
-                            fullWidth
+                            error={!!errors[col.field]}
+                            helperText={errors[col.field] || ""}
+                            disabled={disabled || false}
                           />
                         );
 
                       default:
                         return (
                           <TextField
-                            disabled={disabled || false}
+                            fullWidth
                             sx={{ width: "100%" }}
                             label={col.header}
                             value={value}
                             onChange={(e: any) =>
                               handleChange(col.field, e.target.value)
                             }
-                            fullWidth
+                            error={!!errors[col.field]}
+                            helperText={errors[col.field] || ""}
+                            disabled={disabled || false}
                           />
                         );
                     }
@@ -240,27 +265,6 @@ const CreateForm: React.FC<CreateFormProps> = ({
                 </Grid>
               );
             })}
-          {status === "success" && (
-            <Grid size={12}>
-              <Alert
-                message={t("Item successfully created")}
-                showAlert={true}
-                severity="success"
-                autoClose
-              />
-            </Grid>
-          )}
-
-          {status === "error" && (
-            <Grid size={12}>
-              <Alert
-                message={t("Error creating item")}
-                showAlert={true}
-                severity="error"
-                autoClose
-              />
-            </Grid>
-          )}
         </Grid>
 
         <Grid
@@ -286,6 +290,27 @@ const CreateForm: React.FC<CreateFormProps> = ({
           <Grid sx={disabled ? { display: "none" } : {}}>
             <Button onClick={handleSave}>Submit</Button>
           </Grid>
+          {status === "success" && (
+            <Grid size={12}>
+              <Alert
+                message={t("Item successfully created!")}
+                showAlert={true}
+                severity="success"
+                autoClose
+              />
+            </Grid>
+          )}
+
+          {status === "error" && (
+            <Grid size={12}>
+              <Alert
+                message={t("Error creating item!")}
+                showAlert={true}
+                severity="error"
+                autoClose
+              />
+            </Grid>
+          )}
         </Grid>
       </Box>
     </>
