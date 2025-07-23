@@ -42,6 +42,14 @@ export const MenuActions = ({
     configurations?.actions?.find((el: any) => el.id === "delete") ?? null;
   const detailsAction =
     configurations?.actions?.find((el: any) => el.id === "details") ?? null;
+  let editUrl = editAction?.url || "";
+
+  if (editUrl.startsWith("/")) {
+    editUrl = editUrl.slice(1);
+  }
+  if (selectedRow?.id) {
+    editUrl = editUrl.replace("{id}", selectedRow.id);
+  }
   return (
     <Menu
       anchorEl={anchorEl}
@@ -66,9 +74,10 @@ export const MenuActions = ({
           }}
         >
           <EditAction
+            setRefreshTable={setRefreshTable}
             columns={columns || []}
             selectedRow={selectedRow}
-            actionUrl={editAction?.url ?? ""}
+            actionUrl={editUrl || ""}
             setAnchorEl={setAnchorEl}
           />
         </MenuItem>

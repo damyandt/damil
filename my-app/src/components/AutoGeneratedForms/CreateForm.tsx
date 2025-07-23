@@ -26,9 +26,9 @@ const CreateForm: React.FC<CreateFormProps> = ({
   disabled,
   setAnchorEl,
 }) => {
-  const [formValues, setFormValues] = useState<Record<string, any>>(
-    selectedRow ?? {}
-  );
+  const { id, ...rest } = selectedRow ?? {};
+  const [formValues, setFormValues] = useState<Record<string, any>>(rest);
+
   const [loading, setLoading] = useState<boolean>(false);
   const excludedKeys = ["id", "actions", "createdAt", "updatedAt"];
   const [options, setOptions] = useState<any>([]);
@@ -97,7 +97,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
     try {
       const query: Query = {
         endpoint: actionUrl,
-        method: "POST",
+        method: selectedRow ? "PUT" : "POST",
         variables: { ...formValues },
       };
 
@@ -293,7 +293,11 @@ const CreateForm: React.FC<CreateFormProps> = ({
           {status === "success" && (
             <Grid size={12}>
               <Alert
-                message={t("Item successfully created!")}
+                message={
+                  selectedRow
+                    ? t("Item successfully edited!")
+                    : t("Item successfully created!")
+                }
                 showAlert={true}
                 severity="success"
                 autoClose
@@ -304,7 +308,11 @@ const CreateForm: React.FC<CreateFormProps> = ({
           {status === "error" && (
             <Grid size={12}>
               <Alert
-                message={t("Error creating item!")}
+                message={
+                  selectedRow
+                    ? t("Error editing item!")
+                    : t("Error creating item!")
+                }
                 showAlert={true}
                 severity="error"
                 autoClose
