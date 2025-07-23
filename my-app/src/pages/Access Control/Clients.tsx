@@ -40,6 +40,7 @@ const ClientsPage = () => {
         <RightMenu
           setRefreshTable={setRefreshTable}
           columns={tableData.columns ?? []}
+          configurations={tableData.config ?? {}}
           addNew={true}
         />
       );
@@ -56,6 +57,18 @@ const ClientsPage = () => {
         query: getClientsTable(),
         auth: { setAuthedUser },
       });
+      // const newData = data.data.columns;
+      // newData.push({
+      //   field: "actions",
+      //   header: "Actions",
+      //   type: "button",
+      //   dropDownConfig: null,
+      // });
+
+      // setTableData({
+      //   ...data.data,
+      //   columns: newData,
+      // });
       setTableData(data.data);
     } catch (err) {
       console.log(err);

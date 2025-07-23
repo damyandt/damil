@@ -15,6 +15,7 @@ interface CreateFormProps {
   selectedRow?: any;
   disabled?: boolean;
   setAnchorEl?: any;
+  configurations?: any;
 }
 
 const CreateForm: React.FC<CreateFormProps> = ({
@@ -25,6 +26,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
   selectedRow,
   disabled,
   setAnchorEl,
+  configurations,
 }) => {
   const { id, ...rest } = selectedRow ?? {};
   const [formValues, setFormValues] = useState<Record<string, any>>(rest);
@@ -36,6 +38,9 @@ const CreateForm: React.FC<CreateFormProps> = ({
   const { setAuthedUser } = useAuthedContext();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { t } = useLanguageContext();
+
+  const createFieldsColumns =
+    columns.filter((col: any) => configurations.createFields[col.field]) || [];
 
   useEffect(() => {
     const fetchAllOptions = async () => {
@@ -128,7 +133,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
     <>
       <Box component="div" sx={{ p: 2 }}>
         <Grid container spacing={2}>
-          {columns
+          {createFieldsColumns
             .filter(
               (col: any) => !excludedKeys.includes(col.header?.toLowerCase())
             )

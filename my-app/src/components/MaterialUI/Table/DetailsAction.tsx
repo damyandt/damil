@@ -48,10 +48,7 @@ export const DetailsAction = ({
       >
         <Grid container spacing={2} sx={{ p: 2 }}>
           {columns
-            ?.filter(
-              (col: any) =>
-                !["id", "actions", "createdAt", "updatedAt"].includes(col.field)
-            )
+            ?.filter((col: any) => !["actions"].includes(col.field))
             .map((col: any) => (
               <Grid size={4} key={col.field}>
                 <Typography variant="subtitle2" color="text.secondary">

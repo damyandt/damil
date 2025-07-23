@@ -10,12 +10,14 @@ interface InvoiceRightMenuProps {
   setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>;
   columns: any;
   addNew?: boolean;
+  configurations: any;
 }
 
 const RightMenu: React.FC<InvoiceRightMenuProps> = ({
   setRefreshTable,
   columns,
   addNew,
+  configurations,
 }) => {
   // console.log(columns);
   const { t } = useLanguageContext();
@@ -48,6 +50,7 @@ const RightMenu: React.FC<InvoiceRightMenuProps> = ({
           <CreateForm
             setRefreshTable={setRefreshTable}
             columns={columns}
+            configurations={configurations}
             actionUrl="gym-members/members"
             setModalTitle={setModalTitle}
           />

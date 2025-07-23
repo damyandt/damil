@@ -11,6 +11,7 @@ type EditActionProps = {
   actionUrl: string;
   setAnchorEl: any;
   setRefreshTable: any;
+  configurations: any;
 };
 
 export const EditAction = ({
@@ -19,6 +20,7 @@ export const EditAction = ({
   actionUrl,
   setAnchorEl,
   setRefreshTable,
+  configurations,
 }: EditActionProps) => {
   const { t } = useLanguageContext();
 
@@ -51,6 +53,7 @@ export const EditAction = ({
             setModalTitle={setOpen}
             selectedRow={selectedRow}
             setRefreshTable={setRefreshTable}
+            configurations={configurations}
           />
         )}
       </CustomModal>
