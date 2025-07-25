@@ -1,7 +1,5 @@
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { Menu, MenuItem } from "@mui/material";
 import { DeleteAction } from "./DeleteAction";
-import CustomTooltip from "../CustomTooltip";
-import InfoIcon from "@mui/icons-material/Info";
 import { EditAction } from "./EditAction";
 import { DetailsAction } from "./DetailsAction";
 

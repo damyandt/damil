@@ -13,6 +13,7 @@ import EmployeeCalendar from "../../pages/Staff/Calender";
 import StaffPage from "../../pages/Staff/StaffMembersPage";
 import StaffRolesPage from "../../pages/Staff/StaffRolesPage";
 import StaffShifts from "../../pages/Staff/Shifts/StaffShifts";
+import HomePage from "../../pages/Home/Home";
 
 export default createBrowserRouter([
   {
@@ -26,7 +27,7 @@ export default createBrowserRouter([
       },
       {
         path: "/",
-        element: <ClientsPage />,
+        element: <HomePage />,
       },
 
       // Analystics

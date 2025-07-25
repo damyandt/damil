@@ -58,7 +58,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
       });
 
       setAuthedUser({
-        ...signedInUser,
+        ...signedInUser.data,
       });
 
       return;

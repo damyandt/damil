@@ -10,13 +10,15 @@ import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
+import { JSX } from "react";
+import SearchIcon from "@mui/icons-material/Search";
 
 interface CustomModalProps extends Pick<MuiModalProps, "open" | "onClose"> {
   title: string;
   width?: number | string;
   children: React.ReactNode;
   style?: "info" | "edit" | "create";
-  titleIcon?: "info" | "edit" | "create";
+  titleIcon?: "info" | "edit" | "create" | "search";
 }
 
 const sizeMap: any = {
@@ -34,6 +36,12 @@ const CustomModal: React.FC<CustomModalProps> = ({
   style,
   titleIcon,
 }) => {
+  const iconMap: Record<string, JSX.Element> = {
+    info: <InfoOutlineIcon fontSize="large" color="action" />,
+    create: <AddCircleOutlineOutlinedIcon fontSize="large" color="info" />,
+    edit: <EditIcon fontSize="large" color="primary" />,
+    search: <SearchIcon fontSize="large" color="action" />,
+  };
   return (
     <Modal
       open={open}
@@ -55,6 +63,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
           flexDirection: "column",
           gap: 3,
           justifyContent: "space-between",
+          maxHeight: "95vh",
+          overflow: "scroll",
         }}
       >
         <Grow in={!!open} timeout={500}>
@@ -104,7 +114,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
                     WebkitBackdropFilter: "blur(5px)",
                   }}
                 >
-                  {titleIcon === "info" && (
+                  {iconMap[titleIcon ?? ""]}
+                  {/* {titleIcon === "info" && (
                     <InfoOutlineIcon fontSize="large" color="action" />
                   )}
                   {titleIcon === "create" && (
@@ -115,7 +126,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
                   )}
                   {titleIcon === "edit" && (
                     <EditIcon fontSize="large" color="primary" />
-                  )}
+                  )} */}
                   <Typography
                     variant="h4"
                     sx={{

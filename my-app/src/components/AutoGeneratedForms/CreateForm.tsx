@@ -6,6 +6,7 @@ import callApi, { Query } from "../../API/callApi";
 import Alert from "../MaterialUI/Alert";
 import TextField from "../MaterialUI/FormFields/TextField";
 import Button from "../MaterialUI/Button";
+import DatePickerComponent from "../MaterialUI/FormFields/DatePicker";
 
 interface CreateFormProps {
   columns?: any;
@@ -173,7 +174,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
                               handleChange(col.field, e.target.value)
                             }
                             error={!!errors[col.field]}
-                            helperText={errors[col.field] || " "}
+                            helperText={errors[col.field] || ""}
                             disabled={disabled || false}
                           />
                         );
@@ -235,18 +236,13 @@ const CreateForm: React.FC<CreateFormProps> = ({
 
                       case "date":
                         return (
-                          <TextField
-                            fullWidth
-                            sx={{ width: "100%" }}
+                          <DatePickerComponent
+                            sx={{ width: "100%", margin: 0 }}
                             label={col.header}
-                            type="date"
                             value={value}
-                            onChange={(e: any) =>
-                              handleChange(col.field, e.target.value)
+                            onChange={(newValue: any) =>
+                              handleChange(col.field, newValue)
                             }
-                            error={!!errors[col.field]}
-                            helperText={errors[col.field] || ""}
-                            disabled={disabled || false}
                           />
                         );
 

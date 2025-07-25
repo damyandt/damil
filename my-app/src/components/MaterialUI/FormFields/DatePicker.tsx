@@ -1,7 +1,8 @@
 import { DatePicker } from "@mui/x-date-pickers";
-import { TextField, TextFieldProps } from "@mui/material";
+import { TextFieldProps } from "@mui/material";
 import { SxProps } from "@mui/system";
 import React from "react";
+import dayjs from "dayjs";
 
 interface DatePickerComponentProps {
   label: string;
@@ -19,13 +20,13 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   onChange,
   fullWidth = true,
   margin = "normal",
-  format = "DD/MM/YYYY",
+  format = "YYYY/MM/DD",
   sx = {},
 }) => {
   return (
     <DatePicker
       label={label}
-      value={value}
+      value={value ? dayjs(value) : null}
       onChange={onChange}
       slotProps={{
         textField: {
@@ -45,7 +46,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
             ...sx,
           },
           inputProps: {
-            format: "DD/MM/YYYY",
+            format: format,
           },
         },
       }}
