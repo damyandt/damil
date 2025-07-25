@@ -20,7 +20,6 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { useAuthedContext } from "../../context/AuthContext";
 import CustomModal from "../../components/MaterialUI/Modal";
 import { useLanguageContext } from "../../context/LanguageContext";
-import GymVisitsChart from "../Analystics/GymVisitsChart";
 import ChartDisplay from "./ChartsDisplayed";
 
 const analytics = [

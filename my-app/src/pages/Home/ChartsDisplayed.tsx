@@ -3,7 +3,6 @@ import { Box, Grid, MenuItem, Select } from "@mui/material";
 import GymVisitsChart from "../Analystics/GymVisitsChart";
 import AgeDistributionChart from "../Analystics/AgeChart";
 import GoalMembersGaugeChart from "../Analystics/Goal";
-import OverviewPage from "../Analystics/Overview";
 import Memberships from "../Analystics/Memberships";
 
 const chartOptions = [
