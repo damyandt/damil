@@ -9,6 +9,7 @@ import {
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import EditIcon from "@mui/icons-material/Edit";
+import LoginIcon from "@mui/icons-material/Login";
 import CloseIcon from "@mui/icons-material/Close";
 import { JSX } from "react";
 import SearchIcon from "@mui/icons-material/Search";
@@ -18,7 +19,7 @@ interface CustomModalProps extends Pick<MuiModalProps, "open" | "onClose"> {
   width?: number | string;
   children: React.ReactNode;
   style?: "info" | "edit" | "create";
-  titleIcon?: "info" | "edit" | "create" | "search";
+  titleIcon?: "info" | "edit" | "create" | "search" | "login";
 }
 
 const sizeMap: any = {
@@ -41,6 +42,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
     create: <AddCircleOutlineOutlinedIcon fontSize="large" color="info" />,
     edit: <EditIcon fontSize="large" color="primary" />,
     search: <SearchIcon fontSize="large" color="action" />,
+    login: <LoginIcon fontSize="large" color="action" />,
   };
   return (
     <Modal
@@ -115,18 +117,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
                   }}
                 >
                   {iconMap[titleIcon ?? ""]}
-                  {/* {titleIcon === "info" && (
-                    <InfoOutlineIcon fontSize="large" color="action" />
-                  )}
-                  {titleIcon === "create" && (
-                    <AddCircleOutlineOutlinedIcon
-                      fontSize="large"
-                      color="info"
-                    />
-                  )}
-                  {titleIcon === "edit" && (
-                    <EditIcon fontSize="large" color="primary" />
-                  )} */}
+
                   <Typography
                     variant="h4"
                     sx={{

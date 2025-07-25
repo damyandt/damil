@@ -7,13 +7,13 @@ import {
   Stepper,
   Step,
   StepLabel,
-  Divider,
 } from "@mui/material";
 import TextField from "../../components/MaterialUI/FormFields/TextField";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 import GroupIcon from "@mui/icons-material/Group";
+import LoginIcon from "@mui/icons-material/Login";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -21,6 +21,7 @@ import { useAuthedContext } from "../../context/AuthContext";
 import CustomModal from "../../components/MaterialUI/Modal";
 import { useLanguageContext } from "../../context/LanguageContext";
 import ChartDisplay from "./ChartsDisplayed";
+import CheckInModal from "./CheckInModal";
 
 const analytics = [
   {
@@ -53,6 +54,7 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useLanguageContext();
   const { authedUser } = useAuthedContext();
+  const [openCheckIn, setOpenCheckIn] = useState(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState(0);
   const [searchInput, setSearchInput] = useState("");
@@ -106,11 +108,22 @@ const HomePage: React.FC = () => {
           }}
         >
           <Grid size={12}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom textAlign={"center"}>
               Quick Actions
             </Typography>
           </Grid>
-          <Grid size={6}>
+          <Grid size={4}>
+            <Button
+              fullWidth
+              variant="outlined"
+              color="primary"
+              startIcon={<LoginIcon />}
+              onClick={() => setOpenCheckIn(true)}
+            >
+              Check In
+            </Button>
+          </Grid>
+          <Grid size={4}>
             <Button
               fullWidth
               variant="contained"
@@ -118,23 +131,23 @@ const HomePage: React.FC = () => {
               startIcon={<PersonAddIcon />}
               onClick={handleAddMember}
             >
-              Add New Gym Member
+              Add New Member
             </Button>
           </Grid>
 
-          <Grid size={6}>
+          <Grid size={4}>
             <Button
               fullWidth
               variant="outlined"
               startIcon={<SearchIcon />}
               onClick={handleSearchMember}
             >
-              Search Gym Member
+              Search Member
             </Button>
           </Grid>
         </Grid>
-        <Divider sx={{ my: 2 }}></Divider>
-        <Grid container spacing={3}>
+        {/* <Divider sx={{ my: 2 }}></Divider> */}
+        <Grid container spacing={3} pt={3}>
           <Grid size={12}>
             <Grid container spacing={3}>
               {analytics.map((stat, index) => (
@@ -263,6 +276,7 @@ const HomePage: React.FC = () => {
           </Box>
         )}
       </CustomModal>
+      <CheckInModal open={openCheckIn} onClose={() => setOpenCheckIn(false)} />
     </>
   );
 };
