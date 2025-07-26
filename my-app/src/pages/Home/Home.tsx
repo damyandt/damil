@@ -146,7 +146,6 @@ const HomePage: React.FC = () => {
             </Button>
           </Grid>
         </Grid>
-        {/* <Divider sx={{ my: 2 }}></Divider> */}
         <Grid container spacing={3} pt={3}>
           <Grid size={12}>
             <Grid container spacing={3}>

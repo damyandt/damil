@@ -12,3 +12,12 @@ export type AutocompleteGroupedOption = {
   groupName: string;
   description: string;
 };
+
+export type ColumnType =
+  | "string"
+  | "number"
+  | "boolean"
+  | "date"
+  | "custom"
+  | "enum"
+  | "dropdown";

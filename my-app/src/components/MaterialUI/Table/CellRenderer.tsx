@@ -1,18 +1,33 @@
 import { Box, TableCell } from "@mui/material";
+import dayjs from "dayjs";
+import FemaleIcon from "@mui/icons-material/Female";
+import MaleIcon from "@mui/icons-material/Male";
+import CloseIcon from "@mui/icons-material/Close";
+import EventIcon from "@mui/icons-material/Event";
+import { ColumnType } from "../../../Global/Types/commonTypes";
 
 type CellRendererProps = {
   value: any;
-  dataType: "string" | "number" | "boolean" | "date" | "custom" | string;
+  dataType: ColumnType;
   align?: "left" | "right" | "center";
+  table: boolean;
 };
 
 const CellRenderer = ({
   value,
   dataType,
   align = "left",
+  table,
 }: CellRendererProps) => {
   let displayValue: React.ReactNode = String(value);
-  let style: any = {};
+  let style: any = {
+    margin: 0,
+    border: "none",
+    height: "fit-content",
+    padding: table ? "0 0 0 1em" : 0,
+    borderBottom: "none",
+  };
+
   switch (dataType) {
     case "boolean":
       style.color = value ? "green" : "red";
@@ -20,10 +35,100 @@ const CellRenderer = ({
       break;
 
     case "number":
+      if (value === "N/A") {
+        displayValue = (
+          <Box display="flex" alignItems="center" gap={0.5}>
+            <CloseIcon fontSize="small" color="error" />
+          </Box>
+        );
+      }
       style.color = "#1976d2"; // Blue
       break;
 
+    case "date":
+      const isISODate =
+        typeof value === "string" &&
+        /^\d{4}-\d{2}-\d{2}T/.test(value) &&
+        dayjs(value).isValid();
+
+      const formatted = isISODate
+        ? dayjs(value).format("DD/MM/YYYY")
+        : dayjs(value).isValid()
+          ? dayjs(value).format("DD/MM/YYYY")
+          : "Invalid Date";
+
+      displayValue = (
+        <Box
+          sx={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 1,
+            px: 1.5,
+            py: 0.5,
+            border: "1px solid #1976d2",
+            backgroundColor: "#e3f2fd",
+            borderRadius: "10px",
+            fontSize: "0.75rem",
+            color: "#1976d2",
+            fontWeight: 700,
+          }}
+        >
+          <EventIcon fontSize="small" />
+          {formatted}
+        </Box>
+      );
+      break;
+
+    case "dropdown":
     case "enum": {
+      if (value === "N/A") {
+        displayValue = (
+          <Box display="flex" alignItems="center" gap={0.5}>
+            <CloseIcon fontSize="small" color="error" />
+          </Box>
+        );
+      }
+      if (
+        String(value).toLowerCase() === "female" ||
+        String(value).toLowerCase() === "male"
+      ) {
+        const isFemale = value.toLowerCase() === "female";
+
+        const genderStyles = {
+          icon: isFemale ? (
+            <FemaleIcon fontSize="small" />
+          ) : (
+            <MaleIcon fontSize="small" />
+          ),
+          color: isFemale ? "#d81b60" : "#1976d2", // pink vs blue
+          backgroundColor: isFemale ? "#fce4ec" : "#e3f2fd",
+          borderColor: isFemale ? "#d81b60" : "#1976d2",
+        };
+        displayValue = (
+          <Box
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 0.5,
+              px: 1.5,
+              py: 0.5,
+              border: `1px solid ${genderStyles.borderColor}`,
+              borderRadius: "10px",
+              fontWeight: 600,
+              fontSize: "0.75rem",
+              color: genderStyles.color,
+              backgroundColor: genderStyles.backgroundColor,
+              textTransform: "capitalize",
+            }}
+          >
+            {genderStyles.icon}
+            {value}
+          </Box>
+        );
+
+        break;
+      }
+
       const enumValue = String(value).toLowerCase();
       const enumStyles: Record<
         string,
@@ -61,15 +166,17 @@ const CellRenderer = ({
       };
 
       const statusStyle = enumStyles[enumValue];
-
       if (statusStyle) {
         displayValue = (
           <Box
             sx={{
-              display: "inline-block",
+              display: "flex",
+              gap: "0.5em",
+              width: "fit-content",
+              alignItems: "center",
               padding: "0.5em 1em",
               border: "1px solid",
-              borderRadius: "20px",
+              borderRadius: "10px",
               fontWeight: 600,
               fontSize: "0.75rem",
               color: statusStyle.color,
@@ -78,23 +185,27 @@ const CellRenderer = ({
               textTransform: "capitalize",
             }}
           >
+            <Box
+              sx={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                backgroundColor: statusStyle.color,
+              }}
+            />
             {statusStyle.label}
           </Box>
         );
-        style = {};
+        style = {
+          margin: 0,
+          border: "none",
+          height: "fit-content",
+          padding: table ? "0 0 0 1em" : 0,
+          borderBottom: "none",
+        };
       }
-
       break;
     }
-
-    case "date":
-      try {
-        displayValue = new Date(value).toLocaleDateString();
-        style.color = "#555";
-      } catch {
-        displayValue = "Invalid Date";
-      }
-      break;
 
     case "custom":
       style = {

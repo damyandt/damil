@@ -12,6 +12,7 @@ import {
   Grid,
   InputAdornment,
   MenuItem,
+  Button,
 } from "@mui/material";
 import CustomTooltip from "../CustomTooltip";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -21,13 +22,16 @@ import { MenuActions } from "./MenuActions";
 import PaginationControls from "./PaginationControls";
 import TextField from "../FormFields/TextField";
 import SearchIcon from "@mui/icons-material/Search";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { useLanguageContext } from "../../../context/LanguageContext";
+import { ColumnType } from "../../../Global/Types/commonTypes";
+import ColumnVisibilityModal from "./ColumnVisibility";
 
 export type Column = {
   header: string;
   field: any;
   align?: "left" | "right" | "center";
-  type: string;
+  type: ColumnType;
   styles?: any;
   dropDownConfig?: any;
 };
@@ -48,6 +52,10 @@ const TableComponent = ({
   title,
 }: TableProps) => {
   const { t } = useLanguageContext();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [columnVisibility, setColumnVisibility] = useState(
+    configurations.columnsLayoutConfig.columnVisibility
+  );
   const [openDetails, setOpenDetails] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState<
@@ -77,7 +85,7 @@ const TableComponent = ({
   const isRowDeleting = (id: string) => !!deleteQueue[id];
 
   const visibleColumns = columns.filter(
-    (col: any) => configurations.columnsLayoutConfig.columnVisibility[col.field]
+    (col: any) => columnVisibility[col.field]
   );
   return (
     <>
@@ -147,7 +155,7 @@ const TableComponent = ({
           </Grid>
         ))} */}
         <Grid size={2} alignItems="right">
-          <TextField
+          {/* <TextField
             select
             size="small"
             label="Status"
@@ -161,7 +169,34 @@ const TableComponent = ({
                 {option}
               </MenuItem>
             ))}
-          </TextField>
+          </TextField> */}
+          <Button
+            onClick={() => setModalOpen(true)}
+            startIcon={<SettingsIcon fontSize="small" />}
+            sx={{
+              textTransform: "none",
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              padding: "0.5em 1em",
+              minWidth: "fit-content",
+              color: "rgba(103, 58, 183, 0.8)",
+              backgroundColor: "white",
+              "&:hover": {
+                borderColor: "#000",
+              },
+            }}
+          >
+            <Typography
+              sx={{
+                transition: "all 0.2s ease-in-out",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                },
+              }}
+            >
+              Columns
+            </Typography>
+          </Button>
         </Grid>
       </Grid>
       <TableContainer sx={{ backgroundColor: "#f0f2f5", paddingX: "5px" }}>
@@ -189,8 +224,10 @@ const TableComponent = ({
                 <TableCell
                   key={col.field as string}
                   align={col.align || "left"}
-                  sx={{ fontWeight: "400" }}
-                  width={col.header.toLowerCase() === "id" ? 100 : 400}
+                  sx={{
+                    fontWeight: "400",
+                    minWidth: col.header.toLowerCase() === "id" ? 50 : 180,
+                  }}
                 >
                   {col.header}
                 </TableCell>
@@ -238,14 +275,17 @@ const TableComponent = ({
                       },
                     }}
                   >
-                    {visibleColumns.map((col) => (
-                      <CellRenderer
-                        key={col.field}
-                        value={row[col.field]}
-                        dataType={col.type}
-                        align={col.align}
-                      />
-                    ))}
+                    {visibleColumns.map((col) => {
+                      return (
+                        <CellRenderer
+                          key={col.field}
+                          value={row[col.field]}
+                          dataType={col.type}
+                          align={col.align}
+                          table={true}
+                        />
+                      );
+                    })}
 
                     {configurations.actions && (
                       <TableCell align="right" sx={{ zIndex: 100 }}>
@@ -309,6 +349,12 @@ const TableComponent = ({
         open={openDetails}
         setOpen={setOpenDetails}
       />
+      <ColumnVisibilityModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        columnVisibility={columnVisibility}
+        onSave={(updated) => setColumnVisibility(updated)}
+      />
       <PaginationControls
         currentPage={page}
         totalPages={Math.ceil(filteredRows.length / rowsPerPage)}
@@ -319,213 +365,3 @@ const TableComponent = ({
 };
 
 export default TableComponent;
-
-// import React, { useState } from "react";
-// import { Grid, Typography, InputAdornment, MenuItem, Box } from "@mui/material";
-// import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
-// import SearchIcon from "@mui/icons-material/Search";
-// import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-// import TextField from "../FormFields/TextField";
-// import { useLanguageContext } from "../../../context/LanguageContext";
-// import CustomTooltip from "../CustomTooltip";
-// import { MenuActions } from "./MenuActions";
-// import { DeleteUndo } from "./DeleteAction";
-
-// const StyledDataGrid = (props: any) => (
-//   <DataGrid
-//     sx={{
-//       backgroundColor: "#fff",
-//       border: "none",
-//       boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
-//       "& .MuiDataGrid-columnHeaders": {
-//         backgroundColor: "#f0f2f5",
-//         fontWeight: 500,
-//       },
-//       "& .MuiDataGrid-row": {
-//         transition: "all 0.2s",
-//         "&:hover": {
-//           backgroundColor: "#f5f5f5",
-//           cursor: "pointer",
-//           transform: "scale(0.99)",
-//           zIndex: 1,
-//         },
-//       },
-//     }}
-//     {...props}
-//   />
-// );
-
-// const TableComponent = ({
-//   columns = [],
-//   rows = [],
-//   configurations = {},
-//   setRefreshTable,
-//   title,
-// }: TableProps) => {
-//   const { t } = useLanguageContext();
-//   const [searchQuery, setSearchQuery] = useState("");
-//   const [paginationModel, setPaginationModel] = useState({
-//     page: 0,
-//     pageSize: 7,
-//   });
-//   const [selectedRow, setSelectedRow] = useState<any>(null);
-//   const [anchorEl, setAnchorEl] = useState<
-//     null | HTMLElement | "closeOnlyAnchor"
-//   >(null);
-//   const [openDetails, setOpenDetails] = useState(false);
-//   const [deleteQueue, setDeleteQueue] = useState<{
-//     [key: string]: { progress: number; timerId: any };
-//   }>({});
-
-//   const filteredRows = rows.filter((row: any) =>
-//     Object.values(row).some((value) =>
-//       value?.toString().toLowerCase().includes(searchQuery.toLowerCase())
-//     )
-//   );
-
-//   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, row: any) => {
-//     setAnchorEl(event.currentTarget);
-//     setSelectedRow(row);
-//   };
-
-//   const isRowDeleting = (id: string) => !!deleteQueue[id];
-
-//   const gridColumns: GridColDef[] = [
-//     ...columns.map((col) => ({
-//       field: col.field,
-//       headerName: col.header,
-//       align: col.align,
-//       headerAlign: col.align,
-//       width: col.header.toLowerCase() === "id" ? 100 : 200,
-//       renderCell: (params: any) => {
-//         const rowId = params.row.id;
-//         if (col.field === "actions" && configurations.actions) {
-//           return isRowDeleting(rowId) ? (
-//             <DeleteUndo
-//               deleteQueue={deleteQueue}
-//               setDeleteQueue={setDeleteQueue}
-//               rowId={rowId}
-//             />
-//           ) : (
-//             <CustomTooltip title="Show Actions" placement="left">
-//               <MoreHorizIcon
-//                 fontSize="small"
-//                 onClick={(e) => {
-//                   e.stopPropagation();
-//                   handleMenuOpen(e as any, params.row);
-//                 }}
-//               />
-//             </CustomTooltip>
-//           );
-//         }
-//         return params.value;
-//       },
-//     })),
-//   ];
-
-//   return (
-//     <>
-//       <Grid container spacing={2} alignItems="center" py={2}>
-//         <Grid size={3}>
-//           <TextField
-//             size="small"
-//             label="Search..."
-//             value={searchQuery}
-//             onChange={(e) => setSearchQuery(e.target.value)}
-//             sx={{ width: "250px", backgroundColor: "#fff" }}
-//             InputProps={{
-//               startAdornment: (
-//                 <InputAdornment position="start">
-//                   <SearchIcon color="action" />
-//                 </InputAdornment>
-//               ),
-//             }}
-//           />
-//         </Grid>
-//         <Grid size={6}>
-//           <Typography variant="h5" sx={{ textAlign: "center", flexGrow: 1 }}>
-//             {title}
-//           </Typography>
-//         </Grid>
-//         <Grid size={1}>
-//           <TextField
-//             select
-//             size="small"
-//             label="Rows"
-//             value={paginationModel.pageSize}
-//             onChange={(e) =>
-//               setPaginationModel((prev) => ({
-//                 ...prev,
-//                 page: 0,
-//                 pageSize: parseInt(e.target.value, 10),
-//               }))
-//             }
-//           >
-//             {[5, 7, 10, 15, 20].map((option) => (
-//               <MenuItem key={option} value={option}>
-//                 {option}
-//               </MenuItem>
-//             ))}
-//           </TextField>
-//         </Grid>
-//         <Grid size={2}>
-//           <TextField
-//             select
-//             size="small"
-//             label="Status"
-//             value={""}
-//             onChange={(e) => {
-//               console.log(e.target.value);
-//             }}
-//           >
-//             {["active", "inactive"].map((option) => (
-//               <MenuItem key={option} value={option}>
-//                 {option}
-//               </MenuItem>
-//             ))}
-//           </TextField>
-//         </Grid>
-//       </Grid>
-
-//       <Box sx={{ px: 2 }}>
-//         <StyledDataGrid
-//           rows={filteredRows}
-//           columns={gridColumns}
-//           pagination
-//           paginationModel={paginationModel}
-//           onPaginationModelChange={setPaginationModel}
-//           pageSizeOptions={[5, 7, 10, 15, 20]}
-//           autoHeight
-//           disableRowSelectionOnClick
-//           onRowClick={(params: any) => {
-//             if (
-//               configurations.actions?.find(
-//                 (action: any) => action.id === "details"
-//               )
-//             ) {
-//               setOpenDetails(true);
-//               setSelectedRow(params.row);
-//               setAnchorEl("closeOnlyAnchor");
-//             }
-//           }}
-//         />
-//       </Box>
-
-//       <MenuActions
-//         setDeleteQueue={setDeleteQueue}
-//         deleteQueue={deleteQueue}
-//         configurations={configurations}
-//         setRefreshTable={setRefreshTable}
-//         selectedRow={selectedRow}
-//         anchorEl={anchorEl}
-//         setSelectedRow={setSelectedRow}
-//         setAnchorEl={setAnchorEl}
-//         columns={columns}
-//         open={openDetails}
-//         setOpen={setOpenDetails}
-//       />
-//     </>
-//   );
-// };
-
-// export default TableComponent;
