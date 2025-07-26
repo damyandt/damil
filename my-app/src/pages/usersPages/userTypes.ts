@@ -5,7 +5,8 @@ export type Gym = {
   address?: string;
   city?: string;
   created_at?: Date;
-  members_count?: number;
+  membersCount?: number;
   gym_members?: number;
+  subscriptionActive?: boolean;
   id?: string;
 };

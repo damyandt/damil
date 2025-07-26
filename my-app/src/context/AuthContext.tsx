@@ -11,6 +11,8 @@ interface UserContextType {
   setAuthedUser: (value: React.SetStateAction<Gym | null>) => void;
   setUserSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
   authedUserLoading: boolean;
+  showIncompleteModal: boolean;
+  snoozeModal: (minutes?: number) => void;
 }
 
 const UserContext = createContext<UserContextType>({} as UserContextType);
@@ -23,6 +25,8 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
   const [authedUser, setAuthedUser] = useState<Gym | null>(null);
   const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [showIncompleteModal, setShowIncompleteModal] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (authedUser === null && userSignedIn) {
@@ -46,6 +50,21 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
     })();
   }, [userSignedIn]);
 
+  useEffect(() => {
+    if (authedUser) {
+      const hasEmptyFields = Object.values(authedUser).some(
+        (val: any) => val === null
+      );
+      console.log(hasEmptyFields);
+      const snoozeUntil = localStorage.getItem("incompleteProfileSnooze");
+      const now = Date.now();
+
+      if (hasEmptyFields && (!snoozeUntil || now > parseInt(snoozeUntil))) {
+        setShowIncompleteModal(true);
+      }
+    }
+  }, [authedUser]);
+
   const checkIfUserIsSignedIn = async () => {
     const refreshToken = getCookie(COOKIE_REFRESH_TOKEN);
     if (refreshToken) {
@@ -65,6 +84,12 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
     }
   };
 
+  const snoozeModal = (minutes = 30) => {
+    const snoozeUntil = Date.now() + minutes * 60 * 1000;
+    localStorage.setItem("incompleteProfileSnooze", snoozeUntil.toString());
+    setShowIncompleteModal(false);
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -72,6 +97,8 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         setAuthedUser,
         setUserSignedIn,
         authedUserLoading: loading,
+        showIncompleteModal,
+        snoozeModal,
       }}
     >
       {children}

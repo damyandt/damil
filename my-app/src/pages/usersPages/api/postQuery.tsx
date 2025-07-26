@@ -23,3 +23,9 @@ export const codeVerification = (input: any): Query => ({
   method: "POST",
   variables: input,
 });
+
+export const completeProfile = (input: any): Query => ({
+  endpoint: `gym/basic-info`,
+  method: "POST",
+  variables: input,
+});

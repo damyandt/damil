@@ -22,6 +22,7 @@ import CustomModal from "../../components/MaterialUI/Modal";
 import { useLanguageContext } from "../../context/LanguageContext";
 import ChartDisplay from "./ChartsDisplayed";
 import CheckInModal from "./CheckInModal";
+import IncompleteProfileModal from "../../components/Profile/IncompleteModal";
 
 const analytics = [
   {
@@ -94,9 +95,49 @@ const HomePage: React.FC = () => {
   return (
     <>
       <Box sx={{ p: 2 }}>
-        <Typography variant="h4" gutterBottom textAlign={"center"}>
-          🏋️‍♂️ {authedUser?.username} Dashboard
-        </Typography>
+        {/* <Box
+          sx={{
+            textAlign: "center",
+            py: 3,
+            mb: 2,
+            borderRadius: "16px",
+            backgroundColor: "#f5f7fa",
+            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.05)",
+          }}
+        >
+          <Typography variant="h4" fontWeight={700} color="primary">
+            Dashboard
+          </Typography>
+          <Typography variant="subtitle1" color="text.secondary" mt={1}>
+            Welcome, {authedUser?.username}
+          </Typography>
+        </Box> */}
+        <Box
+          sx={{
+            textAlign: "center",
+            py: 3,
+            mb: 3,
+            borderRadius: "16px",
+            background: "linear-gradient(90deg, #e3f2fd, #fce4ec)",
+            boxShadow: "0 3px 12px rgba(0,0,0,0.06)",
+          }}
+        >
+          <Typography variant="h4" fontWeight={700} color="primary">
+            📋 Dashboard – {authedUser?.username}
+          </Typography>
+
+          <Typography variant="subtitle1" color="text.secondary" mt={1}>
+            {authedUser?.email}
+            {authedUser?.city && ` · ${authedUser.city}`}
+            {authedUser?.phone && ` · ${authedUser.phone}`}
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary" mt={1}>
+            {authedUser?.subscriptionActive
+              ? `✅ Active Subscription · ${authedUser.membersCount} Member(s)`
+              : `🚫 No Active Subscription`}
+          </Typography>
+        </Box>
         <Grid
           container
           spacing={2}
@@ -276,6 +317,7 @@ const HomePage: React.FC = () => {
         )}
       </CustomModal>
       <CheckInModal open={openCheckIn} onClose={() => setOpenCheckIn(false)} />
+      <IncompleteProfileModal />
     </>
   );
 };

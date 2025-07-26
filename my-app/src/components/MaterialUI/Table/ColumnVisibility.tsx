@@ -5,10 +5,13 @@ import {
   DialogActions,
   Switch,
   FormControlLabel,
-  Button,
   Box,
+  Grid,
 } from "@mui/material";
 import { useState } from "react";
+import Button from "../Button";
+import CustomModal from "../Modal";
+import { useLanguageContext } from "../../../context/LanguageContext";
 
 const ColumnVisibilityModal = ({
   open,
@@ -21,6 +24,7 @@ const ColumnVisibilityModal = ({
   columnVisibility: Record<string, boolean>;
   onSave: (updated: Record<string, boolean>) => void;
 }) => {
+  const { t } = useLanguageContext();
   const [localVisibility, setLocalVisibility] = useState({
     ...columnVisibility,
   });
@@ -38,11 +42,15 @@ const ColumnVisibilityModal = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Customize Column Visibility</DialogTitle>
-      <DialogContent>
-        <Box display="flex" flexDirection="column" gap={1}>
-          {Object.entries(localVisibility).map(([key, isVisible]) => (
+    <CustomModal
+      open={open}
+      onClose={onClose}
+      title={t("Customize Column Visibility")}
+      width={"lg"}
+    >
+      <Grid container spacing={2}>
+        {Object.entries(localVisibility).map(([key, isVisible]) => (
+          <Grid size={4}>
             <FormControlLabel
               key={key}
               control={
@@ -54,16 +62,29 @@ const ColumnVisibilityModal = ({
               }
               label={key}
             />
-          ))}
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={handleSave}>
-          Save
-        </Button>
-      </DialogActions>
-    </Dialog>
+          </Grid>
+        ))}
+      </Grid>
+      <Grid container spacing={2}>
+        <Grid>
+          <Button onClick={onClose} color="error">
+            Cancel
+          </Button>
+        </Grid>
+        <Grid>
+          <Button onClick={handleSave}>Save</Button>
+        </Grid>
+      </Grid>
+    </CustomModal>
+    // <Dialog  maxWidth="sm" fullWidth>
+    //   <DialogTitle></DialogTitle>
+    //   <DialogContent>
+
+    //   </DialogContent>
+    //   <DialogActions>
+    //
+    //   </DialogActions>
+    // </Dialog>
   );
 };
 

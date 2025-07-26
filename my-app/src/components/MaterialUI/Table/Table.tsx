@@ -53,7 +53,7 @@ const TableComponent = ({
 }: TableProps) => {
   const { t } = useLanguageContext();
   const [modalOpen, setModalOpen] = useState(false);
-  const [columnVisibility, setColumnVisibility] = useState(
+  const [columnVisibilityConfig, setColumnVisibilityConfig] = useState(
     configurations.columnsLayoutConfig.columnVisibility
   );
   const [openDetails, setOpenDetails] = useState<boolean>(false);
@@ -85,7 +85,7 @@ const TableComponent = ({
   const isRowDeleting = (id: string) => !!deleteQueue[id];
 
   const visibleColumns = columns.filter(
-    (col: any) => columnVisibility[col.field]
+    (col: any) => columnVisibilityConfig[col.field]
   );
   return (
     <>
@@ -288,7 +288,10 @@ const TableComponent = ({
                     })}
 
                     {configurations.actions && (
-                      <TableCell align="right" sx={{ zIndex: 100 }}>
+                      <TableCell
+                        align="right"
+                        sx={{ zIndex: 100, borderBottom: "none" }}
+                      >
                         {isDeleting ? (
                           <DeleteUndo
                             deleteQueue={deleteQueue}
@@ -349,16 +352,16 @@ const TableComponent = ({
         open={openDetails}
         setOpen={setOpenDetails}
       />
-      <ColumnVisibilityModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        columnVisibility={columnVisibility}
-        onSave={(updated) => setColumnVisibility(updated)}
-      />
       <PaginationControls
         currentPage={page}
         totalPages={Math.ceil(filteredRows.length / rowsPerPage)}
         onPageChange={(newPage) => setPage(newPage)}
+      />
+      <ColumnVisibilityModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        columnVisibility={columnVisibilityConfig}
+        onSave={(updated) => setColumnVisibilityConfig(updated)}
       />
     </>
   );
