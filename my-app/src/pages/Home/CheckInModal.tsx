@@ -105,7 +105,6 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
               message={errors["search"]}
               showAlert={!!errors["search"]}
               severity="error"
-              autoClose
             />
           </Grid>
           <Grid size={12} textAlign="right" mt={2}>
