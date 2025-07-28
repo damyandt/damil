@@ -199,7 +199,13 @@ const TableComponent = ({
           </Button>
         </Grid>
       </Grid>
-      <TableContainer sx={{ backgroundColor: "#f0f2f5", paddingX: "5px" }}>
+      <TableContainer
+        sx={{
+          backgroundColor: "#f0f2f5",
+          paddingX: "5px",
+          marginBottom: "10vh",
+        }}
+      >
         <MuiTable
           sx={{
             borderCollapse: "separate",
@@ -225,6 +231,7 @@ const TableComponent = ({
                   key={col.field as string}
                   align={col.align || "left"}
                   sx={{
+                    paddingLeft: "2em",
                     fontWeight: "400",
                     minWidth: col.header.toLowerCase() === "id" ? 50 : 180,
                   }}

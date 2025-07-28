@@ -17,10 +17,23 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
 }) => {
   return (
     <Box
-      display="flex"
-      justifyContent="space-between"
-      alignItems="center"
-      mt={4}
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        position: "absolute",
+        bottom: 0,
+        ml: "-1em",
+        width: "100%",
+        borderRadius: "0 0 20px 20px",
+        padding: 2,
+        pb: 2,
+        pt: 2,
+        zIndex: 10,
+        borderTop: "1px solid #e0e0e0",
+        backgroundColor: "#fff",
+        boxShadow: "0 -2px 8px rgba(0, 0, 0, 0.08)",
+      }}
     >
       <CustomTooltip title="Back">
         <IconButton

@@ -99,6 +99,7 @@ const NavItem: React.FC<NavItemProps> = ({
         disabled={disabled}
         selected={isSelected}
         sx={{
+          overflowX: "hidden",
           ...(openLeftNav && marginLeft ? { paddingLeft: "2em" } : {}),
           transition: "padding-left 0.4s ease",
           "&:hover": { backgroundColor: MAIN_COLOR + "20" },
@@ -128,7 +129,10 @@ const NavItem: React.FC<NavItemProps> = ({
 
           <ListItemText
             primary={text}
-            sx={!openLeftNav ? { display: "none" } : {}}
+            sx={{
+              opacity: openLeftNav ? 1 : 0,
+              transition: "opacity 0.4s ease",
+            }}
           />
 
           {openLeftNav && nested ? (

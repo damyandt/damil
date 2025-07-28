@@ -30,6 +30,7 @@ const cssStyles = (
   extraRightNavMenu: React.ReactNode | null
 ) => ({
   contentContainer: css({
+    height: "-webkit-fill-available",
     overflow: "hidden",
     background:
       theme.palette.mode === "light"
@@ -63,7 +64,6 @@ const cssStyles = (
     zIndex: 1,
   }),
   outletContainer: css({
-    marginTop: `calc(${TOP_NAV_SPACING_WITH_SITE_CONTENT} + 1em)`,
     marginRight: leftNavIsOpen
       ? isRightNavVisible && extraRightNavMenu
         ? TOP_RIGHT_NAV_HEIGHT
@@ -71,11 +71,13 @@ const cssStyles = (
       : isRightNavVisible && extraRightNavMenu
         ? `calc(${TOP_RIGHT_NAV_HEIGHT} + 1em)`
         : 0,
-    height: `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 1em)`,
+
+    height: `100vh`,
 
     flexGrow: 1,
     position: "relative",
     padding: AUTH_LAYOUT_PADDING,
+
     backgroundColor:
       theme.palette.mode === "light"
         ? AUTH_LAYOUT_BACKGROUND_COLOR
@@ -122,10 +124,10 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
       className={className}
       sx={[styles.flexColumn, styles.contentContainer]}
     >
-      <TopNavigation
+      {/* <TopNavigation
         setOpenLeftNav={setOpenLeftNav}
         openLeftNav={openLeftNav}
-      />
+      /> */}
       <LeftNavigation
         openLeftNav={openLeftNav}
         setOpenLeftNav={setOpenLeftNav}
@@ -151,14 +153,8 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
           sx={{
             position: "relative",
             zIndex: 2,
-            maxHeight: openLeftNav
-              ? `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 4em)`
-              : `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 3em)`,
-            minHeight: openLeftNav
-              ? `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 4em)`
-              : `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 3em)`,
+            height: "100%",
             borderRadius: "20px",
-            transition: "min-height 0.4s ease",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
             backgroundColor: "#fff",
             boxSizing: "border-box",

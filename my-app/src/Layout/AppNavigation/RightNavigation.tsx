@@ -16,9 +16,8 @@ const cssStyles = (
 ) => ({
   rightNavContainer: css({
     borderRadius: !openLeftNav ? "20px" : "20px 0 0 20px",
-    margin: !openLeftNav ? "2em 1em 1em 1em" : "2em 0 2em 1em ",
+    margin: !openLeftNav ? "1em" : "1em 0 1em 1em ",
     position: "fixed",
-    top: TOP_NAV_SPACING_WITH_SITE_CONTENT,
     right: 0,
     width: extraMenu && isVisible ? TOP_RIGHT_NAV_HEIGHT : 0,
     background: theme.palette.common.white,
