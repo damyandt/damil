@@ -16,19 +16,25 @@ import { checkInMember, getMember } from "../Access Control/API/getQueries";
 import { useAuthedContext } from "../../context/AuthContext";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import Alert from "../../components/MaterialUI/Alert";
+import { useLanguageContext } from "../../context/LanguageContext";
 interface CheckInModalProps {
   open: boolean;
   onClose: () => void;
 }
 
 const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
+  const { t } = useLanguageContext();
+
   const [activeStep, setActiveStep] = useState<number>(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [searchInput, setSearchInput] = useState<string>("");
   const [userDetails, setUserDetails] = useState<any>(null);
   const { setAuthedUser, authedUser } = useAuthedContext();
-  const steps = ["Search Member", "Confirm Details", "Check-In Complete"];
-
+  const steps = [
+    t("Search Member"),
+    t("Confirm Details"),
+    t("Check-In Complete"),
+  ];
   const handleNext = async () => {
     try {
       const userDetails = await callApi<any>({
@@ -56,7 +62,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
 
     checkIn.success === true
       ? setActiveStep((prev) => prev + 1)
-      : setErrors(checkIn.validationErrors);
+      : setErrors({ noVisits: checkIn.message });
   };
 
   const handleReset = (closeModal: boolean) => {
@@ -135,6 +141,13 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
             <Grid size={12}>
               <Typography variant="subtitle2">Remaining Visits</Typography>
               <Typography>{userDetails.remainingVisits}</Typography>
+            </Grid>
+            <Grid size={12}>
+              <Alert
+                message={errors["noVisits"]}
+                showAlert={!!errors["noVisits"]}
+                severity="error"
+              />
             </Grid>
           </Grid>
           <Grid

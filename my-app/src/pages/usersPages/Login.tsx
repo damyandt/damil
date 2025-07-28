@@ -13,7 +13,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import MuiLink from "@mui/material/Link";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import EditIcon from "@mui/icons-material/Edit";
 import Visibility from "@mui/icons-material/Visibility";
@@ -30,13 +30,14 @@ import { Fade } from "../../components/MaterialUI/FormFields/Fade";
 export const errorMessages = {
   invalidEmail: "Account with this email does not exists.",
   invalidPassword: "Wrong password. Please double-check and try again.",
-  unverified: "Verify email before login.",
+  unverified: "Account not verified. Please verify your account",
   invalidCode: "Invalid code.",
   internalServerError: "Oops, something happpend! Please try again in 5 min.",
 };
 
 const LoginPage = () => {
   const { setUserSignedIn } = useAuthedContext();
+  const navigate = useNavigate();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [resendCooldown, setResendCooldown] = useState<number>(0);
@@ -173,11 +174,10 @@ const LoginPage = () => {
         }),
         auth: null,
       });
-      if (responce.success === true) {
-        handleLogin();
-      } else {
-        setErrors(responce.validationErrors);
-      }
+      setOpenModal(false);
+      handleLogin();
+      responce.success === true && navigate("/");
+      responce.success === false && setErrors(responce.validationErrors);
     } catch (error) {
       console.log("Verification failed:", error);
     }

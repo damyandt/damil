@@ -22,9 +22,12 @@ import { useAuthedContext } from "../../context/AuthContext";
 import { setCookie } from "../../Global/Utils/commonFunctions";
 import { SetCookieParams } from "../../Auth/authTypes";
 import { Fade } from "../../components/MaterialUI/FormFields/Fade";
+import CustomModal from "../../components/MaterialUI/Modal";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 const RegisterPage = () => {
   const { setUserSignedIn } = useAuthedContext();
+  const { t } = useLanguageContext();
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [openModal, setOpenModal] = React.useState<boolean>(false);
@@ -351,99 +354,83 @@ const RegisterPage = () => {
           </Typography>
         </Box>
       </Box>
-      <Modal
+      <CustomModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        aria-labelledby="verification-modal-title"
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            TransitionComponent: Fade,
-          },
-        }}
+        title={t("  Verify Your Email")}
+        width={"md"}
       >
-        <Fade in={openModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 450,
+            bgcolor: "background.paper",
+            borderRadius: 3,
+            boxShadow: 10,
+            p: 4,
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+          }}
+        >
+          <Typography variant="body2" color="text.secondary">
+            Please enter the 6-digit code sent to your email address.
+          </Typography>
+
+          <TextField
+            placeholder="Enter code"
+            fullWidth
+            value={verificationCode || ""}
+            error={!!errors["verificationCode"]}
+            helperText={errors["verificationCode"] || " "}
+            onChange={(e) => setCode(e.target.value)}
+          />
+
           <Box
             sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 450,
-              bgcolor: "background.paper",
-              borderRadius: 3,
-              boxShadow: 10,
-              p: 4,
               display: "flex",
-              flexDirection: "column",
-              gap: 3,
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            <Typography
-              id="verification-modal-title"
-              variant="h5"
-              fontWeight="bold"
+            <Tooltip
+              title={
+                resendCooldown === 0
+                  ? "Click to Resend Code"
+                  : `Wait ${resendCooldown}s before you try again!`
+              }
+              sx={{ ml: 2 }}
             >
-              Verify Your Email
-            </Typography>
-
-            <Typography variant="body2" color="text.secondary">
-              Please enter the 6-digit code sent to your email address.
-            </Typography>
-
-            <TextField
-              placeholder="Enter code"
-              fullWidth
-              value={verificationCode || ""}
-              error={!!errors["verificationCode"]}
-              helperText={errors["verificationCode"] || " "}
-              onChange={(e) => setCode(e.target.value)}
-            />
-
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Tooltip
-                title={
-                  resendCooldown === 0
-                    ? "Click to Resend Code"
-                    : `Wait ${resendCooldown}s before you try again!`
-                }
-                sx={{ ml: 2 }}
-              >
-                <Typography
-                  variant="body2"
-                  onClick={handleResend}
-                  sx={{
-                    textDecoration: "underline",
-                    "&:hover": {
-                      cursor: "pointer",
-                      color: resendCooldown === 0 ? "primary.main" : "",
-                    },
-                  }}
-                >
-                  Resend Code
-                </Typography>
-              </Tooltip>
-              <IconButton
-                onClick={handleSubmitVerificationCode}
+              <Typography
+                variant="body2"
+                onClick={handleResend}
                 sx={{
-                  bgcolor: "primary.main",
-                  color: "#fff",
-                  "&:hover": { bgcolor: "primary.dark" },
+                  textDecoration: "underline",
+                  "&:hover": {
+                    cursor: "pointer",
+                    color: resendCooldown === 0 ? "primary.main" : "",
+                  },
                 }}
               >
-                <ArrowForwardIcon />
-              </IconButton>
-            </Box>
+                Resend Code
+              </Typography>
+            </Tooltip>
+            <IconButton
+              onClick={handleSubmitVerificationCode}
+              sx={{
+                bgcolor: "primary.main",
+                color: "#fff",
+                "&:hover": { bgcolor: "primary.dark" },
+              }}
+            >
+              <ArrowForwardIcon />
+            </IconButton>
           </Box>
-        </Fade>
-      </Modal>
+        </Box>
+      </CustomModal>
     </>
   );
 };

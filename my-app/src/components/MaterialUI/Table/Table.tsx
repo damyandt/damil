@@ -277,13 +277,18 @@ const TableComponent = ({
                   >
                     {visibleColumns.map((col) => {
                       return (
-                        <CellRenderer
-                          key={col.field}
-                          value={row[col.field]}
-                          dataType={col.type}
+                        <TableCell
                           align={col.align}
-                          table={true}
-                        />
+                          key={col.field}
+                          sx={{ borderBottom: "none" }}
+                        >
+                          <CellRenderer
+                            key={col.field}
+                            value={row[col.field]}
+                            dataType={col.type}
+                            table={true}
+                          />
+                        </TableCell>
                       );
                     })}
 

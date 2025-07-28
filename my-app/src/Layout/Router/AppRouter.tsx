@@ -58,6 +58,10 @@ export default createBrowserRouter([
         element: <ClientsPage />,
       },
       {
+        path: "/DAMIL-Access-Control/All-Clients/:filter",
+        element: <ClientsPage />,
+      },
+      {
         path: "/DAMIL-Access-Control/Daily-Visitors",
         element: <DailyVisitors />,
       },

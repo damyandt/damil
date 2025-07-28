@@ -55,7 +55,6 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
       const hasEmptyFields = Object.values(authedUser).some(
         (val: any) => val === null
       );
-      console.log(hasEmptyFields);
       const snoozeUntil = localStorage.getItem("incompleteProfileSnooze");
       const now = Date.now();
 

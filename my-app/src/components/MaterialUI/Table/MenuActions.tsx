@@ -49,10 +49,6 @@ export const MenuActions = ({
     editUrl = editUrl.replace("{id}", selectedRow.id);
   }
 
-  const createFieldsColumns = columns.filter(
-    (col: any) => configurations.createFields[col.field]
-  );
-  console.log(createFieldsColumns);
   return (
     <Menu
       anchorEl={anchorEl}

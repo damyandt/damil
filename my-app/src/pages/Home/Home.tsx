@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  Grid,
-  Typography,
-  Stepper,
-  Step,
-  StepLabel,
-} from "@mui/material";
-import TextField from "../../components/MaterialUI/FormFields/TextField";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
@@ -18,11 +9,10 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useAuthedContext } from "../../context/AuthContext";
-import CustomModal from "../../components/MaterialUI/Modal";
-import { useLanguageContext } from "../../context/LanguageContext";
 import ChartDisplay from "./ChartsDisplayed";
 import CheckInModal from "./CheckInModal";
 import IncompleteProfileModal from "../../components/Profile/IncompleteModal";
+import SearchModal from "./SearchModal";
 
 const analytics = [
   {
@@ -34,7 +24,7 @@ const analytics = [
   {
     title: "Active Subscriptions",
     value: 90,
-    redirect: "/DAMIL-Access-Control/All-Clients",
+    redirect: "/DAMIL-Access-Control/All-Clients/subscriptionStatus=ACTIVE",
     icon: <FitnessCenterIcon color="success" sx={{ fontSize: 40, mb: 1 }} />,
   },
   {
@@ -46,47 +36,16 @@ const analytics = [
   {
     title: "Expired Subscriptions",
     value: 12,
-    redirect: "/DAMIL-Access-Control/All-Clients",
+    redirect: "/DAMIL-Access-Control/All-Clients/subscriptionStatus=INACTIVE",
     icon: <CancelIcon color="error" sx={{ fontSize: 40, mb: 1 }} />,
   },
 ];
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { t } = useLanguageContext();
   const { authedUser } = useAuthedContext();
   const [openCheckIn, setOpenCheckIn] = useState(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
-  const [activeStep, setActiveStep] = useState(0);
-  const [searchInput, setSearchInput] = useState("");
-  const [userDetails, setUserDetails] = useState<any>(null);
-  const steps = [t("Search Member"), t("View Details")];
-
-  const handleClose = () => {
-    setActiveStep(0);
-    setSearchInput("");
-    setUserDetails(null);
-    setOpenSearch(false);
-  };
-
-  const handleNext = () => {
-    const mockUser = {
-      name: "Jane Smith",
-      email: "jane@example.com",
-      age: 28,
-      membership: "Gold",
-    };
-
-    setUserDetails(mockUser);
-    setActiveStep((prev) => prev + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prev) => prev - 1);
-  };
-  const handleAddMember = () => {
-    navigate("/DAMIL-Access-Control/All-Clients");
-  };
 
   const handleSearchMember = () => {
     setOpenSearch(true);
@@ -95,23 +54,6 @@ const HomePage: React.FC = () => {
   return (
     <>
       <Box sx={{ p: 2 }}>
-        {/* <Box
-          sx={{
-            textAlign: "center",
-            py: 3,
-            mb: 2,
-            borderRadius: "16px",
-            backgroundColor: "#f5f7fa",
-            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.05)",
-          }}
-        >
-          <Typography variant="h4" fontWeight={700} color="primary">
-            Dashboard
-          </Typography>
-          <Typography variant="subtitle1" color="text.secondary" mt={1}>
-            Welcome, {authedUser?.username}
-          </Typography>
-        </Box> */}
         <Box
           sx={{
             textAlign: "center",
@@ -170,7 +112,7 @@ const HomePage: React.FC = () => {
               variant="contained"
               color="primary"
               startIcon={<PersonAddIcon />}
-              onClick={handleAddMember}
+              onClick={() => navigate("/DAMIL-Access-Control/All-Clients")}
             >
               Add New Member
             </Button>
@@ -232,90 +174,8 @@ const HomePage: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
-      <CustomModal
-        title={t("Search User")}
-        open={openSearch}
-        onClose={handleClose}
-        width={"md"}
-        titleIcon="search"
-      >
-        <Box sx={{ width: "100%", mb: 3 }}>
-          <Stepper activeStep={activeStep} alternativeLabel>
-            {steps.map((label, index) => (
-              <Step key={index}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-        </Box>
 
-        {/* Step Content */}
-        {activeStep === 0 && (
-          <Box>
-            <Typography variant="subtitle1" mb={2}>
-              {t("Enter Member ID or Name")}
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid size={12}>
-                <TextField
-                  fullWidth
-                  label={t("Search")}
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                />
-              </Grid>
-              <Grid size={12} display="flex" justifyContent="flex-end">
-                <Button
-                  variant="contained"
-                  onClick={handleNext}
-                  disabled={!searchInput.trim()}
-                >
-                  {t("Next")}
-                </Button>
-              </Grid>
-            </Grid>
-          </Box>
-        )}
-
-        {activeStep === 1 && userDetails && (
-          <Box>
-            <Typography variant="h6" mb={2}>
-              {t("Member Details")}
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid size={6}>
-                <Typography variant="subtitle2">{t("Name")}</Typography>
-                <Typography>{userDetails.name}</Typography>
-              </Grid>
-              <Grid size={6}>
-                <Typography variant="subtitle2">{t("Email")}</Typography>
-                <Typography>{userDetails.email}</Typography>
-              </Grid>
-              <Grid size={6}>
-                <Typography variant="subtitle2">{t("Age")}</Typography>
-                <Typography>{userDetails.age}</Typography>
-              </Grid>
-              <Grid size={6}>
-                <Typography variant="subtitle2">{t("Membership")}</Typography>
-                <Typography>{userDetails.membership}</Typography>
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={2} mt={3} justifyContent="space-between">
-              <Grid>
-                <Button variant="outlined" onClick={handleBack}>
-                  {t("Back")}
-                </Button>
-              </Grid>
-              <Grid>
-                <Button variant="contained" onClick={handleClose}>
-                  {t("Close")}
-                </Button>
-              </Grid>
-            </Grid>
-          </Box>
-        )}
-      </CustomModal>
+      <SearchModal openSearch={openSearch} setOpenSearch={setOpenSearch} />
       <CheckInModal open={openCheckIn} onClose={() => setOpenCheckIn(false)} />
       <IncompleteProfileModal />
     </>

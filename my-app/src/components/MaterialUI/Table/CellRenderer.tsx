@@ -9,16 +9,10 @@ import { ColumnType } from "../../../Global/Types/commonTypes";
 type CellRendererProps = {
   value: any;
   dataType: ColumnType;
-  align?: "left" | "right" | "center";
   table: boolean;
 };
 
-const CellRenderer = ({
-  value,
-  dataType,
-  align = "left",
-  table,
-}: CellRendererProps) => {
+const CellRenderer = ({ value, dataType, table }: CellRendererProps) => {
   let displayValue: React.ReactNode = String(value);
   let style: any = {
     margin: 0,
@@ -42,7 +36,7 @@ const CellRenderer = ({
           </Box>
         );
       }
-      style.color = "#1976d2"; // Blue
+      style.color = "#1976d2";
       break;
 
     case "date":
@@ -219,9 +213,9 @@ const CellRenderer = ({
   }
 
   return (
-    <TableCell align={align} sx={style}>
+    <Box component="div" sx={style}>
       {displayValue}
-    </TableCell>
+    </Box>
   );
 };
 

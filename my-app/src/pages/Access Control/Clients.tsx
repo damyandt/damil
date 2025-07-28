@@ -1,6 +1,6 @@
 import { Box, CircularProgress } from "@mui/material";
 import TableComponent from "../../components/MaterialUI/Table/Table";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import callApi from "../../API/callApi";
 import { getClientsTable } from "./API/getQueries";
@@ -20,6 +20,7 @@ export type Client = {
 
 const ClientsPage = () => {
   const { t } = useLanguageContext();
+  const { filter } = useParams();
   const [refreshTable, setRefreshTable] = useState<boolean>(false);
   const [tableData, setTableData] = useState<any>({});
   const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
@@ -54,21 +55,9 @@ const ClientsPage = () => {
   const fetchData = async () => {
     try {
       const data = await callApi<any>({
-        query: getClientsTable(),
+        query: getClientsTable(filter),
         auth: { setAuthedUser },
       });
-      // const newData = data.data.columns;
-      // newData.push({
-      //   field: "actions",
-      //   header: "Actions",
-      //   type: "button",
-      //   dropDownConfig: null,
-      // });
-
-      // setTableData({
-      //   ...data.data,
-      //   columns: newData,
-      // });
       setTableData(data.data);
     } catch (err) {
       console.log(err);

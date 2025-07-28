@@ -1,10 +1,15 @@
 import { Query } from "../../../API/callApi";
 
-export const getClientsTable = (): Query => ({
-  endpoint: `gym-members/table`,
-  method: "GET",
-});
+export const getClientsTable = (filter?: string): Query => {
+  let endpoint = "gym-members/table";
 
+  filter && (endpoint += `?${filter}`);
+
+  return {
+    endpoint,
+    method: "GET",
+  };
+};
 export const getMember = (
   gymID: string,
   searchQuery: string | number
