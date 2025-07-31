@@ -1,11 +1,13 @@
 import { SerializedStyles, css } from "@emotion/react";
 import {
+  alpha,
   Avatar,
   Box,
   Divider,
   Drawer,
   IconButton,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { LEFT_NAV_WIDTH, MAIN_COLOR } from "../layoutVariables";
 import LeftNavListMenu from "./LeftNavListMenu";
@@ -19,7 +21,7 @@ import { useLanguageContext } from "../../context/LanguageContext";
 import { handleUserSignOut } from "../../context/authContextUtils";
 import { useNavigate } from "react-router-dom";
 
-const cssStyles = (openLeftNav: boolean) => ({
+const cssStyles = (openLeftNav: boolean, theme: any) => ({
   drawer: css({
     width: openLeftNav ? LEFT_NAV_WIDTH : "5.4em",
     flexShrink: 0,
@@ -31,7 +33,8 @@ const cssStyles = (openLeftNav: boolean) => ({
       boxSizing: "border-box",
       border: "none",
       overflowX: "hidden",
-      backgroundColor: "#f0f2f5",
+      backgroundColor:
+        theme.palette.mode === "dark" ? "rgba(96, 96, 96, 0.78)" : "#fff",
       margin: !openLeftNav ? "1em" : "1em 1em 1em 0",
       height: "-webkit-fill-available",
       transition: "margin 0.4s ease, width 0.4s ease, border-radius 0.4s ease",
@@ -40,7 +43,8 @@ const cssStyles = (openLeftNav: boolean) => ({
     },
   }),
   leftNavContent: css({
-    backgroundColor: "#fff",
+    backgroundColor:
+      theme.palette.mode === "dark" ? "rgba(96, 96, 96, 0.78)" : "#fff",
     borderRadius: !openLeftNav ? "20px" : 0,
     transition: "borderRadius 0.4s ease",
     overflow: "auto",
@@ -59,7 +63,8 @@ const cssStyles = (openLeftNav: boolean) => ({
     padding: "1em",
     width: "100%",
     borderTop: "1px solid #e0e0e0",
-    backgroundColor: "#fff",
+    backgroundColor:
+      theme.palette.mode === "dark" ? "rgba(96, 96, 96, 0.78)" : "#fff",
     boxShadow: "0 -2px 8px rgba(0, 0, 0, 0.08)",
   }),
   openLeftNav: css({
@@ -73,7 +78,8 @@ const cssStyles = (openLeftNav: boolean) => ({
     justifyContent: "flex-end",
     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
     transition: "justify-content 0.4s ease",
-    backgroundColor: "#fff",
+    backgroundColor:
+      theme.palette.mode === "dark" ? "rgba(96, 96, 96, 0.78)" : "#fff",
     zIndex: 10,
     gap: 1,
   }),
@@ -93,7 +99,8 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
 }) => {
   const navigate = useNavigate();
   const { t } = useLanguageContext();
-  const styles = { ...cssStyles(openLeftNav) };
+  const theme = useTheme();
+  const styles = { ...cssStyles(openLeftNav, theme) };
   const { NAV_DAMIL_HOME, NAV_DAMIL_ANALYTICS } = useTranslatedNav();
 
   const handleClose = () => {
@@ -198,7 +205,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
             </Box>
             <Box sx={{ display: "flex" }}>
               <CustomTooltip title={t("Settings")} placement="left">
-                <IconButton>
+                <IconButton onClick={() => navigate("Profile")}>
                   <SettingsIcon />
                 </IconButton>
               </CustomTooltip>

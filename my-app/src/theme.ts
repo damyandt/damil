@@ -5,6 +5,7 @@ import {
   Theme,
   ThemeOptions,
 } from "@mui/material/styles";
+import { MAIN_COLOR } from "./Layout/layoutVariables";
 
 declare module "@mui/material/styles" {
   interface PaletteColor {
@@ -133,14 +134,24 @@ const theme = (mode: PaletteMode) => {
       text: {
         primary: mode === "light" ? "#000000" : "#FFFFFF",
       },
+      // primary: {
+      //   main: mode === "light" ? "#a250fa" : "#bb5ff5ff",
+      //   light: mode === "light" ? "#be84fdff" : "#045C6B",
+      //   contrastText: "#FFFFFF",
+      //   light100: "#C1ECEF",
+      //   light200: "#7ED7DE",
+      //   light300: "#5CCDD5",
+      //   light400: "#3BC3CC",
+      // },
       primary: {
-        main: "#30AFB8",
-        light: mode === "light" ? "#E2F6F8" : "#2A9BA3",
-        light100: "#C1ECEF",
-        light200: "#7ED7DE",
-        light300: "#5CCDD5",
-        light400: "#3BC3CC",
+        main: "#a250fa", // Same main color for both modes
+        light: mode === "light" ? "#be84fd" : "#8c3dc8", // A lighter version for light mode, a toned-down version for dark
+        dark: mode === "light" ? "#7d1ecb" : "#5d1b93", // Optional: a darker variant
         contrastText: "#FFFFFF",
+        light100: "#e3caff", // pastel shade for very light background use
+        light200: "#d0aefc",
+        light300: "#bc91f9",
+        light400: "#a250fa", // same as main, for reference
       },
       secondary: {
         main: "#1E88E5",

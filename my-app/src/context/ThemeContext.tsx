@@ -1,12 +1,17 @@
-// ThemeContext.tsx
-import React, { createContext, useContext, ReactNode, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from "react";
 import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
-import { PaletteMode } from "@mui/material";
+// import { PaletteMode } from "@mui/material";
 
 type ThemeContextType = {
-  themeColor: PaletteMode;
-  setThemeColor: React.Dispatch<React.SetStateAction<PaletteMode>>;
+  themeColor: "light" | "dark";
+  setThemeColor: React.Dispatch<React.SetStateAction<"light" | "dark">>;
 };
 
 const ThemeContext = createContext<ThemeContextType>({} as ThemeContextType);
@@ -16,10 +21,7 @@ type ThemeProviderProps = {
 };
 
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [themeColor, setThemeColor] = useState<PaletteMode>(() => {
-    const themeColor = localStorage.getItem("themeColor");
-    return themeColor === "dark" ? "dark" : "light";
-  });
+  const [themeColor, setThemeColor] = useState<"light" | "dark">("light");
 
   useEffect(() => {
     localStorage.setItem("themeColor", themeColor);
@@ -39,6 +41,11 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
 export const useCustomThemeProviderContext = () => {
   const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error(
+      "useCustomThemeProviderContext must be used within a ThemeProvider"
+    );
+  }
   return context;
 };
 

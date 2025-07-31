@@ -60,7 +60,6 @@ export const DetailsAction = ({
                     key={col.field}
                     value={selectedRow?.[col.field as keyof any]}
                     dataType={col.type}
-                    align={col.align}
                     table={false}
                   />
                 </Typography>

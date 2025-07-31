@@ -14,6 +14,7 @@ import StaffPage from "../../pages/Staff/StaffMembersPage";
 import StaffRolesPage from "../../pages/Staff/StaffRolesPage";
 import StaffShifts from "../../pages/Staff/Shifts/StaffShifts";
 import HomePage from "../../pages/Home/Home";
+import ProfilePage from "../../pages/usersPages/Profile";
 
 export default createBrowserRouter([
   {
@@ -28,6 +29,11 @@ export default createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
+      },
+      // Profile
+      {
+        path: "/Profile",
+        element: <ProfilePage />,
       },
 
       // Analystics

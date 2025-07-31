@@ -156,7 +156,8 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
             height: "100%",
             borderRadius: "20px",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-            backgroundColor: "#fff",
+            backgroundColor: (theme) =>
+              theme.palette.mode === "dark" ? "rgba(96, 96, 96, 0.78)" : "#fff",
             boxSizing: "border-box",
             padding: "1em",
             display: "flex",

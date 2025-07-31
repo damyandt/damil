@@ -1,4 +1,4 @@
-import { Box, TableCell } from "@mui/material";
+import { Box, TableCell, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
@@ -10,9 +10,15 @@ type CellRendererProps = {
   value: any;
   dataType: ColumnType;
   table: boolean;
+  fontWeight?: number;
 };
 
-const CellRenderer = ({ value, dataType, table }: CellRendererProps) => {
+const CellRenderer = ({
+  value,
+  dataType,
+  table,
+  fontWeight = 200,
+}: CellRendererProps) => {
   let displayValue: React.ReactNode = String(value);
   let style: any = {
     margin: 0,
@@ -214,7 +220,7 @@ const CellRenderer = ({ value, dataType, table }: CellRendererProps) => {
 
   return (
     <Box component="div" sx={style}>
-      {displayValue}
+      <Typography fontWeight={fontWeight}>{displayValue}</Typography>
     </Box>
   );
 };
