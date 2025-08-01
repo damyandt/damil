@@ -5,7 +5,7 @@ import {
   Theme,
   ThemeOptions,
 } from "@mui/material/styles";
-import { MAIN_COLOR } from "./Layout/layoutVariables";
+import { lighten, darken, alpha } from "@mui/system";
 
 declare module "@mui/material/styles" {
   interface PaletteColor {
@@ -17,6 +17,7 @@ declare module "@mui/material/styles" {
     dark200?: string;
     dark300?: string;
     dark400?: string;
+    opacityMain?: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -28,6 +29,7 @@ declare module "@mui/material/styles" {
     dark200?: string;
     dark300?: string;
     dark400?: string;
+    opacityMain?: string;
   }
 
   interface PaletteOptions {
@@ -37,6 +39,11 @@ declare module "@mui/material/styles" {
       darkBackgroundColor?: string;
       darkGray?: string;
       themeBackground?: string;
+      sectionBackgroundColor: string;
+      shodow?: string;
+      shodowColor?: string;
+      tableRow?: string;
+      tableBackground?: string;
     };
   }
 
@@ -47,6 +54,11 @@ declare module "@mui/material/styles" {
       darkBackgroundColor?: string;
       darkGray?: string;
       themeBackground?: string;
+      sectionBackgroundColor?: string;
+      shodow?: string;
+      shodowColor?: string;
+      tableRow?: string;
+      tableBackground?: string;
     };
   }
 
@@ -105,7 +117,7 @@ const staticThemeColors = {
   },
 };
 
-const theme = (mode: PaletteMode) => {
+const theme = (mode: PaletteMode, mainColor: string) => {
   const baseTheme = createTheme();
 
   const customTheme: ThemeOptions = {
@@ -132,26 +144,20 @@ const theme = (mode: PaletteMode) => {
         black: mode === "light" ? "#000000" : "#FFFFFF",
       },
       text: {
-        primary: mode === "light" ? "#000000" : "#FFFFFF",
+        primary: mode === "light" ? "#000000" : "#d1d1d1ff",
       },
-      // primary: {
-      //   main: mode === "light" ? "#a250fa" : "#bb5ff5ff",
-      //   light: mode === "light" ? "#be84fdff" : "#045C6B",
-      //   contrastText: "#FFFFFF",
-      //   light100: "#C1ECEF",
-      //   light200: "#7ED7DE",
-      //   light300: "#5CCDD5",
-      //   light400: "#3BC3CC",
-      // },
       primary: {
-        main: "#a250fa", // Same main color for both modes
-        light: mode === "light" ? "#be84fd" : "#8c3dc8", // A lighter version for light mode, a toned-down version for dark
-        dark: mode === "light" ? "#7d1ecb" : "#5d1b93", // Optional: a darker variant
+        main: mainColor,
+        light:
+          mode === "light" ? lighten(mainColor, 0.2) : lighten(mainColor, 0.1),
+        dark:
+          mode === "light" ? darken(mainColor, 0.2) : darken(mainColor, 0.1),
         contrastText: "#FFFFFF",
-        light100: "#e3caff", // pastel shade for very light background use
-        light200: "#d0aefc",
-        light300: "#bc91f9",
-        light400: "#a250fa", // same as main, for reference
+        light100: lighten(mainColor, 0.4),
+        light200: lighten(mainColor, 0.3),
+        light300: lighten(mainColor, 0.2),
+        light400: lighten(mainColor, 0.1),
+        opacityMain: mainColor + "20",
       },
       secondary: {
         main: "#1E88E5",
@@ -161,6 +167,24 @@ const theme = (mode: PaletteMode) => {
         light300: "#6DB2EE",
         light400: "#50A2EA",
         contrastText: "#FFFFFF",
+      },
+      customColors: {
+        greyText: mode === "light" ? "#5A5A5A" : "#d3d3d3",
+        darkGrey: "#2d2d2d",
+        darkBackgroundColor:
+          mode === "dark" ? darken(mainColor, 0.9) : lighten(mainColor, 0.95),
+        darkGray: darken(mainColor, 0.5),
+        sectionBackgroundColor:
+          mode === "dark" ? "#222222ff" : lighten(mainColor, 1),
+        shodowColor:
+          mode === "dark" ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.08)",
+        shodow:
+          mode === "dark"
+            ? "0 0 5px rgba(255, 255, 255, 0.1)"
+            : "0 0 5px rgba(0, 0, 0, 0.2)",
+        tableBackground:
+          mode === "dark" ? darken(mainColor, 0.9) : lighten(mainColor, 0.95),
+        tableRow: mode === "dark" ? "#222222ff" : "#fff",
       },
       error: {
         main: mode === "light" ? "#D94646" : "#AD2323",
@@ -173,13 +197,6 @@ const theme = (mode: PaletteMode) => {
       success: {
         main: mode === "light" ? "#00C853" : "#008A3A",
         contrastText: "#FFFFFF",
-      },
-      customColors: {
-        greyText: mode === "light" ? "#5A5A5A" : "#d3d3d3",
-        darkGrey: "#2d2d2d",
-        darkBackgroundColor: "#313131",
-        darkGray: "	#3e3e42",
-        themeBackground: "	#3e3e42",
       },
       grey: staticThemeColors.grey,
     },

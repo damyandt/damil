@@ -7,22 +7,23 @@ import LanguageProvider from "./context/LanguageContext";
 import AuthContext from "./context/AuthContext";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import "dayjs/locale/en-gb"; // for UK date format dd/mm/yyyy
+import "dayjs/locale/en-gb";
 
 const rootElement = document.getElementById("root");
 
 if (rootElement) {
   createRoot(rootElement).render(
-    <ThemeProvider>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+      <CssBaseline />
+      <ThemeProvider>
         <AuthContext>
           <LanguageProvider>
             <CssBaseline />
             <App />
           </LanguageProvider>
         </AuthContext>
-      </LocalizationProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </LocalizationProvider>
   );
 } else {
   console.error("Root element not found");

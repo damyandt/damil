@@ -1,6 +1,5 @@
 import { SerializedStyles, css } from "@emotion/react";
 import {
-  alpha,
   Avatar,
   Box,
   Divider,
@@ -9,7 +8,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { LEFT_NAV_WIDTH, MAIN_COLOR } from "../layoutVariables";
+import { LEFT_NAV_WIDTH } from "../layoutVariables";
 import LeftNavListMenu from "./LeftNavListMenu";
 import { useTranslatedNav } from "../../Global/Hooks/useTranslatedNav";
 import { NAV_DAMIL_ACCESS_CONTROL, NAV_DAMIL_STAFF } from "./leftNavData";
@@ -33,18 +32,17 @@ const cssStyles = (openLeftNav: boolean, theme: any) => ({
       boxSizing: "border-box",
       border: "none",
       overflowX: "hidden",
-      backgroundColor:
-        theme.palette.mode === "dark" ? "rgba(96, 96, 96, 0.78)" : "#fff",
-      margin: !openLeftNav ? "1em" : "1em 1em 1em 0",
+      backgroundColor: theme.palette.customColors.sectionBackgroundColor,
+      margin: !openLeftNav ? "1em" : "1em 1em 0.9em 0",
       height: "-webkit-fill-available",
       transition: "margin 0.4s ease, width 0.4s ease, border-radius 0.4s ease",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      boxShadow: theme.palette.customColors.shodow,
+
       borderRadius: !openLeftNav ? "20px" : "0 20px 20px 0",
     },
   }),
   leftNavContent: css({
-    backgroundColor:
-      theme.palette.mode === "dark" ? "rgba(96, 96, 96, 0.78)" : "#fff",
+    backgroundColor: theme.palette.customColors.sectionBackgroundColor,
     borderRadius: !openLeftNav ? "20px" : 0,
     transition: "borderRadius 0.4s ease",
     overflow: "auto",
@@ -62,24 +60,20 @@ const cssStyles = (openLeftNav: boolean, theme: any) => ({
     alignItems: "center",
     padding: "1em",
     width: "100%",
-    borderTop: "1px solid #e0e0e0",
-    backgroundColor:
-      theme.palette.mode === "dark" ? "rgba(96, 96, 96, 0.78)" : "#fff",
-    boxShadow: "0 -2px 8px rgba(0, 0, 0, 0.08)",
+    backgroundColor: theme.palette.customColors.sectionBackgroundColor,
+    boxShadow: `0 -2px 8px ${theme!.palette!.customColors!.shodowColor}`,
   }),
   openLeftNav: css({
     position: "absolute",
     top: 0,
-    borderBottom: "1px solid #e0e0e0",
     padding: "1em",
     width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+    boxShadow: `0 2px 8px ${theme!.palette!.customColors!.shodowColor}`,
     transition: "justify-content 0.4s ease",
-    backgroundColor:
-      theme.palette.mode === "dark" ? "rgba(96, 96, 96, 0.78)" : "#fff",
+    backgroundColor: theme.palette.customColors.sectionBackgroundColor,
     zIndex: 10,
     gap: 1,
   }),
@@ -118,30 +112,28 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
     >
       <Box
         sx={{
-          mt: "3em",
-          paddingY: "2em",
+          paddingTop: "5em",
+          paddingBottom: "2em",
           height: "-webkit-fill-available",
-          backgroundColor: "#fff",
+          backgroundColor: theme!.palette!.customColors!.sectionBackgroundColor,
         }}
       >
         <Box component="div" sx={styles.openLeftNav}>
           <Box
             sx={{
               fontWeight: 500,
-              color: MAIN_COLOR,
               opacity: openLeftNav ? 1 : 0,
               transition: "opacity 0.4s ease",
             }}
           >
             <Typography>Collapse</Typography>
           </Box>
-          <CustomTooltip title={!openLeftNav ? "Expend" : ""}>
+          <CustomTooltip title={!openLeftNav ? "Expand" : ""}>
             <IconButton
               size="large"
               aria-label="site menu"
               onClick={() => setOpenLeftNav((prev) => !prev)}
               sx={{
-                color: MAIN_COLOR,
                 transform: !openLeftNav ? "rotate(90deg)" : "rotate(0deg)",
                 transition: "transform 0.4s ease",
               }}
@@ -175,6 +167,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
             openLeftNav={openLeftNav}
           />
         </Box>
+
         <Box component="div" sx={styles.profile}>
           <Avatar
             alt="User Name"

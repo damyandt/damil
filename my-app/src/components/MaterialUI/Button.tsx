@@ -12,6 +12,9 @@ export interface ButtonProps extends MUIButtonProps {
   loading?: boolean;
   to?: string;
   external?: boolean;
+  borderWidth?: number;
+  borderColor?: string;
+  borderRadius?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -26,6 +29,9 @@ const Button: React.FC<ButtonProps> = ({
   to,
   external = false,
   component,
+  borderWidth = 2,
+  borderColor,
+  borderRadius = "6px",
   ...rest
 }) => {
   if (!disabled && loading) disabled = true;
@@ -57,8 +63,9 @@ const Button: React.FC<ButtonProps> = ({
       {...componentProps}
       {...rest}
       sx={{
-        borderWidth: 2,
-        // backgroundColor: "#f9f9f9",
+        borderWidth: borderWidth,
+        borderColor: borderColor,
+        borderRadius: borderRadius,
       }}
     >
       {children}

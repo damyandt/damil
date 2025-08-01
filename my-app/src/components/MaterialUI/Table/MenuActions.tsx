@@ -69,7 +69,7 @@ export const MenuActions = ({
         <MenuItem
           sx={{
             padding: 0,
-            "&:hover": { backgroundColor: "#fff", cursor: "none" },
+            "&:hover": { cursor: "none", backgroundColor: "inherit" },
           }}
         >
           <EditAction
@@ -87,7 +87,7 @@ export const MenuActions = ({
         <MenuItem
           sx={{
             padding: 0,
-            "&:hover": { backgroundColor: "#fff", cursor: "none" },
+            "&:hover": { backgroundColor: "inherit", cursor: "none" },
           }}
         >
           <DeleteAction
@@ -104,7 +104,7 @@ export const MenuActions = ({
         <MenuItem
           sx={{
             padding: 0,
-            "&:hover": { backgroundColor: "#fff", cursor: "none" },
+            "&:hover": { backgroundColor: "inherit", cursor: "none" },
           }}
         >
           <DetailsAction

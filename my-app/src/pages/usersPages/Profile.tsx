@@ -26,17 +26,9 @@ import { useCustomThemeProviderContext } from "../../context/ThemeContext";
 const ProfilePage = () => {
   const { t } = useLanguageContext();
   const [editMode, setEditMode] = useState(false);
-  const { themeColor, setThemeColor } = useCustomThemeProviderContext();
+  const { themeMode, setThemeMode, setPrimaryColor, primaryColor } =
+    useCustomThemeProviderContext();
   const { authedUser } = useAuthedContext();
-  console.log(themeColor);
-  //   const data: any = {
-  //     username: "Mama",
-  //     email: "mama@abv.bg",
-  //     city: "Dobrich",
-  //     phone: "0899240177",
-  //     membersCount: 0,
-  //     subscriptionActive: false,
-  //   };
   const info: any = [
     { label: "City", field: "city" },
     { label: "Phone", field: "phone" },
@@ -44,21 +36,21 @@ const ProfilePage = () => {
     { label: "Subscription", field: "subscriptionActive" },
   ];
 
-  const [selectedColor, setSelectedColor] = useState("green");
-
   // Available colors
   const colorOptions = [
-    { name: "green", color: "#2e7d32" },
-    { name: "yellow", color: "#fdd835" },
-    { name: "orange", color: "#ef6c00" },
-    { name: "red", color: "#d32f2f" },
+    { name: "purple", color: "#a250fa" },
+    { name: "sky", color: "#0EA5E9" }, // clean sky blue
+    { name: "emerald", color: "#10B981" }, // soft emerald green
+    { name: "amber", color: "#F59E0B" }, // warm amber yellow-orange
+    { name: "rose", color: "#F43F5E" }, // bright rose red
   ];
 
   const handleToggleDarkMode = () => {
-    setThemeColor((prevThemeColor: PaletteMode) =>
-      prevThemeColor === "light" ? "dark" : "light"
+    setThemeMode((prevThemeMode: PaletteMode) =>
+      prevThemeMode === "light" ? "dark" : "light"
     );
   };
+
   return (
     <Grid container spacing={4} p={4} alignSelf={"center"}>
       <Grid size={12} display="flex" flexDirection="column" alignItems="center">
@@ -176,10 +168,10 @@ const ProfilePage = () => {
                   control={
                     <Switch
                       onChange={() => handleToggleDarkMode()}
-                      checked={themeColor === "light" ? false : true}
+                      checked={themeMode === "light" ? false : true}
                     />
                   }
-                  label={themeColor === "dark" ? "Dark Mode" : "Light Mode"}
+                  label={themeMode === "dark" ? "Dark Mode" : "Light Mode"}
                 />
               </Box>
 
@@ -205,8 +197,8 @@ const ProfilePage = () => {
                         }}
                       />
                       <Checkbox
-                        checked={selectedColor === option.name}
-                        onChange={() => setSelectedColor(option.name)}
+                        checked={primaryColor === option.color}
+                        onChange={() => setPrimaryColor(option.color)}
                         sx={{ mt: 1 }}
                       />
                     </Box>

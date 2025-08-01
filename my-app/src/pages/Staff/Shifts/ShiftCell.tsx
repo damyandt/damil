@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { Paper, IconButton, Box } from "@mui/material";
+import { Paper, IconButton, Box, useTheme } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { MAIN_COLOR } from "../../../Layout/layoutVariables";
 
 const ShiftCell = ({ staff, day, shift, onDelete }: any) => {
   const [hovered, setHovered] = useState(false);
-
+  const theme = useTheme();
   return (
     <Paper
       variant="outlined"
@@ -14,7 +13,11 @@ const ShiftCell = ({ staff, day, shift, onDelete }: any) => {
         height: 50,
         borderColor: "#fff",
         bgcolor: () =>
-          shift ? (hovered ? MAIN_COLOR + "20" : "#d0f0d0") : "#f0f2f5",
+          shift
+            ? hovered
+              ? theme.palette.primary.main + "20"
+              : "#d0f0d0"
+            : "#f0f2f5",
         p: 1,
         fontSize: "0.75rem",
         whiteSpace: "pre-wrap",

@@ -11,6 +11,7 @@ import {
   Modal,
   Backdrop,
   Tooltip,
+  useTheme,
 } from "@mui/material";
 import MuiLink from "@mui/material/Link";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
@@ -19,7 +20,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import TextField from "../../components/MaterialUI/FormFields/TextField";
-import { MAIN_COLOR } from "../../Layout/layoutVariables";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
 import { codeVerification, postLogin, validateEmail } from "./api/postQuery";
 import { setCookie } from "../../Global/Utils/commonFunctions";
@@ -38,6 +38,7 @@ export const errorMessages = {
 const LoginPage = () => {
   const { setUserSignedIn } = useAuthedContext();
   const navigate = useNavigate();
+  const theme = useTheme();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [resendCooldown, setResendCooldown] = useState<number>(0);
@@ -213,7 +214,11 @@ const LoginPage = () => {
             gap: 2,
           }}
         >
-          <Typography variant="h6" fontWeight={500} sx={{ color: MAIN_COLOR }}>
+          <Typography
+            variant="h6"
+            fontWeight={500}
+            sx={{ color: theme.palette.primary.main }}
+          >
             Sign in
           </Typography>
           <Grid container spacing={2}>

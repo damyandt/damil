@@ -267,7 +267,6 @@ const GymVisitsChart: React.FC<VisitsProps> = ({ height }) => {
         enabled: true,
         divideShape: "clone",
       },
-      //   color: MAIN_COLOR,
     },
     grid: {
       top: 80,

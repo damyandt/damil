@@ -14,7 +14,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { css, SerializedStyles } from "@emotion/react";
 import { Theme, useTheme } from "@mui/material/styles";
 import {
-  MAIN_COLOR,
   TOP_NAV_PADDING,
   TOP_NAV_SPACING_WITH_SITE_CONTENT,
   TOP_RIGHT_NAV_HEIGHT,
@@ -96,7 +95,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
               size="large"
               aria-label="site menu"
               onClick={() => setOpenLeftNav((prev) => !prev)}
-              sx={{ color: MAIN_COLOR }}
+              sx={{ color: theme.palette.primary.main }}
             >
               <MenuIcon />
             </IconButton>

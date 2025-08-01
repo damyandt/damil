@@ -1,5 +1,4 @@
 import { Box, IconButton, Theme, useMediaQuery } from "@mui/material";
-import TopNavigation from "./AppNavigation/TopNavigation";
 import { useEffect, useState } from "react";
 import LeftNavigation from "./AppNavigation/LeftNavigation";
 import { css, SerializedStyles } from "@emotion/react";
@@ -7,7 +6,6 @@ import {
   AUTH_LAYOUT_BACKGROUND_COLOR,
   AUTH_LAYOUT_PADDING,
   LEFT_NAV_WIDTH,
-  TOP_NAV_SPACING_WITH_SITE_CONTENT,
   AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
   TOP_RIGHT_NAV_HEIGHT,
 } from "./layoutVariables";
@@ -32,10 +30,11 @@ const cssStyles = (
   contentContainer: css({
     height: "-webkit-fill-available",
     overflow: "hidden",
-    background:
-      theme.palette.mode === "light"
-        ? AUTH_LAYOUT_BACKGROUND_COLOR
-        : AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
+    background: theme.palette.customColors?.darkBackgroundColor,
+    // background:
+    //   theme.palette.mode === "light"
+    //     ? AUTH_LAYOUT_BACKGROUND_COLOR
+    //     : AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
   }),
   floatingArrowButton: css({
     position: "fixed",
@@ -77,11 +76,12 @@ const cssStyles = (
     flexGrow: 1,
     position: "relative",
     padding: AUTH_LAYOUT_PADDING,
+    backgroundColor: theme.palette.customColors?.darkBackgroundColor,
 
-    backgroundColor:
-      theme.palette.mode === "light"
-        ? AUTH_LAYOUT_BACKGROUND_COLOR
-        : AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
+    // backgroundColor:
+    //   theme.palette.mode === "light"
+    //     ? AUTH_LAYOUT_BACKGROUND_COLOR
+    //     : AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
     // if mobile view -> don't have transition
     ...(!mobileLeftNav && {
       transition: "margin 0.4s ease",
@@ -155,9 +155,10 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
             zIndex: 2,
             height: "100%",
             borderRadius: "20px",
-            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-            backgroundColor: (theme) =>
-              theme.palette.mode === "dark" ? "rgba(96, 96, 96, 0.78)" : "#fff",
+            // boxShadow: theme!.palette!.customColors!.sectionBackgroundColor,
+            boxShadow: theme!.palette!.customColors!.shodow,
+            backgroundColor:
+              theme!.palette!.customColors!.sectionBackgroundColor,
             boxSizing: "border-box",
             padding: "1em",
             display: "flex",

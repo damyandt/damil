@@ -8,6 +8,7 @@ import {
   Grid,
   Modal,
   Tooltip,
+  useTheme,
 } from "@mui/material";
 import MuiLink from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
@@ -15,7 +16,6 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import TextField from "../../components/MaterialUI/FormFields/TextField";
-import { MAIN_COLOR } from "../../Layout/layoutVariables";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
 import { codeVerification, postLogin, postRegister } from "./api/postQuery";
 import { useAuthedContext } from "../../context/AuthContext";
@@ -28,6 +28,7 @@ import { useLanguageContext } from "../../context/LanguageContext";
 const RegisterPage = () => {
   const { setUserSignedIn } = useAuthedContext();
   const { t } = useLanguageContext();
+  const theme = useTheme();
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [openModal, setOpenModal] = React.useState<boolean>(false);
@@ -267,7 +268,11 @@ const RegisterPage = () => {
             gap: 2,
           }}
         >
-          <Typography variant="h6" fontWeight={500} sx={{ color: MAIN_COLOR }}>
+          <Typography
+            variant="h6"
+            fontWeight={500}
+            sx={{ color: theme.palette.primary.main }}
+          >
             Sign up
           </Typography>
           <Grid container spacing={2}>

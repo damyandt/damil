@@ -4,15 +4,17 @@ import {
   ListItemIcon,
   ListItemText,
   Box,
+  useTheme,
 } from "@mui/material";
 import { useState } from "react";
 import { SerializedStyles } from "@emotion/react";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Link, useLocation } from "react-router-dom";
-import { LeftNavList, LeftNavSingleItem, MAIN_COLOR } from "../layoutVariables";
+import { LeftNavList, LeftNavSingleItem } from "../layoutVariables";
 import Collapse from "../../components/MaterialUI/Collapse";
 import { FormStatuses } from "../../Global/Types/commonTypes";
 import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
+import { useCustomThemeProviderContext } from "../../context/ThemeContext";
 
 interface LeftNavListMenuProps {
   css?: SerializedStyles[] | SerializedStyles;
@@ -74,6 +76,8 @@ const NavItem: React.FC<NavItemProps> = ({
   openLeftNav,
 }) => {
   const location = useLocation();
+  const theme = useTheme();
+  const { primaryColor } = useCustomThemeProviderContext();
   const hasCurrentPath = (
     nestedItems: LeftNavSingleItem[] = [],
     path: string
@@ -102,11 +106,11 @@ const NavItem: React.FC<NavItemProps> = ({
           overflowX: "hidden",
           ...(openLeftNav && marginLeft ? { paddingLeft: "2em" } : {}),
           transition: "padding-left 0.4s ease",
-          "&:hover": { backgroundColor: MAIN_COLOR + "20" },
+          "&:hover": { backgroundColor: theme.palette.primary.opacityMain },
           "&.Mui-selected": {
-            backgroundColor: MAIN_COLOR + "20",
-            color: MAIN_COLOR,
-            "& .MuiListItemIcon-root": { color: MAIN_COLOR },
+            backgroundColor: theme.palette.primary.opacityMain,
+            color: primaryColor,
+            "& .MuiListItemIcon-root": { color: primaryColor },
           },
           borderRadius: "1em",
           margin: "0.1em 1em",

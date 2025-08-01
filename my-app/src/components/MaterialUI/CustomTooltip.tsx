@@ -1,6 +1,6 @@
 import { Box, Tooltip, tooltipClasses, TooltipProps } from "@mui/material";
 import React from "react";
-import { MAIN_COLOR } from "../../Layout/layoutVariables";
+import { useCustomThemeProviderContext } from "../../context/ThemeContext";
 
 interface CustomTooltipProps extends TooltipProps {
   children: React.ReactElement;
@@ -11,11 +11,14 @@ interface CustomTooltipProps extends TooltipProps {
 const CustomTooltip: React.FC<CustomTooltipProps> = ({
   children,
   title,
-  mainColor = MAIN_COLOR,
+  mainColor,
   placement = "right",
   width,
   ...rest
 }) => {
+  const { primaryColor } = useCustomThemeProviderContext();
+
+  const effectiveColor = mainColor || primaryColor;
   return (
     <Tooltip
       title={title}
@@ -25,7 +28,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
         tooltip: {
           sx: {
             width: width ? width : "fit-content",
-            bgcolor: mainColor,
+            bgcolor: effectiveColor,
             color: "#fff",
             fontSize: 13,
             borderRadius: 0.5,
@@ -33,7 +36,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
             px: 1.5,
             py: 0.5,
             [`& .${tooltipClasses.arrow}`]: {
-              color: mainColor,
+              color: effectiveColor,
             },
           },
         },

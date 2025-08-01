@@ -5,13 +5,17 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
+import {
+  ThemeProvider as MUIThemeProvider,
+  PaletteMode,
+} from "@mui/material/styles";
 import theme from "../theme";
-// import { PaletteMode } from "@mui/material";
 
 type ThemeContextType = {
-  themeColor: "light" | "dark";
-  setThemeColor: React.Dispatch<React.SetStateAction<"light" | "dark">>;
+  themeMode: "light" | "dark";
+  setThemeMode: React.Dispatch<React.SetStateAction<"light" | "dark">>;
+  primaryColor: string;
+  setPrimaryColor: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const ThemeContext = createContext<ThemeContextType>({} as ThemeContextType);
@@ -21,20 +25,34 @@ type ThemeProviderProps = {
 };
 
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [themeColor, setThemeColor] = useState<"light" | "dark">("light");
+  const [themeMode, setThemeMode] = useState<PaletteMode>(
+    (localStorage.getItem("themeMode") as PaletteMode) || "light"
+  );
+
+  const [primaryColor, setPrimaryColor] = useState<string>(
+    localStorage.getItem("primaryColor") || "#a250fa"
+  );
 
   useEffect(() => {
-    localStorage.setItem("themeColor", themeColor);
-  }, [themeColor]);
+    localStorage.setItem("themeMode", themeMode);
+  }, [themeMode]);
+
+  useEffect(() => {
+    localStorage.setItem("primaryColor", primaryColor);
+  }, [primaryColor]);
 
   const value: ThemeContextType = {
-    themeColor,
-    setThemeColor,
+    themeMode,
+    setThemeMode,
+    primaryColor,
+    setPrimaryColor,
   };
 
   return (
     <ThemeContext.Provider value={value}>
-      <MUIThemeProvider theme={theme(themeColor)}>{children}</MUIThemeProvider>
+      <MUIThemeProvider theme={theme(themeMode, primaryColor)}>
+        {children}
+      </MUIThemeProvider>
     </ThemeContext.Provider>
   );
 };
