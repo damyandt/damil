@@ -207,13 +207,7 @@ const LoginPage = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          // backgroundColor: "#fff",
           textAlign: "center",
-          // backgroundImage: 'url("/login.jpg")',
-          // backgroundSize: "cover",
-          // backgroundRepeat: "repeat",
-          // backgroundPosition: "center",
-          // bgcolor: "rgba(0, 0, 0, 0.3)",
         }}
       >
         <Box
@@ -221,6 +215,7 @@ const LoginPage = () => {
             position: "fixed",
             top: 0,
             left: 0,
+            zIndex: 2,
             width: "100vw",
             height: "100vh",
             backgroundColor: theme.palette.customColors?.darkBackgroundColor,
@@ -235,127 +230,139 @@ const LoginPage = () => {
           />
         </Box>
 
-        <Box sx={{ zIndex: 10 }}>
-          <Typography variant="h2" fontWeight={600} mb={4}>
-            Sign in to your Gym.
-          </Typography>
+        {/* <Box sx={{ zIndex: 10 }}> */}
+        <Typography variant="h2" fontWeight={600} mb={4} zIndex={10}>
+          Sign in to your Gym.
+        </Typography>
 
-          <Box
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: 400,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <Typography
+            variant="h3"
+            fontWeight={500}
             sx={{
-              width: "100%",
-              maxWidth: 400,
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
+              color: theme.palette.primary.main,
+              zIndex: 10,
+              width: "fit-content",
+              alignSelf: "center",
             }}
           >
-            <Typography
-              variant="h3"
-              fontWeight={500}
-              sx={{ color: theme.palette.primary.main }}
-            >
-              Sign in
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid size={12}>
+            Sign in
+          </Typography>
+          <Grid container spacing={2} zIndex={10}>
+            <Grid size={12}>
+              <TextField
+                fullWidth
+                disabled={disableEmail}
+                label={errors["email"] || "Email"}
+                error={!!errors["email"]}
+                onKeyDown={(e) => e.key === "Enter" && handleNextClick()}
+                onChange={(e) => handleChange("email", e.target.value)}
+                InputProps={{
+                  endAdornment: !showPasswordField ? (
+                    <InputAdornment position="end">
+                      <IconButton
+                        edge="end"
+                        onClick={handleNextClick}
+                        size="small"
+                      >
+                        <ArrowForwardIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ) : (
+                    <InputAdornment position="end">
+                      <IconButton
+                        edge="end"
+                        onClick={() => {
+                          setDisableEmail(false);
+                          setShowPasswordField(false);
+                        }}
+                        size="small"
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid size={12} zIndex={10}>
+              <Collapse in={showPasswordField}>
                 <TextField
                   fullWidth
-                  disabled={disableEmail}
-                  label={errors["email"] || "Email"}
-                  error={!!errors["email"]}
-                  onKeyDown={(e) => e.key === "Enter" && handleNextClick()}
-                  onChange={(e) => handleChange("email", e.target.value)}
+                  label={errors["password"] || "Password"}
+                  type={showPassword ? "text" : "password"}
+                  error={!!errors["password"]}
+                  onChange={(e) => handleChange("password", e.target.value)}
+                  inputRef={passwordInputRef}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleLogin();
+                  }}
                   InputProps={{
-                    endAdornment: !showPasswordField ? (
-                      <InputAdornment position="end">
-                        <IconButton
-                          edge="end"
-                          onClick={handleNextClick}
-                          size="small"
+                    endAdornment: (
+                      <Box sx={{ display: "flex", gap: 0, padding: 0 }}>
+                        <InputAdornment
+                          position="start"
+                          sx={{ margin: "0", paddingLeft: "0" }}
                         >
-                          <ArrowForwardIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ) : (
-                      <InputAdornment position="end">
-                        <IconButton
-                          edge="end"
-                          onClick={() => {
-                            setDisableEmail(false);
-                            setShowPasswordField(false);
-                          }}
-                          size="small"
-                        >
-                          <EditIcon />
-                        </IconButton>
-                      </InputAdornment>
+                          <IconButton
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            edge="start"
+                            tabIndex={-1}
+                            size="small"
+                            sx={{ mr: -0.5 }}
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                        <InputAdornment position="end" sx={{ ml: 0 }}>
+                          <IconButton
+                            edge="end"
+                            onClick={handleLogin}
+                            size="small"
+                          >
+                            <ArrowForwardIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      </Box>
                     ),
                   }}
                 />
-              </Grid>
-              <Grid size={12}>
-                <Collapse in={showPasswordField}>
-                  <TextField
-                    fullWidth
-                    label={errors["password"] || "Password"}
-                    type={showPassword ? "text" : "password"}
-                    error={!!errors["password"]}
-                    onChange={(e) => handleChange("password", e.target.value)}
-                    inputRef={passwordInputRef}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") handleLogin();
-                    }}
-                    InputProps={{
-                      endAdornment: (
-                        <Box sx={{ display: "flex", gap: 0, padding: 0 }}>
-                          <InputAdornment
-                            position="start"
-                            sx={{ margin: "0", paddingLeft: "0" }}
-                          >
-                            <IconButton
-                              onClick={() => setShowPassword((prev) => !prev)}
-                              edge="start"
-                              tabIndex={-1}
-                              size="small"
-                              sx={{ mr: -0.5 }}
-                            >
-                              {showPassword ? (
-                                <VisibilityOff />
-                              ) : (
-                                <Visibility />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                          <InputAdornment position="end" sx={{ ml: 0 }}>
-                            <IconButton
-                              edge="end"
-                              onClick={handleLogin}
-                              size="small"
-                            >
-                              <ArrowForwardIcon />
-                            </IconButton>
-                          </InputAdornment>
-                        </Box>
-                      ),
-                    }}
-                  />
-                </Collapse>
-              </Grid>
+              </Collapse>
             </Grid>
-            <FormControlLabel
-              control={<Checkbox />}
-              label="Remember me"
-              sx={{ alignSelf: "flex-center", mt: 1 }}
-            />
-            <Typography variant="body2" fontWeight={500}>
-              You don't have an Account?{" "}
-              <MuiLink component={RouterLink} to="/register" underline="hover">
-                Register Here
-              </MuiLink>
-            </Typography>
-          </Box>
+          </Grid>
+          <FormControlLabel
+            control={<Checkbox />}
+            label="Remember me"
+            sx={{
+              alignSelf: "flex-center",
+              mt: 1,
+              zIndex: 10,
+              width: "fit-content",
+            }}
+          />
+          <Typography
+            variant="body2"
+            fontWeight={500}
+            zIndex={10}
+            width={"fit-content"}
+            alignSelf={"center"}
+          >
+            You don't have an Account?{" "}
+            <MuiLink component={RouterLink} to="/register" underline="hover">
+              Register Here
+            </MuiLink>
+          </Typography>
         </Box>
       </Box>
+      {/* </Box> */}
       <CustomModal
         open={openModal}
         onClose={() => setOpenModal(false)}
