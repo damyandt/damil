@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import {
+  alpha,
+  Box,
+  Button,
+  darken,
+  Grid,
+  lighten,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +22,7 @@ import ChartDisplay from "./ChartsDisplayed";
 import CheckInModal from "./CheckInModal";
 import IncompleteProfileModal from "../../components/Profile/IncompleteModal";
 import SearchModal from "./SearchModal";
-
+import tinycolor from "tinycolor2";
 const analytics = [
   {
     title: "Total Members",
@@ -50,6 +59,20 @@ const HomePage: React.FC = () => {
   const handleSearchMember = () => {
     setOpenSearch(true);
   };
+  const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
+  const primary = theme.palette.primary.main;
+
+  // Derive light and darker variants of primary
+  const shiftHue = (color: string, amount: number) =>
+    tinycolor(color).spin(amount).toHexString();
+
+  const colorStart = isDark
+    ? shiftHue(lighten(primary, 0.1), -20)
+    : shiftHue(lighten(primary, 0.1), -20);
+  const colorEnd = isDark
+    ? shiftHue(darken(primary, 0.2), 20)
+    : shiftHue(lighten(primary, 0.3), 20);
 
   return (
     <>
@@ -60,21 +83,28 @@ const HomePage: React.FC = () => {
             py: 3,
             mb: 3,
             borderRadius: "16px",
-            background: "linear-gradient(90deg, #e3f2fd, #fce4ec)",
-            boxShadow: "0 3px 12px rgba(0,0,0,0.06)",
+            background: `linear-gradient(90deg, ${colorStart}, ${colorEnd})`,
+            boxShadow: isDark
+              ? `0 3px 12px ${alpha(primary, 0.3)}`
+              : `0 3px 12px ${alpha("#000", 0.06)}`,
           }}
         >
-          <Typography variant="h4" fontWeight={700} color="primary">
+          <Typography
+            variant="h2"
+            fontWeight={700}
+            // color={isDark ? "#fff" : theme.palette.primary.main}
+            color="#fff"
+          >
             📋 Dashboard – {authedUser?.username}
           </Typography>
 
-          <Typography variant="subtitle1" color="text.secondary" mt={1}>
+          <Typography variant="subtitle1" color="#fff" mt={1}>
             {authedUser?.email}
             {authedUser?.city && ` · ${authedUser.city}`}
             {authedUser?.phone && ` · ${authedUser.phone}`}
           </Typography>
 
-          <Typography variant="body2" color="text.secondary" mt={1}>
+          <Typography variant="body2" color="#fff" mt={1}>
             {authedUser?.subscriptionActive
               ? `✅ Active Subscription · ${authedUser.membersCount} Member(s)`
               : `🚫 No Active Subscription`}

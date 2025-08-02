@@ -139,7 +139,7 @@ export default function Memberships() {
     },
     title: {
       textStyle: {
-        fontFamily: "Montserrat",
+        fontFamily: "Noto Sans",
         fontSize: 18,
         fontWeight: "bold",
       },

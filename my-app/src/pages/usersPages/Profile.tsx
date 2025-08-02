@@ -31,19 +31,11 @@ const ProfilePage = () => {
   const { themeMode, setThemeMode, setPrimaryColor, primaryColor } =
     useCustomThemeProviderContext();
   const { authedUser } = useAuthedContext();
-  const user = {
-    name: "Mama",
-    email: "mama@abv.bg",
-    city: "Dobrich",
-    phone: "0899240177",
-    plan: "starter", // 'starter' | 'core' | 'elite'
-    subscription: false,
-  };
   const info: any = [
+    { label: "Username", field: "username" },
+    { label: "Email", field: "email" },
     { label: "City", field: "city" },
     { label: "Phone", field: "phone" },
-    { label: "Email", field: "email" },
-    { label: "Subscription", field: "subscriptionActive" },
   ];
 
   // Available colors
@@ -72,7 +64,6 @@ const ProfilePage = () => {
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
-          {/* Avatar */}
           <Avatar
             src=""
             sx={{
@@ -84,8 +75,6 @@ const ProfilePage = () => {
           >
             M
           </Avatar>
-
-          {/* Overlay */}
           {hovered && (
             <Box
               position="absolute"
@@ -106,30 +95,11 @@ const ProfilePage = () => {
                 <IconButton size="small" sx={{ color: "#fff" }}>
                   <EditIcon fontSize="small" />
                 </IconButton>
-                {/* <IconButton size="small" sx={{ color: "#fff" }}>
-                  <DeleteIcon fontSize="small" />
-                </IconButton> */}
               </Box>
             </Box>
           )}
         </Box>
-        {/* <Box position="relative">
-          <Avatar src="" sx={{ width: 100, height: 100 }}>
-            M
-          </Avatar>
-          <IconButton
-            size="small"
-            sx={{
-              position: "absolute",
-              bottom: 0,
-              right: 0,
-              borderRadius: "50%",
-            }}
-          >
-            <EditIcon fontSize="small" />
-          </IconButton>
-        </Box> */}
-        <Typography variant="h6" sx={{ mt: 2 }}>
+        <Typography variant="h4" sx={{ mt: 2 }}>
           {authedUser?.username}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -137,10 +107,9 @@ const ProfilePage = () => {
         </Typography>
       </Grid>
 
-      {/* Account Details */}
       <Grid size={6}>
         <Box component={"div"} display={"flex"} gap={2} mb={2}>
-          <Typography variant="h6" gutterBottom alignSelf={"center"} margin={0}>
+          <Typography variant="h4" gutterBottom alignSelf={"center"} margin={0}>
             Account Details
           </Typography>
           <CustomTooltip
@@ -158,22 +127,15 @@ const ProfilePage = () => {
         </Box>
         {editMode ? (
           <Grid container spacing={2} height={"7em"}>
-            <Grid size={6}>
-              <TextField fullWidth label="City" value={authedUser?.city} />
-            </Grid>
-            <Grid size={6}>
-              <TextField fullWidth label="Phone" value={authedUser?.phone} />
-            </Grid>
-            <Grid size={6}>
-              <TextField fullWidth label="Email" value={authedUser?.email} />
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                fullWidth
-                label="Subscription"
-                value={authedUser?.subscriptionActive ? "Active" : "Inactive"}
-              />
-            </Grid>
+            {info.map((col: any) => (
+              <Grid size={6} key={col.field}>
+                <TextField
+                  fullWidth
+                  label={col.label}
+                  value={authedUser ? authedUser[col.field as keyof Gym] : ""}
+                />
+              </Grid>
+            ))}
           </Grid>
         ) : (
           <Grid container spacing={2} height={"7em"}>
@@ -197,7 +159,7 @@ const ProfilePage = () => {
           <Grid size={12}>
             <Grid container spacing={2} mt={4}>
               <Grid size={12}>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h4" gutterBottom>
                   Account Preferences
                 </Typography>
               </Grid>

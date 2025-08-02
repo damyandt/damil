@@ -1,4 +1,4 @@
-import { Box, TableCell, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import dayjs from "dayjs";
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
@@ -17,7 +17,7 @@ const CellRenderer = ({
   value,
   dataType,
   table,
-  fontWeight = 300,
+  fontWeight = 350,
 }: CellRendererProps) => {
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";

@@ -54,7 +54,7 @@ const PlanCard = ({ plan = "starter" }) => {
         }}
       >
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">{planInfo.label}</Typography>
+          <Typography variant="h4">{planInfo.label}</Typography>
           <Chip
             label={plan.toUpperCase()}
             color={planInfo.color}

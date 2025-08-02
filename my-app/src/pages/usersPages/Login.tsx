@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   Typography,
   Box,
@@ -12,6 +12,7 @@ import {
   Backdrop,
   Tooltip,
   useTheme,
+  hexToRgb,
 } from "@mui/material";
 import MuiLink from "@mui/material/Link";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
@@ -26,6 +27,17 @@ import { setCookie } from "../../Global/Utils/commonFunctions";
 import { useAuthedContext } from "../../context/AuthContext";
 import { SetCookieParams } from "../../Auth/authTypes";
 import { Fade } from "../../components/MaterialUI/FormFields/Fade";
+// import DarkVeil from "../../components/ogl/background";
+import Orb from "../../components/ogl/background";
+import CustomModal from "../../components/MaterialUI/Modal";
+import { useLanguageContext } from "../../context/LanguageContext";
+
+export const hexToVec3 = (hex: string): [number, number, number] => {
+  const [r, g, b] = hexToRgb(hex)
+    .match(/\d+/g)!
+    .map((v: any) => parseInt(v) / 255);
+  return [r, g, b];
+};
 
 export const errorMessages = {
   invalidEmail: "Account with this email does not exists.",
@@ -47,11 +59,12 @@ const LoginPage = () => {
   const [disableEmail, setDisableEmail] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const passwordInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useLanguageContext();
   const [formData, setFormData] = useState<any>({
     email: "",
     password: "",
   });
-
+  const primaryColor = hexToVec3(theme.palette.primary.main);
   const handleNextClick = async () => {
     try {
       if (!validator(true)) {
@@ -112,6 +125,7 @@ const LoginPage = () => {
       setCookie(refreshCookie);
       setUserSignedIn(false);
       setUserSignedIn(true);
+      navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
       setErrors({
@@ -193,222 +207,215 @@ const LoginPage = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#fff",
+          // backgroundColor: "#fff",
           textAlign: "center",
-          backgroundImage: 'url("/login.jpg")',
-          backgroundSize: "cover",
-          backgroundRepeat: "repeat",
-          backgroundPosition: "center",
+          // backgroundImage: 'url("/login.jpg")',
+          // backgroundSize: "cover",
+          // backgroundRepeat: "repeat",
+          // backgroundPosition: "center",
+          // bgcolor: "rgba(0, 0, 0, 0.3)",
         }}
       >
-        <Typography variant="h3" fontWeight={600} mb={4}>
-          Sign in to your Gym.
-        </Typography>
-
         <Box
           sx={{
-            width: "100%",
-            maxWidth: 400,
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: theme.palette.customColors?.darkBackgroundColor,
           }}
         >
-          <Typography
-            variant="h6"
-            fontWeight={500}
-            sx={{ color: theme.palette.primary.main }}
-          >
-            Sign in
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid size={12}>
-              <TextField
-                fullWidth
-                disabled={disableEmail}
-                label={errors["email"] || "Email"}
-                error={!!errors["email"]}
-                onKeyDown={(e) => e.key === "Enter" && handleNextClick()}
-                onChange={(e) => handleChange("email", e.target.value)}
-                InputProps={{
-                  endAdornment: !showPasswordField ? (
-                    <InputAdornment position="end">
-                      <IconButton
-                        edge="end"
-                        onClick={handleNextClick}
-                        size="small"
-                      >
-                        <ArrowForwardIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ) : (
-                    <InputAdornment position="end">
-                      <IconButton
-                        edge="end"
-                        onClick={() => {
-                          setDisableEmail(false);
-                          setShowPasswordField(false);
-                        }}
-                        size="small"
-                      >
-                        <EditIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-            <Grid size={12}>
-              <Collapse in={showPasswordField}>
-                <TextField
-                  fullWidth
-                  label={errors["password"] || "Password"}
-                  type={showPassword ? "text" : "password"}
-                  error={!!errors["password"]}
-                  onChange={(e) => handleChange("password", e.target.value)}
-                  inputRef={passwordInputRef}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleLogin();
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <Box sx={{ display: "flex", gap: 0, padding: 0 }}>
-                        <InputAdornment
-                          position="start"
-                          sx={{ margin: "0", paddingLeft: "0" }}
-                        >
-                          <IconButton
-                            onClick={() => setShowPassword((prev) => !prev)}
-                            edge="start"
-                            tabIndex={-1}
-                            size="small"
-                            sx={{ mr: -0.5 }}
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                        <InputAdornment position="end" sx={{ ml: 0 }}>
-                          <IconButton
-                            edge="end"
-                            onClick={handleLogin}
-                            size="small"
-                          >
-                            <ArrowForwardIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      </Box>
-                    ),
-                  }}
-                />
-              </Collapse>
-            </Grid>
-          </Grid>
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Remember me"
-            sx={{ alignSelf: "flex-center", mt: 1 }}
+          <Orb
+            primaryColor={primaryColor}
+            hoverIntensity={1}
+            rotateOnHover={true}
+            hue={0.8}
+            forceHoverState={false}
           />
-          <Typography variant="body2">
-            You don't have an Account?{" "}
-            <MuiLink component={RouterLink} to="/register" underline="hover">
-              Register Here
-            </MuiLink>
-          </Typography>
         </Box>
-      </Box>
-      <Modal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        aria-labelledby="verification-modal-title"
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            TransitionComponent: Fade,
-          },
-        }}
-      >
-        <Fade in={openModal}>
+
+        <Box sx={{ zIndex: 10 }}>
+          <Typography variant="h2" fontWeight={600} mb={4}>
+            Sign in to your Gym.
+          </Typography>
+
           <Box
             sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 450,
-              bgcolor: "background.paper",
-              borderRadius: 3,
-              boxShadow: 10,
-              p: 4,
+              width: "100%",
+              maxWidth: 400,
               display: "flex",
               flexDirection: "column",
-              gap: 3,
+              gap: 2,
             }}
           >
             <Typography
-              id="verification-modal-title"
-              variant="h5"
-              fontWeight="bold"
+              variant="h3"
+              fontWeight={500}
+              sx={{ color: theme.palette.primary.main }}
             >
-              Verify Your Email
+              Sign in
             </Typography>
-
-            <Typography variant="body2" color="text.secondary">
-              Please enter the 6-digit code sent to your email address.
-            </Typography>
-
-            <TextField
-              placeholder="Enter code"
-              fullWidth
-              value={verificationCode || ""}
-              error={!!errors["verificationCode"]}
-              helperText={errors["verificationCode"] || " "}
-              onChange={(e) => setVerificationCode(e.target.value)}
+            <Grid container spacing={2}>
+              <Grid size={12}>
+                <TextField
+                  fullWidth
+                  disabled={disableEmail}
+                  label={errors["email"] || "Email"}
+                  error={!!errors["email"]}
+                  onKeyDown={(e) => e.key === "Enter" && handleNextClick()}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  InputProps={{
+                    endAdornment: !showPasswordField ? (
+                      <InputAdornment position="end">
+                        <IconButton
+                          edge="end"
+                          onClick={handleNextClick}
+                          size="small"
+                        >
+                          <ArrowForwardIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ) : (
+                      <InputAdornment position="end">
+                        <IconButton
+                          edge="end"
+                          onClick={() => {
+                            setDisableEmail(false);
+                            setShowPasswordField(false);
+                          }}
+                          size="small"
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid size={12}>
+                <Collapse in={showPasswordField}>
+                  <TextField
+                    fullWidth
+                    label={errors["password"] || "Password"}
+                    type={showPassword ? "text" : "password"}
+                    error={!!errors["password"]}
+                    onChange={(e) => handleChange("password", e.target.value)}
+                    inputRef={passwordInputRef}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleLogin();
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <Box sx={{ display: "flex", gap: 0, padding: 0 }}>
+                          <InputAdornment
+                            position="start"
+                            sx={{ margin: "0", paddingLeft: "0" }}
+                          >
+                            <IconButton
+                              onClick={() => setShowPassword((prev) => !prev)}
+                              edge="start"
+                              tabIndex={-1}
+                              size="small"
+                              sx={{ mr: -0.5 }}
+                            >
+                              {showPassword ? (
+                                <VisibilityOff />
+                              ) : (
+                                <Visibility />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                          <InputAdornment position="end" sx={{ ml: 0 }}>
+                            <IconButton
+                              edge="end"
+                              onClick={handleLogin}
+                              size="small"
+                            >
+                              <ArrowForwardIcon />
+                            </IconButton>
+                          </InputAdornment>
+                        </Box>
+                      ),
+                    }}
+                  />
+                </Collapse>
+              </Grid>
+            </Grid>
+            <FormControlLabel
+              control={<Checkbox />}
+              label="Remember me"
+              sx={{ alignSelf: "flex-center", mt: 1 }}
             />
+            <Typography variant="body2" fontWeight={500}>
+              You don't have an Account?{" "}
+              <MuiLink component={RouterLink} to="/register" underline="hover">
+                Register Here
+              </MuiLink>
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+      <CustomModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        title={t("Verify Your Email")}
+        width={"md"}
+      >
+        <Typography variant="body2" color="text.secondary">
+          Please enter the 6-digit code sent to your email address.
+        </Typography>
 
-            <Box
+        <TextField
+          placeholder="Enter code"
+          fullWidth
+          value={verificationCode || ""}
+          error={!!errors["verificationCode"]}
+          helperText={errors["verificationCode"] || " "}
+          onChange={(e) => setVerificationCode(e.target.value)}
+        />
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Tooltip
+            title={
+              resendCooldown === 0
+                ? "Click to Resend Code"
+                : `Wait ${resendCooldown}s before you try again!`
+            }
+            sx={{ ml: 2 }}
+          >
+            <Typography
+              variant="body2"
+              onClick={handleResend}
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
+                textDecoration: "underline",
+                "&:hover": {
+                  cursor: "pointer",
+                  color: resendCooldown === 0 ? "primary.main" : "",
+                },
               }}
             >
-              <Tooltip
-                title={
-                  resendCooldown === 0
-                    ? "Click to Resend Code"
-                    : `Wait ${resendCooldown}s before you try again!`
-                }
-                sx={{ ml: 2 }}
-              >
-                <Typography
-                  variant="body2"
-                  onClick={handleResend}
-                  sx={{
-                    textDecoration: "underline",
-                    "&:hover": {
-                      cursor: "pointer",
-                      color: resendCooldown === 0 ? "primary.main" : "",
-                    },
-                  }}
-                >
-                  Resend Code
-                </Typography>
-              </Tooltip>
-              <IconButton
-                onClick={handleSubmitVerificationCode}
-                sx={{
-                  bgcolor: "primary.main",
-                  color: "#fff",
-                  "&:hover": { bgcolor: "primary.dark" },
-                }}
-              >
-                <ArrowForwardIcon />
-              </IconButton>
-            </Box>
-          </Box>
-        </Fade>
-      </Modal>
+              Resend Code
+            </Typography>
+          </Tooltip>
+          <IconButton
+            onClick={handleSubmitVerificationCode}
+            sx={{
+              bgcolor: "primary.main",
+              color: "#fff",
+              "&:hover": { bgcolor: "primary.dark" },
+            }}
+          >
+            <ArrowForwardIcon />
+          </IconButton>
+        </Box>
+      </CustomModal>
     </>
   );
 };

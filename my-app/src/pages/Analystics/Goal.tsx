@@ -29,7 +29,7 @@ const GoalMembersGaugeChart: React.FC<GoalMembersGaugeChartProps> = ({
   const option: echarts.EChartsCoreOption = {
     title: {
       textStyle: {
-        fontFamily: "Montserrat",
+        fontFamily: "Noto Sans",
         fontSize: 18,
         fontWeight: "bold",
       },

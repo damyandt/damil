@@ -219,7 +219,7 @@ const GymVisitsChart: React.FC<VisitsProps> = ({ height }) => {
   const option: echarts.EChartsCoreOption = {
     title: {
       textStyle: {
-        fontFamily: "Montserrat",
+        fontFamily: "Noto Sans",
         fontSize: 18,
         fontWeight: "bold",
       },

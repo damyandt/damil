@@ -3,10 +3,8 @@ import { useEffect, useState } from "react";
 import LeftNavigation from "./AppNavigation/LeftNavigation";
 import { css, SerializedStyles } from "@emotion/react";
 import {
-  AUTH_LAYOUT_BACKGROUND_COLOR,
   AUTH_LAYOUT_PADDING,
   LEFT_NAV_WIDTH,
-  AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
   TOP_RIGHT_NAV_HEIGHT,
 } from "./layoutVariables";
 import { alpha, useTheme } from "@mui/material/styles";
@@ -31,10 +29,6 @@ const cssStyles = (
     height: "-webkit-fill-available",
     overflow: "hidden",
     background: theme.palette.customColors?.darkBackgroundColor,
-    // background:
-    //   theme.palette.mode === "light"
-    //     ? AUTH_LAYOUT_BACKGROUND_COLOR
-    //     : AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
   }),
   floatingArrowButton: css({
     position: "fixed",
@@ -77,12 +71,6 @@ const cssStyles = (
     position: "relative",
     padding: AUTH_LAYOUT_PADDING,
     backgroundColor: theme.palette.customColors?.darkBackgroundColor,
-
-    // backgroundColor:
-    //   theme.palette.mode === "light"
-    //     ? AUTH_LAYOUT_BACKGROUND_COLOR
-    //     : AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
-    // if mobile view -> don't have transition
     ...(!mobileLeftNav && {
       transition: "margin 0.4s ease",
       marginLeft: "6.5em",
@@ -155,7 +143,6 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
             zIndex: 2,
             height: "100%",
             borderRadius: "20px",
-            // boxShadow: theme!.palette!.customColors!.sectionBackgroundColor,
             boxShadow: theme!.palette!.customColors!.shodow,
             backgroundColor:
               theme!.palette!.customColors!.sectionBackgroundColor,

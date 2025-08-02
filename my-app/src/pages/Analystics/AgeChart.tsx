@@ -36,7 +36,7 @@ const AgeDistributionChart: React.FC<GAgeChartProps> = ({ height }) => {
     },
     title: {
       textStyle: {
-        fontFamily: "Montserrat",
+        fontFamily: "Noto Sans",
         fontSize: 18,
         fontWeight: "bold",
       },

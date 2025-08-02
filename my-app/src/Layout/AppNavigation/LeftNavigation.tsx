@@ -170,10 +170,12 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
 
         <Box component="div" sx={styles.profile}>
           <Avatar
-            alt="User Name"
+            alt="Damyan"
             src="/profile.jpg"
-            sx={{ width: 40, height: 40, ml: "0.4em" }}
+            sx={{ width: 40, height: 40, ml: "0.4em", cursor: "pointer" }}
+            onClick={() => navigate("Profile")}
           />
+
           <Box
             sx={{
               opacity: openLeftNav ? 1 : 0,
@@ -189,7 +191,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
                 marginLeft: "1em",
               }}
             >
-              <Typography variant="body1" fontWeight="bold">
+              <Typography variant="body1" fontWeight={500}>
                 Damyan Todorov
               </Typography>
               <Typography variant="body2" color="text.secondary">
