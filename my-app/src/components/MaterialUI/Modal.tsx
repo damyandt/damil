@@ -79,10 +79,10 @@ const CustomModal: React.FC<CustomModalProps> = ({
                   ? {
                       backgroundImage:
                         style === "info"
-                          ? `url("/black:white.jpg")`
+                          ? `url("/details.jpg")`
                           : style === "edit"
-                            ? `url("/purple.jpg")`
-                            : `url("/blue.jpg")`,
+                            ? `url("/edit.jpg")`
+                            : `url("/create.jpg")`,
                       backgroundSize: "cover",
                       backgroundRepeat: "repeat",
                       backgroundPosition: "center 27%",
