@@ -38,6 +38,7 @@ const StaffRolesPage = () => {
     } else {
       setExtraRightNavMenu(
         <RightMenu
+          configurations={tableData.config ?? {}}
           setRefreshTable={setRefreshTable}
           columns={tableData.columns ?? []}
           addNew={true}
