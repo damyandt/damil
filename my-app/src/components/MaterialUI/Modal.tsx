@@ -69,6 +69,10 @@ const CustomModal: React.FC<CustomModalProps> = ({
           justifyContent: "space-between",
           maxHeight: "95vh",
           overflow: "scroll",
+          scrollbarWidth: "none", // for Firefox
+          "&::-webkit-scrollbar": {
+            display: "none", // for Chrome, Safari, and Edge
+          },         
         }}
       >
         <Grow in={!!open} timeout={500}>
@@ -77,17 +81,17 @@ const CustomModal: React.FC<CustomModalProps> = ({
               sx={
                 style
                   ? {
-                      backgroundImage:
-                        style === "info"
-                          ? `url("/details.jpg")`
-                          : style === "edit"
-                            ? `url("/edit.jpg")`
-                            : `url("/create.jpg")`,
-                      backgroundSize: "cover",
-                      backgroundRepeat: "repeat",
-                      backgroundPosition: "center 27%",
-                      borderRadius: 1,
-                    }
+                    backgroundImage:
+                      style === "info"
+                        ? `url("/details.jpg")`
+                        : style === "edit"
+                          ? `url("/edit.jpg")`
+                          : `url("/create.jpg")`,
+                    backgroundSize: "cover",
+                    backgroundRepeat: "repeat",
+                    backgroundPosition: "center 27%",
+                    borderRadius: 1,
+                  }
                   : {}
               }
             >
@@ -107,27 +111,27 @@ const CustomModal: React.FC<CustomModalProps> = ({
                   sx={
                     style
                       ? {
-                          alignItems: "center",
-                          border: "2px solid #fff",
-                          paddingY: 1,
-                          paddingX: 4,
-                          height: "auto",
-                          display: "flex",
-                          borderRadius: 1,
-                          gap: 2,
-                          backgroundColor: "rgba(255, 255, 255, 0.4)",
-                          backdropFilter: "blur(5px)",
-                          WebkitBackdropFilter: "blur(5px)",
-                        }
+                        alignItems: "center",
+                        border: "2px solid #fff",
+                        paddingY: 1,
+                        paddingX: 4,
+                        height: "auto",
+                        display: "flex",
+                        borderRadius: 1,
+                        gap: 2,
+                        backgroundColor: "rgba(255, 255, 255, 0.4)",
+                        backdropFilter: "blur(5px)",
+                        WebkitBackdropFilter: "blur(5px)",
+                      }
                       : {
-                          alignItems: "center",
-                          paddingY: 1,
-                          paddingX: 4,
-                          height: "auto",
-                          display: "flex",
-                          // color: theme.palette.primary.main,
-                          gap: 2,
-                        }
+                        alignItems: "center",
+                        paddingY: 1,
+                        paddingX: 4,
+                        height: "auto",
+                        display: "flex",
+                        // color: theme.palette.primary.main,
+                        gap: 2,
+                      }
                   }
                 >
                   {iconMap[titleIcon ?? ""]}
@@ -137,12 +141,12 @@ const CustomModal: React.FC<CustomModalProps> = ({
                     sx={
                       style
                         ? {
-                            color: "rgba(0, 0, 0, 0.75)",
-                            fontWeight: 600,
-                            letterSpacing: 0.5,
-                            textTransform: "capitalize",
-                            textShadow: "0 1px 2px rgba(255, 255, 255, 0.3)", // optional glow for contrast
-                          }
+                          color: "rgba(0, 0, 0, 0.75)",
+                          fontWeight: 600,
+                          letterSpacing: 0.5,
+                          textTransform: "capitalize",
+                          textShadow: "0 1px 2px rgba(255, 255, 255, 0.3)", // optional glow for contrast
+                        }
                         : {}
                     }
                   >
