@@ -271,110 +271,113 @@ const RegisterPage = () => {
           />
         </Box>
 
-        <Box sx={{ zIndex: 10 }}>
-          <Typography variant="h2" fontWeight={600} mb={2}>
-            Make new Profile
-          </Typography>
+        <Typography variant="h2" fontWeight={600} mb={1} sx={{ zIndex: 10 }}>
+          Make new Profile
+        </Typography>
 
-          <Box
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: 400,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <Typography
+            variant="h4"
+            fontWeight={500}
             sx={{
-              width: "100%",
-              maxWidth: 400,
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
+              color: theme.palette.primary.main,
+              zIndex: 10,
+              width: "fit-content",
+              alignSelf: "center",
             }}
           >
-            <Typography
-              variant="h3"
-              fontWeight={500}
-              sx={{ color: theme.palette.primary.main }}
-            >
-              Sign up
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid size={12}>
-                <TextField
-                  fullWidth
-                  label={errors["username"] || "Username"}
-                  error={!!errors["username"]}
-                  onChange={(e) => handleChange("username", e.target.value)}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  fullWidth
-                  label={errors["email"] || "Email"}
-                  error={!!errors["email"]}
-                  onChange={(e) => handleChange("email", e.target.value)}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label={errors["password"] || "Password"}
-                  fullWidth
-                  type={showPassword ? "text" : "password"}
-                  error={!!errors["password"]}
-                  onChange={(e) => handleChange("password", e.target.value)}
-                  InputProps={{
-                    endAdornment: (
-                      <Box sx={{ display: "flex", gap: 0, padding: 0 }}>
-                        <InputAdornment
-                          position="start"
-                          sx={{ margin: "0", paddingLeft: "0" }}
-                        >
-                          <IconButton
-                            onClick={() => setShowPassword((prev) => !prev)}
-                            edge="start"
-                            tabIndex={-1}
-                            size="small"
-                            sx={{ mr: -0.5 }}
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      </Box>
-                    ),
-                  }}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label={errors["confirmPassword"] || "Confirm Password"}
-                  fullWidth
-                  type={showPassword ? "text" : "password"}
-                  error={!!errors["confirmPassword"]}
-                  onChange={(e) =>
-                    handleChange("confirmPassword", e.target.value)
-                  }
-                  InputProps={{
-                    endAdornment: (
-                      <Box sx={{ display: "flex", gap: 0, padding: 0 }}>
-                        <InputAdornment position="end" sx={{ ml: 0 }}>
-                          <IconButton
-                            edge="end"
-                            onClick={() => {
-                              handleRegister();
-                            }}
-                            size="small"
-                          >
-                            <ArrowForwardIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      </Box>
-                    ),
-                  }}
-                />
-              </Grid>
+            Sign up
+          </Typography>
+          <Grid container spacing={2} zIndex={10}>
+            <Grid size={12}>
+              <TextField
+                fullWidth
+                label={errors["username"] || "Username"}
+                error={!!errors["username"]}
+                onChange={(e) => handleChange("username", e.target.value)}
+              />
             </Grid>
+            <Grid size={12}>
+              <TextField
+                fullWidth
+                label={errors["email"] || "Email"}
+                error={!!errors["email"]}
+                onChange={(e) => handleChange("email", e.target.value)}
+              />
+            </Grid>
+            <Grid size={12}>
+              <TextField
+                label={errors["password"] || "Password"}
+                fullWidth
+                type={showPassword ? "text" : "password"}
+                error={!!errors["password"]}
+                onChange={(e) => handleChange("password", e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <Box sx={{ display: "flex", gap: 0, padding: 0 }}>
+                      <InputAdornment
+                        position="start"
+                        sx={{ margin: "0", paddingLeft: "0" }}
+                      >
+                        <IconButton
+                          onClick={() => setShowPassword((prev) => !prev)}
+                          edge="start"
+                          tabIndex={-1}
+                          size="small"
+                          sx={{ mr: -0.5 }}
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    </Box>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid size={12}>
+              <TextField
+                label={errors["confirmPassword"] || "Confirm Password"}
+                fullWidth
+                type={showPassword ? "text" : "password"}
+                error={!!errors["confirmPassword"]}
+                onChange={(e) =>
+                  handleChange("confirmPassword", e.target.value)
+                }
+                InputProps={{
+                  endAdornment: (
+                    <Box sx={{ display: "flex", gap: 0, padding: 0 }}>
+                      <InputAdornment position="end" sx={{ ml: 0 }}>
+                        <IconButton
+                          edge="end"
+                          onClick={() => {
+                            handleRegister();
+                          }}
+                          size="small"
+                        >
+                          <ArrowForwardIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    </Box>
+                  ),
+                }}
+              />
+            </Grid>
+          </Grid>
 
-            <Typography variant="body2">
-              {"You already have an Account? "}
-              <MuiLink component={RouterLink} to="/login" underline="hover">
-                Login Here
-              </MuiLink>
-            </Typography>
-          </Box>
+          <Typography variant="body2" zIndex={10}>
+            {"You already have an Account? "}
+            <MuiLink component={RouterLink} to="/login" underline="hover">
+              Login Here
+            </MuiLink>
+          </Typography>
         </Box>
       </Box>
       <CustomModal

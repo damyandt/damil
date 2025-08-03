@@ -230,7 +230,6 @@ const LoginPage = () => {
           />
         </Box>
 
-        {/* <Box sx={{ zIndex: 10 }}> */}
         <Typography variant="h2" fontWeight={600} mb={4} zIndex={10}>
           Sign in to your Gym.
         </Typography>
@@ -245,7 +244,7 @@ const LoginPage = () => {
           }}
         >
           <Typography
-            variant="h3"
+            variant="h4"
             fontWeight={500}
             sx={{
               color: theme.palette.primary.main,
@@ -362,7 +361,6 @@ const LoginPage = () => {
           </Typography>
         </Box>
       </Box>
-      {/* </Box> */}
       <CustomModal
         open={openModal}
         onClose={() => setOpenModal(false)}

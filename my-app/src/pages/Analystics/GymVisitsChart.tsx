@@ -11,6 +11,7 @@ import {
   GraphicComponent,
 } from "echarts/components";
 import { CanvasRenderer } from "echarts/renderers";
+import BaseChart from "../../components/pageComponents/BaseChart";
 
 echarts.use([
   BarChart,
@@ -278,12 +279,12 @@ const GymVisitsChart: React.FC<VisitsProps> = ({ height }) => {
   };
 
   return (
-    <ReactEChartsCore
+    <BaseChart
       ref={chartRef}
       echarts={echarts}
       onEvents={onEvents}
       option={option}
-      style={{ width: "100%", height: `${height}vh` }}
+      height={`${height}vh`}
     />
   );
 };

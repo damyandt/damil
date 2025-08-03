@@ -43,15 +43,15 @@ export default createBrowserRouter([
       },
       {
         path: "/DAMIL-Analytics/Visits",
-        element: <GymVisitsChart height={87} />,
+        element: <GymVisitsChart height={92} />,
       },
       {
         path: "/DAMIL-Analytics/Goal",
-        element: <GoalMembersGaugeChart value={68} height={87} />,
+        element: <GoalMembersGaugeChart value={68} height={92} />,
       },
       {
         path: "/DAMIL-Analytics/Ages",
-        element: <AgeDistributionChart height={87} />,
+        element: <AgeDistributionChart height={92} />,
       },
       {
         path: "/DAMIL-Analytics/Memberships",

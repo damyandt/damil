@@ -9,6 +9,7 @@ import {
   TitleComponent,
 } from "echarts/components";
 import { CanvasRenderer } from "echarts/renderers";
+import BaseChart from "../../components/pageComponents/BaseChart";
 
 echarts.use([
   GridComponent,
@@ -89,16 +90,7 @@ const AgeDistributionChart: React.FC<GAgeChartProps> = ({ height }) => {
     ],
   };
 
-  return (
-    <ReactEChartsCore
-      echarts={echarts}
-      option={option}
-      style={{
-        height: `${height}vh`,
-        width: "100%",
-      }}
-    />
-  );
+  return <BaseChart echarts={echarts} option={option} height={`${height}vh`} />;
 };
 
 export default AgeDistributionChart;

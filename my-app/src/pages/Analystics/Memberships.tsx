@@ -1,4 +1,5 @@
 import ReactECharts from "echarts-for-react";
+import BaseChart from "../../components/pageComponents/BaseChart";
 
 // Data as arrays of [height, weight]
 const maleData = [
@@ -201,7 +202,5 @@ export default function Memberships() {
     ],
   };
 
-  return (
-    <ReactECharts option={option} style={{ height: "87vh", width: "100%" }} />
-  );
+  return <BaseChart option={option} height={`${87}vh`} />;
 }

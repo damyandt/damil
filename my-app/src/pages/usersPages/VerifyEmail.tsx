@@ -78,7 +78,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
     <CustomModal
       open={openModal}
       onClose={() => setOpenModal(false)}
-      title={t("  Verify Your Email")}
+      title={t("Verify Your Email")}
       width={"md"}
     >
       <Box

@@ -5,6 +5,9 @@ import {
   Divider,
   Drawer,
   IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -15,10 +18,13 @@ import { NAV_DAMIL_ACCESS_CONTROL, NAV_DAMIL_STAFF } from "./leftNavData";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
+import PersonIcon from "@mui/icons-material/Person";
+import { LanguageOutlined } from "@mui/icons-material";
 import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
 import { useLanguageContext } from "../../context/LanguageContext";
 import { handleUserSignOut } from "../../context/authContextUtils";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const cssStyles = (openLeftNav: boolean, theme: any) => ({
   drawer: css({
@@ -92,22 +98,22 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
   mobileLeftNav,
 }) => {
   const navigate = useNavigate();
-  const { t } = useLanguageContext();
+  const { t, setLanguage, language } = useLanguageContext();
   const theme = useTheme();
+  const [anchorElSettings, setAnchorElSettings] = useState<any>(null);
+  // const [anchorElLanguage, setAnchorElLanguage] = useState<any>(null);
   const styles = { ...cssStyles(openLeftNav, theme) };
   const { NAV_DAMIL_HOME, NAV_DAMIL_ANALYTICS } = useTranslatedNav();
-
-  const handleClose = () => {
-    setOpenLeftNav((prev) => !prev);
-    window.dispatchEvent(new Event("resize"));
-  };
 
   return (
     <Drawer
       sx={styles.drawer}
       anchor="left"
       open={mobileLeftNav ? openLeftNav : true}
-      onClose={handleClose}
+      onClose={() => {
+        setOpenLeftNav((prev) => !prev);
+        window.dispatchEvent(new Event("resize"));
+      }}
       variant={mobileLeftNav ? "temporary" : "persistent"}
     >
       <Box
@@ -126,7 +132,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
               transition: "opacity 0.4s ease",
             }}
           >
-            <Typography>Collapse</Typography>
+            <Typography>{t("Collapse")}</Typography>
           </Box>
           <CustomTooltip title={!openLeftNav ? "Expand" : ""}>
             <IconButton
@@ -195,18 +201,56 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
                 Damyan Todorov
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Admin
+                {t("Admin")}
               </Typography>
             </Box>
             <Box sx={{ display: "flex" }}>
               <CustomTooltip title={t("Settings")} placement="left">
-                <IconButton onClick={() => navigate("Profile")}>
+                <IconButton
+                  onClick={(event: any) =>
+                    setAnchorElSettings(event.currentTarget)
+                  }
+                >
                   <SettingsIcon />
                 </IconButton>
               </CustomTooltip>
-              <CustomTooltip title={t("Logout")}>
-                <IconButton onClick={() => handleUserSignOut(navigate)}>
-                  <LogoutIcon />
+              <Menu
+                anchorEl={anchorElSettings}
+                open={Boolean(anchorElSettings)}
+                onClose={() => setAnchorElSettings(null)}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                transformOrigin={{ vertical: "bottom", horizontal: "center" }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    navigate("Profile");
+                    setAnchorElSettings(null);
+                  }}
+                >
+                  <ListItemIcon>
+                    <PersonIcon fontSize="small" />
+                  </ListItemIcon>
+                  <Typography variant="inherit">{t("Profile")}</Typography>
+                </MenuItem>
+                <MenuItem onClick={() => handleUserSignOut(navigate)}>
+                  <ListItemIcon>
+                    <LogoutIcon fontSize="small" />
+                  </ListItemIcon>
+                  <Typography variant="inherit">{t("Logout")}</Typography>
+                </MenuItem>
+              </Menu>
+
+              <CustomTooltip
+                title={
+                  language === "bg"
+                    ? "Превключи на Английски"
+                    : "Switch to Bulgarian"
+                }
+              >
+                <IconButton
+                  onClick={() => setLanguage(language === "bg" ? "en" : "bg")}
+                >
+                  <LanguageOutlined />
                 </IconButton>
               </CustomTooltip>
             </Box>

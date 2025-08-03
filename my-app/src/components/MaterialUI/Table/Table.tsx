@@ -55,9 +55,10 @@ const TableComponent = ({
   const theme = useTheme();
   const { t } = useLanguageContext();
   const [modalOpen, setModalOpen] = useState(false);
-  const [columnVisibilityConfig, setColumnVisibilityConfig] = useState(
-    configurations.columnsLayoutConfig.columnVisibility
-  );
+  const [columnVisibilityConfig, setColumnVisibilityConfig] = useState<Record<
+    string,
+    boolean
+  > | null>(configurations?.columnsLayoutConfig?.columnVisibility ?? null);
   const [openDetails, setOpenDetails] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState<
@@ -86,9 +87,9 @@ const TableComponent = ({
 
   const isRowDeleting = (id: string) => !!deleteQueue[id];
 
-  const visibleColumns = columns.filter(
-    (col: any) => columnVisibilityConfig[col.field]
-  );
+  const visibleColumns = columnVisibilityConfig
+    ? columns.filter((col: any) => columnVisibilityConfig[col.field])
+    : columns;
   return (
     <>
       <Grid container spacing={2} alignItems={"center"} py={2}>
@@ -109,7 +110,7 @@ const TableComponent = ({
           />
         </Grid>
         <Grid size={6}>
-          <Typography variant="h2" sx={{ textAlign: "center", flexGrow: 1 }}>
+          <Typography variant="h4" sx={{ textAlign: "center", flexGrow: 1 }}>
             {title}
           </Typography>
         </Grid>
@@ -272,10 +273,6 @@ const TableComponent = ({
                           ? "#5a2a2a"
                           : "#ffe6e6"
                         : theme.palette.customColors?.tableRow,
-                      // : theme.palette.mode === "dark"
-                      //   ? "#565656ff"
-                      //   : "#fff",
-
                       transition: "background-color 0.3s ease",
                       boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
                       "&:hover": {

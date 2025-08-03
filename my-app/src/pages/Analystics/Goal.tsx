@@ -8,6 +8,7 @@ import {
   GridComponent,
 } from "echarts/components";
 import { CanvasRenderer } from "echarts/renderers";
+import BaseChart from "../../components/pageComponents/BaseChart";
 
 echarts.use([
   GaugeChart,
@@ -91,13 +92,7 @@ const GoalMembersGaugeChart: React.FC<GoalMembersGaugeChartProps> = ({
     ],
   };
 
-  return (
-    <ReactEChartsCore
-      echarts={echarts}
-      option={option}
-      style={{ height: `${height}vh`, width: "100%" }}
-    />
-  );
+  return <BaseChart echarts={echarts} option={option} height={`${height}vh`} />;
 };
 
 export default GoalMembersGaugeChart;

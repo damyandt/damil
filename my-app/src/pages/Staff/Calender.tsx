@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Box, Grid, MenuItem, Typography } from "@mui/material";
+import { Box, Grid, MenuItem, Typography, useTheme } from "@mui/material";
 import CustomModal from "../../components/MaterialUI/Modal";
 import TextField from "../../components/MaterialUI/FormFields/TextField";
 import Button from "../../components/MaterialUI/Button";
@@ -20,7 +20,8 @@ const EmployeeCalendar = () => {
   const { openLeftNav } = useOutletContext<AppRouterProps>();
   const calendarRef = useRef<FullCalendar | null>(null);
   const [diffDays, setDiffDays] = useState<number>(0);
-
+  const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
   const [formData, setFormData] = useState<any>({
     title: "",
     person: "",
@@ -206,16 +207,78 @@ const EmployeeCalendar = () => {
   };
 
   return (
-    <Box sx={{ p: 0 }}>
-      <FullCalendar
-        ref={calendarRef}
-        plugins={[dayGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        events={events}
-        dateClick={handleDateClick}
-        eventClick={handleEventClick}
-        height="auto"
-      />
+    <Box sx={{ p: 0, height: "100%" }}>
+      <Box
+        sx={{
+          // Base calendar container
+          "& .fc": {
+            backgroundColor: "transparent",
+            color: isDark ? "#000000ff" : "#212121",
+            // fontFamily: "Inter, sans-serif",
+          },
+
+          // Toolbar (month name, prev/next buttons)
+          "& .fc-toolbar-title": {
+            color: isDark ? "#ffffff" : "#111111",
+            fontWeight: 600,
+            fontSize: "1.25rem",
+          },
+
+          "& .fc-button": {
+            backgroundColor: isDark ? "#333" : "#e0e0e0",
+            color: isDark ? "#fff" : "#000",
+            border: "none",
+            "&:hover": {
+              backgroundColor: isDark ? "#444" : "#d5d5d5",
+            },
+          },
+
+          // Day grid cells
+          "& .fc-daygrid-day": {
+            backgroundColor: isDark ? "#1a1a1a" : "#ffffff",
+            borderColor: isDark ? "#333" : "#e0e0e0",
+          },
+
+          // Day numbers
+          "& .fc-daygrid-day-number": {
+            color: isDark ? "#bbb" : "#333",
+            fontWeight: 500,
+          },
+
+          // Event styling
+          "& .fc-event": {
+            backgroundColor: isDark ? "#2196f3" : "#1976d2",
+            color: "#fff",
+            border: "none",
+            borderRadius: "6px",
+            padding: "2px 6px",
+            fontSize: "0.85rem",
+            transition: "background-color 0.2s",
+            "&:hover": {
+              backgroundColor: isDark ? "#42a5f5" : "#1565c0",
+            },
+          },
+
+          // Today highlight
+          "& .fc-daygrid-day.fc-day-today": {
+            backgroundColor: `${theme.palette.primary.main} !important`,
+          },
+          "& .fc-daygrid-day.fc-day-today .fc-daygrid-day-number": {
+            color: "#fff !important",
+            fontWeight: 700,
+          },
+        }}
+      >
+        <FullCalendar
+          ref={calendarRef}
+          plugins={[dayGridPlugin, interactionPlugin]}
+          initialView="dayGridMonth"
+          events={events}
+          dateClick={handleDateClick}
+          eventClick={handleEventClick}
+          height="92vh"
+        />
+      </Box>
 
       <CustomModal
         title="Add Event"
