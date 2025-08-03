@@ -15,6 +15,11 @@ const cssStyles = (
     margin: !openLeftNav ? "1em" : "1em 0 1em 1em ",
     position: "fixed",
     right: 0,
+    overflow: 'auto',
+    scrollbarWidth: "none", // for Firefox
+    "&::-webkit-scrollbar": {
+      display: "none", // for Chrome, Safari, and Edge
+    },
     width: extraMenu && isVisible ? TOP_RIGHT_NAV_HEIGHT : 0,
     backgroundColor: theme!.palette!.customColors!.sectionBackgroundColor,
     zIndex: theme.zIndex.drawer + 1,

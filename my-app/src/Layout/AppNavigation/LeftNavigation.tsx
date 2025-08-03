@@ -43,7 +43,6 @@ const cssStyles = (openLeftNav: boolean, theme: any) => ({
       height: "-webkit-fill-available",
       transition: "margin 0.4s ease, width 0.4s ease, border-radius 0.4s ease",
       boxShadow: theme.palette.customColors.shodow,
-
       borderRadius: !openLeftNav ? "20px" : "0 20px 20px 0",
     },
   }),
@@ -52,6 +51,10 @@ const cssStyles = (openLeftNav: boolean, theme: any) => ({
     borderRadius: !openLeftNav ? "20px" : 0,
     transition: "borderRadius 0.4s ease",
     overflow: "auto",
+    scrollbarWidth: "none", // for Firefox
+    "&::-webkit-scrollbar": {
+      display: "none", // for Chrome, Safari, and Edge
+    },
     height: "94%",
   }),
   toggleButtonBox: css({

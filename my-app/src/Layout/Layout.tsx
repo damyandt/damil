@@ -66,7 +66,6 @@ const cssStyles = (
         : 0,
 
     height: `100vh`,
-
     flexGrow: 1,
     position: "relative",
     padding: AUTH_LAYOUT_PADDING,
@@ -155,6 +154,10 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
           <Box
             sx={{
               overflow: "auto",
+              scrollbarWidth: "none", // for Firefox
+              "&::-webkit-scrollbar": {
+                display: "none", // for Chrome, Safari, and Edge
+              },
               flexGrow: 1,
               minHeight: 0,
             }}
