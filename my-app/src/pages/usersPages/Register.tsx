@@ -144,7 +144,9 @@ const RegisterPage = () => {
         (newErrors["confirmPassword"] = t("Passwords do not match."));
     } else {
       verificationCode.length !== 6 &&
-        (newErrors["verificationCode"] = t("Verification Code must be 6 digits."));
+        (newErrors["verificationCode"] = t(
+          "Verification Code must be 6 digits."
+        ));
     }
 
     setErrors(newErrors);

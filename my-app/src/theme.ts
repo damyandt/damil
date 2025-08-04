@@ -91,8 +91,6 @@ const staticThemeColors = {
 };
 
 const theme = (mode: PaletteMode, mainColor: string) => {
-  const baseTheme = createTheme();
-
   const customTheme: ThemeOptions = {
     components: {
       MuiCssBaseline: {
@@ -117,7 +115,7 @@ const theme = (mode: PaletteMode, mainColor: string) => {
         black: mode === "light" ? "#000000" : "#FFFFFF",
       },
       text: {
-        primary: mode === "light" ? "#000000" : "#d1d1d1ff",
+        primary: mode === "light" ? "#252525ff" : "#d1d1d1ff",
       },
       primary: {
         main: mainColor,
