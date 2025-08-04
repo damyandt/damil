@@ -26,7 +26,6 @@ import { codeVerification, postLogin, validateEmail } from "./api/postQuery";
 import { setCookie } from "../../Global/Utils/commonFunctions";
 import { useAuthedContext } from "../../context/AuthContext";
 import { SetCookieParams } from "../../Auth/authTypes";
-import { Fade } from "../../components/MaterialUI/FormFields/Fade";
 // import DarkVeil from "../../components/ogl/background";
 import Orb from "../../components/ogl/background";
 import CustomModal from "../../components/MaterialUI/Modal";
@@ -39,17 +38,17 @@ export const hexToVec3 = (hex: string): [number, number, number] => {
   return [r, g, b];
 };
 
-export const errorMessages = () => {
-  const { t } = useLanguageContext()
+export const errorMessages = (t: (key: string) => string) => {
   return {
     invalidEmail: t("Account with this email does not exists."),
     invalidPassword: t("Wrong password. Please double-check and try again."),
     unverified: t("Account not verified. Please verify your account"),
     invalidCode: t("Invalid code."),
-    internalServerError: t("Oops, something happpend! Please try again in 5 min."),
-  }
+    internalServerError: t(
+      "Oops, something happpend! Please try again in 5 min."
+    ),
+  };
 };
-
 const LoginPage = () => {
   const { setUserSignedIn } = useAuthedContext();
   const navigate = useNavigate();
@@ -81,7 +80,7 @@ const LoginPage = () => {
       });
 
       if (responce.success === false) {
-        return setErrors({ email: errorMessages().invalidEmail });
+        return setErrors({ email: errorMessages(t).invalidEmail });
       }
 
       setShowPasswordField(true);
@@ -92,7 +91,7 @@ const LoginPage = () => {
     } catch (error) {
       console.error("Failed:", error);
       setErrors({
-        email: errorMessages().internalServerError,
+        email: errorMessages(t).internalServerError,
       });
     }
   };
@@ -108,11 +107,11 @@ const LoginPage = () => {
         auth: null,
       });
 
-      if (responce.message === errorMessages().invalidPassword) {
+      if (responce.message === errorMessages(t).invalidPassword) {
         return setErrors({
-          password: errorMessages().invalidPassword,
+          password: errorMessages(t).invalidPassword,
         });
-      } else if (responce.message === errorMessages().unverified) {
+      } else if (responce.message === errorMessages(t).unverified) {
         return setOpenModal(true);
       }
 
@@ -132,7 +131,7 @@ const LoginPage = () => {
     } catch (error) {
       console.error("Login failed:", error);
       setErrors({
-        password: errorMessages().internalServerError,
+        password: errorMessages(t).internalServerError,
       });
     }
   };
@@ -234,7 +233,7 @@ const LoginPage = () => {
         </Box>
 
         <Typography variant="h2" fontWeight={600} mb={4} zIndex={10}>
-         { t("Sign in to your Gym.")}
+          {t("Sign in to your Gym.")}
         </Typography>
 
         <Box

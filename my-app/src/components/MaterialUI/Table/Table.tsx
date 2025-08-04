@@ -96,7 +96,7 @@ const TableComponent = ({
         <Grid size={3}>
           <TextField
             size="small"
-            label="Search..."
+            label={t("Search...")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             sx={{ width: "250px" }}
@@ -119,7 +119,7 @@ const TableComponent = ({
           <TextField
             select
             size="small"
-            label="Rows"
+            label={t("Rows")}
             value={rowsPerPage}
             onChange={(e) => {
               setPage(1);
