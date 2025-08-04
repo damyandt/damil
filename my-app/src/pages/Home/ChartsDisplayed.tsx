@@ -4,15 +4,18 @@ import GymVisitsChart from "../Analystics/GymVisitsChart";
 import AgeDistributionChart from "../Analystics/AgeChart";
 import GoalMembersGaugeChart from "../Analystics/Goal";
 import Memberships from "../Analystics/Memberships";
+import { useLanguageContext } from "../../context/LanguageContext";
 
-const chartOptions = [
-  { label: "Gym Visits", value: "gym" },
-  { label: "Age Distribution", value: "age" },
-  { label: "Goals", value: "goal" },
-  { label: "Memberships", value: "memberships" },
-];
+
 
 const ChartDisplay = () => {
+  const { t } = useLanguageContext();
+  const chartOptions: { label: string; value: string }[] = [
+    { label: t("Gym Visits"), value: "gym" },
+    { label: t("Age Distribution"), value: "age" },
+    { label: t("Goals"), value: "goal" },
+    { label: t("Memberships"), value: "memberships" },
+  ];
   const [selectedChart, setSelectedChart] = useState("gym");
 
   const renderChart = () => {

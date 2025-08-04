@@ -2,11 +2,12 @@ import React from "react";
 import { CircularProgress, Box, Typography, useTheme } from "@mui/material";
 import cssComponentsStyles from "../../Global/Styles/components";
 import cssLayoutStyles from "../../Global/Styles/layout";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 const LoadingScreen: React.FC = () => {
   const theme = useTheme();
   const styles = { ...cssComponentsStyles(theme), ...cssLayoutStyles };
-
+  const { t } = useLanguageContext();
   return (
     <Box
       sx={[styles.card, styles.flexCenter]}
@@ -17,7 +18,7 @@ const LoadingScreen: React.FC = () => {
     >
       <CircularProgress />
       <Typography variant="h4" mt={2} color={"primary.main"}>
-        Loading...
+        {t("Loading...")}
       </Typography>
     </Box>
   );

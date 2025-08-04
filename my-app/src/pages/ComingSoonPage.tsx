@@ -61,7 +61,6 @@ const ComingSoonPage: React.FC = () => {
     if (lgMediaQuery && openLeftNav) {
       setOpenLeftNav(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lgMediaQuery]);
 
   return (
@@ -73,7 +72,7 @@ const ComingSoonPage: React.FC = () => {
       <Box component="div" sx={styles.floating}>
         <img src="/coming-soon.png" alt="Coming-Soon" width="360" />
       </Box>
-      <Typography variant="h1" mt={3} sx={{ color: theme.palette.customColors.greyText }}>
+      <Typography variant="h1" mt={3} sx={{ color: theme.palette.customColors?.darkGray }}>
         {t("Coming Soon!")}
       </Typography>
     </Box>

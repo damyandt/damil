@@ -39,12 +39,15 @@ export const hexToVec3 = (hex: string): [number, number, number] => {
   return [r, g, b];
 };
 
-export const errorMessages = {
-  invalidEmail: "Account with this email does not exists.",
-  invalidPassword: "Wrong password. Please double-check and try again.",
-  unverified: "Account not verified. Please verify your account",
-  invalidCode: "Invalid code.",
-  internalServerError: "Oops, something happpend! Please try again in 5 min.",
+export const errorMessages = () => {
+  const { t } = useLanguageContext()
+  return {
+    invalidEmail: t("Account with this email does not exists."),
+    invalidPassword: t("Wrong password. Please double-check and try again."),
+    unverified: t("Account not verified. Please verify your account"),
+    invalidCode: t("Invalid code."),
+    internalServerError: t("Oops, something happpend! Please try again in 5 min."),
+  }
 };
 
 const LoginPage = () => {
@@ -78,7 +81,7 @@ const LoginPage = () => {
       });
 
       if (responce.success === false) {
-        return setErrors({ email: errorMessages.invalidEmail });
+        return setErrors({ email: errorMessages().invalidEmail });
       }
 
       setShowPasswordField(true);
@@ -89,7 +92,7 @@ const LoginPage = () => {
     } catch (error) {
       console.error("Failed:", error);
       setErrors({
-        email: errorMessages.internalServerError,
+        email: errorMessages().internalServerError,
       });
     }
   };
@@ -105,11 +108,11 @@ const LoginPage = () => {
         auth: null,
       });
 
-      if (responce.message === errorMessages.invalidPassword) {
+      if (responce.message === errorMessages().invalidPassword) {
         return setErrors({
-          password: errorMessages.invalidPassword,
+          password: errorMessages().invalidPassword,
         });
-      } else if (responce.message === errorMessages.unverified) {
+      } else if (responce.message === errorMessages().unverified) {
         return setOpenModal(true);
       }
 
@@ -129,7 +132,7 @@ const LoginPage = () => {
     } catch (error) {
       console.error("Login failed:", error);
       setErrors({
-        password: errorMessages.internalServerError,
+        password: errorMessages().internalServerError,
       });
     }
   };
@@ -153,7 +156,7 @@ const LoginPage = () => {
       formData.email === null ||
       formData.email === ""
     ) {
-      newErrors[`email`] = "This field is required";
+      newErrors[`email`] = t("This field is required");
     }
 
     if (
@@ -161,7 +164,7 @@ const LoginPage = () => {
       formData.password === null ||
       formData.password === ""
     ) {
-      !onlyEmial && (newErrors[`password`] = "This field is required");
+      !onlyEmial && (newErrors[`password`] = t("This field is required"));
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -177,7 +180,7 @@ const LoginPage = () => {
 
   const handleSubmitVerificationCode = async () => {
     if (verificationCode.length !== 6) {
-      setErrors({ verificationCode: "Verification Code must be 6 digits." });
+      setErrors({ verificationCode: t("Verification Code must be 6 digits.") });
       console.warn("Form validation failed!");
       return;
     }
@@ -231,7 +234,7 @@ const LoginPage = () => {
         </Box>
 
         <Typography variant="h2" fontWeight={600} mb={4} zIndex={10}>
-          Sign in to your Gym.
+         { t("Sign in to your Gym.")}
         </Typography>
 
         <Box
@@ -253,14 +256,14 @@ const LoginPage = () => {
               alignSelf: "center",
             }}
           >
-            Sign in
+            {t("Sign in")}
           </Typography>
           <Grid container spacing={2} zIndex={10}>
             <Grid size={12}>
               <TextField
                 fullWidth
                 disabled={disableEmail}
-                label={errors["email"] || "Email"}
+                label={errors["email"] || t("Email")}
                 error={!!errors["email"]}
                 onKeyDown={(e) => e.key === "Enter" && handleNextClick()}
                 onChange={(e) => handleChange("email", e.target.value)}
@@ -296,7 +299,7 @@ const LoginPage = () => {
               <Collapse in={showPasswordField}>
                 <TextField
                   fullWidth
-                  label={errors["password"] || "Password"}
+                  label={errors["password"] || t("Password")}
                   type={showPassword ? "text" : "password"}
                   error={!!errors["password"]}
                   onChange={(e) => handleChange("password", e.target.value)}
@@ -354,9 +357,9 @@ const LoginPage = () => {
             width={"fit-content"}
             alignSelf={"center"}
           >
-            You don't have an Account?{" "}
+            {t("You don't have an Account?")}{" "}
             <MuiLink component={RouterLink} to="/register" underline="hover">
-              Register Here
+              {t("Register Here")}
             </MuiLink>
           </Typography>
         </Box>
@@ -368,11 +371,11 @@ const LoginPage = () => {
         width={"md"}
       >
         <Typography variant="body2" color="text.secondary">
-          Please enter the 6-digit code sent to your email address.
+          {t("Please enter the 6-digit code sent to your email address.")}
         </Typography>
 
         <TextField
-          placeholder="Enter code"
+          placeholder={t("Enter code")}
           fullWidth
           value={verificationCode || ""}
           error={!!errors["verificationCode"]}
@@ -390,8 +393,8 @@ const LoginPage = () => {
           <Tooltip
             title={
               resendCooldown === 0
-                ? "Click to Resend Code"
-                : `Wait ${resendCooldown}s before you try again!`
+                ? t("Click to Resend Code")
+                : `${t("Wait")} ${resendCooldown}${t("s before you try again!")}`
             }
             sx={{ ml: 2 }}
           >
@@ -406,7 +409,7 @@ const LoginPage = () => {
                 },
               }}
             >
-              Resend Code
+              {t("Resend Code")}
             </Typography>
           </Tooltip>
           <IconButton

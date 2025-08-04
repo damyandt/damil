@@ -74,7 +74,7 @@ const StaffRolesPage = () => {
           sx={{
             display: "flex",
             justifyContent: "center",
-            height: " -webkit-fill-available",
+            height: "-webkit-fill-available",
             alignItems: "center",
           }}
         >

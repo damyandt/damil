@@ -9,6 +9,7 @@ import {
 } from "echarts/components";
 import { CanvasRenderer } from "echarts/renderers";
 import BaseChart from "../../components/pageComponents/BaseChart";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 echarts.use([
   GaugeChart,
@@ -27,6 +28,7 @@ const GoalMembersGaugeChart: React.FC<GoalMembersGaugeChartProps> = ({
   value,
   height,
 }) => {
+    const { t } = useLanguageContext()
   const option: echarts.EChartsCoreOption = {
     title: {
       textStyle: {
@@ -34,7 +36,7 @@ const GoalMembersGaugeChart: React.FC<GoalMembersGaugeChartProps> = ({
         fontSize: 18,
         fontWeight: "bold",
       },
-      text: "Goal - Members for this mounth",
+      text: t("Goal - Members for this mounth"),
       left: "center",
       top: 25,
     },

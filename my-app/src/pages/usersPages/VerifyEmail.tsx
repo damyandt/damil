@@ -98,11 +98,11 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
         }}
       >
         <Typography variant="body2" color="text.secondary">
-          Please enter the 6-digit code sent to your email address.
+          {t("Please enter the 6-digit code sent to your email address.")}
         </Typography>
 
         <TextField
-          placeholder="Enter code"
+          placeholder={t("Enter code")}
           fullWidth
           value={verificationCode || ""}
           error={!!errors["verificationCode"]}
@@ -120,8 +120,8 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
           <CustomTooltip
             title={
               resendCooldown === 0
-                ? "Click to Resend Code"
-                : `Wait ${resendCooldown}s before you try again!`
+                ? t("Click to Resend Code")
+                : `${t("Wait")} ${resendCooldown}${t("s before you try again!")}`
             }
             sx={{ ml: 2 }}
           >

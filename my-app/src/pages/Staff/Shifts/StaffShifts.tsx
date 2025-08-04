@@ -15,12 +15,9 @@ import AddIcon from "@mui/icons-material/Add";
 import CustomModal from "../../../components/MaterialUI/Modal";
 import TextField from "../../../components/MaterialUI/FormFields/TextField";
 import ShiftCell from "./ShiftCell";
+import { useLanguageContext } from "../../../context/LanguageContext";
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const staffList = [
-  { id: "1", name: "Damyan Todorov", role: "Front Desk" },
-  { id: "2", name: "Iliyan Todorov", role: "Front Desk" },
-];
 
 type Shift = {
   staffId: string;
@@ -32,6 +29,11 @@ type Shift = {
 const StaffShifts = () => {
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [open, setOpen] = useState<boolean>(false);
+  const { t } = useLanguageContext()
+  const staffList = [
+    { id: "1", name: "Damyan Todorov", role: t("Front Desk") },
+    { id: "2", name: "Iliyan Todorov", role: t("Front Desk") },
+  ];
   const [newShift, setNewShift] = useState<Shift>({
     staffId: "",
     day: "Mon",
@@ -71,11 +73,11 @@ const StaffShifts = () => {
       <Grid container p={4}>
         <Grid size={12}>
           <Typography variant="h4" mb={4} textAlign={"center"}>
-            Staff Scheduling
+            {t("Staff Scheduling")}
           </Typography>
         </Grid>
         <Grid position={"absolute"}>
-          <CustomTooltip title="Assign Shift" placement="right">
+          <CustomTooltip title={t("Assign Shift")} placement="right">
             <IconButton onClick={() => setOpen(true)}>
               <AddIcon />
             </IconButton>
@@ -124,7 +126,7 @@ const StaffShifts = () => {
       <CustomModal
         open={open}
         onClose={() => setOpen(false)}
-        title="Assign New Shift"
+        title={t("Assign New Shift")}
       >
         <TextField
           select
@@ -142,7 +144,7 @@ const StaffShifts = () => {
 
         <TextField
           select
-          label="Day"
+          label={t("Day")}
           value={newShift.day}
           onChange={(e) => handleChange("day", e.target.value)}
           fullWidth
@@ -155,17 +157,17 @@ const StaffShifts = () => {
         </TextField>
 
         <TimePicker
-          label="Select Time"
+          label={t("Select Time")}
           value={newShift.start}
           onChange={(newValue: any) => handleChange("start", newValue)}
         />
         <TimePicker
-          label="End Time"
+          label={t("End Time")}
           value={newShift.end}
           onChange={(newValue: any) => handleChange("end", newValue)}
         />
 
-        <Button onClick={addShift}>Save Shift</Button>
+        <Button onClick={addShift}>{t("Save Shift")}</Button>
       </CustomModal>
     </>
   );

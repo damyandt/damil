@@ -73,9 +73,6 @@ const PageNotFound: React.FC = () => {
       sx={[styles.flexCenter, styles.pageNotFoundContent]}
       flexDirection="column"
     >
-      {/* <Box component="div" sx={styles.floating}>
-                <img src="/photos/404.jpeg" alt="404-Page-NotFound" width="300" />
-            </Box> */}
       <Typography variant="h2" color="primary.main" mt={4}>
         404
       </Typography>

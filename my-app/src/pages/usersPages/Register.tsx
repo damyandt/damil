@@ -6,7 +6,6 @@ import {
   InputAdornment,
   IconButton,
   Grid,
-  Modal,
   Tooltip,
   useTheme,
 } from "@mui/material";
@@ -21,7 +20,6 @@ import { codeVerification, postLogin, postRegister } from "./api/postQuery";
 import { useAuthedContext } from "../../context/AuthContext";
 import { setCookie } from "../../Global/Utils/commonFunctions";
 import { SetCookieParams } from "../../Auth/authTypes";
-import { Fade } from "../../components/MaterialUI/FormFields/Fade";
 import CustomModal from "../../components/MaterialUI/Modal";
 import { useLanguageContext } from "../../context/LanguageContext";
 import Orb from "../../components/ogl/background";
@@ -85,20 +83,6 @@ const RegisterPage = () => {
             email: "Invalid Email!",
           }));
         }
-        // try {
-        //   const res = await callApi<any>({
-        //     query: validateEmail(formData.email),
-        //     auth: null,
-        //   });
-        //   if (res.success === true) {
-        //     return setErrors((prev) => ({
-        //       ...prev,
-        //       email: "Account with this email already exist!",
-        //     }));
-        //   }
-        // } catch (err) {
-        //   console.log(err);
-        // }
       }
     }, 700);
 
@@ -111,7 +95,7 @@ const RegisterPage = () => {
         if (formData.password.length < 8) {
           return setErrors((prev) => ({
             ...prev,
-            password: "At least 8 characters",
+            password: t("At least 8 characters"),
           }));
         }
       }
@@ -125,7 +109,7 @@ const RegisterPage = () => {
         if (formData.confirmPassword !== formData.password) {
           return setErrors((prev) => ({
             ...prev,
-            confirmPassword: "Passwords do not match.",
+            confirmPassword: t("Passwords do not match."),
           }));
         }
       }
@@ -139,7 +123,7 @@ const RegisterPage = () => {
       const fields: string[] = ["username", "email", "password"];
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (formData.email && !emailPattern.test(formData.email)) {
-        newErrors["email"] = "Please enter a valid email address.";
+        newErrors["email"] = t("Please enter a valid email address.");
       }
       fields.map((el: string) => {
         if (
@@ -153,14 +137,14 @@ const RegisterPage = () => {
       });
 
       formData.password.length < 8 &&
-        (newErrors["password"] = "Password must be at least 8 characters.");
+        (newErrors["password"] = t("Password must be at least 8 characters."));
       formData.confirmPassword.length === 0 &&
-        (newErrors["confirmPassword"] = "Confirm Password is Required");
+        (newErrors["confirmPassword"] = t("Confirm Password is Required"));
       formData.confirmPassword !== formData.password &&
-        (newErrors["confirmPassword"] = "Passwords do not match.");
+        (newErrors["confirmPassword"] = t("Passwords do not match."));
     } else {
       verificationCode.length !== 6 &&
-        (newErrors["verificationCode"] = "Verification Code must be 6 digits.");
+        (newErrors["verificationCode"] = t("Verification Code must be 6 digits."));
     }
 
     setErrors(newErrors);
@@ -272,7 +256,7 @@ const RegisterPage = () => {
         </Box>
 
         <Typography variant="h2" fontWeight={600} mb={1} sx={{ zIndex: 10 }}>
-          Make new Profile
+          {t("Make new Profile")}
         </Typography>
 
         <Box
@@ -294,13 +278,13 @@ const RegisterPage = () => {
               alignSelf: "center",
             }}
           >
-            Sign up
+            {t("Sign up")}
           </Typography>
           <Grid container spacing={2} zIndex={10}>
             <Grid size={12}>
               <TextField
                 fullWidth
-                label={errors["username"] || "Username"}
+                label={errors["username"] || t("Username")}
                 error={!!errors["username"]}
                 onChange={(e) => handleChange("username", e.target.value)}
               />
@@ -308,14 +292,14 @@ const RegisterPage = () => {
             <Grid size={12}>
               <TextField
                 fullWidth
-                label={errors["email"] || "Email"}
+                label={errors["email"] || t("Email")}
                 error={!!errors["email"]}
                 onChange={(e) => handleChange("email", e.target.value)}
               />
             </Grid>
             <Grid size={12}>
               <TextField
-                label={errors["password"] || "Password"}
+                label={errors["password"] || t("Password")}
                 fullWidth
                 type={showPassword ? "text" : "password"}
                 error={!!errors["password"]}
@@ -375,7 +359,7 @@ const RegisterPage = () => {
           <Typography variant="body2" zIndex={10}>
             {"You already have an Account? "}
             <MuiLink component={RouterLink} to="/login" underline="hover">
-              Login Here
+              {t("Login Here")}
             </MuiLink>
           </Typography>
         </Box>
@@ -403,7 +387,7 @@ const RegisterPage = () => {
           }}
         >
           <Typography variant="body2" color="text.secondary">
-            Please enter the 6-digit code sent to your email address.
+            {t("Please enter the 6-digit code sent to your email address.")}
           </Typography>
 
           <TextField
@@ -425,8 +409,8 @@ const RegisterPage = () => {
             <Tooltip
               title={
                 resendCooldown === 0
-                  ? "Click to Resend Code"
-                  : `Wait ${resendCooldown}s before you try again!`
+                  ? t("Click to Resend Code")
+                  : `${t("Wait")} ${resendCooldown}${t("s before you try again!")}`
               }
               sx={{ ml: 2 }}
             >
@@ -441,7 +425,7 @@ const RegisterPage = () => {
                   },
                 }}
               >
-                Resend Code
+                {t("Resend Code")}
               </Typography>
             </Tooltip>
             <IconButton

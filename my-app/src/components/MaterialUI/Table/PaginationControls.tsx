@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import CustomTooltip from "../CustomTooltip";
+import { useLanguageContext } from "../../../context/LanguageContext";
 
 interface PaginationControlsProps {
   currentPage: number;
@@ -15,6 +16,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
   totalPages,
   onPageChange,
 }) => {
+  const { t } = useLanguageContext();
   const theme = useTheme();
   return (
     <Box
@@ -52,11 +54,11 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
           textAlign: "center",
         }}
       >
-        Page {currentPage < 10 ? `0${currentPage}` : currentPage} of{" "}
+        {t("Page")} {currentPage < 10 ? `0${currentPage}` : currentPage} {t("of")}{" "}
         {totalPages < 10 ? `0${totalPages}` : totalPages}
       </Typography>
 
-      <CustomTooltip title="Next" placement="left">
+      <CustomTooltip title={t("Next")} placement="left">
         <IconButton
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}

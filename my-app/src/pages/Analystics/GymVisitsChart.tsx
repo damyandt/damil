@@ -12,6 +12,7 @@ import {
 } from "echarts/components";
 import { CanvasRenderer } from "echarts/renderers";
 import BaseChart from "../../components/pageComponents/BaseChart";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 echarts.use([
   BarChart,
@@ -30,6 +31,7 @@ interface VisitsProps {
 
 const GymVisitsChart: React.FC<VisitsProps> = ({ height }) => {
   const chartRef = useRef<any>(null);
+    const { t } = useLanguageContext()
   const drilldownData = [
     {
       dataGroupId: "Jan",
@@ -224,7 +226,7 @@ const GymVisitsChart: React.FC<VisitsProps> = ({ height }) => {
         fontSize: 18,
         fontWeight: "bold",
       },
-      text: "Gym Visits",
+      text: t("Gym Visits"),
       left: "center",
       top: 25,
     },

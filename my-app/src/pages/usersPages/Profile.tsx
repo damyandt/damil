@@ -32,10 +32,10 @@ const ProfilePage = () => {
     useCustomThemeProviderContext();
   const { authedUser } = useAuthedContext();
   const info: any = [
-    { label: "Username", field: "username" },
-    { label: "Email", field: "email" },
-    { label: "City", field: "city" },
-    { label: "Phone", field: "phone" },
+    { label: t("Username"), field: "username" },
+    { label: t("Email"), field: "email" },
+    { label: t("City"), field: "city" },
+    { label: t("Phone"), field: "phone" },
   ];
 
   // Available colors
@@ -192,7 +192,7 @@ const ProfilePage = () => {
                   </Box>
 
                   <FormControl component="fieldset">
-                    <FormLabel component="legend">Primary App Color</FormLabel>
+                    <FormLabel component="legend">{t("Primary App Color")}</FormLabel>
                     <FormGroup row>
                       {colorOptions.map((option) => (
                         <Box

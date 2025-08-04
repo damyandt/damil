@@ -37,6 +37,7 @@ const StaffPage = () => {
         <RightMenu
           setRefreshTable={setRefreshTable}
           columns={tableData.columns ?? []}
+          configurations={tableData.config ?? {}}
           addNew={true}
         />
       );

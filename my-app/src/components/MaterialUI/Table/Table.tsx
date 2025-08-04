@@ -188,7 +188,7 @@ const TableComponent = ({
                 },
               }}
             >
-              Columns
+              {t("Columns")}
             </Typography>
           </Button>
         </Grid>
@@ -239,7 +239,7 @@ const TableComponent = ({
               ))}
               {configurations.actions && (
                 <TableCell sx={{ fontWeight: "400" }} align="right">
-                  Actions
+                  {t("Actions")}
                 </TableCell>
               )}
             </TableRow>
