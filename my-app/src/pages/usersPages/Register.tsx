@@ -24,6 +24,7 @@ import CustomModal from "../../components/MaterialUI/Modal";
 import { useLanguageContext } from "../../context/LanguageContext";
 import Orb from "../../components/ogl/background";
 import { hexToVec3 } from "./Login";
+import TextType from "../../components/ogl/textTyping";
 
 const RegisterPage = () => {
   const { setUserSignedIn } = useAuthedContext();
@@ -258,7 +259,17 @@ const RegisterPage = () => {
         </Box>
 
         <Typography variant="h2" fontWeight={600} mb={1} sx={{ zIndex: 10 }}>
-          {t("Make new Profile")}
+          <TextType
+            text={[
+              t("Make new Profile"),
+              t("Make new Profile"),
+              t("Make new Profile"),
+            ]}
+            typingSpeed={75}
+            pauseDuration={3000}
+            showCursor={true}
+            cursorCharacter="|"
+          />
         </Typography>
 
         <Box

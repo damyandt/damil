@@ -30,6 +30,7 @@ import { SetCookieParams } from "../../Auth/authTypes";
 import Orb from "../../components/ogl/background";
 import CustomModal from "../../components/MaterialUI/Modal";
 import { useLanguageContext } from "../../context/LanguageContext";
+import TextType from "../../components/ogl/textTyping";
 
 export const hexToVec3 = (hex: string): [number, number, number] => {
   const [r, g, b] = hexToRgb(hex)
@@ -233,7 +234,17 @@ const LoginPage = () => {
         </Box>
 
         <Typography variant="h2" fontWeight={600} mb={4} zIndex={10}>
-          {t("Sign in to your Gym.")}
+          <TextType
+            text={[
+              t("Sign in to your Gym."),
+              t("Sign in to your Gym."),
+              t("Sign in to your Gym."),
+            ]}
+            typingSpeed={75}
+            pauseDuration={1500}
+            showCursor={true}
+            cursorCharacter="|"
+          />
         </Typography>
 
         <Box
