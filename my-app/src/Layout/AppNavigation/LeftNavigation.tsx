@@ -190,7 +190,13 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
             alt="Damyan"
             src="/profile.jpg"
             sx={{ width: 40, height: 40, ml: "0.4em", cursor: "pointer" }}
-            onClick={() => navigate("Profile")}
+            onClick={(event: any) => {
+              if (openLeftNav) {
+                navigate("Profile");
+              } else {
+                setAnchorElSettings(event.currentTarget);
+              }
+            }}
           />
 
           <Box

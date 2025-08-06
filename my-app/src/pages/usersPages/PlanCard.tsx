@@ -1,4 +1,4 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import DoneIcon from "@mui/icons-material/Done";
 import {
   Box,
   lighten,
@@ -31,7 +31,12 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
           ? `2px solid ${theme.palette.mode === "dark" ? theme.palette.common.black : theme.palette.common.white}`
           : "none",
         // backgroundColor: plan.color,
-        background: `linear-gradient(90deg, ${colorStart}, ${colorEnd})`,
+        background:
+          plan.name === "Professional"
+            ? `linear-gradient(90deg, ${colorStart}, ${colorEnd})`
+            : theme.palette.mode === "dark"
+              ? "linear-gradient(160deg, #0e0b1d 0%, #1b1433 100%)"
+              : "linear-gradient(160deg, #ffffff 0%, #f3f4f6 100%)",
         borderRadius: "20px",
         height: "100%",
         width: "100%",
@@ -44,7 +49,10 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
           display: "flex",
           flexDirection: "column",
           height: "100%",
-          color: "#ffffffff",
+          color:
+            plan.name === "Professional"
+              ? "#ffffffff"
+              : theme.palette.common.black,
         }}
       >
         <Box
@@ -79,7 +87,7 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
           )}
         </Box>
 
-        <Typography variant="h2" fontWeight={900}>
+        <Typography variant="h2" fontWeight={600}>
           {period === "monthly" ? plan.price : plan.priceYear}
           <Typography component="span" variant="body1">
             {period === "monthly" ? "/month" : "/year"}
@@ -98,8 +106,17 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
               textAlign={"center"}
               alignItems={"center"}
             >
-              <CheckCircleIcon fontSize="small" />
-              <Typography fontSize={"0.85rem"}>{feature}</Typography>
+              <DoneIcon />
+              <Typography
+                fontSize={"0.85rem"}
+                sx={{
+                  textDecoration: "underline",
+                  textDecorationThickness: "1px", // thinner line
+                  textUnderlineOffset: "4px",
+                }}
+              >
+                {feature}
+              </Typography>
             </Box>
           ))}
         </Box>
@@ -108,20 +125,35 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
           <Button
             variant="contained"
             fullWidth
-            sx={{
-              bgcolor: theme.palette.common.white,
-              color: theme.palette.common.black,
-              fontWeight: "bold",
-              borderRadius: 2,
-              // textTransform: "none",
-              transition:
-                "ease 0.4s color, ease 0.4s background-color, transform 0.4s ease ",
-              "&:hover": {
-                bgcolor: lighten(plan.color, 0.4),
-                color: "#fff",
-                transform: "scale(1.03)",
-              },
-            }}
+            sx={
+              plan.name === "Professional"
+                ? {
+                    bgcolor: theme.palette.common.white,
+                    color: theme.palette.common.black,
+                    fontWeight: "bold",
+                    borderRadius: 2,
+                    // textTransform: "none",
+                    transition:
+                      "ease 0.4s color, ease 0.4s background-color, transform 0.4s ease ",
+                    "&:hover": {
+                      bgcolor: lighten(plan.color, 0.4),
+                      color: "#fff",
+                      transform: "scale(1.03)",
+                    },
+                  }
+                : {
+                    fontWeight: "bold",
+                    borderRadius: 2,
+                    // textTransform: "none",
+                    transition:
+                      "ease 0.4s color, ease 0.4s background-color, transform 0.4s ease ",
+                    "&:hover": {
+                      // bgcolor: lighten(plan.color, 0.4),
+                      color: "#fff",
+                      transform: "scale(1.03)",
+                    },
+                  }
+            }
           >
             {plan.buttonText}
           </Button>

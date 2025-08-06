@@ -39,7 +39,7 @@ const PricingPage = () => {
       active: false,
     },
     {
-      name: "Professional",
+      name: "Standart",
       price: "$15",
       priceYear: "$165",
       description: "Ideal for individual creators.",
@@ -51,11 +51,11 @@ const PricingPage = () => {
         "2 collaborators",
         "Password protection",
       ],
-      buttonText: "Get Professional",
+      buttonText: "Standart",
       active: true,
     },
     {
-      name: "Team",
+      name: "Professional",
       price: "$25",
       priceYear: "$275",
       description: "Small teams with up to 10 users.",
@@ -66,7 +66,7 @@ const PricingPage = () => {
         "Custom storage plans",
         "Custom branding by team",
       ],
-      buttonText: "Get Team Plan",
+      buttonText: "Get Professional",
       active: false,
     },
   ];
@@ -136,9 +136,10 @@ const PricingPage = () => {
                 "&:hover": {
                   transform: "scale(1.05)",
                 },
-                animation: plan.active
-                  ? `${float} 3s ease-in-out infinite`
-                  : "none",
+                animation:
+                  plan.name === "Professional"
+                    ? `${float} 3s ease-in-out infinite`
+                    : "none",
               }}
             >
               <PlanCard plan={plan} period={period} />

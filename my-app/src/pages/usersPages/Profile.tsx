@@ -242,10 +242,10 @@ const ProfilePage = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid size={4} mt={4}>
+      <Grid size={4}>
         <PlanCard
           plan={{
-            name: "Professional",
+            name: "Standart",
             price: "$15",
             priceYear: "$165",
             description: "Ideal for individual creators.",
@@ -257,7 +257,7 @@ const ProfilePage = () => {
               "2 collaborators",
               "Password protection",
             ],
-            buttonText: "Get Professional",
+            buttonText: "Standart",
             active: true,
           }}
           period="monthly"
