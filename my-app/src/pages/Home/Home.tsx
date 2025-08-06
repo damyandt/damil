@@ -25,6 +25,9 @@ import SearchModal from "./SearchModal";
 import tinycolor from "tinycolor2";
 import { useLanguageContext } from "../../context/LanguageContext";
 
+export const shiftHue = (color: string, amount: number) =>
+  tinycolor(color).spin(amount).toHexString();
+
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { authedUser } = useAuthedContext();
@@ -63,10 +66,6 @@ const HomePage: React.FC = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
   const primary = theme.palette.primary.main;
-
-  // Derive light and darker variants of primary
-  const shiftHue = (color: string, amount: number) =>
-    tinycolor(color).spin(amount).toHexString();
 
   const colorStart = isDark
     ? shiftHue(lighten(primary, 0.1), -20)

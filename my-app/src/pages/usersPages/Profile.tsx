@@ -13,8 +13,12 @@ import {
   IconButton,
   FormLabel,
   PaletteMode,
+  useTheme,
+  darken,
+  keyframes,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import SaveIcon from "@mui/icons-material/Save";
 import CellRenderer from "../../components/MaterialUI/Table/CellRenderer";
 import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
@@ -23,10 +27,22 @@ import { useAuthedContext } from "../../context/AuthContext";
 import { Gym } from "./userTypes";
 import { useCustomThemeProviderContext } from "../../context/ThemeContext";
 import PlanCard from "./PlanCard";
-
+import { useNavigate } from "react-router-dom";
+const animatedGradient = keyframes`
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+`;
 const ProfilePage = () => {
   const { t } = useLanguageContext();
   const [editMode, setEditMode] = useState(false);
+  const navigate = useNavigate();
   const { themeMode, setThemeMode, setPrimaryColor, primaryColor } =
     useCustomThemeProviderContext();
   const { authedUser } = useAuthedContext();
@@ -51,7 +67,7 @@ const ProfilePage = () => {
       prevThemeMode === "light" ? "dark" : "light"
     );
   };
-
+  const theme = useTheme();
   const [hovered, setHovered] = useState<boolean>(false);
 
   return (
@@ -105,7 +121,6 @@ const ProfilePage = () => {
           {authedUser?.email}
         </Typography>
       </Grid>
-
       <Grid size={6}>
         <Box component={"div"} display={"flex"} gap={2} mb={2}>
           <Typography variant="h4" gutterBottom alignSelf={"center"} margin={0}>
@@ -157,7 +172,7 @@ const ProfilePage = () => {
         <Grid container spacing={2}>
           <Grid size={12}>
             <Grid container spacing={2} mt={4}>
-              <Grid size={12}>
+              <Grid size={12} display={"flex"} justifyContent={"space-between"}>
                 <Typography variant="h4" gutterBottom>
                   Account Preferences
                 </Typography>
@@ -191,7 +206,9 @@ const ProfilePage = () => {
                   </Box>
 
                   <FormControl component="fieldset">
-                    <FormLabel component="legend">{t("Primary App Color")}</FormLabel>
+                    <FormLabel component="legend">
+                      {t("Primary App Color")}
+                    </FormLabel>
                     <FormGroup row>
                       {colorOptions.map((option) => (
                         <Box
@@ -226,8 +243,57 @@ const ProfilePage = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid size={6} mt={4}>
-        <PlanCard plan={"primary"} />
+      <Grid size={4} mt={4}>
+        <PlanCard
+          plan={{
+            name: "Professional",
+            price: "$15",
+            priceYear: "$165",
+            description: "Ideal for individual creators.",
+            color: darken(theme.palette.primary.main, 0.4),
+            features: [
+              "Everything in Basic",
+              "250GB of song storage",
+              "250GB of asset storage",
+              "2 collaborators",
+              "Password protection",
+            ],
+            buttonText: "Get Professional",
+            active: true,
+          }}
+          period="monthly"
+        />
+      </Grid>
+      <Grid
+        size={2}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        width="fit-content"
+      >
+        <Typography
+          variant="body1"
+          sx={{
+            cursor: "pointer",
+            fontWeight: 700,
+            display: "flex",
+            alignItems: "center",
+            // background: `linear-gradient(40deg, ${primaryColor}, ${primaryColor})`,
+            background: `linear-gradient(90deg, #a250fa, #0EA5E9, #10B981, #F59E0B, #F43F5E)`,
+            backgroundSize: "300% 300%",
+            animation: `${animatedGradient} 3s ease infinite`,
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            transition: "transform 0.2s",
+            width: "fit-content",
+            "&:hover": {
+              transform: "translateX(4px)",
+            },
+          }}
+          onClick={() => navigate("/Plans")}
+        >
+          See all plans <ArrowForwardIcon sx={{ ml: 1, fontSize: 20 }} />
+        </Typography>
       </Grid>
     </Grid>
   );

@@ -1,101 +1,116 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  Chip,
-  Box,
-  Button,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  useTheme,
-} from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { useNavigate } from "react-router-dom";
+import { Box, lighten, Typography, useTheme, Button } from "@mui/material";
 
-const planDescriptions: any = {
-  starter: {
-    label: "Starter Plan",
-    color: "default",
-    features: ["Access to front desk", "Basic check-in", "Email support"],
-  },
-  core: {
-    label: "Core Plan",
-    color: "primary",
-    features: ["Access to classes", "Staff management", "Priority support"],
-  },
-  elite: {
-    label: "Elite Plan",
-    color: "success",
-    features: ["Full analytics", "Unlimited access", "Dedicated manager"],
-  },
-};
+interface PlanCardProps {
+  plan: any;
+  period: string;
+}
 
-const PlanCard = ({ plan = "starter" }) => {
-  const navigate = useNavigate();
-  const planInfo = planDescriptions[plan] || planDescriptions.starter;
-
+const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
   const theme = useTheme();
   return (
-    <Card
+    <Box
       sx={{
+        border: plan.active
+          ? `2px solid ${theme.palette.mode === "dark" ? theme.palette.common.black : theme.palette.common.white}`
+          : "none",
+        backgroundColor: plan.color,
+        borderRadius: "20px",
+        height: "100%",
         width: "100%",
-        maxWidth: 400,
-        p: 2,
-        borderRadius: 3,
+        p: 3,
         boxShadow: theme.palette.customColors?.shodow,
-        height: "25em",
       }}
     >
-      <CardContent
+      <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
           height: "100%",
+          color: "#ffffffff",
         }}
       >
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h4">{planInfo.label}</Typography>
-          <Chip
-            label={plan.toUpperCase()}
-            color={planInfo.color}
-            sx={{ fontWeight: 600 }}
-          />
-        </Box>
-
-        <Typography variant="body2" color="text.secondary" mt={1} mb={2}>
-          {plan === "starter"
-            ? "You are currently on the free Starter plan."
-            : plan === "core"
-              ? "Enjoy more tools and features for growing gyms."
-              : "You have full access to all modules and premium support."}
-        </Typography>
-
-        <List dense>
-          {planInfo.features.map((feature: any, index: any) => (
-            <ListItem key={index} disablePadding>
-              <ListItemIcon sx={{ minWidth: 30 }}>
-                <CheckCircleIcon fontSize="small" color="action" />
-              </ListItemIcon>
-              <ListItemText primary={feature} />
-            </ListItem>
-          ))}
-        </List>
-
-        <Box display="flex" justifyContent="space-between" mt={3}>
-          <Button variant="outlined" size="small" onClick={() => navigate("/Plans")}>
-            View Plans
-          </Button>
-          {plan !== "elite" && (
-            <Button variant="contained" size="small">
-              Upgrade Plan
-            </Button>
+        <Box
+          component={"div"}
+          display={"flex"}
+          justifyContent={"space-between"}
+          textAlign={"center"}
+          alignItems={"center"}
+        >
+          <Typography variant="h5" fontWeight={700} gutterBottom>
+            {plan.name}
+          </Typography>
+          {plan.active && (
+            <Typography
+              variant="subtitle2"
+              fontWeight={600}
+              gutterBottom
+              sx={{
+                backgroundColor: "primary.contrastText",
+                color: "primary.main",
+                px: 1,
+                py: 0.5,
+                borderRadius: "8px",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                fontSize: "0.7rem",
+                boxShadow: 1,
+              }}
+            >
+              Current Plan
+            </Typography>
           )}
         </Box>
-      </CardContent>
-    </Card>
+
+        <Typography variant="h2" fontWeight={900}>
+          {period === "monthly" ? plan.price : plan.priceYear}
+          <Typography component="span" variant="body1">
+            {period === "monthly" ? "/month" : "/year"}
+          </Typography>
+        </Typography>
+        <Typography variant="body2" mt={1} mb={2}>
+          {plan.description}
+        </Typography>
+
+        <Box gap={2} display={"flex"} flexDirection={"column"} my={2}>
+          {plan.features.map((feature: any, idx: any) => (
+            <Box
+              key={idx}
+              display={"flex"}
+              gap={1}
+              textAlign={"center"}
+              alignItems={"center"}
+            >
+              <CheckCircleIcon fontSize="small" />
+              <Typography fontSize={"0.85rem"}>{feature}</Typography>
+            </Box>
+          ))}
+        </Box>
+
+        <Box mt="auto" pt={2}>
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{
+              bgcolor: theme.palette.common.white,
+              color: theme.palette.common.black,
+              fontWeight: "bold",
+              borderRadius: 2,
+              // textTransform: "none",
+              transition:
+                "ease 0.4s color, ease 0.4s background-color, transform 0.4s ease ",
+              "&:hover": {
+                bgcolor: lighten(plan.color, 0.4),
+                color: "#fff",
+                transform: "scale(1.03)",
+              },
+            }}
+          >
+            {plan.buttonText}
+          </Button>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
