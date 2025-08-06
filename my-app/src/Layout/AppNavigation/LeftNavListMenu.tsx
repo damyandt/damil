@@ -29,11 +29,15 @@ interface LeftNavListMenuProps {
   alertMessage?: string | null;
   collapsed?: boolean;
   openLeftNav: boolean;
+  mobileLeftNav?: any;
+  setOpenLeftNav?: any;
 }
 
 const LeftNavListMenu: React.FC<LeftNavListMenuProps> = ({
   navList,
   openLeftNav,
+  setOpenLeftNav,
+  mobileLeftNav,
 }) => {
   const location = useLocation();
   return (
@@ -41,6 +45,7 @@ const LeftNavListMenu: React.FC<LeftNavListMenuProps> = ({
       {navList.map((item, index) => (
         <NavItem
           openLeftNav={openLeftNav}
+          mobileLeftNav={mobileLeftNav}
           key={`parent-item${index}-${item.text}`}
           text={item.text}
           url={item.url}
@@ -49,6 +54,7 @@ const LeftNavListMenu: React.FC<LeftNavListMenuProps> = ({
           disabled={item.disabled}
           isAlreadyOpen={item.open == true ? true : false}
           currentPath={location.pathname}
+          setOpenLeftNav={setOpenLeftNav}
         />
       ))}
     </List>
@@ -63,6 +69,8 @@ interface NavItemProps extends LeftNavSingleItem {
   marginLeft?: boolean;
   currentPath?: string;
   openLeftNav: boolean;
+  mobileLeftNav?: any;
+  setOpenLeftNav?: any;
 }
 const NavItem: React.FC<NavItemProps> = ({
   text,
@@ -74,6 +82,8 @@ const NavItem: React.FC<NavItemProps> = ({
   marginLeft,
   currentPath,
   openLeftNav,
+  mobileLeftNav,
+  setOpenLeftNav,
 }) => {
   const location = useLocation();
   const theme = useTheme();
@@ -93,13 +103,30 @@ const NavItem: React.FC<NavItemProps> = ({
 
   const isSelected = url === location.pathname;
   const itemIconButtonProps = {
-    ...(url ? { component: Link, to: url } : { onClick: () => setOpen(!open) }),
+    ...(url
+      ? {
+          component: Link,
+          to: url,
+          onClick: () => {
+            if (mobileLeftNav) {
+              setOpenLeftNav && setOpenLeftNav((prev: boolean) => !prev);
+            }
+          },
+        }
+      : {
+          onClick: () => {
+            setOpen(!open);
+          },
+        }),
   };
 
   return (
     <Box component="div">
       <ListItemButton
         {...itemIconButtonProps}
+        // onClick={() => {
+        //   mobileLeftNav && !nested && setOpenLeftNav(false);
+        // }}
         disabled={disabled}
         selected={isSelected}
         sx={{

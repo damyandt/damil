@@ -114,7 +114,7 @@ const LoginForm = () => {
         auth: null,
       });
 
-      if (responce.message === errorMessages(t).invalidPassword) {
+      if (responce.success === false) {
         return setErrors({
           password: errorMessages(t).invalidPassword,
         });

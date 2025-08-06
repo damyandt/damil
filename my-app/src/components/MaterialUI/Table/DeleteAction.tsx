@@ -128,6 +128,7 @@ export const DeleteUndo = ({
         alignItems: "center",
         gap: 1,
         justifyContent: "flex-end",
+        zIndex: 10,
       }}
     >
       <CustomTooltip title="Undo" placement="left">

@@ -282,7 +282,7 @@ const TableComponent = ({
                             : "#fff",
                         cursor: "pointer",
                         transform: "scale(0.99)",
-                        zIndex: 1,
+                        zIndex: 10,
                         position: "relative",
                       },
                     }}

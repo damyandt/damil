@@ -156,24 +156,32 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
             navList={NAV_DAMIL_HOME.list}
             listTitle="Home"
             openLeftNav={openLeftNav}
+            mobileLeftNav={mobileLeftNav}
+            setOpenLeftNav={setOpenLeftNav}
           />
           <Divider variant="middle" />
           <LeftNavListMenu
             navList={NAV_DAMIL_ACCESS_CONTROL.list}
             listTitle={NAV_DAMIL_ACCESS_CONTROL.title}
             openLeftNav={openLeftNav}
+            mobileLeftNav={mobileLeftNav}
+            setOpenLeftNav={setOpenLeftNav}
           />
           <Divider variant="middle" />
           <LeftNavListMenu
             navList={NAV_DAMIL_STAFF.list}
             listTitle={NAV_DAMIL_STAFF.title}
             openLeftNav={openLeftNav}
+            mobileLeftNav={mobileLeftNav}
+            setOpenLeftNav={setOpenLeftNav}
           />
           <Divider variant="middle" />
           <LeftNavListMenu
             navList={NAV_DAMIL_ANALYTICS.list}
             listTitle={NAV_DAMIL_ANALYTICS.title}
             openLeftNav={openLeftNav}
+            mobileLeftNav={mobileLeftNav}
+            setOpenLeftNav={setOpenLeftNav}
           />
         </Box>
 
