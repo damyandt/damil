@@ -7,7 +7,6 @@ import Memberships from "../../pages/Analystics/Memberships";
 import OverviewPage from "../../pages/Analystics/Overview";
 import ClientsPage from "../../pages/Access Control/Clients";
 import DailyVisitors from "../../pages/Access Control/DailyVisitors";
-import PageNotFound from "../../pages/PageNotFound";
 import ErrorPage from "./ErrorPage";
 import EmployeeCalendar from "../../pages/Staff/Calender";
 import StaffPage from "../../pages/Staff/StaffMembersPage";
@@ -15,6 +14,8 @@ import StaffRolesPage from "../../pages/Staff/StaffRolesPage";
 import StaffShifts from "../../pages/Staff/Shifts/StaffShifts";
 import HomePage from "../../pages/Home/Home";
 import ProfilePage from "../../pages/usersPages/Profile";
+import PlansPage from "../../pages/usersPages/PlansPage";
+import PageNotFound from "../../components/pageComponents/PageNotFound";
 
 export default createBrowserRouter([
   {
@@ -29,6 +30,10 @@ export default createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
+      },
+      {
+        path: "Plans",
+        element: <PlansPage />,
       },
       // Profile
       {

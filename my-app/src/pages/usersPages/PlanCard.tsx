@@ -12,6 +12,7 @@ import {
   useTheme,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useNavigate } from "react-router-dom";
 
 const planDescriptions: any = {
   starter: {
@@ -32,7 +33,9 @@ const planDescriptions: any = {
 };
 
 const PlanCard = ({ plan = "starter" }) => {
+  const navigate = useNavigate();
   const planInfo = planDescriptions[plan] || planDescriptions.starter;
+
   const theme = useTheme();
   return (
     <Card
@@ -82,7 +85,7 @@ const PlanCard = ({ plan = "starter" }) => {
         </List>
 
         <Box display="flex" justifyContent="space-between" mt={3}>
-          <Button variant="outlined" size="small">
+          <Button variant="outlined" size="small" onClick={() => navigate("/Plans")}>
             View Plans
           </Button>
           {plan !== "elite" && (

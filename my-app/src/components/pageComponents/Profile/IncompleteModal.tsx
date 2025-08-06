@@ -1,12 +1,12 @@
 import { Box, Typography } from "@mui/material";
-import { useAuthedContext } from "../../context/AuthContext";
-import CustomModal from "../MaterialUI/Modal";
-import Button from "../MaterialUI/Button";
-import TextField from "../MaterialUI/FormFields/TextField";
+import { useAuthedContext } from "../../../context/AuthContext";
+import CustomModal from "../../MaterialUI/Modal";
+import Button from "../../MaterialUI/Button";
+import TextField from "../../MaterialUI/FormFields/TextField";
 import { useState } from "react";
-import { completeProfile } from "../../pages/usersPages/api/postQuery";
-import callApi from "../../API/callApi";
-import { useLanguageContext } from "../../context/LanguageContext";
+import { completeProfile } from "../../../pages/usersPages/api/postQuery";
+import callApi from "../../../API/callApi";
+import { useLanguageContext } from "../../../context/LanguageContext";
 
 const IncompleteProfileModal = () => {
   const { showIncompleteModal, snoozeModal, authedUser, setAuthedUser } =

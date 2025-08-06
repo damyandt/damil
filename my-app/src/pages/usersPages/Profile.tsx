@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import DeleteIcon from "@mui/icons-material/Delete";
 import CellRenderer from "../../components/MaterialUI/Table/CellRenderer";
 import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
 import { useLanguageContext } from "../../context/LanguageContext";

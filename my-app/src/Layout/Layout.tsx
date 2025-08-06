@@ -176,9 +176,9 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
           <Box
             sx={{
               overflow: "auto",
-              scrollbarWidth: "none", // for Firefox
+              scrollbarWidth: "none",
               "&::-webkit-scrollbar": {
-                display: "none", // for Chrome, Safari, and Edge
+                display: "none",
               },
               flexGrow: 1,
               minHeight: 0,

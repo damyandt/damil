@@ -20,7 +20,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { useAuthedContext } from "../../context/AuthContext";
 import ChartDisplay from "./ChartsDisplayed";
 import CheckInModal from "./CheckInModal";
-import IncompleteProfileModal from "../../components/Profile/IncompleteModal";
+import IncompleteProfileModal from "../../components/pageComponents/Profile/IncompleteModal";
 import SearchModal from "./SearchModal";
 import tinycolor from "tinycolor2";
 import { useLanguageContext } from "../../context/LanguageContext";

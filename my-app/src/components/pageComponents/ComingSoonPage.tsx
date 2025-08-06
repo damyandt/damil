@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import cssLayoutStyles from "../Global/Styles/layout";
+import cssLayoutStyles from "../../Global/Styles/layout";
 import { Theme } from "@mui/material";
 import { css, keyframes } from "@emotion/react";
 import {
@@ -10,8 +10,8 @@ import {
   AUTH_LAYOUT_PADDING,
   LEFT_NAV_WIDTH,
   TOP_NAV_SPACING_WITH_SITE_CONTENT,
-} from "../Layout/layoutVariables";
-import { useLanguageContext } from "../context/LanguageContext";
+} from "../../Layout/layoutVariables";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 const float = keyframes`
   0%, 100% { transform: translateY(0); }
