@@ -26,7 +26,7 @@ const PricingPage = () => {
       price: "Free",
       priceYear: "Free",
       description: "Free plan for all users.",
-      color: shiftHue(darken(theme.palette.primary.main, 0.2), -20),
+      color: shiftHue(darken(theme.palette.primary.main, 0.2), -50),
 
       features: [
         "Store up to 20 songs",
@@ -59,7 +59,7 @@ const PricingPage = () => {
       price: "$25",
       priceYear: "$275",
       description: "Small teams with up to 10 users.",
-      color: shiftHue(darken(theme.palette.primary.main, 0.2), 20),
+      color: shiftHue(darken(theme.palette.primary.main, 0.2), 50),
       features: [
         "Everything in Professional",
         "Shared team workspace",

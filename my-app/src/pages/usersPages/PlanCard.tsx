@@ -1,5 +1,13 @@
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { Box, lighten, Typography, useTheme, Button } from "@mui/material";
+import {
+  Box,
+  lighten,
+  Typography,
+  useTheme,
+  Button,
+  darken,
+} from "@mui/material";
+import { shiftHue } from "../Home/Home";
 
 interface PlanCardProps {
   plan: any;
@@ -8,13 +16,22 @@ interface PlanCardProps {
 
 const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
   const theme = useTheme();
+  const colorStart =
+    theme.palette.mode === "dark"
+      ? shiftHue(lighten(plan.color, 0.1), -20)
+      : shiftHue(lighten(plan.color, 0.1), -20);
+  const colorEnd =
+    theme.palette.mode === "dark"
+      ? shiftHue(darken(plan.color, 0.2), 20)
+      : shiftHue(lighten(plan.color, 0.3), 20);
   return (
     <Box
       sx={{
         border: plan.active
           ? `2px solid ${theme.palette.mode === "dark" ? theme.palette.common.black : theme.palette.common.white}`
           : "none",
-        backgroundColor: plan.color,
+        // backgroundColor: plan.color,
+        background: `linear-gradient(90deg, ${colorStart}, ${colorEnd})`,
         borderRadius: "20px",
         height: "100%",
         width: "100%",

@@ -14,7 +14,6 @@ import {
   FormLabel,
   PaletteMode,
   useTheme,
-  darken,
   keyframes,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -250,7 +249,7 @@ const ProfilePage = () => {
             price: "$15",
             priceYear: "$165",
             description: "Ideal for individual creators.",
-            color: darken(theme.palette.primary.main, 0.4),
+            color: theme.palette.primary.main,
             features: [
               "Everything in Basic",
               "250GB of song storage",
@@ -278,7 +277,6 @@ const ProfilePage = () => {
             fontWeight: 700,
             display: "flex",
             alignItems: "center",
-            // background: `linear-gradient(40deg, ${primaryColor}, ${primaryColor})`,
             background: `linear-gradient(90deg, #a250fa, #0EA5E9, #10B981, #F59E0B, #F43F5E)`,
             backgroundSize: "300% 300%",
             animation: `${animatedGradient} 3s ease infinite`,
