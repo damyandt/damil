@@ -2,7 +2,6 @@
 
 import { ElementType, useEffect, useRef, useState, createElement } from "react";
 import { gsap } from "gsap";
-import "./TextType.css";
 import { useTheme } from "@mui/material";
 
 interface TextTypeProps {
