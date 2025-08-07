@@ -21,7 +21,7 @@ const ColumnVisibilityModal = ({
 }: {
   open: boolean;
   onClose: () => void;
-  columnVisibility: Record<string, boolean>;
+  columnVisibility: Record<string, boolean> | null;
   onSave: (updated: Record<string, boolean>) => void;
 }) => {
   const { t } = useLanguageContext();
@@ -39,6 +39,11 @@ const ColumnVisibilityModal = ({
   const handleSave = () => {
     onSave(localVisibility);
     onClose();
+  };
+  const toHumanReadable = (str: string) => {
+    return str
+      .replace(/([A-Z])/g, " $1")
+      .replace(/^./, (s: any) => s.toUpperCase());
   };
 
   return (
@@ -60,12 +65,12 @@ const ColumnVisibilityModal = ({
                   color="primary"
                 />
               }
-              label={key}
+              label={toHumanReadable(key)}
             />
           </Grid>
         ))}
       </Grid>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} justifyContent={"flex-end"}>
         <Grid>
           <Button onClick={onClose} color="error">
             Cancel
@@ -76,15 +81,6 @@ const ColumnVisibilityModal = ({
         </Grid>
       </Grid>
     </CustomModal>
-    // <Dialog  maxWidth="sm" fullWidth>
-    //   <DialogTitle></DialogTitle>
-    //   <DialogContent>
-
-    //   </DialogContent>
-    //   <DialogActions>
-    //
-    //   </DialogActions>
-    // </Dialog>
   );
 };
 

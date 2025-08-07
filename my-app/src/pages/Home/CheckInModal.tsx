@@ -6,7 +6,6 @@ import {
   StepLabel,
   Grid,
   Typography,
-  Paper,
 } from "@mui/material";
 import CustomModal from "../../components/MaterialUI/Modal"; // Use your own modal component
 import TextField from "../../components/MaterialUI/FormFields/TextField";
@@ -48,7 +47,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
       userDetails.success === true && setActiveStep((prev) => prev + 1);
     } catch (error) {
       console.log(error);
-      setErrors({ search: "Can't find user with this information!" });
+      setErrors({ search: t("Can't find user with this information!") });
     }
   };
 
@@ -75,7 +74,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
 
   return (
     <CustomModal
-      title="Member Check-In"
+      title={t("Member Check-In")}
       titleIcon="login"
       open={open}
       onClose={() => handleReset(true)}
@@ -95,12 +94,12 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
       {activeStep === 0 && (
         <Grid container spacing={2}>
           <Grid size={12}>
-            <Typography mb={2}>Enter Member Name or ID</Typography>
+            <Typography mb={2}>{t("Enter Member Name or ID")}</Typography>
           </Grid>
           <Grid size={12}>
             <TextField
               fullWidth
-              label="Search"
+              label={t("Search")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
             />
@@ -125,21 +124,21 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
       {activeStep === 1 && userDetails && (
         <Box>
           <Typography variant="h6" mb={2}>
-            Confirm Member Details
+            {t("Confirm Member Details")}
           </Typography>
           <Grid container spacing={2}>
             <Grid size={6}>
-              <Typography variant="subtitle2">Name</Typography>
+              <Typography variant="subtitle2">{t("Name")}</Typography>
               <Typography>
                 {`${userDetails.firstName} ${userDetails.lastName}`}
               </Typography>
             </Grid>
             <Grid size={6}>
-              <Typography variant="subtitle2">Subscription PLan</Typography>
+              <Typography variant="subtitle2">{t("Subscription PLan")}</Typography>
               <Typography>{userDetails.subscriptionPlan}</Typography>
             </Grid>
             <Grid size={12}>
-              <Typography variant="subtitle2">Remaining Visits</Typography>
+              <Typography variant="subtitle2">{t("Remaining Visits")}</Typography>
               <Typography>{userDetails.remainingVisits}</Typography>
             </Grid>
             <Grid size={12}>
@@ -159,7 +158,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
           >
             <Grid>
               <Button color={"error"} onClick={handleBack}>
-                Back
+                {t("Back")}
               </Button>
             </Grid>
             <Grid>
@@ -189,7 +188,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
               width="100%"
               textAlign={"center"}
             >
-              Check-In Successful!
+              {t("Check-In Successful!")}
             </Typography>
             <Typography
               variant="h6"
@@ -197,8 +196,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
               width="100%"
               textAlign={"center"}
             >
-              {userDetails?.firstName} {userDetails?.lastName} has been checked
-              in.
+              {userDetails?.firstName} {userDetails?.lastName} {t("has been checked in.")}
             </Typography>
           </Box>
 
@@ -211,11 +209,11 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
           >
             <Grid>
               <Button onClick={() => handleReset(true)} color="error">
-                Close
+                {t("Close")}
               </Button>
             </Grid>
             <Grid>
-              <Button onClick={() => handleReset(false)}>Next Check-In</Button>
+              <Button onClick={() => handleReset(false)}>{t("Next Check-In")}</Button>
             </Grid>
           </Grid>
         </>

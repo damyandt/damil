@@ -12,7 +12,7 @@ import {
   Grid,
   InputAdornment,
   MenuItem,
-  Button,
+  useTheme,
 } from "@mui/material";
 import CustomTooltip from "../CustomTooltip";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -26,6 +26,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import { ColumnType } from "../../../Global/Types/commonTypes";
 import ColumnVisibilityModal from "./ColumnVisibility";
+import Button from "../Button";
 
 export type Column = {
   header: string;
@@ -51,11 +52,13 @@ const TableComponent = ({
   setRefreshTable,
   title,
 }: TableProps) => {
+  const theme = useTheme();
   const { t } = useLanguageContext();
   const [modalOpen, setModalOpen] = useState(false);
-  const [columnVisibilityConfig, setColumnVisibilityConfig] = useState(
-    configurations.columnsLayoutConfig.columnVisibility
-  );
+  const [columnVisibilityConfig, setColumnVisibilityConfig] = useState<Record<
+    string,
+    boolean
+  > | null>(configurations?.columnsLayoutConfig?.columnVisibility ?? null);
   const [openDetails, setOpenDetails] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState<
@@ -84,19 +87,19 @@ const TableComponent = ({
 
   const isRowDeleting = (id: string) => !!deleteQueue[id];
 
-  const visibleColumns = columns.filter(
-    (col: any) => columnVisibilityConfig[col.field]
-  );
+  const visibleColumns = columnVisibilityConfig
+    ? columns.filter((col: any) => columnVisibilityConfig[col.field])
+    : columns;
   return (
     <>
       <Grid container spacing={2} alignItems={"center"} py={2}>
         <Grid size={3}>
           <TextField
             size="small"
-            label="Search..."
+            label={t("Search...")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            sx={{ width: "250px", backgroundColor: "#fff" }}
+            sx={{ width: "250px" }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -107,7 +110,7 @@ const TableComponent = ({
           />
         </Grid>
         <Grid size={6}>
-          <Typography variant="h5" sx={{ textAlign: "center", flexGrow: 1 }}>
+          <Typography variant="h4" sx={{ textAlign: "center", flexGrow: 1 }}>
             {title}
           </Typography>
         </Grid>
@@ -116,7 +119,7 @@ const TableComponent = ({
           <TextField
             select
             size="small"
-            label="Rows"
+            label={t("Rows")}
             value={rowsPerPage}
             onChange={(e) => {
               setPage(1);
@@ -171,20 +174,11 @@ const TableComponent = ({
             ))}
           </TextField> */}
           <Button
+            borderWidth={1}
+            borderColor="#ccc"
+            color="inherit"
             onClick={() => setModalOpen(true)}
             startIcon={<SettingsIcon fontSize="small" />}
-            sx={{
-              textTransform: "none",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "0.5em 1em",
-              minWidth: "fit-content",
-              color: "rgba(103, 58, 183, 0.8)",
-              backgroundColor: "white",
-              "&:hover": {
-                borderColor: "#000",
-              },
-            }}
           >
             <Typography
               sx={{
@@ -194,14 +188,14 @@ const TableComponent = ({
                 },
               }}
             >
-              Columns
+              {t("Columns")}
             </Typography>
           </Button>
         </Grid>
       </Grid>
       <TableContainer
         sx={{
-          backgroundColor: "#f0f2f5",
+          backgroundColor: theme.palette.customColors?.tableBackground,
           paddingX: "5px",
           marginBottom: "10vh",
         }}
@@ -220,12 +214,16 @@ const TableComponent = ({
             },
             "& thead > tr:first-of-type > th": {
               borderBottom: "none",
-              backgroundColor: "#f0f2f5",
+              backgroundColor: theme.palette.customColors?.tableBackground,
             },
           }}
         >
           <TableHead>
-            <TableRow sx={{ backgroundColor: "#ffffff" }}>
+            <TableRow
+              sx={{
+                backgroundColor: theme.palette.customColors?.tableBackground,
+              }}
+            >
               {visibleColumns?.map((col) => (
                 <TableCell
                   key={col.field as string}
@@ -241,7 +239,7 @@ const TableComponent = ({
               ))}
               {configurations.actions && (
                 <TableCell sx={{ fontWeight: "400" }} align="right">
-                  Actions
+                  {t("Actions")}
                 </TableCell>
               )}
             </TableRow>
@@ -270,14 +268,21 @@ const TableComponent = ({
                     key={row.id}
                     sx={{
                       position: "relative",
-                      backgroundColor: isDeleting ? "#ffe6e6" : "#fff",
+                      backgroundColor: isDeleting
+                        ? theme.palette.mode === "dark"
+                          ? "#5a2a2a"
+                          : "#ffe6e6"
+                        : theme.palette.customColors?.tableRow,
                       transition: "background-color 0.3s ease",
                       boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
                       "&:hover": {
-                        backgroundColor: "#f5f5f5",
+                        backgroundColor:
+                          theme.palette.mode === "dark"
+                            ? "rgba(96, 96, 96, 0.78)"
+                            : "#fff",
                         cursor: "pointer",
                         transform: "scale(0.99)",
-                        zIndex: 1,
+                        zIndex: 10,
                         position: "relative",
                       },
                     }}

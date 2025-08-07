@@ -1,12 +1,21 @@
-// ThemeContext.tsx
-import React, { createContext, useContext, ReactNode, useState, useEffect } from "react";
-import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from "react";
+import {
+  ThemeProvider as MUIThemeProvider,
+  PaletteMode,
+} from "@mui/material/styles";
 import theme from "../theme";
-import { PaletteMode } from "@mui/material";
 
 type ThemeContextType = {
-  themeColor: PaletteMode;
-  setThemeColor: React.Dispatch<React.SetStateAction<PaletteMode>>;
+  themeMode: "light" | "dark";
+  setThemeMode: React.Dispatch<React.SetStateAction<"light" | "dark">>;
+  primaryColor: string;
+  setPrimaryColor: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const ThemeContext = createContext<ThemeContextType>({} as ThemeContextType);
@@ -16,29 +25,45 @@ type ThemeProviderProps = {
 };
 
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [themeColor, setThemeColor] = useState<PaletteMode>(() => {
-    const themeColor = localStorage.getItem("themeColor");
-    return themeColor === "dark" ? "dark" : "light";
-  });
+  const [themeMode, setThemeMode] = useState<PaletteMode>(
+    (localStorage.getItem("themeMode") as PaletteMode) || "light"
+  );
+
+  const [primaryColor, setPrimaryColor] = useState<string>(
+    localStorage.getItem("primaryColor") || "#a250fa"
+  );
 
   useEffect(() => {
-    localStorage.setItem("themeColor", themeColor);
-  }, [themeColor]);
+    localStorage.setItem("themeMode", themeMode);
+  }, [themeMode]);
+
+  useEffect(() => {
+    localStorage.setItem("primaryColor", primaryColor);
+  }, [primaryColor]);
 
   const value: ThemeContextType = {
-    themeColor,
-    setThemeColor,
+    themeMode,
+    setThemeMode,
+    primaryColor,
+    setPrimaryColor,
   };
 
   return (
     <ThemeContext.Provider value={value}>
-      <MUIThemeProvider theme={theme(themeColor)}>{children}</MUIThemeProvider>
+      <MUIThemeProvider theme={theme(themeMode, primaryColor)}>
+        {children}
+      </MUIThemeProvider>
     </ThemeContext.Provider>
   );
 };
 
 export const useCustomThemeProviderContext = () => {
   const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error(
+      "useCustomThemeProviderContext must be used within a ThemeProvider"
+    );
+  }
   return context;
 };
 

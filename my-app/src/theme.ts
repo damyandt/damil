@@ -5,6 +5,7 @@ import {
   Theme,
   ThemeOptions,
 } from "@mui/material/styles";
+import { lighten, darken, alpha } from "@mui/system";
 
 declare module "@mui/material/styles" {
   interface PaletteColor {
@@ -16,6 +17,7 @@ declare module "@mui/material/styles" {
     dark200?: string;
     dark300?: string;
     dark400?: string;
+    opacityMain?: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -27,6 +29,7 @@ declare module "@mui/material/styles" {
     dark200?: string;
     dark300?: string;
     dark400?: string;
+    opacityMain?: string;
   }
 
   interface PaletteOptions {
@@ -36,6 +39,11 @@ declare module "@mui/material/styles" {
       darkBackgroundColor?: string;
       darkGray?: string;
       themeBackground?: string;
+      sectionBackgroundColor: string;
+      shodow?: string;
+      shodowColor?: string;
+      tableRow?: string;
+      tableBackground?: string;
     };
   }
 
@@ -46,6 +54,11 @@ declare module "@mui/material/styles" {
       darkBackgroundColor?: string;
       darkGray?: string;
       themeBackground?: string;
+      sectionBackgroundColor?: string;
+      shodow?: string;
+      shodowColor?: string;
+      tableRow?: string;
+      tableBackground?: string;
     };
   }
 
@@ -62,33 +75,6 @@ declare module "@mui/material/styles" {
   }
 }
 
-const getTypographyAdjustments = (theme: Theme) => ({
-  body1: {
-    ...theme.typography.body1,
-    [theme.breakpoints.down("md")]: {
-      fontSize: "0.9rem",
-    },
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "0.8rem",
-    },
-  },
-  body2: {
-    ...theme.typography.body2,
-    [theme.breakpoints.down("md")]: {
-      fontSize: "0.775rem",
-    },
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "0.675rem",
-    },
-  },
-  caption: {
-    ...theme.typography.caption,
-    [theme.breakpoints.down("md")]: {
-      fontSize: "0.65rem",
-    },
-  },
-});
-
 const staticThemeColors = {
   grey: {
     50: "#F0F2F5",
@@ -104,9 +90,7 @@ const staticThemeColors = {
   },
 };
 
-const theme = (mode: PaletteMode) => {
-  const baseTheme = createTheme();
-
+const theme = (mode: PaletteMode, mainColor: string) => {
   const customTheme: ThemeOptions = {
     components: {
       MuiCssBaseline: {
@@ -131,16 +115,20 @@ const theme = (mode: PaletteMode) => {
         black: mode === "light" ? "#000000" : "#FFFFFF",
       },
       text: {
-        primary: mode === "light" ? "#000000" : "#FFFFFF",
+        primary: mode === "light" ? "#252525ff" : "#d1d1d1ff",
       },
       primary: {
-        main: "#30AFB8",
-        light: mode === "light" ? "#E2F6F8" : "#2A9BA3",
-        light100: "#C1ECEF",
-        light200: "#7ED7DE",
-        light300: "#5CCDD5",
-        light400: "#3BC3CC",
+        main: mainColor,
+        light:
+          mode === "light" ? lighten(mainColor, 0.2) : lighten(mainColor, 0.1),
+        dark:
+          mode === "light" ? darken(mainColor, 0.2) : darken(mainColor, 0.1),
         contrastText: "#FFFFFF",
+        light100: lighten(mainColor, 0.4),
+        light200: lighten(mainColor, 0.3),
+        light300: lighten(mainColor, 0.2),
+        light400: lighten(mainColor, 0.1),
+        opacityMain: mainColor + "20",
       },
       secondary: {
         main: "#1E88E5",
@@ -150,6 +138,24 @@ const theme = (mode: PaletteMode) => {
         light300: "#6DB2EE",
         light400: "#50A2EA",
         contrastText: "#FFFFFF",
+      },
+      customColors: {
+        greyText: mode === "light" ? "#5A5A5A" : "#d3d3d3",
+        darkGrey: "#2d2d2d",
+        darkBackgroundColor:
+          mode === "dark" ? darken(mainColor, 0.9) : lighten(mainColor, 0.95),
+        darkGray: darken(mainColor, 0.5),
+        sectionBackgroundColor:
+          mode === "dark" ? "#222222ff" : lighten(mainColor, 1),
+        shodowColor:
+          mode === "dark" ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.08)",
+        shodow:
+          mode === "dark"
+            ? "0 0 5px rgba(255, 255, 255, 0.1)"
+            : "0 0 5px rgba(0, 0, 0, 0.2)",
+        tableBackground:
+          mode === "dark" ? darken(mainColor, 0.9) : lighten(mainColor, 0.95),
+        tableRow: mode === "dark" ? "#222222ff" : "#fff",
       },
       error: {
         main: mode === "light" ? "#D94646" : "#AD2323",
@@ -163,82 +169,76 @@ const theme = (mode: PaletteMode) => {
         main: mode === "light" ? "#00C853" : "#008A3A",
         contrastText: "#FFFFFF",
       },
-      customColors: {
-        greyText: mode === "light" ? "#5A5A5A" : "#d3d3d3",
-        darkGrey: "#2d2d2d",
-        darkBackgroundColor: "#313131",
-        darkGray: "	#3e3e42",
-        themeBackground: "	#3e3e42",
-      },
       grey: staticThemeColors.grey,
     },
     typography: {
-      button: {
-        fontFamily: "Montserrat",
-        fontWeight: 700,
-        fontSize: "0.875rem",
-        lineHeight: 1.75,
-        letterSpacing: "0.02857em",
-        textTransform: "none",
-      },
-      fontFamily: ["Montserrat", "sans-serif"].join(","),
+      fontFamily: ["Noto Sans", "sans-serif"].join(","),
       htmlFontSize: 16,
-      fontSize: 14,
+      fontSize: 14, // base font size for rem calculations
       fontWeightRegular: 400,
+      fontWeightMedium: 500,
       fontWeightBold: 700,
+
       h1: {
-        fontSize: "1.5rem",
+        fontSize: "3rem", // ~48px
         fontWeight: 700,
+        lineHeight: 1.2,
       },
       h2: {
+        fontSize: "2.25rem", // ~36px
         fontWeight: 700,
-        fontSize: "1.25rem",
+        lineHeight: 1.3,
       },
       h3: {
+        fontSize: "1.75rem", // ~28px
         fontWeight: 600,
-        fontSize: "1rem",
+        lineHeight: 1.4,
       },
       h4: {
+        fontSize: "1.5rem", // ~24px
         fontWeight: 600,
-        fontSize: "1rem",
+        lineHeight: 1.4,
       },
       h5: {
+        fontSize: "1.25rem", // ~20px
         fontWeight: 600,
-        fontSize: "0.875rem",
+        lineHeight: 1.5,
       },
       h6: {
+        fontSize: "1rem", // ~16px
         fontWeight: 600,
-        fontSize: "0.75rem",
+        lineHeight: 1.5,
       },
       body1: {
-        ...getTypographyAdjustments(baseTheme).body1,
-        fontFamily: "Montserrat",
+        fontSize: "1rem", // 16px
         fontWeight: 400,
-        fontSize: "1rem",
         lineHeight: 1.5,
         letterSpacing: "0.00938em",
       },
       body2: {
-        ...getTypographyAdjustments(baseTheme).body2,
-        fontFamily: "Montserrat",
+        fontSize: "0.875rem", // 14px
         fontWeight: 400,
-        fontSize: "0.875rem",
         lineHeight: 1.43,
         letterSpacing: "0.01071em",
       },
       caption: {
-        ...getTypographyAdjustments(baseTheme).caption,
-        fontFamily: "Montserrat",
+        fontSize: "0.75rem", // 12px
         fontWeight: 400,
-        fontSize: "0.75rem",
         lineHeight: 1.66,
         letterSpacing: "0.03333em",
+      },
+      button: {
+        fontSize: "0.875rem", // 14px
+        fontWeight: 500,
+        lineHeight: 1.75,
+        letterSpacing: "0.02857em",
+        textTransform: "none",
       },
     },
     customizedTextStyles: {
       labelStyles: {
-        fontFamily: "Montserrat",
-        fontWeight: 400,
+        fontFamily: "Noto Sans",
+        fontWeight: 500,
         fontSize: "1rem",
         lineHeight: 1.66,
         color:

@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import {
+  alpha,
+  Box,
+  Button,
+  darken,
+  Grid,
+  lighten,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
@@ -11,45 +20,59 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { useAuthedContext } from "../../context/AuthContext";
 import ChartDisplay from "./ChartsDisplayed";
 import CheckInModal from "./CheckInModal";
-import IncompleteProfileModal from "../../components/Profile/IncompleteModal";
+import IncompleteProfileModal from "../../components/pageComponents/Profile/IncompleteModal";
 import SearchModal from "./SearchModal";
+import tinycolor from "tinycolor2";
+import { useLanguageContext } from "../../context/LanguageContext";
 
-const analytics = [
-  {
-    title: "Total Members",
-    value: 120,
-    redirect: "/DAMIL-Access-Control/All-Clients",
-    icon: <GroupIcon color="primary" sx={{ fontSize: 40, mb: 1 }} />,
-  },
-  {
-    title: "Active Subscriptions",
-    value: 90,
-    redirect: "/DAMIL-Access-Control/All-Clients/subscriptionStatus=ACTIVE",
-    icon: <FitnessCenterIcon color="success" sx={{ fontSize: 40, mb: 1 }} />,
-  },
-  {
-    title: "New Signups - July",
-    value: 15,
-    redirect: "/DAMIL-Access-Control/All-Clients",
-    icon: <PersonAddAltIcon color="info" sx={{ fontSize: 40, mb: 1 }} />,
-  },
-  {
-    title: "Expired Subscriptions",
-    value: 12,
-    redirect: "/DAMIL-Access-Control/All-Clients/subscriptionStatus=INACTIVE",
-    icon: <CancelIcon color="error" sx={{ fontSize: 40, mb: 1 }} />,
-  },
-];
+export const shiftHue = (color: string, amount: number) =>
+  tinycolor(color).spin(amount).toHexString();
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { authedUser } = useAuthedContext();
   const [openCheckIn, setOpenCheckIn] = useState(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
-
+  const { t } = useLanguageContext();
   const handleSearchMember = () => {
     setOpenSearch(true);
   };
+  const analytics = [
+    {
+      title: t("Total Members"),
+      value: 120,
+      redirect: "/DAMIL-Access-Control/All-Clients",
+      icon: <GroupIcon color="primary" sx={{ fontSize: 40, mb: 1 }} />,
+    },
+    {
+      title: t("Active Subscriptions"),
+      value: 90,
+      redirect: "/DAMIL-Access-Control/All-Clients/subscriptionStatus=ACTIVE",
+      icon: <FitnessCenterIcon color="success" sx={{ fontSize: 40, mb: 1 }} />,
+    },
+    {
+      title: t("New Signups - July"),
+      value: 15,
+      redirect: "/DAMIL-Access-Control/All-Clients",
+      icon: <PersonAddAltIcon color="info" sx={{ fontSize: 40, mb: 1 }} />,
+    },
+    {
+      title: t("Expired Subscriptions"),
+      value: 12,
+      redirect: "/DAMIL-Access-Control/All-Clients/subscriptionStatus=INACTIVE",
+      icon: <CancelIcon color="error" sx={{ fontSize: 40, mb: 1 }} />,
+    },
+  ];
+  const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
+  const primary = theme.palette.primary.main;
+
+  const colorStart = isDark
+    ? shiftHue(lighten(primary, 0.1), -20)
+    : shiftHue(lighten(primary, 0.1), -20);
+  const colorEnd = isDark
+    ? shiftHue(darken(primary, 0.2), 20)
+    : shiftHue(lighten(primary, 0.3), 20);
 
   return (
     <>
@@ -60,24 +83,31 @@ const HomePage: React.FC = () => {
             py: 3,
             mb: 3,
             borderRadius: "16px",
-            background: "linear-gradient(90deg, #e3f2fd, #fce4ec)",
-            boxShadow: "0 3px 12px rgba(0,0,0,0.06)",
+            background: `linear-gradient(90deg, ${colorStart}, ${colorEnd})`,
+            boxShadow: isDark
+              ? `0 3px 12px ${alpha(primary, 0.3)}`
+              : `0 3px 12px ${alpha("#000", 0.06)}`,
           }}
         >
-          <Typography variant="h4" fontWeight={700} color="primary">
-            📋 Dashboard – {authedUser?.username}
+          <Typography
+            variant="h2"
+            fontWeight={700}
+            // color={isDark ? "#fff" : theme.palette.primary.main}
+            color="#fff"
+          >
+            📋 {t("Dashboard")} – {authedUser?.username}
           </Typography>
 
-          <Typography variant="subtitle1" color="text.secondary" mt={1}>
+          <Typography variant="subtitle1" color="#fff" mt={1}>
             {authedUser?.email}
             {authedUser?.city && ` · ${authedUser.city}`}
             {authedUser?.phone && ` · ${authedUser.phone}`}
           </Typography>
 
-          <Typography variant="body2" color="text.secondary" mt={1}>
+          <Typography variant="body2" color="#fff" mt={1}>
             {authedUser?.subscriptionActive
-              ? `✅ Active Subscription · ${authedUser.membersCount} Member(s)`
-              : `🚫 No Active Subscription`}
+              ? `✅ ${t("Active Subscription")} · ${authedUser.membersCount} ${t("Member(s)")}`
+              : `🚫 ${t("No Active Subscription")}`}
           </Typography>
         </Box>
         <Grid
@@ -92,7 +122,7 @@ const HomePage: React.FC = () => {
         >
           <Grid size={12}>
             <Typography variant="h6" gutterBottom textAlign={"center"}>
-              Quick Actions
+              {t("Quick Actions")}
             </Typography>
           </Grid>
           <Grid size={4}>
@@ -103,7 +133,7 @@ const HomePage: React.FC = () => {
               startIcon={<LoginIcon />}
               onClick={() => setOpenCheckIn(true)}
             >
-              Check In
+              {t("Check In")}
             </Button>
           </Grid>
           <Grid size={4}>
@@ -114,7 +144,7 @@ const HomePage: React.FC = () => {
               startIcon={<PersonAddIcon />}
               onClick={() => navigate("/DAMIL-Access-Control/All-Clients")}
             >
-              Add New Member
+              {t("Add New Member")}
             </Button>
           </Grid>
 
@@ -125,7 +155,7 @@ const HomePage: React.FC = () => {
               startIcon={<SearchIcon />}
               onClick={handleSearchMember}
             >
-              Search Member
+              {t("Search Member")}
             </Button>
           </Grid>
         </Grid>
@@ -133,14 +163,20 @@ const HomePage: React.FC = () => {
           <Grid size={12}>
             <Grid container spacing={3}>
               {analytics.map((stat, index) => (
-                <Grid size={3} key={index} sx={{ cursor: "pointer" }}>
+                <Grid
+                  size={3}
+                  key={index}
+                  sx={{ cursor: "pointer", aspectRatio: 1 / 0.8 }}
+                >
                   <Box
                     sx={{
                       border: `1px solid #bcbcbcb0`,
-                      p: 3,
+                      px: 2,
                       borderRadius: "20px",
                       textAlign: "center",
                       transition: "transform 0.3s ease",
+                      alignContent: "center",
+                      height: "100%",
                       "&:hover": {
                         transform: "scale(1.03)",
                         boxShadow: "0 8px 24px rgba(0, 0, 0, 0.1)",

@@ -11,6 +11,8 @@ import {
   GraphicComponent,
 } from "echarts/components";
 import { CanvasRenderer } from "echarts/renderers";
+import BaseChart from "../../components/pageComponents/BaseChart";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 echarts.use([
   BarChart,
@@ -29,6 +31,7 @@ interface VisitsProps {
 
 const GymVisitsChart: React.FC<VisitsProps> = ({ height }) => {
   const chartRef = useRef<any>(null);
+    const { t } = useLanguageContext()
   const drilldownData = [
     {
       dataGroupId: "Jan",
@@ -219,11 +222,11 @@ const GymVisitsChart: React.FC<VisitsProps> = ({ height }) => {
   const option: echarts.EChartsCoreOption = {
     title: {
       textStyle: {
-        fontFamily: "Montserrat",
+        fontFamily: "Noto Sans",
         fontSize: 18,
         fontWeight: "bold",
       },
-      text: "Gym Visits",
+      text: t("Gym Visits"),
       left: "center",
       top: 25,
     },
@@ -267,7 +270,6 @@ const GymVisitsChart: React.FC<VisitsProps> = ({ height }) => {
         enabled: true,
         divideShape: "clone",
       },
-      //   color: MAIN_COLOR,
     },
     grid: {
       top: 80,
@@ -279,12 +281,12 @@ const GymVisitsChart: React.FC<VisitsProps> = ({ height }) => {
   };
 
   return (
-    <ReactEChartsCore
+    <BaseChart
       ref={chartRef}
       echarts={echarts}
       onEvents={onEvents}
       option={option}
-      style={{ width: "100%", height: `${height}vh` }}
+      height={`${height}vh`}
     />
   );
 };

@@ -7,13 +7,15 @@ import Memberships from "../../pages/Analystics/Memberships";
 import OverviewPage from "../../pages/Analystics/Overview";
 import ClientsPage from "../../pages/Access Control/Clients";
 import DailyVisitors from "../../pages/Access Control/DailyVisitors";
-import PageNotFound from "../../pages/PageNotFound";
 import ErrorPage from "./ErrorPage";
 import EmployeeCalendar from "../../pages/Staff/Calender";
 import StaffPage from "../../pages/Staff/StaffMembersPage";
 import StaffRolesPage from "../../pages/Staff/StaffRolesPage";
 import StaffShifts from "../../pages/Staff/Shifts/StaffShifts";
 import HomePage from "../../pages/Home/Home";
+import ProfilePage from "../../pages/usersPages/Profile";
+import PlansPage from "../../pages/usersPages/PlansPage";
+import PageNotFound from "../../components/pageComponents/PageNotFound";
 
 export default createBrowserRouter([
   {
@@ -29,6 +31,15 @@ export default createBrowserRouter([
         path: "/",
         element: <HomePage />,
       },
+      {
+        path: "Plans",
+        element: <PlansPage />,
+      },
+      // Profile
+      {
+        path: "/Profile",
+        element: <ProfilePage />,
+      },
 
       // Analystics
       {
@@ -37,15 +48,15 @@ export default createBrowserRouter([
       },
       {
         path: "/DAMIL-Analytics/Visits",
-        element: <GymVisitsChart height={87} />,
+        element: <GymVisitsChart height={92} />,
       },
       {
         path: "/DAMIL-Analytics/Goal",
-        element: <GoalMembersGaugeChart value={68} height={87} />,
+        element: <GoalMembersGaugeChart value={68} height={92} />,
       },
       {
         path: "/DAMIL-Analytics/Ages",
-        element: <AgeDistributionChart height={87} />,
+        element: <AgeDistributionChart height={92} />,
       },
       {
         path: "/DAMIL-Analytics/Memberships",

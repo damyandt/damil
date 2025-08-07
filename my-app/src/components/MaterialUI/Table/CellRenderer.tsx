@@ -1,4 +1,4 @@
-import { Box, TableCell } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import dayjs from "dayjs";
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
@@ -10,9 +10,17 @@ type CellRendererProps = {
   value: any;
   dataType: ColumnType;
   table: boolean;
+  fontWeight?: number;
 };
 
-const CellRenderer = ({ value, dataType, table }: CellRendererProps) => {
+const CellRenderer = ({
+  value,
+  dataType,
+  table,
+  fontWeight = 350,
+}: CellRendererProps) => {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
   let displayValue: React.ReactNode = String(value);
   let style: any = {
     margin: 0,
@@ -59,11 +67,11 @@ const CellRenderer = ({ value, dataType, table }: CellRendererProps) => {
             gap: 1,
             px: 1.5,
             py: 0.5,
-            border: "1px solid #1976d2",
-            backgroundColor: "#e3f2fd",
+            border: `1px solid ${isDark ? "#90caf9" : "#1976d2"}`,
+            backgroundColor: isDark ? "#1e3a5f" : "#e3f2fd",
             borderRadius: "10px",
             fontSize: "0.75rem",
-            color: "#1976d2",
+            color: isDark ? "#90caf9" : "#1976d2",
             fontWeight: 700,
           }}
         >
@@ -94,9 +102,29 @@ const CellRenderer = ({ value, dataType, table }: CellRendererProps) => {
           ) : (
             <MaleIcon fontSize="small" />
           ),
-          color: isFemale ? "#d81b60" : "#1976d2", // pink vs blue
-          backgroundColor: isFemale ? "#fce4ec" : "#e3f2fd",
-          borderColor: isFemale ? "#d81b60" : "#1976d2",
+          color: isFemale
+            ? isDark
+              ? "#f48fb1" // lighter pink for dark mode
+              : "#d81b60" // original pink
+            : isDark
+              ? "#90caf9" // lighter blue for dark mode
+              : "#1976d2", // original blue
+
+          backgroundColor: isFemale
+            ? isDark
+              ? "#3f2d3d" // muted dark pink background
+              : "#fce4ec"
+            : isDark
+              ? "#1e3a5f" // muted dark blue background
+              : "#e3f2fd",
+
+          borderColor: isFemale
+            ? isDark
+              ? "#f48fb1"
+              : "#d81b60"
+            : isDark
+              ? "#90caf9"
+              : "#1976d2",
         };
         displayValue = (
           <Box
@@ -134,27 +162,27 @@ const CellRenderer = ({ value, dataType, table }: CellRendererProps) => {
         }
       > = {
         active: {
-          color: "green",
-          backgroundColor: "#e6ffe6",
-          borderColor: "green",
+          color: isDark ? "#66bb6a" : "green",
+          backgroundColor: isDark ? "#1b5e20" : "#e6ffe6",
+          borderColor: isDark ? "#66bb6a" : "green",
           label: "Active",
         },
         inactive: {
-          color: "red",
-          backgroundColor: "#ffe6e6",
-          borderColor: "red",
+          color: isDark ? "#ef5350" : "red",
+          backgroundColor: isDark ? "#2a1b1b" : "#ffe6e6",
+          borderColor: isDark ? "#ef5350" : "red",
           label: "Inactive",
         },
         pending: {
-          color: "#ff9800",
-          backgroundColor: "#fff3e0",
-          borderColor: "#ff9800",
+          color: isDark ? "#ffb74d" : "#ff9800",
+          backgroundColor: isDark ? "#4e342e" : "#fff3e0",
+          borderColor: isDark ? "#ffb74d" : "#ff9800",
           label: "Pending",
         },
         cancelled: {
-          color: "#9e9e9e",
-          backgroundColor: "#f5f5f5",
-          borderColor: "#9e9e9e",
+          color: isDark ? "#bdbdbd" : "#9e9e9e",
+          backgroundColor: isDark ? "#424242" : "#f5f5f5",
+          borderColor: isDark ? "#bdbdbd" : "#9e9e9e",
           label: "Canceled",
         },
       };
@@ -166,7 +194,9 @@ const CellRenderer = ({ value, dataType, table }: CellRendererProps) => {
             sx={{
               display: "flex",
               gap: "0.5em",
-              width: "fit-content",
+              width: 100,
+              // width: "fit-content",
+              justifyContent: "center",
               alignItems: "center",
               padding: "0.5em 1em",
               border: "1px solid",
@@ -176,6 +206,7 @@ const CellRenderer = ({ value, dataType, table }: CellRendererProps) => {
               color: statusStyle.color,
               borderColor: statusStyle.borderColor,
               backgroundColor: statusStyle.backgroundColor,
+              // width: 100,
               textTransform: "capitalize",
             }}
           >
@@ -214,7 +245,7 @@ const CellRenderer = ({ value, dataType, table }: CellRendererProps) => {
 
   return (
     <Box component="div" sx={style}>
-      {displayValue}
+      <Typography fontWeight={fontWeight}>{displayValue}</Typography>
     </Box>
   );
 };

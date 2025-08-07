@@ -1,7 +1,5 @@
 import { SvgIconTypeMap } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
-
-export const MAIN_COLOR = "#a250fa";
 export const TOP_RIGHT_NAV_HEIGHT = "54px";
 export const TOP_NAV_PADDING = "25px";
 export const RIGHT_NAV_PADDING = "12px";
@@ -9,7 +7,7 @@ export const TOP_NAV_SPACING_WITH_SITE_CONTENT = `calc(${TOP_RIGHT_NAV_HEIGHT} +
 export const LEFT_NAV_WIDTH = "350px";
 export const AUTH_LAYOUT_PADDING = "14px";
 export const AUTH_LAYOUT_BACKGROUND_COLOR = "#f0f2f5";
-export const AUTH_LAYOUT_DARK_BACKGROUND_COLOR = "#313131";
+export const AUTH_LAYOUT_DARK_BACKGROUND_COLOR = "#1E1E2F";
 
 export type LeftNavSingleItem = {
   text: string;

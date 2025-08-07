@@ -1,20 +1,17 @@
 import { Box, IconButton, Theme, useMediaQuery } from "@mui/material";
-import TopNavigation from "./AppNavigation/TopNavigation";
 import { useEffect, useState } from "react";
 import LeftNavigation from "./AppNavigation/LeftNavigation";
 import { css, SerializedStyles } from "@emotion/react";
 import {
-  AUTH_LAYOUT_BACKGROUND_COLOR,
   AUTH_LAYOUT_PADDING,
   LEFT_NAV_WIDTH,
-  TOP_NAV_SPACING_WITH_SITE_CONTENT,
-  AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
   TOP_RIGHT_NAV_HEIGHT,
 } from "./layoutVariables";
 import { alpha, useTheme } from "@mui/material/styles";
 import cssLayoutStyles from "../Global/Styles/layout";
 import { Outlet } from "react-router-dom";
 import NavigateBeforeOutlinedIcon from "@mui/icons-material/NavigateBeforeOutlined";
+import MenuIcon from "@mui/icons-material/Menu";
 import RightNavigation from "./AppNavigation/RightNavigation";
 
 interface AuthLayoutProps {
@@ -32,10 +29,7 @@ const cssStyles = (
   contentContainer: css({
     height: "-webkit-fill-available",
     overflow: "hidden",
-    background:
-      theme.palette.mode === "light"
-        ? AUTH_LAYOUT_BACKGROUND_COLOR
-        : AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
+    background: theme.palette.customColors?.darkBackgroundColor,
   }),
   floatingArrowButton: css({
     position: "fixed",
@@ -43,6 +37,17 @@ const cssStyles = (
     top: "50%",
     transform: "translateY(-50%)",
     transition: "transform 0.4s ease, right 0.4s ease",
+    backgroundColor:
+      theme.palette.mode === "light"
+        ? alpha(theme.palette.grey[100], 0.6)
+        : alpha(theme.palette.grey[900], 0.3),
+    borderRadius: "50%",
+    zIndex: theme.zIndex.drawer + 2,
+  }),
+  floatingLeftNavigationButton: css({
+    position: "fixed",
+    left: 0,
+    margin: "0.5em",
     backgroundColor:
       theme.palette.mode === "light"
         ? alpha(theme.palette.grey[100], 0.6)
@@ -73,16 +78,10 @@ const cssStyles = (
         : 0,
 
     height: `100vh`,
-
     flexGrow: 1,
     position: "relative",
     padding: AUTH_LAYOUT_PADDING,
-
-    backgroundColor:
-      theme.palette.mode === "light"
-        ? AUTH_LAYOUT_BACKGROUND_COLOR
-        : AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
-    // if mobile view -> don't have transition
+    backgroundColor: theme.palette.customColors?.darkBackgroundColor,
     ...(!mobileLeftNav && {
       transition: "margin 0.4s ease",
       marginLeft: "6.5em",
@@ -117,7 +116,7 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
       setIsRightNavVisible(true);
     }
   }, [location]);
-
+  console.log(lgMediaQuery);
   return (
     <Box
       component="div"
@@ -128,6 +127,16 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
         setOpenLeftNav={setOpenLeftNav}
         openLeftNav={openLeftNav}
       /> */}
+      {lgMediaQuery && !openLeftNav && (
+        <IconButton
+          size="large"
+          aria-label="site menu"
+          onClick={() => setOpenLeftNav((prev) => !prev)}
+          sx={styles.floatingLeftNavigationButton}
+        >
+          <MenuIcon />
+        </IconButton>
+      )}
       <LeftNavigation
         openLeftNav={openLeftNav}
         setOpenLeftNav={setOpenLeftNav}
@@ -155,8 +164,9 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
             zIndex: 2,
             height: "100%",
             borderRadius: "20px",
-            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-            backgroundColor: "#fff",
+            boxShadow: theme!.palette!.customColors!.shodow,
+            backgroundColor:
+              theme!.palette!.customColors!.sectionBackgroundColor,
             boxSizing: "border-box",
             padding: "1em",
             display: "flex",
@@ -166,6 +176,10 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
           <Box
             sx={{
               overflow: "auto",
+              scrollbarWidth: "none",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
               flexGrow: 1,
               minHeight: 0,
             }}

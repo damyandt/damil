@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import cssLayoutStyles from "../Global/Styles/layout";
+import cssLayoutStyles from "../../Global/Styles/layout";
 import { Theme } from "@mui/material";
 import { css, keyframes } from "@emotion/react";
 import {
@@ -10,8 +10,8 @@ import {
   AUTH_LAYOUT_PADDING,
   LEFT_NAV_WIDTH,
   TOP_NAV_SPACING_WITH_SITE_CONTENT,
-} from "../Layout/layoutVariables";
-import { useLanguageContext } from "../context/LanguageContext";
+} from "../../Layout/layoutVariables";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 const float = keyframes`
   0%, 100% { transform: translateY(0); }
@@ -61,7 +61,6 @@ const ComingSoonPage: React.FC = () => {
     if (lgMediaQuery && openLeftNav) {
       setOpenLeftNav(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lgMediaQuery]);
 
   return (
@@ -73,7 +72,7 @@ const ComingSoonPage: React.FC = () => {
       <Box component="div" sx={styles.floating}>
         <img src="/coming-soon.png" alt="Coming-Soon" width="360" />
       </Box>
-      <Typography variant="h1" mt={3} sx={{ color: theme.palette.customColors.greyText }}>
+      <Typography variant="h1" mt={3} sx={{ color: theme.palette.customColors?.darkGray }}>
         {t("Coming Soon!")}
       </Typography>
     </Box>

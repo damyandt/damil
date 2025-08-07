@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import TableComponent from "../../components/MaterialUI/Table/Table";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 type Client = {
   name: string;
@@ -108,12 +109,12 @@ const DailyVisitors = () => {
   const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
   const day = String(today.getDate()).padStart(2, "0");
   const customFormat = `${year}-${month}-${day}`;
+  const { t } = useLanguageContext();
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
         height: "100%",
       }}
     >
@@ -125,7 +126,7 @@ const DailyVisitors = () => {
             pageSize: 7,
           },
         }}
-        title={`All Visitors for Today(${customFormat})`}
+        title={`${t("All Visitors for Today")}(${customFormat})`}
       />
     </Box>
   );

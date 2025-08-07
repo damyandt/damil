@@ -1,16 +1,17 @@
 import { Box, Typography } from "@mui/material";
-import { useAuthedContext } from "../../context/AuthContext";
-import CustomModal from "../MaterialUI/Modal";
-import Button from "../MaterialUI/Button";
-import TextField from "../MaterialUI/FormFields/TextField";
+import { useAuthedContext } from "../../../context/AuthContext";
+import CustomModal from "../../MaterialUI/Modal";
+import Button from "../../MaterialUI/Button";
+import TextField from "../../MaterialUI/FormFields/TextField";
 import { useState } from "react";
-import { completeProfile } from "../../pages/usersPages/api/postQuery";
-import callApi from "../../API/callApi";
+import { completeProfile } from "../../../pages/usersPages/api/postQuery";
+import callApi from "../../../API/callApi";
+import { useLanguageContext } from "../../../context/LanguageContext";
 
 const IncompleteProfileModal = () => {
   const { showIncompleteModal, snoozeModal, authedUser, setAuthedUser } =
     useAuthedContext();
-
+  const { t } = useLanguageContext();
   const [step, setStep] = useState(0);
 
   const [formData, setFormData] = useState({
@@ -48,8 +49,7 @@ const IncompleteProfileModal = () => {
       <Box>
         {step === 0 && (
           <Typography variant="body1" gutterBottom>
-            Some of your profile information is missing. Please take a moment to
-            complete it.
+            {t("Some of your profile information is missing. Please take a moment to complete it.")}
           </Typography>
         )}
 
@@ -57,33 +57,33 @@ const IncompleteProfileModal = () => {
           <Box display="flex" flexDirection="column" gap={2}>
             <TextField
               disabled={true}
-              label="Email"
+              label={t("Email")}
               type="email"
               value={formData.email}
               onChange={(e) => handleChange("email", e.target.value)}
               fullWidth
             />
             <TextField
-              label="Username"
+              label={t("Username")}
               value={formData.username}
               onChange={(e) => handleChange("username", e.target.value)}
               fullWidth
             />
 
             <TextField
-              label="City"
+              label={t("City")}
               value={formData.city}
               onChange={(e) => handleChange("city", e.target.value)}
               fullWidth
             />
             <TextField
-              label="Address"
+              label={t("Address")}
               value={formData.address}
               onChange={(e) => handleChange("address", e.target.value)}
               fullWidth
             />
             <TextField
-              label="Phone"
+              label={t("Phone")}
               type="tel"
               value={formData.phone}
               onChange={(e) => handleChange("phone", e.target.value)}
@@ -94,10 +94,10 @@ const IncompleteProfileModal = () => {
 
         <Box mt={3} display="flex" justifyContent="flex-end" gap={1}>
           <Button onClick={() => snoozeModal(60)} color="error">
-            Remind Me Later
+            {t("Remind Me Later")}
           </Button>
           <Button onClick={handleNext} color="primary">
-            {step === 0 ? "Next" : "Save & Close"}
+            {step === 0 ? t("Next") : t("Save & Close")}
           </Button>
         </Box>
       </Box>

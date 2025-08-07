@@ -1,4 +1,6 @@
 import ReactECharts from "echarts-for-react";
+import BaseChart from "../../components/pageComponents/BaseChart";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 // Data as arrays of [height, weight]
 const maleData = [
@@ -133,17 +135,18 @@ const femaleData = [
 ];
 
 export default function Memberships() {
+    const { t } = useLanguageContext()
   const option = {
     grid: {
       top: 140,
     },
     title: {
       textStyle: {
-        fontFamily: "Montserrat",
+        fontFamily: "Noto Sans",
         fontSize: 18,
         fontWeight: "bold",
       },
-      text: "Height vs Weight Scatter Plot",
+      text: t("Height vs Weight Scatter Plot"),
       left: "center",
       top: 25,
     },
@@ -181,7 +184,7 @@ export default function Memberships() {
     },
     series: [
       {
-        name: "Male",
+        name: t("Male"),
         type: "scatter",
         data: maleData,
         symbolSize: 10,
@@ -190,7 +193,7 @@ export default function Memberships() {
         },
       },
       {
-        name: "Female",
+        name: t("Female"),
         type: "scatter",
         data: femaleData,
         symbolSize: 10,
@@ -201,7 +204,5 @@ export default function Memberships() {
     ],
   };
 
-  return (
-    <ReactECharts option={option} style={{ height: "87vh", width: "100%" }} />
-  );
+  return <BaseChart option={option} height={`${87}vh`} />;
 }

@@ -9,6 +9,8 @@ import {
   TitleComponent,
 } from "echarts/components";
 import { CanvasRenderer } from "echarts/renderers";
+import BaseChart from "../../components/pageComponents/BaseChart";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 echarts.use([
   GridComponent,
@@ -23,6 +25,7 @@ interface GAgeChartProps {
 }
 
 const AgeDistributionChart: React.FC<GAgeChartProps> = ({ height }) => {
+  const { t } = useLanguageContext()
   const option: echarts.EChartsCoreOption = {
     grid: {
       left: "3%",
@@ -36,11 +39,11 @@ const AgeDistributionChart: React.FC<GAgeChartProps> = ({ height }) => {
     },
     title: {
       textStyle: {
-        fontFamily: "Montserrat",
+        fontFamily: "Noto Sans",
         fontSize: 18,
         fontWeight: "bold",
       },
-      text: "Ages of members",
+      text: t("Ages of members"),
       left: "center",
       top: 25,
     },
@@ -54,7 +57,7 @@ const AgeDistributionChart: React.FC<GAgeChartProps> = ({ height }) => {
     },
     series: [
       {
-        name: "Age Distribution",
+        name: t("Age Distribution"),
         type: "pie",
         center: ["50%", "55%"],
         radius: ["40%", "70%"],
@@ -89,16 +92,7 @@ const AgeDistributionChart: React.FC<GAgeChartProps> = ({ height }) => {
     ],
   };
 
-  return (
-    <ReactEChartsCore
-      echarts={echarts}
-      option={option}
-      style={{
-        height: `${height}vh`,
-        width: "100%",
-      }}
-    />
-  );
+  return <BaseChart echarts={echarts} option={option} height={`${height}vh`} />;
 };
 
 export default AgeDistributionChart;

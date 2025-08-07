@@ -4,15 +4,17 @@ import {
   ListItemIcon,
   ListItemText,
   Box,
+  useTheme,
 } from "@mui/material";
 import { useState } from "react";
 import { SerializedStyles } from "@emotion/react";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Link, useLocation } from "react-router-dom";
-import { LeftNavList, LeftNavSingleItem, MAIN_COLOR } from "../layoutVariables";
+import { LeftNavList, LeftNavSingleItem } from "../layoutVariables";
 import Collapse from "../../components/MaterialUI/Collapse";
 import { FormStatuses } from "../../Global/Types/commonTypes";
 import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
+import { useCustomThemeProviderContext } from "../../context/ThemeContext";
 
 interface LeftNavListMenuProps {
   css?: SerializedStyles[] | SerializedStyles;
@@ -27,11 +29,15 @@ interface LeftNavListMenuProps {
   alertMessage?: string | null;
   collapsed?: boolean;
   openLeftNav: boolean;
+  mobileLeftNav?: any;
+  setOpenLeftNav?: any;
 }
 
 const LeftNavListMenu: React.FC<LeftNavListMenuProps> = ({
   navList,
   openLeftNav,
+  setOpenLeftNav,
+  mobileLeftNav,
 }) => {
   const location = useLocation();
   return (
@@ -39,6 +45,7 @@ const LeftNavListMenu: React.FC<LeftNavListMenuProps> = ({
       {navList.map((item, index) => (
         <NavItem
           openLeftNav={openLeftNav}
+          mobileLeftNav={mobileLeftNav}
           key={`parent-item${index}-${item.text}`}
           text={item.text}
           url={item.url}
@@ -47,6 +54,7 @@ const LeftNavListMenu: React.FC<LeftNavListMenuProps> = ({
           disabled={item.disabled}
           isAlreadyOpen={item.open == true ? true : false}
           currentPath={location.pathname}
+          setOpenLeftNav={setOpenLeftNav}
         />
       ))}
     </List>
@@ -61,6 +69,8 @@ interface NavItemProps extends LeftNavSingleItem {
   marginLeft?: boolean;
   currentPath?: string;
   openLeftNav: boolean;
+  mobileLeftNav?: any;
+  setOpenLeftNav?: any;
 }
 const NavItem: React.FC<NavItemProps> = ({
   text,
@@ -72,8 +82,12 @@ const NavItem: React.FC<NavItemProps> = ({
   marginLeft,
   currentPath,
   openLeftNav,
+  mobileLeftNav,
+  setOpenLeftNav,
 }) => {
   const location = useLocation();
+  const theme = useTheme();
+  const { primaryColor } = useCustomThemeProviderContext();
   const hasCurrentPath = (
     nestedItems: LeftNavSingleItem[] = [],
     path: string
@@ -89,24 +103,41 @@ const NavItem: React.FC<NavItemProps> = ({
 
   const isSelected = url === location.pathname;
   const itemIconButtonProps = {
-    ...(url ? { component: Link, to: url } : { onClick: () => setOpen(!open) }),
+    ...(url
+      ? {
+          component: Link,
+          to: url,
+          onClick: () => {
+            if (mobileLeftNav) {
+              setOpenLeftNav && setOpenLeftNav((prev: boolean) => !prev);
+            }
+          },
+        }
+      : {
+          onClick: () => {
+            setOpen(!open);
+          },
+        }),
   };
 
   return (
     <Box component="div">
       <ListItemButton
         {...itemIconButtonProps}
+        // onClick={() => {
+        //   mobileLeftNav && !nested && setOpenLeftNav(false);
+        // }}
         disabled={disabled}
         selected={isSelected}
         sx={{
           overflowX: "hidden",
           ...(openLeftNav && marginLeft ? { paddingLeft: "2em" } : {}),
           transition: "padding-left 0.4s ease",
-          "&:hover": { backgroundColor: MAIN_COLOR + "20" },
+          "&:hover": { backgroundColor: theme.palette.primary.opacityMain },
           "&.Mui-selected": {
-            backgroundColor: MAIN_COLOR + "20",
-            color: MAIN_COLOR,
-            "& .MuiListItemIcon-root": { color: MAIN_COLOR },
+            backgroundColor: theme.palette.primary.opacityMain,
+            color: primaryColor,
+            "& .MuiListItemIcon-root": { color: primaryColor },
           },
           borderRadius: "1em",
           margin: "0.1em 1em",

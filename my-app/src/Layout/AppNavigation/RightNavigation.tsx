@@ -2,11 +2,7 @@ import { Box, Theme, Stack } from "@mui/material";
 import { css, SerializedStyles } from "@emotion/react";
 import React from "react";
 import { useTheme } from "@mui/material/styles";
-import {
-  TOP_RIGHT_NAV_HEIGHT,
-  RIGHT_NAV_PADDING,
-  TOP_NAV_SPACING_WITH_SITE_CONTENT,
-} from "../layoutVariables";
+import { TOP_RIGHT_NAV_HEIGHT, RIGHT_NAV_PADDING } from "../layoutVariables";
 
 const cssStyles = (
   theme: Theme,
@@ -19,8 +15,13 @@ const cssStyles = (
     margin: !openLeftNav ? "1em" : "1em 0 1em 1em ",
     position: "fixed",
     right: 0,
+    overflow: 'auto',
+    scrollbarWidth: "none", // for Firefox
+    "&::-webkit-scrollbar": {
+      display: "none", // for Chrome, Safari, and Edge
+    },
     width: extraMenu && isVisible ? TOP_RIGHT_NAV_HEIGHT : 0,
-    background: theme.palette.common.white,
+    backgroundColor: theme!.palette!.customColors!.sectionBackgroundColor,
     zIndex: theme.zIndex.drawer + 1,
     padding: extraMenu && isVisible ? RIGHT_NAV_PADDING : 0,
     flexDirection: "column",
@@ -29,7 +30,7 @@ const cssStyles = (
     height: "-webkit-fill-available",
     transition:
       "margin 0.4s ease, width 0.4s ease, padding 0.4s ease, border-radius 0.4s ease",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    boxShadow: theme!.palette!.customColors!.shodow,
   }),
 });
 
