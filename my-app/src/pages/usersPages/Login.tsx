@@ -11,8 +11,8 @@ import MuiLink from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 import Orb from "../../components/ogl/background";
 import { useLanguageContext } from "../../context/LanguageContext";
-import TextType from "../../components/ogl/textTyping";
 import LoginForm from "../../components/pageComponents/UserComponents/LoginForm";
+import TextType from "../../components/ogl/textTyping";
 
 export const hexToVec3 = (hex: string): [number, number, number] => {
   const [r, g, b] = hexToRgb(hex)
