@@ -18,8 +18,8 @@ interface TextTypeProps {
   initialDelay?: number;
   pauseDuration?: number;
   deletingSpeed?: number;
-  loop?: boolean;
   textColors?: string[];
+  loop?: boolean;
   variableSpeed?: { min: number; max: number };
   onSentenceComplete?: (sentence: string, index: number) => void;
   startOnVisible?: boolean;
