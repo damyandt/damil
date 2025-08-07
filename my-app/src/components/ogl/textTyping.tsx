@@ -3,6 +3,7 @@
 import { ElementType, useEffect, useRef, useState, createElement } from "react";
 import { gsap } from "gsap";
 import "./TextType.css";
+import { useTheme } from "@mui/material";
 
 interface TextTypeProps {
   className?: string;
@@ -51,6 +52,7 @@ const TextType = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(!startOnVisible);
+  const theme = useTheme();
   const cursorRef = useRef<HTMLSpanElement>(null);
   const containerRef = useRef<HTMLElement>(null);
 
@@ -63,7 +65,7 @@ const TextType = ({
   };
 
   const getCurrentTextColor = () => {
-    if (textColors.length === 0) return "#ffffff";
+    if (textColors.length === 0) return theme.palette.text.primary;
     return textColors[currentTextIndex % textColors.length];
   };
 
