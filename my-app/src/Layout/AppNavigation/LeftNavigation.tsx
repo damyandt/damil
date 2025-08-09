@@ -25,6 +25,7 @@ import { useLanguageContext } from "../../context/LanguageContext";
 import { handleUserSignOut } from "../../context/authContextUtils";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuthedContext } from "../../context/AuthContext";
 
 const cssStyles = (openLeftNav: boolean, theme: any) => ({
   drawer: css({
@@ -104,7 +105,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
   const { t, setLanguage, language } = useLanguageContext();
   const theme = useTheme();
   const [anchorElSettings, setAnchorElSettings] = useState<any>(null);
-  // const [anchorElLanguage, setAnchorElLanguage] = useState<any>(null);
+  const { authedUser } = useAuthedContext();
   const styles = { ...cssStyles(openLeftNav, theme) };
   const { NAV_DAMIL_HOME, NAV_DAMIL_ANALYTICS } = useTranslatedNav();
 
@@ -187,7 +188,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
 
         <Box component="div" sx={styles.profile}>
           <Avatar
-            alt="Damyan"
+            alt={authedUser?.username}
             src="/profile.jpg"
             sx={{ width: 40, height: 40, ml: "0.4em", cursor: "pointer" }}
             onClick={(event: any) => {
@@ -215,10 +216,10 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
               }}
             >
               <Typography variant="body1" fontWeight={500}>
-                Damyan Todorov
+                {authedUser?.username}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {t("Admin")}
+                {t("Gym")}
               </Typography>
             </Box>
             <Box sx={{ display: "flex" }}>

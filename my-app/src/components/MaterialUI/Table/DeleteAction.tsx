@@ -128,11 +128,17 @@ export const DeleteUndo = ({
         alignItems: "center",
         gap: 1,
         justifyContent: "flex-end",
-        zIndex: 10,
+        zIndex: 100,
       }}
     >
       <CustomTooltip title="Undo" placement="left">
-        <IconButton size="small" onClick={() => handleUndo(rowId)}>
+        <IconButton
+          size="small"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleUndo(rowId);
+          }}
+        >
           <UndoIcon />
         </IconButton>
       </CustomTooltip>

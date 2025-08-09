@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Grid, MenuItem } from "@mui/material";
+import { Box, CircularProgress, Grid, MenuItem } from "@mui/material";
 import { useAuthedContext } from "../../context/AuthContext";
 import { useLanguageContext } from "../../context/LanguageContext";
 import callApi, { Query } from "../../API/callApi";
@@ -180,13 +180,53 @@ const CreateForm: React.FC<CreateFormProps> = ({
                         );
 
                       case "enum":
+                      case "dropdown": {
+                        const fieldOptions = options[col.field];
+                        const isLoading =
+                          !fieldOptions || fieldOptions.length === 0;
+                        const hasValue =
+                          value !== null && value !== undefined && value !== "";
+
+                        const menuItems =
+                          isLoading && hasValue
+                            ? [
+                                <MenuItem
+                                  key="loading"
+                                  value="loading"
+                                  disabled
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center", // vertical centering
+                                    justifyContent: "center", // horizontal centering
+                                    gap: 1, // space between spinner and text
+                                  }}
+                                >
+                                  <CircularProgress size={16} /> Loading...
+                                </MenuItem>,
+                              ]
+                            : fieldOptions?.map(
+                                (option: {
+                                  title: string;
+                                  value: string | number;
+                                }) => (
+                                  <MenuItem
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.title}
+                                  </MenuItem>
+                                )
+                              );
+
                         return (
                           <TextField
                             fullWidth
                             select
                             sx={{ width: "100%" }}
                             label={col.header}
-                            value={value}
+                            value={
+                              isLoading && hasValue ? "loading" : (value ?? "")
+                            }
                             onChange={(e: any) =>
                               handleChange(col.field, e.target.value)
                             }
@@ -194,45 +234,10 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             helperText={errors[col.field] || ""}
                             disabled={disabled || false}
                           >
-                            {options[col.field]?.map(
-                              (option: { title: string; value: string }) => (
-                                <MenuItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.title}
-                                </MenuItem>
-                              )
-                            )}
+                            {menuItems}
                           </TextField>
                         );
-                      case "dropdown":
-                        return (
-                          <TextField
-                            fullWidth
-                            select
-                            sx={{ width: "100%" }}
-                            label={col.header}
-                            value={value}
-                            onChange={(e: any) =>
-                              handleChange(col.field, e.target.value)
-                            }
-                            error={!!errors[col.field]}
-                            helperText={errors[col.field] || ""}
-                            disabled={disabled || false}
-                          >
-                            {options[col.field]?.map(
-                              (option: { title: string; value: string }) => (
-                                <MenuItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.title}
-                                </MenuItem>
-                              )
-                            )}
-                          </TextField>
-                        );
+                      }
 
                       case "date":
                         return (

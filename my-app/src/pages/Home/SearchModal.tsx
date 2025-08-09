@@ -1,4 +1,12 @@
-import { Box, Grid, Step, StepLabel, Stepper, Typography } from "@mui/material";
+import {
+  Box,
+  Chip,
+  Grid,
+  Step,
+  StepLabel,
+  Stepper,
+  Typography,
+} from "@mui/material";
 import CustomModal from "../../components/MaterialUI/Modal";
 import TextField from "../../components/MaterialUI/FormFields/TextField";
 import { useLanguageContext } from "../../context/LanguageContext";
@@ -8,6 +16,7 @@ import { getMember } from "../Access Control/API/getQueries";
 import callApi from "../../API/callApi";
 import { useAuthedContext } from "../../context/AuthContext";
 import Alert from "../../components/MaterialUI/Alert";
+import CellRenderer from "../../components/MaterialUI/Table/CellRenderer";
 
 interface SearchModalProps {
   openSearch: boolean;
@@ -61,7 +70,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
       title={t("Search User")}
       open={openSearch}
       onClose={handleClose}
-      width={"md"}
+      width={"lg"}
       titleIcon="search"
     >
       <Box sx={{ width: "100%", mb: 3 }}>
@@ -87,6 +96,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 label={t("Search")}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleNext()}
               />
             </Grid>
             <Grid size={12} display="flex" justifyContent="flex-end">
@@ -111,22 +121,85 @@ const SearchModal: React.FC<SearchModalProps> = ({
             {t("Member Details")}
           </Typography>
           <Grid container spacing={2}>
-            <Grid size={6}>
+            <Grid size={4}>
               <Typography variant="subtitle2">{t("Name")}</Typography>
               <Typography>
-                {userDetails.firstName} {userDetails.lastName}
+                <CellRenderer
+                  key={t("Name")}
+                  value={`${userDetails.firstName} ${userDetails.lastName}`}
+                  dataType={"string"}
+                  table={false}
+                />
               </Typography>
             </Grid>
-            <Grid size={6}>
+            <Grid size={4}>
               <Typography variant="subtitle2">{t("Email")}</Typography>
-              <Typography>{userDetails.email}</Typography>
-            </Grid>
 
-            <Grid size={6}>
+              <CellRenderer
+                key={t("Email")}
+                value={userDetails.email}
+                dataType={"string"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("Phone")}</Typography>
+              <CellRenderer
+                key={t("Phone")}
+                value={userDetails.phone || "-"}
+                dataType={"string"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("Gender")}</Typography>
+              <CellRenderer
+                key={t("Gender")}
+                value={userDetails.gender}
+                dataType={"enum"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
               <Typography variant="subtitle2">
-                {t("Subscription PLan")}
+                {t("Subscription Plan")}
               </Typography>
-              <Typography>{userDetails.subscriptionPlan}</Typography>
+
+              <CellRenderer
+                key={t("Subscription Plan")}
+                value={userDetails.subscriptionPlan}
+                dataType={"enum"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Typography variant="subtitle2">
+                {t("Subscription Status")}
+              </Typography>
+              <CellRenderer
+                key={t("Subscription Status")}
+                value={userDetails.subscriptionStatus}
+                dataType={"enum"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("Start Date")}</Typography>
+              <CellRenderer
+                key={t("Start Date")}
+                value={userDetails.subscriptionStartDate}
+                dataType={"date"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("End Date")}</Typography>
+              <CellRenderer
+                key={t("Start Date")}
+                value={userDetails.subscriptionEndDate}
+                dataType={"date"}
+                table={false}
+              />
             </Grid>
           </Grid>
 

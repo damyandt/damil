@@ -80,7 +80,38 @@ const TableComponent = ({
     )
   );
 
-  const paginatedRows = filteredRows?.slice(
+  let sortedRows = [...(filteredRows || [])];
+  console.log(configurations?.sortable?.field);
+  if (configurations?.sortable?.field) {
+    const { field, desc } = configurations.sortable;
+
+    const columnDef = columns.find((col) => col.field === field);
+    const colType = columnDef?.type || "string"; // default to string
+
+    sortedRows.sort((a, b) => {
+      const valA = a[field];
+      const valB = b[field];
+      console.log(valA);
+      switch (colType) {
+        case "date": {
+          const timeA = valA ? new Date(valA).getTime() : 0;
+          const timeB = valB ? new Date(valB).getTime() : 0;
+          return desc ? timeB - timeA : timeA - timeB;
+        }
+        case "number":
+          return desc
+            ? Number(valB) - Number(valA)
+            : Number(valA) - Number(valB);
+
+        default:
+          return desc
+            ? valB?.toString().localeCompare(valA?.toString())
+            : valA?.toString().localeCompare(valB?.toString());
+      }
+    });
+  }
+
+  const paginatedRows = sortedRows.slice(
     (page - 1) * rowsPerPage,
     page * rowsPerPage
   );
@@ -133,46 +164,7 @@ const TableComponent = ({
             ))}
           </TextField>
         </Grid>
-        {/* {configurations.filters?.map((filter: any) => (
-          <Grid key={filter.field} item xs={2}>
-            <TextField
-              select
-              size="small"
-              label={filter.label}
-              value={filters[filter.field] || ""}
-              onChange={(e) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  [filter.field]: e.target.value,
-                }))
-              }
-              fullWidth
-            >
-              <MenuItem value="">All</MenuItem>
-              {filter.options.map((option: string) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-        ))} */}
         <Grid size={2} alignItems="right">
-          {/* <TextField
-            select
-            size="small"
-            label="Status"
-            value={""}
-            onChange={(e) => {
-              console.log(e.target.value);
-            }}
-          >
-            {["active", "inactive"].map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </TextField> */}
           <Button
             borderWidth={1}
             borderColor="#ccc"
@@ -307,7 +299,12 @@ const TableComponent = ({
                     {configurations.actions && (
                       <TableCell
                         align="right"
-                        sx={{ zIndex: 100, borderBottom: "none" }}
+                        sx={{
+                          zIndex: 100,
+                          borderBottom: "none",
+                          display: "flex",
+                          alignItems: "flex-end",
+                        }}
                       >
                         {isDeleting ? (
                           <DeleteUndo
@@ -316,7 +313,11 @@ const TableComponent = ({
                             rowId={row.id}
                           />
                         ) : (
-                          <CustomTooltip title="Show Actions" placement="left">
+                          <CustomTooltip
+                            title="Show Actions"
+                            placement="left"
+                            sx={{ width: "fit-content" }}
+                          >
                             <IconButton
                               size="small"
                               onClick={(e) => {

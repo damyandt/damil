@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Stepper,
-  Step,
-  StepLabel,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, Stepper, Step, StepLabel, Grid, Typography } from "@mui/material";
 import CustomModal from "../../components/MaterialUI/Modal"; // Use your own modal component
 import TextField from "../../components/MaterialUI/FormFields/TextField";
 import Button from "../../components/MaterialUI/Button";
@@ -16,6 +9,7 @@ import { useAuthedContext } from "../../context/AuthContext";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import Alert from "../../components/MaterialUI/Alert";
 import { useLanguageContext } from "../../context/LanguageContext";
+import CellRenderer from "../../components/MaterialUI/Table/CellRenderer";
 interface CheckInModalProps {
   open: boolean;
   onClose: () => void;
@@ -102,6 +96,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
               label={t("Search")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleNext()}
             />
           </Grid>
 
@@ -120,49 +115,105 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
         </Grid>
       )}
 
-      {/* Step 2 */}
+      {/* Step 3 */}
       {activeStep === 1 && userDetails && (
         <Box>
           <Typography variant="h6" mb={2}>
-            {t("Confirm Member Details")}
+            {t("Member Details")}
           </Typography>
           <Grid container spacing={2}>
-            <Grid size={6}>
+            <Grid size={4}>
               <Typography variant="subtitle2">{t("Name")}</Typography>
               <Typography>
-                {`${userDetails.firstName} ${userDetails.lastName}`}
+                <CellRenderer
+                  key={t("Name")}
+                  value={`${userDetails.firstName} ${userDetails.lastName}`}
+                  dataType={"string"}
+                  table={false}
+                />
               </Typography>
             </Grid>
-            <Grid size={6}>
-              <Typography variant="subtitle2">{t("Subscription PLan")}</Typography>
-              <Typography>{userDetails.subscriptionPlan}</Typography>
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("Email")}</Typography>
+
+              <CellRenderer
+                key={t("Email")}
+                value={userDetails.email}
+                dataType={"string"}
+                table={false}
+              />
             </Grid>
-            <Grid size={12}>
-              <Typography variant="subtitle2">{t("Remaining Visits")}</Typography>
-              <Typography>{userDetails.remainingVisits}</Typography>
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("Phone")}</Typography>
+              <CellRenderer
+                key={t("Phone")}
+                value={userDetails.phone || "-"}
+                dataType={"string"}
+                table={false}
+              />
             </Grid>
-            <Grid size={12}>
-              <Alert
-                message={errors["noVisits"]}
-                showAlert={!!errors["noVisits"]}
-                severity="error"
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("Gender")}</Typography>
+              <CellRenderer
+                key={t("Gender")}
+                value={userDetails.gender}
+                dataType={"enum"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Typography variant="subtitle2">
+                {t("Subscription Plan")}
+              </Typography>
+
+              <CellRenderer
+                key={t("Subscription Plan")}
+                value={userDetails.subscriptionPlan}
+                dataType={"enum"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Typography variant="subtitle2">
+                {t("Subscription Status")}
+              </Typography>
+              <CellRenderer
+                key={t("Subscription Status")}
+                value={userDetails.subscriptionStatus}
+                dataType={"enum"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("Start Date")}</Typography>
+              <CellRenderer
+                key={t("Start Date")}
+                value={userDetails.subscriptionStartDate}
+                dataType={"date"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("End Date")}</Typography>
+              <CellRenderer
+                key={t("Start Date")}
+                value={userDetails.subscriptionEndDate}
+                dataType={"date"}
+                table={false}
               />
             </Grid>
           </Grid>
-          <Grid
-            container
-            spacing={2}
-            mt={3}
-            display={"flex"}
-            justifyContent={"flex-end"}
-          >
+
+          <Grid container spacing={2} mt={3} justifyContent="space-between">
             <Grid>
-              <Button color={"error"} onClick={handleBack}>
+              <Button variant="outlined" onClick={handleBack}>
                 {t("Back")}
               </Button>
             </Grid>
             <Grid>
-              <Button onClick={handleFinish}>Check-In</Button>
+              <Button variant="contained" onClick={handleFinish}>
+                {t("Check In")}
+              </Button>
             </Grid>
           </Grid>
         </Box>
@@ -196,7 +247,8 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
               width="100%"
               textAlign={"center"}
             >
-              {userDetails?.firstName} {userDetails?.lastName} {t("has been checked in.")}
+              {userDetails?.firstName} {userDetails?.lastName}{" "}
+              {t("has been checked in.")}
             </Typography>
           </Box>
 
@@ -213,7 +265,9 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
               </Button>
             </Grid>
             <Grid>
-              <Button onClick={() => handleReset(false)}>{t("Next Check-In")}</Button>
+              <Button onClick={() => handleReset(false)}>
+                {t("Next Check-In")}
+              </Button>
             </Grid>
           </Grid>
         </>

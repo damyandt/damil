@@ -158,7 +158,7 @@ const theme = (mode: PaletteMode, mainColor: string) => {
         tableRow: mode === "dark" ? "#222222ff" : "#fff",
       },
       error: {
-        main: mode === "light" ? "#D94646" : "#AD2323",
+        main: mode === "light" ? "#D94646" : "#ff0000ff",
         contrastText: "#FFFFFF",
       },
       warning: {
