@@ -69,6 +69,14 @@ const TextType = ({
   };
 
   useEffect(() => {
+    setDisplayedText("");
+    setCurrentCharIndex(0);
+    setIsDeleting(false);
+    setCurrentTextIndex(0);
+    setIsVisible(!startOnVisible);
+  }, [text]);
+
+  useEffect(() => {
     if (!startOnVisible || !containerRef.current) return;
 
     const observer = new IntersectionObserver(

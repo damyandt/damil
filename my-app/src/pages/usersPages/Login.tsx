@@ -6,13 +6,16 @@ import {
   FormControlLabel,
   useTheme,
   hexToRgb,
+  IconButton,
 } from "@mui/material";
+import LanguageOutlined from "@mui/icons-material/LanguageOutlined";
 import MuiLink from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 import Orb from "../../components/ogl/background";
 import { useLanguageContext } from "../../context/LanguageContext";
 import LoginForm from "../../components/pageComponents/UserComponents/LoginForm";
 import TextType from "../../components/ogl/textTyping";
+import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
 
 export const hexToVec3 = (hex: string): [number, number, number] => {
   const [r, g, b] = hexToRgb(hex)
@@ -33,13 +36,26 @@ export const errorMessages = (t: (key: string) => string) => {
   };
 };
 const LoginPage = () => {
-  const { t } = useLanguageContext();
+  const { t, setLanguage, language } = useLanguageContext();
   const theme = useTheme();
   const MemoizedOrb = React.memo(Orb);
 
   const primaryColor = hexToVec3(theme.palette.primary.main);
   return (
     <>
+      <CustomTooltip
+        title={
+          language === "bg" ? "Превключи на Английски" : "Switch to Bulgarian"
+        }
+        placement="left"
+        sx={{ zIndex: 100, position: "absolute", top: 0, right: 0, m: 3 }}
+      >
+        <IconButton
+          onClick={() => setLanguage(language === "bg" ? "en" : "bg")}
+        >
+          <LanguageOutlined />
+        </IconButton>
+      </CustomTooltip>
       <Box
         sx={{
           height: "100vh",

@@ -13,6 +13,7 @@ import { Link as RouterLink } from "react-router-dom";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import LanguageOutlined from "@mui/icons-material/LanguageOutlined";
 import TextField from "../../components/MaterialUI/FormFields/TextField";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
 import { codeVerification, postLogin, postRegister } from "./api/postQuery";
@@ -24,10 +25,11 @@ import { useLanguageContext } from "../../context/LanguageContext";
 import Orb from "../../components/ogl/background";
 import { hexToVec3 } from "./Login";
 import TextType from "../../components/ogl/textTyping";
+import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
 
 const RegisterPage = () => {
   const { setUserSignedIn } = useAuthedContext();
-  const { t } = useLanguageContext();
+  const { t, setLanguage, language } = useLanguageContext();
   const theme = useTheme();
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
@@ -228,6 +230,19 @@ const RegisterPage = () => {
   const primaryColor = hexToVec3(theme.palette.primary.main);
   return (
     <>
+      <CustomTooltip
+        title={
+          language === "bg" ? "Превключи на Английски" : "Switch to Bulgarian"
+        }
+        placement="left"
+        sx={{ zIndex: 100, position: "absolute", top: 0, right: 0, m: 3 }}
+      >
+        <IconButton
+          onClick={() => setLanguage(language === "bg" ? "en" : "bg")}
+        >
+          <LanguageOutlined />
+        </IconButton>
+      </CustomTooltip>
       <Box
         sx={{
           height: "100vh",
