@@ -1,7 +1,8 @@
 import { Menu, MenuItem } from "@mui/material";
-import { DeleteAction } from "./DeleteAction";
-import { EditAction } from "./EditAction";
-import { DetailsAction } from "./DetailsAction";
+import { EditAction } from "./actions/EditAction";
+import { DeleteAction } from "./actions/DeleteAction";
+import { DetailsAction } from "./actions/DetailsAction";
+import CustomAction from "./actions/CustomAction";
 
 type MenuActionsProps = {
   setDeleteQueue: any;
@@ -15,6 +16,7 @@ type MenuActionsProps = {
   columns: any;
   open: boolean;
   setOpen: any;
+  customActions?: any;
 };
 
 export const MenuActions = ({
@@ -29,6 +31,7 @@ export const MenuActions = ({
   columns,
   open,
   setOpen,
+  customActions,
 }: MenuActionsProps) => {
   const handleMenuClose = () => {
     setAnchorEl(null);
@@ -41,7 +44,6 @@ export const MenuActions = ({
   const detailsAction =
     configurations?.actions?.find((el: any) => el.id === "details") ?? null;
   let editUrl = editAction?.url || "";
-
   if (editUrl.startsWith("/")) {
     editUrl = editUrl.slice(1);
   }
@@ -117,6 +119,22 @@ export const MenuActions = ({
           />
         </MenuItem>
       )}
+
+      {customActions?.map((action: any) => (
+        <MenuItem
+          key={`custom-action-${action.id}`}
+          sx={{
+            padding: 0,
+            "&:hover": { backgroundColor: "inherit", cursor: "none" },
+          }}
+        >
+          <CustomAction
+            {...action}
+            rowData={selectedRow}
+            setAnchorEl={setAnchorEl}
+          />
+        </MenuItem>
+      ))}
     </Menu>
   );
 };

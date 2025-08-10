@@ -17,7 +17,7 @@ import {
 import CustomTooltip from "../CustomTooltip";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CellRenderer from "./CellRenderer";
-import { DeleteUndo } from "./DeleteAction";
+
 import { MenuActions } from "./MenuActions";
 import PaginationControls from "./PaginationControls";
 import TextField from "../FormFields/TextField";
@@ -27,6 +27,7 @@ import { useLanguageContext } from "../../../context/LanguageContext";
 import { ColumnType } from "../../../Global/Types/commonTypes";
 import ColumnVisibilityModal from "./ColumnVisibility";
 import Button from "../Button";
+import { DeleteUndo } from "./actions/DeleteAction";
 
 export type Column = {
   header: string;
@@ -43,6 +44,7 @@ export type TableProps = {
   configurations: any;
   setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
+  customActions?: any;
 };
 
 const TableComponent = ({
@@ -51,6 +53,7 @@ const TableComponent = ({
   configurations = {},
   setRefreshTable,
   title,
+  customActions,
 }: TableProps) => {
   const theme = useTheme();
   const { t } = useLanguageContext();
@@ -296,7 +299,7 @@ const TableComponent = ({
                       );
                     })}
 
-                    {configurations.actions && (
+                    {(configurations.actions || customActions) && (
                       <TableCell
                         align="right"
                         sx={{
@@ -369,6 +372,7 @@ const TableComponent = ({
         columns={columns}
         open={openDetails}
         setOpen={setOpenDetails}
+        customActions={customActions}
       />
       <PaginationControls
         currentPage={page}

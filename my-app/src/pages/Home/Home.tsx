@@ -89,12 +89,7 @@ const HomePage: React.FC = () => {
               : `0 3px 12px ${alpha("#000", 0.06)}`,
           }}
         >
-          <Typography
-            variant="h2"
-            fontWeight={700}
-            // color={isDark ? "#fff" : theme.palette.primary.main}
-            color="#fff"
-          >
+          <Typography variant="h2" fontWeight={700} color="#fff">
             📋 {t("Dashboard")} – {authedUser?.username}
           </Typography>
 

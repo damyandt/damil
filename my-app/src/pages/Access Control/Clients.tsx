@@ -9,6 +9,7 @@ import { FormStatuses } from "../../Global/Types/commonTypes";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { useLanguageContext } from "../../context/LanguageContext";
 import RightMenu from "../../components/MaterialUI/Table/RightMenu";
+import InfoIcon from "@mui/icons-material/Info";
 
 export type Client = {
   firstName: string;

@@ -1,9 +1,9 @@
 import { IconButton, Grid, Typography } from "@mui/material";
-import CustomTooltip from "../CustomTooltip";
+import CustomTooltip from "../../CustomTooltip";
 import InfoIcon from "@mui/icons-material/Info";
-import CustomModal from "../Modal";
-import { useLanguageContext } from "../../../context/LanguageContext";
-import CellRenderer from "./CellRenderer";
+import CustomModal from "../../Modal";
+import { useLanguageContext } from "../../../../context/LanguageContext";
+import CellRenderer from ".././CellRenderer";
 
 type DetailsActionProps = {
   selectedRow: any;

@@ -1,7 +1,6 @@
 import { Box } from "@mui/material";
 import TableComponent from "../../components/MaterialUI/Table/Table";
 import { useLanguageContext } from "../../context/LanguageContext";
-
 type Client = {
   name: string;
   birthday: string;

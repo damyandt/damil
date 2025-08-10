@@ -1,10 +1,10 @@
 import { Box, IconButton } from "@mui/material";
-import CustomTooltip from "../CustomTooltip";
+import CustomTooltip from "../../CustomTooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UndoIcon from "@mui/icons-material/Undo";
-import { deleteQueryAction } from "../../API/componentsQueries";
-import callApi from "../../../API/callApi";
-import { useAuthedContext } from "../../../context/AuthContext";
+import { deleteQueryAction } from "../../../API/componentsQueries";
+import callApi from "../../../../API/callApi";
+import { useAuthedContext } from "../../../../context/AuthContext";
 
 type DeleteActionProps = {
   setDeleteQueue: any;
