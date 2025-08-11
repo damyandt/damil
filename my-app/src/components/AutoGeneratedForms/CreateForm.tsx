@@ -10,24 +10,28 @@ import DatePickerComponent from "../MaterialUI/FormFields/DatePicker";
 
 interface CreateFormProps {
   columns?: any;
-  actionUrl: string;
+  actionUrl?: string;
   setRefreshTable: any;
   setModalTitle?: any;
   selectedRow?: any;
   disabled?: boolean;
   setAnchorEl?: any;
   configurations?: any;
+  removeButtons?: boolean;
+  setActiveStep?: any;
 }
 
 const CreateForm: React.FC<CreateFormProps> = ({
   columns,
-  actionUrl,
+  actionUrl = "",
   setRefreshTable,
   setModalTitle,
   selectedRow,
   disabled,
   setAnchorEl,
   configurations,
+  removeButtons = false,
+  setActiveStep,
 }) => {
   const { id, ...rest } = selectedRow ?? {};
   const [formValues, setFormValues] = useState<Record<string, any>>(rest);
@@ -119,10 +123,12 @@ const CreateForm: React.FC<CreateFormProps> = ({
       console.log(responce.validationErrors);
 
       setLoading(false);
-      responce.success &&
-        setTimeout(() => {
-          handleClose();
-        }, 1000);
+      setActiveStep
+        ? setActiveStep((prev: number) => prev + 1)
+        : responce.success &&
+          setTimeout(() => {
+            handleClose();
+          }, 1000);
     } catch (error) {
       console.error("Error creating item:", error);
       setStatus("error");
@@ -282,20 +288,25 @@ const CreateForm: React.FC<CreateFormProps> = ({
             mt: 2,
           }}
         >
-          <Grid>
-            <Button
-              color="error"
-              onClick={() => {
-                handleClose();
-                setAnchorEl && setAnchorEl(null);
-              }}
-            >
-              {disabled ? t("Close") : t("Cancel")}
-            </Button>
-          </Grid>
-          <Grid sx={disabled ? { display: "none" } : {}}>
-            <Button onClick={handleSave}>Submit</Button>
-          </Grid>
+          {!removeButtons && (
+            <>
+              <Grid>
+                <Button
+                  color="error"
+                  onClick={() => {
+                    handleClose();
+                    setAnchorEl && setAnchorEl(null);
+                  }}
+                >
+                  {disabled ? t("Close") : t("Cancel")}
+                </Button>
+              </Grid>
+              <Grid sx={disabled ? { display: "none" } : {}}>
+                <Button onClick={handleSave}>Submit</Button>
+              </Grid>
+            </>
+          )}
+
           {status === "success" && (
             <Grid size={12}>
               <Alert

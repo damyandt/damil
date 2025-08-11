@@ -1,17 +1,20 @@
-import { DatePicker } from "@mui/x-date-pickers";
-import { TextFieldProps } from "@mui/material";
-import { SxProps } from "@mui/system";
 import React from "react";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
+import { DatePicker, DatePickerProps } from "@mui/x-date-pickers";
+import { TextFieldProps } from "@mui/material/TextField";
+import { SxProps, Theme } from "@mui/material/styles";
 
-interface DatePickerComponentProps {
+interface DatePickerComponentProps
+  extends Omit<DatePickerProps, "onChange" | "value"> {
   label: string;
-  value: any;
-  onChange: (value: any) => void;
+  value: Dayjs | null;
+  onChange: (value: Dayjs | null) => void;
   fullWidth?: boolean;
   margin?: TextFieldProps["margin"];
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   format?: string;
+  error?: boolean;
+  helperText?: React.ReactNode;
 }
 
 const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
@@ -22,17 +25,24 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   margin = "normal",
   format = "YYYY/MM/DD",
   sx = {},
+  error,
+  helperText,
+  ...rest
 }) => {
   return (
     <DatePicker
       label={label}
       value={value ? dayjs(value) : null}
       onChange={onChange}
+      format={format}
+      {...rest}
       slotProps={{
         textField: {
           fullWidth,
           margin,
           variant: "outlined",
+          error,
+          helperText,
           sx: {
             "& .MuiOutlinedInput-root": {
               borderRadius: 4,
@@ -45,10 +55,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
             },
             ...sx,
           },
-          inputProps: {
-            format: format,
-          },
-        },
+        } as TextFieldProps,
       }}
     />
   );

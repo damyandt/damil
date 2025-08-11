@@ -10,6 +10,7 @@ import { AppRouterProps } from "../../Layout/layoutVariables";
 import { useLanguageContext } from "../../context/LanguageContext";
 import RightMenu from "../../components/MaterialUI/Table/RightMenu";
 import InfoIcon from "@mui/icons-material/Info";
+import ClientsRightMenu from "../../components/pageComponents/Clients/ClientsRightNav";
 
 export type Client = {
   firstName: string;
@@ -39,11 +40,9 @@ const ClientsPage = () => {
       setExtraRightNavMenu(null);
     } else {
       setExtraRightNavMenu(
-        <RightMenu
+        <ClientsRightMenu
           setRefreshTable={setRefreshTable}
           columns={tableData.columns ?? []}
-          configurations={tableData.config ?? {}}
-          addNew={true}
         />
       );
     }
@@ -66,6 +65,23 @@ const ClientsPage = () => {
 
     setPageStatus(null);
   };
+  // const clientCustomActions = [
+  //   {
+  //     id: "newPlan",
+  //     icon: <InfoIcon />,
+  //     tooltip: "View Client Notes",
+  //     modalTitle: "Client Notes",
+  //     modalWidth: "md" as const,
+  //     modalStyle: "info" as const,
+  //     modalTitleIcon: "info" as const,
+  //     renderContent: (rowData: any) => (
+  //       <div>
+  //         <h3>Notes for {rowData?.firstName}</h3>
+  //         <p>{rowData?.notes || "No notes available"}</p>
+  //       </div>
+  //     ),
+  //   },
+  // ];
 
   return (
     <>

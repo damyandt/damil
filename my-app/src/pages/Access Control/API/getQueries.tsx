@@ -25,3 +25,20 @@ export const checkInMember = (
   endpoint: `gym-members/${gymID}/check-in?query=${searchQuery}`,
   method: "POST",
 });
+
+export const postMember = (formData: any): Query => ({
+  endpoint: `gym-members/members`,
+  method: "POST",
+  variables: formData,
+});
+
+export const postSubscription = (formData: any, id: any): Query => ({
+  endpoint: `gym-members/${id}/subscription`,
+  method: "PATCH",
+  variables: formData,
+});
+
+export const getQueryOptions = (url: string): Query => ({
+  endpoint: `${url}`,
+  method: "GET",
+});

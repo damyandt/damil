@@ -18,6 +18,7 @@ import SearchIcon from "@mui/icons-material/Search";
 interface CustomModalProps extends Pick<MuiModalProps, "open" | "onClose"> {
   title: string;
   width?: number | string;
+  height?: any;
   children: React.ReactNode;
   style?: "info" | "edit" | "create";
   titleIcon?: "info" | "edit" | "create" | "search" | "login";
@@ -33,6 +34,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
   open,
   onClose,
   title,
+  height,
   width = 450,
   children,
   style,
@@ -67,6 +69,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           flexDirection: "column",
           gap: 3,
           justifyContent: "space-between",
+          height: height ?? "auto",
           maxHeight: "95vh",
           overflow: "scroll",
           scrollbarWidth: "none", // for Firefox
