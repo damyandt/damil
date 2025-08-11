@@ -1,10 +1,14 @@
 import {
   TextField as MaterialTextField,
   StandardTextFieldProps,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
 import { NumericFormat, NumericFormatProps } from "react-number-format";
 import React from "react";
 import { SerializedStyles } from "@emotion/react";
+import AddIcon from "@mui/icons-material/Add";
 
 interface TextFieldProps extends StandardTextFieldProps {
   css?: SerializedStyles[] | SerializedStyles;
@@ -13,6 +17,8 @@ interface TextFieldProps extends StandardTextFieldProps {
   noThousandSeparator?: boolean;
   allowNegatives?: boolean;
   noDecimalLimit?: boolean;
+  addOption?: boolean; // ✅ new prop
+  onAddOptionClick?: () => void; // ✅ new prop
 }
 
 const TextField: React.FC<TextFieldProps> = ({
@@ -24,6 +30,9 @@ const TextField: React.FC<TextFieldProps> = ({
   noThousandSeparator,
   allowNegatives,
   noDecimalLimit,
+  addOption,
+  onAddOptionClick,
+  children,
   ...rest
 }) => {
   return (
@@ -52,7 +61,25 @@ const TextField: React.FC<TextFieldProps> = ({
       }}
       fullWidth={fullWidth}
       variant="outlined"
-    />
+      select={rest.select}
+    >
+      {children}
+
+      {rest.select && addOption && (
+        <MenuItem
+          value="__add__"
+          onClick={(e) => {
+            e.preventDefault();
+            if (onAddOptionClick) onAddOptionClick();
+          }}
+        >
+          <ListItemIcon>
+            <AddIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Add new..." />
+        </MenuItem>
+      )}
+    </MaterialTextField>
   );
 };
 

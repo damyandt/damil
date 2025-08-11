@@ -7,18 +7,19 @@ import Alert from "../MaterialUI/Alert";
 import TextField from "../MaterialUI/FormFields/TextField";
 import Button from "../MaterialUI/Button";
 import DatePickerComponent from "../MaterialUI/FormFields/DatePicker";
+import { Column, Configuration, Row } from "../../Global/Types/commonTypes";
 
 interface CreateFormProps {
-  columns?: any;
+  columns?: Column[];
   actionUrl?: string;
   setRefreshTable: any;
   setModalTitle?: any;
-  selectedRow?: any;
-  disabled?: boolean;
   setAnchorEl?: any;
-  configurations?: any;
-  removeButtons?: boolean;
   setActiveStep?: any;
+  selectedRow?: Row;
+  disabled?: boolean;
+  configurations?: Configuration;
+  removeButtons?: boolean;
 }
 
 const CreateForm: React.FC<CreateFormProps> = ({
@@ -33,9 +34,11 @@ const CreateForm: React.FC<CreateFormProps> = ({
   removeButtons = false,
   setActiveStep,
 }) => {
-  const { id, ...rest } = selectedRow ?? {};
+  const { id, ...rest } = (selectedRow ?? {}) as {
+    id?: any;
+    [key: string]: any;
+  };
   const [formValues, setFormValues] = useState<Record<string, any>>(rest);
-
   const [loading, setLoading] = useState<boolean>(false);
   const excludedKeys = ["id", "actions", "createdAt", "updatedAt"];
   const [options, setOptions] = useState<any>([]);
@@ -43,9 +46,10 @@ const CreateForm: React.FC<CreateFormProps> = ({
   const { setAuthedUser } = useAuthedContext();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { t } = useLanguageContext();
-
   const createFieldsColumns =
-    columns.filter((col: any) => configurations.createFields[col.field]) || [];
+    columns?.filter(
+      (col: Column) => (configurations?.createFields ?? {})[col.field]
+    ) || [];
 
   useEffect(() => {
     const fetchAllOptions = async () => {
@@ -59,11 +63,11 @@ const CreateForm: React.FC<CreateFormProps> = ({
 
         if (isDropdown || isEnum) {
           const rawUrl = col.dropDownConfig?.url || col.enumConfig?.url;
-          const url = rawUrl.startsWith("/v1/") ? rawUrl.slice(4) : rawUrl;
+          const url = rawUrl?.startsWith("/v1/") ? rawUrl.slice(4) : rawUrl;
 
           try {
             const options = await callApi<any>({
-              query: getQueryOptions(url),
+              query: getQueryOptions(url ?? ""),
               auth: { setAuthedUser },
             });
             options.success && (optionsMap[col.field] = options.data);
@@ -105,10 +109,27 @@ const CreateForm: React.FC<CreateFormProps> = ({
     setLoading(true);
     setStatus(null);
     try {
+      let payload = { ...formValues };
+      if (selectedRow) {
+        const originalValues = { ...rest };
+        type OriginalKeys = keyof typeof originalValues;
+
+        payload = Object.entries(formValues).reduce(
+          (acc, [key, value]) => {
+            const typedKey = key as OriginalKeys;
+            if (value !== originalValues[typedKey]) {
+              acc[typedKey] = value;
+            }
+            return acc;
+          },
+          {} as Partial<typeof originalValues>
+        );
+      }
+
       const query: Query = {
         endpoint: actionUrl,
-        method: selectedRow ? "PUT" : "POST",
-        variables: { ...formValues },
+        method: selectedRow ? "PATCH" : "POST",
+        variables: { ...payload },
       };
 
       const responce = await callApi<any>({
@@ -118,9 +139,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
 
       responce.success ? setStatus("success") : setStatus("error");
 
-      responce.validationErrors !== null &&
-        setErrors(responce.validationErrors);
-      console.log(responce.validationErrors);
+      responce.success === false && setErrors(responce.validationErrors);
 
       setLoading(false);
       setActiveStep

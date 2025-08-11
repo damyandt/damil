@@ -25,8 +25,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
   const [authedUser, setAuthedUser] = useState<Gym | null>(null);
   const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [showIncompleteModal, setShowIncompleteModal] =
-    useState<boolean>(false);
+  const [showIncompleteModal, setShowIncompleteModal] = useState<boolean>(true);
 
   useEffect(() => {
     if (authedUser === null && userSignedIn) {

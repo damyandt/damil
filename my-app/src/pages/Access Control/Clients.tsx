@@ -8,8 +8,6 @@ import { useAuthedContext } from "../../context/AuthContext";
 import { FormStatuses } from "../../Global/Types/commonTypes";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { useLanguageContext } from "../../context/LanguageContext";
-import RightMenu from "../../components/MaterialUI/Table/RightMenu";
-import InfoIcon from "@mui/icons-material/Info";
 import ClientsRightMenu from "../../components/pageComponents/Clients/ClientsRightNav";
 
 export type Client = {
@@ -24,7 +22,7 @@ const ClientsPage = () => {
   const { t } = useLanguageContext();
   const { filter } = useParams();
   const [refreshTable, setRefreshTable] = useState<boolean>(false);
-  const [tableData, setTableData] = useState<any>({});
+  const [tableData, setTableData] = useState<any>();
   const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
   const { setAuthedUser } = useAuthedContext();
   const { smMediaQuery, setExtraRightNavMenu } =
@@ -42,7 +40,7 @@ const ClientsPage = () => {
       setExtraRightNavMenu(
         <ClientsRightMenu
           setRefreshTable={setRefreshTable}
-          columns={tableData.columns ?? []}
+          columns={tableData?.columns ?? []}
         />
       );
     }
@@ -65,23 +63,6 @@ const ClientsPage = () => {
 
     setPageStatus(null);
   };
-  // const clientCustomActions = [
-  //   {
-  //     id: "newPlan",
-  //     icon: <InfoIcon />,
-  //     tooltip: "View Client Notes",
-  //     modalTitle: "Client Notes",
-  //     modalWidth: "md" as const,
-  //     modalStyle: "info" as const,
-  //     modalTitleIcon: "info" as const,
-  //     renderContent: (rowData: any) => (
-  //       <div>
-  //         <h3>Notes for {rowData?.firstName}</h3>
-  //         <p>{rowData?.notes || "No notes available"}</p>
-  //       </div>
-  //     ),
-  //   },
-  // ];
 
   return (
     <>
@@ -100,9 +81,9 @@ const ClientsPage = () => {
       ) : (
         <Box>
           <TableComponent
-            columns={tableData.columns}
-            rows={tableData.rows}
-            configurations={tableData.config}
+            columns={tableData?.columns || []}
+            rows={tableData?.rows || []}
+            configurations={tableData?.config || {}}
             setRefreshTable={setRefreshTable}
             title={t("All Registered Clients")}
           />

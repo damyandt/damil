@@ -37,13 +37,6 @@ const CellRenderer = ({
       break;
 
     case "number":
-      if (value === "N/A") {
-        displayValue = (
-          <Box display="flex" alignItems="center" gap={0.5}>
-            <CloseIcon fontSize="small" color="error" />
-          </Box>
-        );
-      }
       style.color = "#1976d2";
       break;
 
@@ -83,13 +76,6 @@ const CellRenderer = ({
 
     case "dropdown":
     case "enum": {
-      if (value === "N/A") {
-        displayValue = (
-          <Box display="flex" alignItems="center" gap={0.5}>
-            <CloseIcon fontSize="small" color="error" />
-          </Box>
-        );
-      }
       if (
         String(value).toLowerCase() === "female" ||
         String(value).toLowerCase() === "male"
@@ -195,7 +181,6 @@ const CellRenderer = ({
               display: "flex",
               gap: "0.5em",
               width: 100,
-              // width: "fit-content",
               justifyContent: "center",
               alignItems: "center",
               px: 1.5,
@@ -207,7 +192,6 @@ const CellRenderer = ({
               color: statusStyle.color,
               borderColor: statusStyle.borderColor,
               backgroundColor: statusStyle.backgroundColor,
-              // width: 100,
               textTransform: "capitalize",
             }}
           >
@@ -242,6 +226,14 @@ const CellRenderer = ({
 
     default:
       break;
+  }
+
+  if (value === "N/A") {
+    displayValue = (
+      <Box display="flex" alignItems="center" gap={0.5}>
+        <CloseIcon fontSize="small" color="error" />
+      </Box>
+    );
   }
 
   return (

@@ -26,10 +26,12 @@ import {
 import Alert from "../../MaterialUI/Alert";
 import DatePickerComponent from "../../MaterialUI/FormFields/DatePicker";
 import CustomModal from "../../MaterialUI/Modal";
+import { Column } from "../../../Global/Types/commonTypes";
+import { Dayjs } from "dayjs";
 
 interface ClientsCreateFormProps {
-  setRefreshTable: any;
-  columns: any;
+  setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>;
+  columns: Column[];
   setModalTitle: any;
 }
 
@@ -87,7 +89,10 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
     setActiveStep((prevActiveStep) => Math.max(prevActiveStep - 1, 0));
   };
 
-  const handleChange = (field: string, value: string): void => {
+  const handleChange = (
+    field: string,
+    value: string | number | Dayjs | null
+  ): void => {
     setFormData((prev: any) => ({
       ...prev,
       [field]: value,
@@ -112,11 +117,11 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
 
         if (isDropdown || isEnum) {
           const rawUrl = col.dropDownConfig?.url || col.enumConfig?.url;
-          const url = rawUrl.startsWith("/v1/") ? rawUrl.slice(4) : rawUrl;
+          const url = rawUrl?.startsWith("/v1/") ? rawUrl.slice(4) : rawUrl;
 
           try {
             const options = await callApi<any>({
-              query: getQueryOptions(url),
+              query: getQueryOptions(url ?? ""),
               auth: { setAuthedUser },
             });
             options.success && (optionsMap[col.field] = options.data);
@@ -191,7 +196,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 sx={{ width: "100%", margin: 0 }}
                 label={t("Birth Date")}
                 value={formData.birthDate}
-                onChange={(newValue: any) =>
+                onChange={(newValue: Dayjs | null) =>
                   handleChange("birthDate", newValue)
                 }
                 error={!!errors["birthDate"]}
@@ -207,12 +212,9 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 error={!!errors["gender"]}
                 helperText={errors["gender"]}
                 fullWidth
-                disabled={!options["gender"]}
               >
                 {!options["gender"] ? (
-                  <MenuItem value="">
-                    <em>{t("Loading...")}</em>
-                  </MenuItem>
+                  <MenuItem value="loading">{t("Loading...")}</MenuItem>
                 ) : (
                   options["gender"].map(
                     (option: { title: string; value: string | number }) => (

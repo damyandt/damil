@@ -24,22 +24,13 @@ import TextField from "../FormFields/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useLanguageContext } from "../../../context/LanguageContext";
-import { ColumnType } from "../../../Global/Types/commonTypes";
+import { Column } from "../../../Global/Types/commonTypes";
 import ColumnVisibilityModal from "./ColumnVisibility";
 import Button from "../Button";
 import { DeleteUndo } from "./actions/DeleteAction";
 
-export type Column = {
-  header: string;
-  field: any;
-  align?: "left" | "right" | "center";
-  type: ColumnType;
-  styles?: any;
-  dropDownConfig?: any;
-};
-
 export type TableProps = {
-  columns: Column[];
+  columns: Column[] | [];
   rows: any;
   configurations: any;
   setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -84,17 +75,16 @@ const TableComponent = ({
   );
 
   let sortedRows = [...(filteredRows || [])];
-  console.log(configurations?.sortable?.field);
   if (configurations?.sortable?.field) {
     const { field, desc } = configurations.sortable;
 
-    const columnDef = columns.find((col) => col.field === field);
+    const columnDef = columns.find((col: Column) => col.field === field);
     const colType = columnDef?.type || "string"; // default to string
 
     sortedRows.sort((a, b) => {
       const valA = a[field];
       const valB = b[field];
-      console.log(valA);
+
       switch (colType) {
         case "date": {
           const timeA = valA ? new Date(valA).getTime() : 0;
@@ -219,7 +209,7 @@ const TableComponent = ({
                 backgroundColor: theme.palette.customColors?.tableBackground,
               }}
             >
-              {visibleColumns?.map((col) => (
+              {visibleColumns?.map((col: Column) => (
                 <TableCell
                   key={col.field as string}
                   align={col.align || "left"}
@@ -282,7 +272,7 @@ const TableComponent = ({
                       },
                     }}
                   >
-                    {visibleColumns.map((col) => {
+                    {visibleColumns.map((col: Column) => {
                       return (
                         <TableCell
                           align={col.align}

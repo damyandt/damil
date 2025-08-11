@@ -4,7 +4,7 @@ import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import callApi from "../../API/callApi";
 import { useAuthedContext } from "../../context/AuthContext";
-import { FormStatuses } from "../../Global/Types/commonTypes";
+import { FormStatuses, Table } from "../../Global/Types/commonTypes";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { getStaffRoles } from "./API/getQueries";
 import { useLanguageContext } from "../../context/LanguageContext";
@@ -21,7 +21,7 @@ export type Client = {
 const StaffRolesPage = () => {
   const { t } = useLanguageContext();
   const [refreshTable, setRefreshTable] = useState<boolean>(false);
-  const [tableData, setTableData] = useState<any>({});
+  const [tableData, setTableData] = useState<Table>();
   const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
   const { setAuthedUser } = useAuthedContext();
   const { smMediaQuery, setExtraRightNavMenu } =
@@ -38,10 +38,10 @@ const StaffRolesPage = () => {
     } else {
       setExtraRightNavMenu(
         <RightMenu
-          configurations={tableData.config ?? {}}
+          configurations={tableData?.config ?? {}}
           setRefreshTable={setRefreshTable}
-          columns={tableData.columns ?? []}
-          configurations={tableData.config ?? {}}
+          columns={tableData?.columns ?? []}
+          // configurations={tableData.config ?? {}}
           addNew={true}
         />
       );
@@ -89,13 +89,13 @@ const StaffRolesPage = () => {
                 field: "id",
                 header: "ID",
                 type: "string",
-                dropDownConfig: null,
+                dropDownConfig: undefined,
               },
               {
                 field: "name",
                 header: "Name",
                 type: "string",
-                dropDownConfig: null,
+                dropDownConfig: undefined,
               },
               {
                 field: "type",
@@ -109,7 +109,7 @@ const StaffRolesPage = () => {
                 field: "displayName",
                 header: "Display Name",
                 type: "string",
-                dropDownConfig: null,
+                dropDownConfig: undefined,
               },
             ]}
             rows={[

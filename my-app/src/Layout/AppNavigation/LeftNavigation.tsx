@@ -14,7 +14,11 @@ import {
 import { LEFT_NAV_WIDTH } from "../layoutVariables";
 import LeftNavListMenu from "./LeftNavListMenu";
 import { useTranslatedNav } from "../../Global/Hooks/useTranslatedNav";
-import { NAV_DAMIL_ACCESS_CONTROL, NAV_DAMIL_STAFF } from "./leftNavData";
+import {
+  NAV_DAMIL_ACCESS_CONTROL,
+  NAV_DAMIL_CONFIGURATIONS,
+  NAV_DAMIL_STAFF,
+} from "./leftNavData";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -184,6 +188,14 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
             mobileLeftNav={mobileLeftNav}
             setOpenLeftNav={setOpenLeftNav}
           />
+          <Divider variant="middle" />
+          <LeftNavListMenu
+            navList={NAV_DAMIL_CONFIGURATIONS.list}
+            listTitle={NAV_DAMIL_CONFIGURATIONS.title}
+            openLeftNav={openLeftNav}
+            mobileLeftNav={mobileLeftNav}
+            setOpenLeftNav={setOpenLeftNav}
+          />
         </Box>
 
         <Box component="div" sx={styles.profile}>
@@ -193,7 +205,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
             sx={{ width: 40, height: 40, ml: "0.4em", cursor: "pointer" }}
             onClick={(event: any) => {
               if (openLeftNav) {
-                navigate("Profile");
+                navigate("DAMIL-Configurations/Profile");
               } else {
                 setAnchorElSettings(event.currentTarget);
               }
@@ -241,7 +253,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
               >
                 <MenuItem
                   onClick={() => {
-                    navigate("Profile");
+                    navigate("DAMIL-Configurations/Profile");
                     setAnchorElSettings(null);
                   }}
                 >

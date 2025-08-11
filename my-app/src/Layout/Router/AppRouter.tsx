@@ -16,6 +16,7 @@ import HomePage from "../../pages/Home/Home";
 import ProfilePage from "../../pages/usersPages/Profile";
 import PlansPage from "../../pages/usersPages/PlansPage";
 import PageNotFound from "../../components/pageComponents/PageNotFound";
+import SubscriptionPlans from "../../pages/Configurations/SubscriptionPlans";
 
 export default createBrowserRouter([
   {
@@ -34,11 +35,6 @@ export default createBrowserRouter([
       {
         path: "Plans",
         element: <PlansPage />,
-      },
-      // Profile
-      {
-        path: "/Profile",
-        element: <ProfilePage />,
       },
 
       // Analystics
@@ -93,6 +89,15 @@ export default createBrowserRouter([
       {
         path: "/DAMIL-Staff/Events",
         element: <EmployeeCalendar />,
+      },
+      // Configurations
+      {
+        path: "/DAMIL-Configurations/Profile",
+        element: <ProfilePage />,
+      },
+      {
+        path: "/DAMIL-Configurations/Subscription-Plans",
+        element: <SubscriptionPlans />,
       },
     ],
   },

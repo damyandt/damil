@@ -4,7 +4,7 @@ import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import callApi from "../../API/callApi";
 import { useAuthedContext } from "../../context/AuthContext";
-import { FormStatuses } from "../../Global/Types/commonTypes";
+import { FormStatuses, Table } from "../../Global/Types/commonTypes";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { getStaffMembers } from "./API/getQueries";
 import { useLanguageContext } from "../../context/LanguageContext";
@@ -19,7 +19,7 @@ const StaffPage = () => {
   const { t } = useLanguageContext();
   const { setAuthedUser } = useAuthedContext();
   const [refreshTable, setRefreshTable] = useState<boolean>(false);
-  const [tableData, setTableData] = useState<any>({});
+  const [tableData, setTableData] = useState<Table>();
   const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
   const { smMediaQuery, setExtraRightNavMenu } =
     useOutletContext<AppRouterProps>();
@@ -36,8 +36,8 @@ const StaffPage = () => {
       setExtraRightNavMenu(
         <RightMenu
           setRefreshTable={setRefreshTable}
-          columns={tableData.columns ?? []}
-          configurations={tableData.config ?? {}}
+          columns={tableData?.columns ?? []}
+          configurations={tableData?.config ?? {}}
           addNew={true}
         />
       );
@@ -80,7 +80,7 @@ const StaffPage = () => {
       ) : (
         <Box>
           <TableComponent
-            columns={tableData.columns}
+            columns={tableData?.columns || []}
             // rows={tableData.rows}
             rows={[
               {
@@ -124,7 +124,7 @@ const StaffPage = () => {
                 phone: "+1-555-111-2222",
               },
             ]}
-            configurations={tableData.config}
+            configurations={tableData?.config}
             setRefreshTable={setRefreshTable}
             title={t("All Staff Members")}
           />

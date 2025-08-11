@@ -14,6 +14,9 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import TuneIcon from "@mui/icons-material/Tune";
+import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 
 enum LEFT_NAV_SECTION {
   "Home" = "Home",
@@ -21,6 +24,7 @@ enum LEFT_NAV_SECTION {
   "DAMIL Gyms" = "DAMIL Gyms",
   "DAMIL Access Control" = "DAMIL Access Control",
   "DAMIL Staff Members" = "DAMIL Staff Members",
+  "DAMIL Configurations" = "DAMIL Configurations",
 }
 
 type LeftNavMenu = {
@@ -141,6 +145,31 @@ export const NAV_DAMIL_STAFF: LeftNavMenu = {
           text: "Events",
           url: "/DAMIL-Staff/Events",
           Icon: DateRangeIcon,
+          disabled: false,
+        },
+      ],
+    },
+  ],
+};
+export const NAV_DAMIL_CONFIGURATIONS: LeftNavMenu = {
+  title: LEFT_NAV_SECTION["DAMIL Configurations"],
+  list: [
+    {
+      text: "Configurations",
+      url: null,
+      Icon: TuneIcon,
+      disabled: false,
+      nested: [
+        {
+          text: "Profile",
+          url: "/DAMIL-Configurations/Profile",
+          Icon: AssignmentIndIcon,
+          disabled: false,
+        },
+        {
+          text: "Subscription Plans",
+          url: "/DAMIL-Configurations/Subscription-Plans",
+          Icon: SubscriptionsIcon,
           disabled: false,
         },
       ],

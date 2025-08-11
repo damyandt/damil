@@ -23,7 +23,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   onChange,
   fullWidth = true,
   margin = "normal",
-  format = "YYYY/MM/DD",
+  format = "DD/MM/YYYY",
   sx = {},
   error,
   helperText,
