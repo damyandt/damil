@@ -26,17 +26,19 @@ import {
 import Alert from "../../MaterialUI/Alert";
 import DatePickerComponent from "../../MaterialUI/FormFields/DatePicker";
 import CustomModal from "../../MaterialUI/Modal";
-import { Column } from "../../../Global/Types/commonTypes";
+import { Column, Enum, Response } from "../../../Global/Types/commonTypes";
 import { Dayjs } from "dayjs";
 
 interface ClientsCreateFormProps {
   setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>;
   columns: Column[];
-  setModalTitle: any;
+  setModalTitle: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const steps = ["Person Info", "Plan", "Payment"];
-
+type EnumMap = {
+  [key: string]: Enum[];
+};
 const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
   setRefreshTable,
   setModalTitle,
@@ -46,7 +48,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
   const { t } = useLanguageContext();
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(0);
-  const [options, setOptions] = useState<any>([]);
+  const [options, setOptions] = useState<EnumMap>({});
   const [formData, setFormData] = useState<any>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [subscriptionData, setSubscriptionData] = useState<any>({});
@@ -109,7 +111,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
     const fetchAllOptions = async () => {
       if (!columns) return;
 
-      const optionsMap: Record<string, any[]> = {};
+      const optionsMap: EnumMap = {};
 
       for (const col of columns) {
         const isDropdown = col.dropDownConfig?.url;
@@ -120,7 +122,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
           const url = rawUrl?.startsWith("/v1/") ? rawUrl.slice(4) : rawUrl;
 
           try {
-            const options = await callApi<any>({
+            const options = await callApi<Response<Enum[]>>({
               query: getQueryOptions(url ?? ""),
               auth: { setAuthedUser },
             });
@@ -438,7 +440,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
           </Button>
           <Button
             onClick={async () => {
-              await callApi<any>({
+              await callApi<Response<any>>({
                 query: postSubscription(subscriptionData, id),
                 auth: { setAuthedUser },
               });
