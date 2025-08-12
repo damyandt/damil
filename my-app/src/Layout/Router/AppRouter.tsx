@@ -32,10 +32,6 @@ export default createBrowserRouter([
         path: "/",
         element: <HomePage />,
       },
-      {
-        path: "Plans",
-        element: <PlansPage />,
-      },
 
       // Analystics
       {
@@ -96,8 +92,12 @@ export default createBrowserRouter([
         element: <ProfilePage />,
       },
       {
-        path: "/DAMIL-Configurations/Subscription-Plans",
+        path: "/DAMIL-Configurations/Member-Plans",
         element: <SubscriptionPlans />,
+      },
+      {
+        path: "/DAMIL-Configurations/Subscription-Plans",
+        element: <PlansPage />,
       },
     ],
   },

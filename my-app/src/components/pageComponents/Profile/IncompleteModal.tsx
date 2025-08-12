@@ -8,6 +8,7 @@ import { completeProfile } from "../../../pages/usersPages/api/postQuery";
 import callApi from "../../../API/callApi";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import { useNavigate } from "react-router-dom";
+import { Gym } from "../../../pages/usersPages/userTypes";
 
 const IncompleteProfileModal = () => {
   const { showIncompleteModal, snoozeModal, authedUser, setAuthedUser } =
@@ -15,12 +16,13 @@ const IncompleteProfileModal = () => {
   const { t } = useLanguageContext();
   const [step, setStep] = useState(0);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Gym>({
     city: authedUser?.city || "",
     phone: authedUser?.phone || "",
     address: authedUser?.address || "",
     email: authedUser?.email || "",
     username: authedUser?.username || "",
+    gymName: authedUser?.gymName || "",
   });
   const [preferances, setPreferences] = useState({
     currency: "",
@@ -41,7 +43,7 @@ const IncompleteProfileModal = () => {
     try {
       if (step === 0) {
         const isFormDataIncomplete = Object.values(formData).some(
-          (val) => !val || val.trim() === ""
+          (val) => !val || val === "" || val === null || val === undefined
         );
 
         if (isFormDataIncomplete) {

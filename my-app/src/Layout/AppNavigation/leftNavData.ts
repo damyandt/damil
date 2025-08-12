@@ -15,6 +15,7 @@ import DateRangeIcon from "@mui/icons-material/DateRange";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import TuneIcon from "@mui/icons-material/Tune";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOnOutlined";
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 
@@ -167,9 +168,15 @@ export const NAV_DAMIL_CONFIGURATIONS: LeftNavMenu = {
           disabled: false,
         },
         {
+          text: "Member Plans",
+          url: "/DAMIL-Configurations/Member-Plans",
+          Icon: SubscriptionsIcon,
+          disabled: false,
+        },
+        {
           text: "Subscription Plans",
           url: "/DAMIL-Configurations/Subscription-Plans",
-          Icon: SubscriptionsIcon,
+          Icon: MonetizationOnIcon,
           disabled: false,
         },
       ],
