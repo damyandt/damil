@@ -8,7 +8,8 @@ export type SelectOption<T extends string = string> = {
 export type Table = {
   config: Configuration;
   columns: Column[];
-  rows: Row[];
+  // rows: Row[];
+  rows: any;
 };
 
 export type Row = Record<string, any>[];

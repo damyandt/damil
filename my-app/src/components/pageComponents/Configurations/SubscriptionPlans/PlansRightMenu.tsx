@@ -4,17 +4,19 @@ import CustomModal from "../../../MaterialUI/Modal";
 import { useLanguageContext } from "../../../../context/LanguageContext";
 import { useState } from "react";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import AddNewPlansPaper from "./AddNewPlanPaper";
-import { Enum } from "../../../../Global/Types/commonTypes";
+import AddNewPlansPaper, { SubscriptionPlan } from "./AddNewPlanPaper";
+import { Enum, Row } from "../../../../Global/Types/commonTypes";
 
 interface PlansRightMenuProps {
   plansOptions: Enum[];
   setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>;
+  withoutThis: SubscriptionPlan[];
 }
 
 const PlansRightMenu: React.FC<PlansRightMenuProps> = ({
   plansOptions,
   setRefreshTable,
+  withoutThis,
 }) => {
   const { t } = useLanguageContext();
 
@@ -38,7 +40,7 @@ const PlansRightMenu: React.FC<PlansRightMenuProps> = ({
         open={!!modalTitle}
         onClose={() => setModalTitle(null)}
         title="Add New Client"
-        width={"lg"}
+        width={"sm"}
         style="create"
         titleIcon="create"
       >
@@ -53,6 +55,7 @@ const PlansRightMenu: React.FC<PlansRightMenuProps> = ({
           }}
         >
           <AddNewPlansPaper
+            withoutThis={withoutThis}
             plansOptions={plansOptions}
             setRefreshTable={setRefreshTable}
           />
