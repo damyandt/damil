@@ -3,19 +3,27 @@ import { EditAction } from "./actions/EditAction";
 import { DeleteAction } from "./actions/DeleteAction";
 import { DetailsAction } from "./actions/DetailsAction";
 import CustomAction from "./actions/CustomAction";
+import { Dispatch, SetStateAction } from "react";
+import {
+  Column,
+  Configuration,
+  DeleteQueueType,
+  Row,
+  TableAction,
+} from "../../../Global/Types/commonTypes";
 
 type MenuActionsProps = {
-  setDeleteQueue: any;
-  deleteQueue: any;
-  configurations: any;
-  setRefreshTable: any;
-  selectedRow: any;
-  anchorEl: any;
-  setSelectedRow: any;
-  setAnchorEl: any;
-  columns: any;
+  setDeleteQueue: Dispatch<SetStateAction<DeleteQueueType>>;
+  deleteQueue: DeleteQueueType;
+  configurations?: Configuration;
+  setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedRow: Row | null;
+  anchorEl: null | HTMLElement | "closeOnlyAnchor";
+  setSelectedRow: Dispatch<SetStateAction<Record<string, unknown> | null>>;
+  setAnchorEl: Dispatch<SetStateAction<null | HTMLElement | "closeOnlyAnchor">>;
+  columns: Column[];
   open: boolean;
-  setOpen: any;
+  setOpen: Dispatch<SetStateAction<boolean>>;
   customActions?: any;
 };
 
@@ -38,22 +46,25 @@ export const MenuActions = ({
     setSelectedRow(null);
   };
   const editAction =
-    configurations?.actions?.find((el: any) => el.id === "edit") ?? null;
+    configurations?.actions?.find((el: TableAction) => el.id === "edit") ??
+    null;
   const deleteAction =
-    configurations?.actions?.find((el: any) => el.id === "delete") ?? null;
+    configurations?.actions?.find((el: TableAction) => el.id === "delete") ??
+    null;
   const detailsAction =
-    configurations?.actions?.find((el: any) => el.id === "details") ?? null;
+    configurations?.actions?.find((el: TableAction) => el.id === "details") ??
+    null;
   let editUrl = editAction?.url || "";
   if (editUrl.startsWith("/")) {
     editUrl = editUrl.slice(1);
   }
   if (selectedRow?.id) {
-    editUrl = editUrl.replace("{id}", selectedRow.id);
+    editUrl = editUrl.replace("{id}", String(selectedRow.id));
   }
 
   return (
     <Menu
-      anchorEl={anchorEl}
+      anchorEl={anchorEl === "closeOnlyAnchor" ? null : anchorEl}
       open={Boolean(anchorEl)}
       onClose={handleMenuClose}
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

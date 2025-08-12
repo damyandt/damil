@@ -43,7 +43,7 @@ const ColumnVisibilityModal = ({
   const toHumanReadable = (str: string) => {
     return str
       .replace(/([A-Z])/g, " $1")
-      .replace(/^./, (s: any) => s.toUpperCase());
+      .replace(/^./, (s: string) => s.toUpperCase());
   };
 
   return (

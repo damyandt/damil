@@ -4,7 +4,7 @@ import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import callApi from "../../API/callApi";
 import { useAuthedContext } from "../../context/AuthContext";
-import { FormStatuses, Table } from "../../Global/Types/commonTypes";
+import { FormStatuses, Response, Table } from "../../Global/Types/commonTypes";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { getStaffMembers } from "./API/getQueries";
 import { useLanguageContext } from "../../context/LanguageContext";
@@ -37,7 +37,7 @@ const StaffPage = () => {
         <RightMenu
           setRefreshTable={setRefreshTable}
           columns={tableData?.columns ?? []}
-          configurations={tableData?.config ?? {}}
+          configurations={tableData?.config}
           addNew={true}
         />
       );
@@ -50,7 +50,7 @@ const StaffPage = () => {
 
   const fetchData = async () => {
     try {
-      const data = await callApi<any>({
+      const data = await callApi<Response<any>>({
         query: getStaffMembers(),
         auth: { setAuthedUser },
       });

@@ -9,7 +9,7 @@ import Button from "../../components/MaterialUI/Button";
 import { useOutletContext } from "react-router-dom";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import DatePickerComponent from "../../components/MaterialUI/FormFields/DatePicker";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 const EmployeeCalendar = () => {
   const [events, setEvents] = useState<any[]>([]);
@@ -122,7 +122,7 @@ const EmployeeCalendar = () => {
     return () => clearTimeout(timeout);
   }, [openLeftNav]);
 
-  const handleChange = (field: string, value: string): void => {
+  const handleChange = (field: string, value: string | Dayjs | null): void => {
     setFormData((prev: any) => ({
       ...prev,
       [field]: value,
@@ -351,7 +351,9 @@ const EmployeeCalendar = () => {
             <DatePickerComponent
               label="End Date"
               value={formData.end}
-              onChange={(newValue: any) => handleChange("end", newValue)}
+              onChange={(newValue: Dayjs | null) =>
+                handleChange("end", newValue)
+              }
             />
           </Grid>
 

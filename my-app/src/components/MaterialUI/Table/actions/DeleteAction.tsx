@@ -5,14 +5,21 @@ import UndoIcon from "@mui/icons-material/Undo";
 import { deleteQueryAction } from "../../../API/componentsQueries";
 import callApi from "../../../../API/callApi";
 import { useAuthedContext } from "../../../../context/AuthContext";
+import { Dispatch, SetStateAction } from "react";
+import {
+  Configuration,
+  DeleteQueueType,
+  Response,
+  Row,
+} from "../../../../Global/Types/commonTypes";
 
 type DeleteActionProps = {
-  setDeleteQueue: any;
-  deleteQueue: any;
-  configurations: any;
-  setRefreshTable: any;
-  handleMenuClose: any;
-  selectedRow: any;
+  setDeleteQueue: Dispatch<SetStateAction<DeleteQueueType>>;
+  deleteQueue: DeleteQueueType;
+  configurations?: Configuration;
+  setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
+  handleMenuClose: (event?: MouseEvent | React.KeyboardEvent) => void;
+  selectedRow: Row | null;
 };
 
 export const DeleteAction = ({
@@ -24,14 +31,14 @@ export const DeleteAction = ({
   selectedRow,
 }: DeleteActionProps) => {
   const { setAuthedUser } = useAuthedContext();
-  const handleDeleteClick = (row: any) => {
+  const handleDeleteClick = (row: Row) => {
     const id = row.id;
     if (deleteQueue[id]) return;
 
     let deleteTasks: Promise<void>[] = [];
 
     const timerId = setInterval(() => {
-      setDeleteQueue((prev: any) => {
+      setDeleteQueue((prev: DeleteQueueType) => {
         const progress = prev[id]?.progress || 0;
         if (progress >= 108) {
           clearInterval(timerId);
@@ -44,9 +51,9 @@ export const DeleteAction = ({
 
           deletePromise.finally(() => {
             setTimeout(() => {
-              setDeleteQueue((current: any) => {
+              setDeleteQueue((current: DeleteQueueType) => {
                 if (Object.keys(current).length === 0) {
-                  setRefreshTable?.((prev: any) => !prev);
+                  setRefreshTable?.((prev: boolean) => !prev);
                 }
                 return current;
               });
@@ -64,9 +71,9 @@ export const DeleteAction = ({
     }, 100);
   };
 
-  const sendDelete = async (row: any): Promise<void> => {
+  const sendDelete = async (row: Row): Promise<void> => {
     const id = row.id;
-    const urlConfig = configurations.actions?.find(
+    const urlConfig = configurations?.actions?.find(
       (el: { id: string }) => el.id === "delete"
     );
 
@@ -76,7 +83,7 @@ export const DeleteAction = ({
     const url = rawUrl.startsWith("/") ? rawUrl.slice(1) : rawUrl;
 
     try {
-      await callApi<any>({
+      await callApi<Response<any>>({
         query: deleteQueryAction(url),
         auth: { setAuthedUser },
       });
@@ -89,7 +96,7 @@ export const DeleteAction = ({
     <CustomTooltip title="Delete" placement="bottom">
       <IconButton
         onClick={() => {
-          handleDeleteClick(selectedRow);
+          selectedRow && handleDeleteClick(selectedRow);
           handleMenuClose();
         }}
       >
@@ -100,8 +107,8 @@ export const DeleteAction = ({
 };
 
 type DeleteUndoProps = {
-  deleteQueue: any;
-  setDeleteQueue: any;
+  deleteQueue: DeleteQueueType;
+  setDeleteQueue: Dispatch<SetStateAction<DeleteQueueType>>;
   rowId: string;
 };
 
@@ -113,7 +120,7 @@ export const DeleteUndo = ({
   const handleUndo = (id: string) => {
     if (deleteQueue[id]) {
       clearInterval(deleteQueue[id].timerId);
-      setDeleteQueue((prev: any) => {
+      setDeleteQueue((prev: DeleteQueueType) => {
         const newQueue = { ...prev };
         delete newQueue[id];
         return newQueue;

@@ -8,6 +8,7 @@ import { useState } from "react";
 import { SetCookieParams } from "../../Auth/authTypes";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
 import { codeVerification, postLogin } from "./api/postQuery";
+import { Response } from "../../Global/Types/commonTypes";
 
 interface VerifyEmailProps {
   openModal: boolean;
@@ -31,7 +32,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
     //   return;
     // }
     try {
-      const responce = await callApi<any>({
+      const responce = await callApi<Response<any>>({
         query: codeVerification({
           verificationCode: verificationCode,
           email: email,

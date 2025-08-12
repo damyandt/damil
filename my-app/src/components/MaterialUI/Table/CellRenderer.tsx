@@ -22,7 +22,7 @@ const CellRenderer = ({
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
   let displayValue: React.ReactNode = String(value);
-  let style: any = {
+  let style: React.CSSProperties = {
     margin: 0,
     border: "none",
     height: "fit-content",

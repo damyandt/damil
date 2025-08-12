@@ -2,8 +2,22 @@ import { useState } from "react";
 import { Paper, IconButton, Box, useTheme } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { Shift } from "./StaffShifts";
 
-const ShiftCell = ({ staff, day, shift, onDelete }: any) => {
+type Staff = {
+  id: string;
+  name: string;
+  role: string;
+};
+
+type ShiftCellProps = {
+  staff: Staff;
+  day: string;
+  shift: Shift | null;
+  onDelete?: (staffId: string, day: string) => void;
+};
+
+const ShiftCell = ({ staff, day, shift, onDelete }: ShiftCellProps) => {
   const [hovered, setHovered] = useState(false);
   const theme = useTheme();
   return (
@@ -70,7 +84,6 @@ const ShiftCell = ({ staff, day, shift, onDelete }: any) => {
             console.log("edit");
           }}
           sx={{
-            // position: "absolute",
             transition: "opacity 0.3s ease",
             opacity: hovered && shift ? 1 : 0,
             pointerEvents: hovered && shift ? "auto" : "none",

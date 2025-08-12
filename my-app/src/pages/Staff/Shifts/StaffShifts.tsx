@@ -1,12 +1,5 @@
-import { useEffect, useState } from "react";
-import {
-  Box,
-  Typography,
-  MenuItem,
-  Paper,
-  IconButton,
-  Grid,
-} from "@mui/material";
+import { useState } from "react";
+import { Box, Typography, MenuItem, IconButton, Grid } from "@mui/material";
 import { TimePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 import Button from "../../../components/MaterialUI/Button";
@@ -18,18 +11,17 @@ import ShiftCell from "./ShiftCell";
 import { useLanguageContext } from "../../../context/LanguageContext";
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-
-type Shift = {
+export type Shift = {
   staffId: string;
   day: string;
-  start: Dayjs | null; // Use Dayjs type here
+  start: Dayjs | null;
   end: Dayjs | null;
 };
 
 const StaffShifts = () => {
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [open, setOpen] = useState<boolean>(false);
-  const { t } = useLanguageContext()
+  const { t } = useLanguageContext();
   const staffList = [
     { id: "1", name: "Damyan Todorov", role: t("Front Desk") },
     { id: "2", name: "Iliyan Todorov", role: t("Front Desk") },
@@ -45,21 +37,15 @@ const StaffShifts = () => {
     setOpen(false);
     setNewShift({ staffId: "", day: "Mon", start: null, end: null });
   };
-
-  const handleChange = (field: keyof Shift, value: string) => {
+  const handleChange = <K extends keyof Shift>(field: K, value: Shift[K]) => {
     setNewShift((prev) => ({ ...prev, [field]: value }));
   };
-
   const addShift = () => {
     if (!newShift.staffId || !newShift.start || !newShift.end) return;
     setShifts((prev) => [...prev, newShift]);
     closeModal();
   };
-  const getShift = (staffId: string, day: string): Shift | undefined => {
-    return shifts.find(
-      (shift) => shift.staffId === staffId && shift.day === day
-    );
-  };
+
   const handleDeleteShift = (staffId: string, day: string) => {
     setShifts((prevShifts) =>
       prevShifts.filter(
@@ -111,8 +97,7 @@ const StaffShifts = () => {
                       key={`${staff.id}-${day}`}
                       staff={staff}
                       day={day}
-                      s
-                      shift={shift}
+                      shift={shift ?? null}
                       onDelete={handleDeleteShift}
                     />
                   );
@@ -159,12 +144,12 @@ const StaffShifts = () => {
         <TimePicker
           label={t("Select Time")}
           value={newShift.start}
-          onChange={(newValue: any) => handleChange("start", newValue)}
+          onChange={(newValue: Dayjs | null) => handleChange("start", newValue)}
         />
         <TimePicker
           label={t("End Time")}
           value={newShift.end}
-          onChange={(newValue: any) => handleChange("end", newValue)}
+          onChange={(newValue: Dayjs | null) => handleChange("end", newValue)}
         />
 
         <Button onClick={addShift}>{t("Save Shift")}</Button>

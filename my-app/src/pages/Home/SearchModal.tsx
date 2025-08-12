@@ -17,6 +17,7 @@ import callApi from "../../API/callApi";
 import { useAuthedContext } from "../../context/AuthContext";
 import Alert from "../../components/MaterialUI/Alert";
 import CellRenderer from "../../components/MaterialUI/Table/CellRenderer";
+import { Response } from "../../Global/Types/commonTypes";
 
 interface SearchModalProps {
   openSearch: boolean;
@@ -39,7 +40,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
 
   const handleNext = async () => {
     try {
-      const userDetails = await callApi<any>({
+      const userDetails = await callApi<Response<any>>({
         query: getMember(authedUser?.id || "", searchInput),
         auth: { setAuthedUser },
       });

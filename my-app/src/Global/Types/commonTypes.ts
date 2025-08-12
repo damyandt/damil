@@ -12,7 +12,7 @@ export type Table = {
   rows: any;
 };
 
-export type Row = Record<string, any>[];
+export type Row = Record<string, any>;
 
 export type Column = {
   onCreation?: number;
@@ -34,7 +34,7 @@ export interface Response<TData> {
   message: string;
   errorCode: string | null;
   data: TData;
-  validationErrors: Record<string, string[]> | null;
+  validationErrors: Record<string, string> | {};
 }
 
 export type Enum = {
@@ -56,11 +56,7 @@ export type Configuration = {
     field: string;
     desc: boolean;
   };
-  actions?: {
-    id: string;
-    name: string;
-    url: string;
-  }[];
+  actions?: TableAction[];
   columnsLayoutConfig: {
     columnVisibility: Record<string, boolean>;
   };
@@ -70,10 +66,23 @@ export type Configuration = {
   };
 };
 
+export type TableAction = {
+  id: string;
+  name: string;
+  url: string;
+};
+
 export type AutocompleteOption = SelectOption;
 
 export type AutocompleteGroupedOption = {
   value: string;
   groupName: string;
   description: string;
+};
+
+export type DeleteQueueType = {
+  [key: string]: {
+    progress: number;
+    timerId: any;
+  };
 };

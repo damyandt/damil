@@ -4,14 +4,17 @@ import InfoIcon from "@mui/icons-material/Info";
 import CustomModal from "../../Modal";
 import { useLanguageContext } from "../../../../context/LanguageContext";
 import CellRenderer from ".././CellRenderer";
+import { Column, Row } from "../../../../Global/Types/commonTypes";
 
 type DetailsActionProps = {
-  selectedRow: any;
-  columns: any;
+  selectedRow: Row | null;
+  columns: Column[];
   actionUrl: string;
   open: boolean;
-  setOpen: any;
-  setAnchorEl: any;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setAnchorEl: React.Dispatch<
+    React.SetStateAction<null | HTMLElement | "closeOnlyAnchor">
+  >;
 };
 
 export const DetailsAction = ({
@@ -49,8 +52,8 @@ export const DetailsAction = ({
       >
         <Grid container spacing={2} sx={{ p: 2 }}>
           {columns
-            ?.filter((col: any) => !["actions"].includes(col.field))
-            .map((col: any) => (
+            ?.filter((col: Column) => !["actions"].includes(col.field))
+            .map((col: Column) => (
               <Grid size={4} key={col.field}>
                 <Typography variant="subtitle2" color="text.secondary">
                   {col.header}
@@ -58,7 +61,7 @@ export const DetailsAction = ({
                 <Typography>
                   <CellRenderer
                     key={col.field}
-                    value={selectedRow?.[col.field as keyof any]}
+                    value={selectedRow?.[col.field as keyof Row]}
                     dataType={col.type}
                     table={false}
                   />

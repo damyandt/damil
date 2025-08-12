@@ -24,15 +24,21 @@ import TextField from "../FormFields/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useLanguageContext } from "../../../context/LanguageContext";
-import { Column } from "../../../Global/Types/commonTypes";
+import {
+  Column,
+  Configuration,
+  DeleteQueueType,
+  Row,
+  TableAction,
+} from "../../../Global/Types/commonTypes";
 import ColumnVisibilityModal from "./ColumnVisibility";
 import Button from "../Button";
 import { DeleteUndo } from "./actions/DeleteAction";
 
 export type TableProps = {
   columns: Column[] | [];
-  rows: any;
-  configurations: any;
+  rows: Row[];
+  configurations?: Configuration;
   setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
   customActions?: any;
@@ -41,7 +47,7 @@ export type TableProps = {
 const TableComponent = ({
   columns = [],
   rows = [],
-  configurations = {},
+  configurations,
   setRefreshTable,
   title,
   customActions,
@@ -58,17 +64,15 @@ const TableComponent = ({
   const [anchorEl, setAnchorEl] = useState<
     null | HTMLElement | "closeOnlyAnchor"
   >(null);
-  const [selectedRow, setSelectedRow] = useState<any>(null);
-  const [deleteQueue, setDeleteQueue] = useState<{
-    [key: string]: { progress: number; timerId: any };
-  }>({});
+  const [selectedRow, setSelectedRow] = useState<Row | null>(null);
+  const [deleteQueue, setDeleteQueue] = useState<DeleteQueueType>({});
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(7);
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, row: any) => {
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, row: Row) => {
     setAnchorEl(event.currentTarget);
     setSelectedRow(row);
   };
-  const filteredRows = rows?.filter((row: any) =>
+  const filteredRows = rows?.filter((row: Row) =>
     Object.values(row).some((value) =>
       value?.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
@@ -81,7 +85,7 @@ const TableComponent = ({
     const columnDef = columns.find((col: Column) => col.field === field);
     const colType = columnDef?.type || "string"; // default to string
 
-    sortedRows.sort((a, b) => {
+    sortedRows.sort((a: Row, b: Row) => {
       const valA = a[field];
       const valB = b[field];
 
@@ -112,7 +116,7 @@ const TableComponent = ({
   const isRowDeleting = (id: string) => !!deleteQueue[id];
 
   const visibleColumns = columnVisibilityConfig
-    ? columns.filter((col: any) => columnVisibilityConfig[col.field])
+    ? columns.filter((col: Column) => columnVisibilityConfig[col.field])
     : columns;
   return (
     <>
@@ -222,7 +226,7 @@ const TableComponent = ({
                   {col.header}
                 </TableCell>
               ))}
-              {configurations.actions && (
+              {configurations?.actions && (
                 <TableCell sx={{ fontWeight: "400" }} align="right">
                   {t("Actions")}
                 </TableCell>
@@ -233,7 +237,7 @@ const TableComponent = ({
             {paginatedRows.length === 0 ? (
               <Typography>{t("No Data...")}</Typography>
             ) : (
-              paginatedRows?.map((row: any) => {
+              paginatedRows?.map((row: Row) => {
                 const isDeleting = isRowDeleting(row.id);
                 const progress = deleteQueue[row.id]?.progress || 0;
 
@@ -241,8 +245,8 @@ const TableComponent = ({
                   <TableRow
                     onClick={() => {
                       if (
-                        configurations.actions?.find(
-                          (action: any) => action.id === "details"
+                        configurations?.actions?.find(
+                          (action: TableAction) => action.id === "details"
                         )
                       ) {
                         setOpenDetails(true);
@@ -289,7 +293,7 @@ const TableComponent = ({
                       );
                     })}
 
-                    {(configurations.actions || customActions) && (
+                    {(configurations?.actions || customActions) && (
                       <TableCell
                         align="right"
                         sx={{

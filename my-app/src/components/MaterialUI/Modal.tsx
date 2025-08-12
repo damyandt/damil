@@ -18,13 +18,13 @@ import SearchIcon from "@mui/icons-material/Search";
 interface CustomModalProps extends Pick<MuiModalProps, "open" | "onClose"> {
   title: string;
   width?: number | string;
-  height?: any;
+  height?: number | string;
   children: React.ReactNode;
   style?: "info" | "edit" | "create";
   titleIcon?: "info" | "edit" | "create" | "search" | "login";
 }
 
-const sizeMap: any = {
+const sizeMap: { [key: string]: string } = {
   sm: "400px",
   md: "600px",
   lg: "800px",

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Box, CircularProgress, Grid, MenuItem } from "@mui/material";
 import { useAuthedContext } from "../../context/AuthContext";
 import { useLanguageContext } from "../../context/LanguageContext";
@@ -7,15 +7,22 @@ import Alert from "../MaterialUI/Alert";
 import TextField from "../MaterialUI/FormFields/TextField";
 import Button from "../MaterialUI/Button";
 import DatePickerComponent from "../MaterialUI/FormFields/DatePicker";
-import { Column, Configuration, Row } from "../../Global/Types/commonTypes";
+import {
+  Column,
+  Configuration,
+  Response,
+  Row,
+} from "../../Global/Types/commonTypes";
 
 interface CreateFormProps {
   columns?: Column[];
   actionUrl?: string;
-  setRefreshTable: any;
-  setModalTitle?: any;
-  setAnchorEl?: any;
-  setActiveStep?: any;
+  setRefreshTable: Dispatch<SetStateAction<boolean>>;
+  setModalTitle?: Dispatch<SetStateAction<string | null>>;
+  setAnchorEl?: Dispatch<
+    SetStateAction<null | HTMLElement | "closeOnlyAnchor">
+  >;
+  setActiveStep?: Dispatch<SetStateAction<number>>;
   selectedRow?: Row;
   disabled?: boolean;
   configurations?: Configuration;
@@ -35,7 +42,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
   setActiveStep,
 }) => {
   const { id, ...rest } = (selectedRow ?? {}) as {
-    id?: any;
+    id?: string | number;
     [key: string]: any;
   };
   const [formValues, setFormValues] = useState<Record<string, any>>(rest);
@@ -66,7 +73,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
           const url = rawUrl?.startsWith("/v1/") ? rawUrl.slice(4) : rawUrl;
 
           try {
-            const options = await callApi<any>({
+            const options = await callApi<Response<any>>({
               query: getQueryOptions(url ?? ""),
               auth: { setAuthedUser },
             });
@@ -87,9 +94,9 @@ const CreateForm: React.FC<CreateFormProps> = ({
 
   const handleClose = (): void => {
     if (!loading) {
-      setRefreshTable?.((prev: any) => !prev);
+      setRefreshTable?.((prev: boolean) => !prev);
       setFormValues({});
-      setModalTitle(null);
+      setModalTitle?.(null);
     }
   };
 
@@ -132,14 +139,14 @@ const CreateForm: React.FC<CreateFormProps> = ({
         variables: { ...payload },
       };
 
-      const responce = await callApi<any>({
+      const responce = await callApi<Response<any>>({
         query,
         auth: { setAuthedUser },
       });
 
       responce.success ? setStatus("success") : setStatus("error");
 
-      responce.success === false && setErrors(responce.validationErrors);
+      responce.success === false && setErrors(responce.validationErrors || {});
 
       setLoading(false);
       setActiveStep

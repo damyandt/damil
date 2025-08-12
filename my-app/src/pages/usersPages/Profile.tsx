@@ -40,12 +40,13 @@ const animatedGradient = keyframes`
 `;
 const ProfilePage = () => {
   const { t } = useLanguageContext();
-  const [editMode, setEditMode] = useState(false);
   const navigate = useNavigate();
+  const { authedUser } = useAuthedContext();
   const { themeMode, setThemeMode, setPrimaryColor, primaryColor } =
     useCustomThemeProviderContext();
-  const { authedUser } = useAuthedContext();
-  const info: any = [
+  const [editMode, setEditMode] = useState<boolean>(false);
+
+  const info: { label: string; field: string }[] = [
     { label: t("Username"), field: "username" },
     { label: t("Email"), field: "email" },
     { label: t("City"), field: "city" },
@@ -53,7 +54,7 @@ const ProfilePage = () => {
   ];
 
   // Available colors
-  const colorOptions = [
+  const colorOptions: { name: string; color: string }[] = [
     { name: "purple", color: "#a250fa" },
     { name: "sky", color: "#0EA5E9" }, // clean sky blue
     { name: "emerald", color: "#10B981" }, // soft emerald green
@@ -129,7 +130,7 @@ const ProfilePage = () => {
             title={editMode ? t("Save") : t("Edit")}
             placement="right"
           >
-            <IconButton onClick={() => setEditMode((prev: any) => !prev)}>
+            <IconButton onClick={() => setEditMode((prev: boolean) => !prev)}>
               {editMode ? (
                 <SaveIcon fontSize="small" />
               ) : (
@@ -140,7 +141,7 @@ const ProfilePage = () => {
         </Box>
         {editMode ? (
           <Grid container spacing={2} height={"7em"}>
-            {info.map((col: any) => (
+            {info.map((col: { label: string; field: string }) => (
               <Grid size={6} key={col.field}>
                 <TextField
                   fullWidth
@@ -152,7 +153,7 @@ const ProfilePage = () => {
           </Grid>
         ) : (
           <Grid container spacing={2} height={"7em"}>
-            {info.map((col: any) => (
+            {info.map((col: { label: string; field: string }) => (
               <Grid size={6} key={col.field}>
                 <Typography variant="subtitle2" color="text.secondary">
                   {col.label}
@@ -161,7 +162,7 @@ const ProfilePage = () => {
                   fontWeight={400}
                   key={col.field}
                   value={authedUser ? authedUser[col.field as keyof Gym] : ""}
-                  dataType={col.type}
+                  dataType={"string"}
                   table={false}
                 />
               </Grid>

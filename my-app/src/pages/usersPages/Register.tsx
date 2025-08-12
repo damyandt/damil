@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   Typography,
   Box,
@@ -26,17 +25,19 @@ import Orb from "../../components/ogl/background";
 import { hexToVec3 } from "./Login";
 import TextType from "../../components/ogl/textTyping";
 import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
+import { Response } from "../../Global/Types/commonTypes";
+import { useEffect, useState } from "react";
 
 const RegisterPage = () => {
   const { setUserSignedIn } = useAuthedContext();
   const { t, setLanguage, language } = useLanguageContext();
   const theme = useTheme();
-  const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
-  const [showPassword, setShowPassword] = React.useState<boolean>(false);
-  const [openModal, setOpenModal] = React.useState<boolean>(false);
-  const [resendCooldown, setResendCooldown] = React.useState<number>(0);
-  const [verificationCode, setCode] = React.useState<string>("");
-  const [formData, setFormData] = React.useState<any>({
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [resendCooldown, setResendCooldown] = useState<number>(0);
+  const [verificationCode, setCode] = useState<string>("");
+  const [formData, setFormData] = useState<Record<string, string>>({
     username: "",
     email: "",
     password: "",
@@ -49,7 +50,7 @@ const RegisterPage = () => {
       return;
     }
     try {
-      const responce = await callApi<any>({
+      const responce = await callApi<Response<any>>({
         query: postRegister(formData),
         auth: null,
       });
@@ -63,8 +64,8 @@ const RegisterPage = () => {
     }
   };
 
-  const handleChange = (field: string, value: any) => {
-    setFormData((prev: any) => ({
+  const handleChange = (field: string, value: string) => {
+    setFormData((prev: Record<string, string>) => ({
       ...prev,
       [field]: value,
     }));
@@ -75,7 +76,7 @@ const RegisterPage = () => {
     }));
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const delayDebounce = setTimeout(async () => {
       if (formData.email) {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -91,7 +92,7 @@ const RegisterPage = () => {
     return () => clearTimeout(delayDebounce);
   }, [formData.email]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const delayDebounce = setTimeout(async () => {
       if (formData.password) {
         if (formData.password.length < 8) {
@@ -105,7 +106,7 @@ const RegisterPage = () => {
     return () => clearTimeout(delayDebounce);
   }, [formData.password]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const delayDebounce = setTimeout(async () => {
       if (formData.confirmPassword) {
         if (formData.confirmPassword !== formData.password) {
@@ -163,7 +164,7 @@ const RegisterPage = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const lastResend = localStorage.getItem("lastResendTimestamp");
     if (lastResend) {
       const secondsPassed = Math.floor(
@@ -176,7 +177,7 @@ const RegisterPage = () => {
     }
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (resendCooldown > 0) {
       const timer = setInterval(() => {
         setResendCooldown((prev) => prev - 1);
@@ -192,7 +193,7 @@ const RegisterPage = () => {
       return;
     }
     try {
-      const responce = await callApi<any>({
+      const responce = await callApi<Response<any>>({
         query: codeVerification({
           verificationCode: verificationCode,
           email: formData.email,
@@ -200,7 +201,7 @@ const RegisterPage = () => {
         auth: null,
       });
       if (responce.success === true) {
-        const responce = await callApi<any>({
+        const responceLogin = await callApi<any>({
           query: postLogin({
             email: formData.email,
             password: formData.password,
@@ -208,7 +209,7 @@ const RegisterPage = () => {
           auth: null,
         });
 
-        const refresh_token = responce.refreshToken;
+        const refresh_token = responceLogin.refreshToken;
         const refreshCookie: SetCookieParams = {
           name: COOKIE_REFRESH_TOKEN,
           value: refresh_token,
