@@ -4,15 +4,20 @@ import callApi, { COOKIE_REFRESH_TOKEN } from "../API/callApi";
 import { Gym } from "../pages/usersPages/userTypes";
 import { getQueryUsersGetCurrentUser } from "../Auth/API/apiAuthGetQueries";
 import { handleFetchUserAccessToken } from "./authContextUtils";
+import { PreferencesType, Response } from "../Global/Types/commonTypes";
+import { getPreferences } from "../pages/usersPages/api/postQuery";
+import { PaletteMode } from "@mui/material";
 
 export type GetQueryUsersGetCurrentUserSnippet = { user: Gym };
+
 interface UserContextType {
-  authedUser: Gym | null;
-  setAuthedUser: (value: React.SetStateAction<Gym | null>) => void;
+  authedUser: Gym;
+  setAuthedUser: (value: React.SetStateAction<Gym>) => void;
   setUserSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
   authedUserLoading: boolean;
   showIncompleteModal: boolean;
   snoozeModal: (minutes?: number) => void;
+  preferences: PreferencesType;
 }
 
 const UserContext = createContext<UserContextType>({} as UserContextType);
@@ -22,15 +27,45 @@ interface AuthContextProps {
 }
 
 const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
-  const [authedUser, setAuthedUser] = useState<Gym | null>(null);
+  const [authedUser, setAuthedUser] = useState<Gym>({
+    gymName: "",
+    username: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    membersCount: 0,
+    subscriptionActive: false,
+  });
   const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [showIncompleteModal, setShowIncompleteModal] = useState<boolean>(true);
+  const [showIncompleteModal, setShowIncompleteModal] =
+    useState<boolean>(false);
+  const [preferences, setPreferences] = useState<PreferencesType>({
+    themeColor: localStorage.getItem("themeColor") || "#a250fa",
+    mode: (localStorage.getItem("themeMode") as PaletteMode) || "light",
+    currency: "BGN",
+    language: "bg",
+  });
 
   useEffect(() => {
-    if (authedUser === null && userSignedIn) {
+    const fetchPreferences = async () => {
+      const preferencesInfo = await callApi<Response<any>>({
+        query: getPreferences(),
+        auth: { setAuthedUser },
+      });
+      preferencesInfo.success &&
+        preferencesInfo.data.settings &&
+        setPreferences(preferencesInfo.data.settings);
+    };
+
+    fetchPreferences();
+  }, [setAuthedUser]);
+
+  useEffect(() => {
+    if (authedUser.email === "" && userSignedIn) {
       setUserSignedIn(false);
-    } else if (authedUser !== null && !userSignedIn) {
+    } else if (authedUser.email !== "" && !userSignedIn) {
       setUserSignedIn(true);
     }
   }, [authedUser?.id]);
@@ -51,9 +86,14 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
 
   useEffect(() => {
     if (authedUser) {
-      const hasEmptyFields = Object.values(authedUser).some(
-        (val: any) => val === null
-      );
+      let hasEmptyFields =
+        Object.values(authedUser).some(
+          (val: any) => val === "" || val === null
+        ) ||
+        Object.values(preferences).some(
+          (val: any) => val === "" || val === null
+        );
+
       const snoozeUntil = localStorage.getItem("incompleteProfileSnooze");
       const now = Date.now();
 
@@ -97,6 +137,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         authedUserLoading: loading,
         showIncompleteModal,
         snoozeModal,
+        preferences,
       }}
     >
       {children}

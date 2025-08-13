@@ -6,7 +6,6 @@ import callApi, {
 import { deleteCookie, setCookie } from "../Global/Utils/commonFunctions";
 import { postQueryTokenRefresh } from "../Auth/API/apiAuthGetQueries";
 import { DecodedJWTToken, SetCookieParams } from "../Auth/authTypes";
-import { useState } from "react";
 
 export const handleUserSignOut = (navigate: (path: string) => void) => {
   deleteCookie(COOKIE_ACCESS_TOKEN);

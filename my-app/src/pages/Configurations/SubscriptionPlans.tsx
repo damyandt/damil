@@ -81,7 +81,7 @@ const SubscriptionPlans = () => {
 
     setPageStatus(null);
   };
-
+  console.log(tableData?.rows.length);
   return (
     <>
       {pageStatus === "loading" ? (
@@ -98,7 +98,7 @@ const SubscriptionPlans = () => {
       ) : tableData?.rows.length !== 0 ? (
         <Box>
           <TableComponent
-            configurations={tableData?.config || {}}
+            configurations={tableData?.config}
             columns={tableData?.columns || []}
             rows={tableData?.rows || []}
             setRefreshTable={setRefreshTable}

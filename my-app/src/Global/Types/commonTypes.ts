@@ -86,3 +86,10 @@ export type DeleteQueueType = {
     timerId: any;
   };
 };
+
+export type PreferencesType = {
+  themeColor: string;
+  mode: "light" | "dark";
+  language: string;
+  currency: string;
+};

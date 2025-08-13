@@ -15,14 +15,14 @@ if (rootElement) {
   createRoot(rootElement).render(
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
       <CssBaseline />
-      <ThemeProvider>
-        <AuthContext>
+      <AuthContext>
+        <ThemeProvider>
           <LanguageProvider>
             <CssBaseline />
             <App />
           </LanguageProvider>
-        </AuthContext>
-      </ThemeProvider>
+        </ThemeProvider>
+      </AuthContext>
     </LocalizationProvider>
   );
 } else {

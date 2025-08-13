@@ -30,7 +30,7 @@ export const shiftHue = (color: string, amount: number) =>
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { authedUser } = useAuthedContext();
+  const { authedUser, setAuthedUser } = useAuthedContext();
   const [openCheckIn, setOpenCheckIn] = useState(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const { t } = useLanguageContext();

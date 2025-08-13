@@ -16,11 +16,11 @@ import { Enum, Response } from "../../../../Global/Types/commonTypes";
 
 export interface SubscriptionPlan {
   subscriptionPlan: string;
-  price: number;
-  studentPrice: number;
-  seniorPrice: number;
-  handicapPrice: number;
-  currency: string;
+  price?: number;
+  studentPrice?: number;
+  seniorPrice?: number;
+  handicapPrice?: number;
+  currency?: string;
 }
 
 type AddNewPlansPaperProps = {
@@ -59,11 +59,6 @@ const AddNewPlansPaper = ({
     try {
       const plans: SubscriptionPlan[] = selectedPlans.map((planType) => ({
         subscriptionPlan: planType,
-        price: 0,
-        studentPrice: 0,
-        seniorPrice: 0,
-        handicapPrice: 0,
-        currency: "EUR",
       }));
 
       await callApi<Response<any>>({

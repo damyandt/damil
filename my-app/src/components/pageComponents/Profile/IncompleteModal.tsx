@@ -1,67 +1,102 @@
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  FormGroup,
+  FormLabel,
+  Typography,
+} from "@mui/material";
 import { useAuthedContext } from "../../../context/AuthContext";
 import CustomModal from "../../MaterialUI/Modal";
 import Button from "../../MaterialUI/Button";
 import TextField from "../../MaterialUI/FormFields/TextField";
 import { useState } from "react";
-import { completeProfile } from "../../../pages/usersPages/api/postQuery";
+import {
+  completeProfile,
+  savePreferences,
+} from "../../../pages/usersPages/api/postQuery";
 import callApi from "../../../API/callApi";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import { useNavigate } from "react-router-dom";
 import { Gym } from "../../../pages/usersPages/userTypes";
+import Checkbox from "../../MaterialUI/FormFields/Checkbox";
+import { useCustomThemeProviderContext } from "../../../context/ThemeContext";
+import { PreferencesType, Response } from "../../../Global/Types/commonTypes";
 
 const IncompleteProfileModal = () => {
-  const { showIncompleteModal, snoozeModal, authedUser, setAuthedUser } =
-    useAuthedContext();
+  const {
+    showIncompleteModal,
+    snoozeModal,
+    authedUser,
+    setAuthedUser,
+    preferences,
+  } = useAuthedContext();
+  const { themeMode, setThemeMode, setPrimaryColor, primaryColor } =
+    useCustomThemeProviderContext();
   const { t } = useLanguageContext();
   const [step, setStep] = useState(0);
 
   const [formData, setFormData] = useState<Gym>({
+    gymName: authedUser?.gymName || "",
+    username: authedUser?.username || "",
     city: authedUser?.city || "",
     phone: authedUser?.phone || "",
     address: authedUser?.address || "",
     email: authedUser?.email || "",
-    username: authedUser?.username || "",
-    gymName: authedUser?.gymName || "",
   });
-  const [preferances, setPreferences] = useState({
-    currency: "",
-    language: "",
+  const [preferancesData, setPreferencesData] = useState<PreferencesType>({
+    currency: preferences.currency || "",
+    language: preferences.language || "",
+    mode: preferences.mode || "",
+    themeColor: preferences.themeColor || "",
   });
   const navigate = useNavigate();
   const handleChange = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
   const handleChangePreferences = (
-    field: keyof typeof preferances,
+    field: keyof typeof preferancesData,
     value: string
   ) => {
-    setPreferences((prev) => ({ ...prev, [field]: value }));
+    setPreferencesData((prev) => ({ ...prev, [field]: value }));
   };
+  const colorOptions: { name: string; color: string }[] = [
+    { name: "purple", color: "#a250fa" },
+    { name: "sky", color: "#0EA5E9" },
+    { name: "emerald", color: "#10B981" },
+    { name: "amber", color: "#F59E0B" },
+    { name: "rose", color: "#F43F5E" },
+  ];
 
   const handleNext = async () => {
     try {
       if (step === 0) {
         const isFormDataIncomplete = Object.values(formData).some(
-          (val) => !val || val === "" || val === null || val === undefined
+          (val) => !val || val === ""
         );
 
-        if (isFormDataIncomplete) {
+        if (!isFormDataIncomplete) {
           setStep(2);
         } else {
           setStep(1);
         }
       } else if (step === 1) {
         console.log("Updated profile data:", formData);
-        const gymInfo = await callApi<any>({
+        const gymInfo = await callApi<Response<any>>({
           query: completeProfile(formData),
           auth: { setAuthedUser },
         });
         gymInfo.success === true && setStep(2);
       } else if (step === 2) {
-        setStep(3);
+        const preferencesInfo = await callApi<Response<any>>({
+          query: savePreferences(preferancesData),
+          auth: { setAuthedUser },
+        });
+
+        localStorage.setItem("themeMode", preferancesData.mode);
+        localStorage.setItem("themeColor", preferancesData.themeColor);
+        preferencesInfo.success === true && setStep(3);
       } else {
-        navigate("DAMIL-Configurations/Subscription-Plans");
+        navigate("DAMIL-Configurations/Member-Plans");
       }
     } catch (err) {
       console.log(err);
@@ -100,6 +135,12 @@ const IncompleteProfileModal = () => {
               onChange={(e) => handleChange("username", e.target.value)}
               fullWidth
             />
+            <TextField
+              label={t("Gym Name")}
+              value={formData.gymName}
+              onChange={(e) => handleChange("gymName", e.target.value)}
+              fullWidth
+            />
 
             <TextField
               label={t("City")}
@@ -127,7 +168,7 @@ const IncompleteProfileModal = () => {
             <TextField
               label={t("Currency")}
               type="currency"
-              value={preferances.currency}
+              value={preferancesData.currency}
               onChange={(e) =>
                 handleChangePreferences("currency", e.target.value)
               }
@@ -136,12 +177,91 @@ const IncompleteProfileModal = () => {
             <TextField
               label={t("Language")}
               type="language"
-              value={preferances.language}
+              value={preferancesData.language}
               onChange={(e) =>
                 handleChangePreferences("language", e.target.value)
               }
               fullWidth
             />
+            <FormControl component="fieldset">
+              <FormLabel component="legend">{t("Dark/Light Mode")}</FormLabel>
+              <FormGroup row>
+                {[
+                  {
+                    name: "Light",
+                    color: "#f5f5f5",
+                    mode: "light",
+                  },
+                  {
+                    name: "Dark",
+                    color: "#1e1e1e",
+                    mode: "dark",
+                  },
+                ].map((option: any) => (
+                  <Box
+                    key={option.name}
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    mr={2}
+                    mt={2}
+                  >
+                    <Box
+                      sx={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: "10%",
+                        backgroundColor: option.color,
+                        border: "2px solid #ccc",
+                      }}
+                    />
+                    <Checkbox
+                      checked={themeMode === option.mode}
+                      // onChange={() => setThemeMode(option.mode)}
+                      onChange={() => {
+                        handleChangePreferences("mode", option.mode);
+                        setThemeMode(option.mode);
+                      }}
+                      sx={{ mt: 1 }}
+                    />
+                  </Box>
+                ))}
+              </FormGroup>
+            </FormControl>
+
+            <FormControl component="fieldset">
+              <FormLabel component="legend">{t("Primary App Color")}</FormLabel>
+              <FormGroup row>
+                {colorOptions.map((option) => (
+                  <Box
+                    key={option.name}
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    mr={2}
+                    mt={2}
+                  >
+                    <Box
+                      sx={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: "10%",
+                        backgroundColor: option.color,
+                        border: "2px solid #ccc",
+                      }}
+                    />
+                    <Checkbox
+                      checked={primaryColor === option.color}
+                      onChange={() => {
+                        handleChangePreferences("themeColor", option.color);
+                        setPrimaryColor(option.color);
+                      }}
+                      sx={{ mt: 1 }}
+                    />
+                  </Box>
+                ))}
+              </FormGroup>
+            </FormControl>
           </Box>
         )}
         {step === 3 && (

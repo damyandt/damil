@@ -10,6 +10,7 @@ import {
   PaletteMode,
 } from "@mui/material/styles";
 import theme from "../theme";
+import { useAuthedContext } from "./AuthContext";
 
 type ThemeContextType = {
   themeMode: "light" | "dark";
@@ -25,22 +26,15 @@ type ThemeProviderProps = {
 };
 
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [themeMode, setThemeMode] = useState<PaletteMode>(
-    (localStorage.getItem("themeMode") as PaletteMode) || "light"
-  );
-
+  const { preferences } = useAuthedContext();
+  const [themeMode, setThemeMode] = useState<PaletteMode>(preferences.mode);
   const [primaryColor, setPrimaryColor] = useState<string>(
-    localStorage.getItem("primaryColor") || "#a250fa"
+    preferences.themeColor
   );
-
   useEffect(() => {
-    localStorage.setItem("themeMode", themeMode);
-  }, [themeMode]);
-
-  useEffect(() => {
-    localStorage.setItem("primaryColor", primaryColor);
-  }, [primaryColor]);
-
+    setThemeMode(preferences.mode);
+    setPrimaryColor(preferences.themeColor);
+  }, [preferences]);
   const value: ThemeContextType = {
     themeMode,
     setThemeMode,

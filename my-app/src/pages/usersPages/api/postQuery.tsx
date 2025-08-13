@@ -29,3 +29,14 @@ export const completeProfile = (input: any): Query => ({
   method: "POST",
   variables: input,
 });
+
+export const savePreferences = (input: any): Query => ({
+  endpoint: `gym/account-settings/update/me`,
+  method: "PUT",
+  variables: input,
+});
+
+export const getPreferences = (): Query => ({
+  endpoint: `gym/account-settings/me`,
+  method: "GET",
+});

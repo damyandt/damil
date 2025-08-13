@@ -5,9 +5,9 @@ import {
   FormControlLabel,
   Typography,
   Theme,
+  useTheme,
 } from "@mui/material";
 import React from "react";
-import useTheme from "@mui/material/styles/useTheme";
 
 const cssStyles = (theme: Theme) => ({
   smallCheckbox: css({
@@ -23,7 +23,12 @@ interface ICheckboxProps extends CheckboxProps {
   styling?: string;
 }
 
-const Checkbox: React.FC<ICheckboxProps> = ({ className, label, size, ...props }) => {
+const Checkbox: React.FC<ICheckboxProps> = ({
+  className,
+  label,
+  size,
+  ...props
+}) => {
   const theme = useTheme();
   const styles = { ...cssStyles(theme) };
 
