@@ -11,7 +11,7 @@ const App: React.FC = () => {
   if (authedUserLoading) {
     return <LoadingScreen />;
   }
-  if (authedUser.email !== "") {
+  if (authedUser.email !== "error") {
     return (
       <Box component="main">
         <RouterProvider router={appRouter} />

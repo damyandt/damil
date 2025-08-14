@@ -238,7 +238,9 @@ const CellRenderer = ({
 
   return (
     <Box component="div" sx={style}>
-      <Typography fontWeight={fontWeight}>{displayValue}</Typography>
+      <Typography fontWeight={fontWeight} border={"none"}>
+        {displayValue}
+      </Typography>
     </Box>
   );
 };

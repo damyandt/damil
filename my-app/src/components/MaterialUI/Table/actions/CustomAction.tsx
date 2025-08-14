@@ -1,9 +1,11 @@
 import { IconButton } from "@mui/material";
 import CustomTooltip from "../../CustomTooltip";
 import CustomModal from "../../Modal";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { Column, Row } from "../../../../Global/Types/commonTypes";
 
 type CustomActionProps = {
+  columns: Column[];
   rowData?: any;
   icon: React.ReactNode;
   tooltip?: string;
@@ -11,12 +13,19 @@ type CustomActionProps = {
   modalWidth?: "sm" | "md" | "lg";
   modalStyle?: "info" | "edit" | "create";
   modalTitleIcon?: "info" | "edit" | "create" | "search" | "login";
-  renderContent?: (rowData?: any) => React.ReactNode;
+  renderContent?: (
+    rowData?: Row,
+    setOpen?: Dispatch<SetStateAction<boolean>>,
+    columns?: Column[],
+    setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>
+  ) => React.ReactNode;
   setAnchorEl?: (value: any) => void;
+  setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const CustomAction = ({
   rowData,
+  columns,
   icon,
   tooltip,
   modalTitle,
@@ -25,6 +34,7 @@ export const CustomAction = ({
   modalTitleIcon = "info",
   renderContent,
   setAnchorEl,
+  setRefreshTable,
 }: CustomActionProps) => {
   const [open, setOpen] = useState<boolean>(false);
 
@@ -52,7 +62,7 @@ export const CustomAction = ({
         style={modalStyle}
         titleIcon={modalTitleIcon}
       >
-        {renderContent?.(rowData)}
+        {renderContent?.(rowData, setOpen, columns, setRefreshTable)}
       </CustomModal>
     </>
   );

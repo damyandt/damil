@@ -28,12 +28,12 @@ interface AuthContextProps {
 
 const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
   const [authedUser, setAuthedUser] = useState<Gym>({
-    gymName: "",
-    username: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
+    gymName: "error",
+    username: "error",
+    email: "error",
+    phone: "error",
+    address: "error",
+    city: "error",
     membersCount: 0,
     subscriptionActive: false,
   });
@@ -63,9 +63,9 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
   }, [setAuthedUser]);
 
   useEffect(() => {
-    if (authedUser.email === "" && userSignedIn) {
+    if (authedUser.email === "error" && userSignedIn) {
       setUserSignedIn(false);
-    } else if (authedUser.email !== "" && !userSignedIn) {
+    } else if (authedUser.email !== "error" && !userSignedIn) {
       setUserSignedIn(true);
     }
   }, [authedUser?.id]);
@@ -86,6 +86,8 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
 
   useEffect(() => {
     if (authedUser) {
+      console.log(preferences);
+      console.log(authedUser);
       let hasEmptyFields =
         Object.values(authedUser).some(
           (val: any) => val === "" || val === null
@@ -101,7 +103,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         setShowIncompleteModal(true);
       }
     }
-  }, [authedUser]);
+  }, [authedUser, preferences]);
 
   const checkIfUserIsSignedIn = async () => {
     const refreshToken = getCookie(COOKIE_REFRESH_TOKEN);

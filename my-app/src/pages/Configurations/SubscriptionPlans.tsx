@@ -34,7 +34,6 @@ const SubscriptionPlans = () => {
   const [tableData, setTableData] = useState<Table>();
   const [plansOptions, setPlansOptions] = useState<Enum[]>([]);
   const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
-
   const { smMediaQuery, setExtraRightNavMenu } =
     useOutletContext<AppRouterProps>();
   const { setAuthedUser } = useAuthedContext();

@@ -199,7 +199,7 @@ const ProfilePage = () => {
         <Slide
           direction={selectedTab === 0 ? "right" : "left"}
           in={slideIn}
-          timeout={400}
+          timeout={600}
           mountOnEnter
           unmountOnExit
         >

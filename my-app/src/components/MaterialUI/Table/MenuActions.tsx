@@ -141,8 +141,10 @@ export const MenuActions = ({
         >
           <CustomAction
             {...action}
+            columns={columns}
             rowData={selectedRow}
             setAnchorEl={setAnchorEl}
+            setRefreshTable={setRefreshTable}
           />
         </MenuItem>
       ))}

@@ -30,7 +30,7 @@ export const shiftHue = (color: string, amount: number) =>
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { authedUser, setAuthedUser } = useAuthedContext();
+  const { authedUser } = useAuthedContext();
   const [openCheckIn, setOpenCheckIn] = useState(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const { t } = useLanguageContext();
@@ -40,7 +40,7 @@ const HomePage: React.FC = () => {
   const analytics = [
     {
       title: t("Total Members"),
-      value: 120,
+      value: authedUser.membersCount,
       redirect: "/DAMIL-Access-Control/All-Clients",
       icon: <GroupIcon color="primary" sx={{ fontSize: 40, mb: 1 }} />,
     },

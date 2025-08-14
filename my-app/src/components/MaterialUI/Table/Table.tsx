@@ -173,6 +173,7 @@ const TableComponent = ({
               sx={{
                 transition: "all 0.2s ease-in-out",
                 "&:hover": {
+                  border: "none",
                   transform: "scale(1.05)",
                 },
               }}
@@ -270,7 +271,7 @@ const TableComponent = ({
                             ? "rgba(96, 96, 96, 0.78)"
                             : "#fff",
                         cursor: "pointer",
-                        transform: "scale(0.99)",
+                        // transform: "scale(0.99)",
                         zIndex: 10,
                         position: "relative",
                       },
@@ -281,7 +282,7 @@ const TableComponent = ({
                         <TableCell
                           align={col.align}
                           key={col.field}
-                          sx={{ borderBottom: "none" }}
+                          sx={{ borderBottom: "none", border: "none" }}
                         >
                           <CellRenderer
                             key={col.field}

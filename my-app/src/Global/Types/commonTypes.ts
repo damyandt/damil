@@ -93,3 +93,7 @@ export type PreferencesType = {
   language: string;
   currency: string;
 };
+
+export type EnumMap = {
+  [key: string]: Enum[];
+};

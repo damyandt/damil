@@ -1,15 +1,16 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Grid } from "@mui/material";
 import TableComponent from "../../components/MaterialUI/Table/Table";
 import { useOutletContext, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import callApi from "../../API/callApi";
 import { getClientsTable } from "./API/getQueries";
 import { useAuthedContext } from "../../context/AuthContext";
-import { FormStatuses } from "../../Global/Types/commonTypes";
+import { Column, FormStatuses, Row } from "../../Global/Types/commonTypes";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { useLanguageContext } from "../../context/LanguageContext";
 import ClientsRightMenu from "../../components/pageComponents/Clients/ClientsRightNav";
-
+import NextPlanIcon from "@mui/icons-material/NextPlan";
+import NewSubscriptionPlan from "../../components/pageComponents/Clients/NewSubscriptionPlan";
 export type Client = {
   firstName: string;
   lastName: string;
@@ -86,6 +87,7 @@ const ClientsPage = () => {
             configurations={tableData?.config || {}}
             setRefreshTable={setRefreshTable}
             title={t("All Registered Clients")}
+            customActions={clientCustomActions}
           />
         </Box>
       )}
@@ -94,3 +96,28 @@ const ClientsPage = () => {
 };
 
 export default ClientsPage;
+
+const clientCustomActions = [
+  {
+    id: "assignSubscriptionPlan",
+    icon: <NextPlanIcon fontSize="small" />,
+    tooltip: "Assign Subscription Plan",
+    modalTitle: "Assign Subscription Plan",
+    modalWidth: "lg" as const,
+    modalStyle: "create" as const,
+    modalTitleIcon: "create" as const,
+    renderContent: (
+      rowData: Row,
+      setOpen: Dispatch<SetStateAction<boolean>>,
+      columns: Column[],
+      setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>
+    ) => (
+      <NewSubscriptionPlan
+        rowData={rowData}
+        setOpen={setOpen}
+        columns={columns}
+        setRefreshTable={setRefreshTable}
+      />
+    ),
+  },
+];
