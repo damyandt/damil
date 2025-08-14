@@ -116,7 +116,6 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
       setIsRightNavVisible(true);
     }
   }, [location]);
-  console.log(lgMediaQuery);
   return (
     <Box
       component="div"

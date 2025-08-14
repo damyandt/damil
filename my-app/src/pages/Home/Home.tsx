@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { JSX, useEffect, useState } from "react";
 import {
   alpha,
   Box,
@@ -12,11 +12,8 @@ import {
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
-import GroupIcon from "@mui/icons-material/Group";
 import LoginIcon from "@mui/icons-material/Login";
-import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-import CancelIcon from "@mui/icons-material/Cancel";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { useAuthedContext } from "../../context/AuthContext";
 import ChartDisplay from "./ChartsDisplayed";
 import CheckInModal from "./CheckInModal";
@@ -24,45 +21,53 @@ import IncompleteProfileModal from "../../components/pageComponents/Profile/Inco
 import SearchModal from "./SearchModal";
 import tinycolor from "tinycolor2";
 import { useLanguageContext } from "../../context/LanguageContext";
+import FiltersModal from "./FiltersModal";
+import PeopleIcon from "@mui/icons-material/People"; // Gender
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline"; // Employment
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
+import CardMembershipIcon from "@mui/icons-material/CardMembership"; // SubscriptionPlan
+
+const iconMap: Record<string, JSX.Element> = {
+  Gender: <PeopleIcon color="primary" sx={{ fontSize: 40, mb: 1 }} />,
+  Employment: (
+    <WorkOutlineIcon color="secondary" sx={{ fontSize: 40, mb: 1 }} />
+  ),
+  SubscriptionStatus: (
+    <QuestionMarkIcon color="success" sx={{ fontSize: 40, mb: 1 }} />
+  ),
+  SubscriptionPlan: (
+    <CardMembershipIcon color="info" sx={{ fontSize: 40, mb: 1 }} />
+  ),
+};
+
+export const descriptionMap: Record<string, string> = {
+  Gender: "All Members with Gender",
+  Employment: "All Members with Employment Type",
+  SubscriptionStatus: "All Members with Subscription Status",
+  SubscriptionPlan: "All Members with Subscription Plan",
+};
 
 export const shiftHue = (color: string, amount: number) =>
   tinycolor(color).spin(amount).toHexString();
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { authedUser } = useAuthedContext();
-  const [openCheckIn, setOpenCheckIn] = useState(false);
+  const { authedUser, preferences } = useAuthedContext();
+  const [openCheckIn, setOpenCheckIn] = useState<boolean>(false);
+  const [selectedFilters, setSelectedFilters] = useState<any>(
+    preferences.homeFilters ?? [
+      "Gender - MALE",
+      "SubscriptionStatus - ACTIVE",
+      "Employment - REGULAR",
+      "SubscriptionPlan - MONTHLY",
+    ]
+  );
+  const [openFilterConfig, setOpenFilterConfig] = useState<boolean>(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const { t } = useLanguageContext();
   const handleSearchMember = () => {
     setOpenSearch(true);
   };
-  const analytics = [
-    {
-      title: t("Total Members"),
-      value: authedUser.membersCount,
-      redirect: "/DAMIL-Access-Control/All-Clients",
-      icon: <GroupIcon color="primary" sx={{ fontSize: 40, mb: 1 }} />,
-    },
-    {
-      title: t("Active Subscriptions"),
-      value: 90,
-      redirect: "/DAMIL-Access-Control/All-Clients/subscriptionStatus=ACTIVE",
-      icon: <FitnessCenterIcon color="success" sx={{ fontSize: 40, mb: 1 }} />,
-    },
-    {
-      title: t("New Signups - July"),
-      value: 15,
-      redirect: "/DAMIL-Access-Control/All-Clients",
-      icon: <PersonAddAltIcon color="info" sx={{ fontSize: 40, mb: 1 }} />,
-    },
-    {
-      title: t("Expired Subscriptions"),
-      value: 12,
-      redirect: "/DAMIL-Access-Control/All-Clients/subscriptionStatus=INACTIVE",
-      icon: <CancelIcon color="error" sx={{ fontSize: 40, mb: 1 }} />,
-    },
-  ];
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
   const primary = theme.palette.primary.main;
@@ -73,7 +78,7 @@ const HomePage: React.FC = () => {
   const colorEnd = isDark
     ? shiftHue(darken(primary, 0.2), 20)
     : shiftHue(lighten(primary, 0.3), 20);
-
+  console.log(selectedFilters);
   return (
     <>
       <Box sx={{ p: 2 }}>
@@ -110,7 +115,7 @@ const HomePage: React.FC = () => {
           spacing={2}
           sx={{
             p: 3,
-            border: `1px solid #bcbcbcb0`,
+            border: `1px solid ${theme.palette.primary.light100}`,
             borderRadius: "20px",
             justifyContent: "flex-start",
           }}
@@ -156,45 +161,62 @@ const HomePage: React.FC = () => {
         </Grid>
         <Grid container spacing={3} pt={3}>
           <Grid size={12}>
+            <Button
+              fullWidth
+              variant="outlined"
+              color="primary"
+              sx={{ border: `1px solid ${theme.palette.primary.light100}` }}
+              startIcon={<SettingsIcon />}
+              onClick={() => setOpenFilterConfig(true)}
+            >
+              {t("Configure Filters")}
+            </Button>
+          </Grid>
+          <Grid size={12}>
             <Grid container spacing={3}>
-              {analytics.map((stat, index) => (
-                <Grid
-                  size={3}
-                  key={index}
-                  sx={{ cursor: "pointer", aspectRatio: 1 / 0.8 }}
-                >
-                  <Box
-                    sx={{
-                      border: `1px solid #bcbcbcb0`,
-                      px: 2,
-                      borderRadius: "20px",
-                      textAlign: "center",
-                      transition: "transform 0.3s ease",
-                      alignContent: "center",
-                      height: "100%",
-                      "&:hover": {
-                        transform: "scale(1.03)",
-                        boxShadow: "0 8px 24px rgba(0, 0, 0, 0.1)",
-                        cursor: "pointer",
-                      },
-                    }}
-                    onClick={() => navigate(stat.redirect)}
+              {selectedFilters.map((filter: string, index: number) => {
+                const [field, value] = filter.split(" - ");
+
+                return (
+                  <Grid
+                    size={3}
+                    key={index}
+                    sx={{ cursor: "pointer", aspectRatio: 1 / 0.8 }}
                   >
-                    {stat.icon}
-                    <Typography variant="h5" fontWeight="bold">
-                      {stat.value}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                      {stat.title}
-                    </Typography>
-                  </Box>
-                </Grid>
-              ))}
+                    <Box
+                      sx={{
+                        border: `1px solid ${theme.palette.primary.light100}`,
+                        px: 2,
+                        borderRadius: "20px",
+                        textAlign: "center",
+                        transition: "transform 0.3s ease",
+                        alignContent: "center",
+                        height: "100%",
+                        "&:hover": {
+                          transform: "scale(1.03)",
+                          boxShadow: "0 8px 24px rgba(0, 0, 0, 0.1)",
+                          cursor: "pointer",
+                        },
+                      }}
+                      onClick={() =>
+                        navigate(
+                          `/DAMIL-Access-Control/All-Clients/${field}=${value}`
+                        )
+                      }
+                    >
+                      {iconMap[field]}
+                      <Typography variant="body2">
+                        {descriptionMap[field]} <b>{value}</b>
+                      </Typography>
+                    </Box>
+                  </Grid>
+                );
+              })}
               <Grid size={12}>
                 <Box
                   sx={{
                     p: 2,
-                    border: `1px solid #bcbcbcb0`,
+                    border: `1px solid ${theme.palette.primary.light100}`,
                     borderRadius: "20px",
                   }}
                 >
@@ -209,6 +231,13 @@ const HomePage: React.FC = () => {
       <SearchModal openSearch={openSearch} setOpenSearch={setOpenSearch} />
       <CheckInModal open={openCheckIn} onClose={() => setOpenCheckIn(false)} />
       <IncompleteProfileModal />
+
+      <FiltersModal
+        openFilterConfig={openFilterConfig}
+        onClose={() => setOpenFilterConfig(false)}
+        selectedFilters={selectedFilters}
+        setSelectedFilters={setSelectedFilters}
+      />
     </>
   );
 };

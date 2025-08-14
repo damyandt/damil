@@ -135,6 +135,7 @@ const LoginForm = () => {
       setUserSignedIn(false);
       setUserSignedIn(true);
       navigate("/");
+      window.location.reload();
     } catch (error) {
       console.error("Login failed:", error);
       setErrors({

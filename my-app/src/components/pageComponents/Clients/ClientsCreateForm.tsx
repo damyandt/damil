@@ -255,11 +255,15 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 }
                 fullWidth
               >
-                {options["subscriptionPlan"].map(
-                  (option: { title: string; value: string | number }) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.title}
-                    </MenuItem>
+                {!options["subscriptionPlan"] ? (
+                  <MenuItem value="loading">{t("Loading...")}</MenuItem>
+                ) : (
+                  options["subscriptionPlan"].map(
+                    (option: { title: string; value: string | number }) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.title}
+                      </MenuItem>
+                    )
                   )
                 )}
               </TextField>
@@ -274,11 +278,15 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 }
                 fullWidth
               >
-                {options["employment"].map(
-                  (option: { title: string; value: string | number }) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.title}
-                    </MenuItem>
+                {!options["employment"] ? (
+                  <MenuItem value="loading">{t("Loading...")}</MenuItem>
+                ) : (
+                  options["employment"].map(
+                    (option: { title: string; value: string | number }) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.title}
+                      </MenuItem>
+                    )
                   )
                 )}
               </TextField>

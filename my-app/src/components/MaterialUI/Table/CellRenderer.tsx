@@ -54,6 +54,7 @@ const CellRenderer = ({
 
       displayValue = (
         <Box
+          component={"span"}
           sx={{
             display: "inline-flex",
             alignItems: "center",
@@ -114,6 +115,7 @@ const CellRenderer = ({
         };
         displayValue = (
           <Box
+            component={"span"}
             sx={{
               display: "inline-flex",
               alignItems: "center",
@@ -177,6 +179,7 @@ const CellRenderer = ({
       if (statusStyle) {
         displayValue = (
           <Box
+            component={"span"}
             sx={{
               display: "flex",
               gap: "0.5em",
@@ -196,6 +199,7 @@ const CellRenderer = ({
             }}
           >
             <Box
+              component={"span"}
               sx={{
                 width: 8,
                 height: 8,

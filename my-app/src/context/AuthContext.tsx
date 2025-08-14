@@ -46,6 +46,12 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
     mode: (localStorage.getItem("themeMode") as PaletteMode) || "light",
     currency: "BGN",
     language: "bg",
+    homeFilters: [
+      "Gender - MALE",
+      "SubscriptionStatus - ACTIVE",
+      "Employment - REGULAR",
+      "SubscriptionPlan - MONTHLY",
+    ],
   });
 
   useEffect(() => {
@@ -59,7 +65,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         setPreferences(preferencesInfo.data.settings);
     };
 
-    fetchPreferences();
+    authedUser && fetchPreferences();
   }, [setAuthedUser]);
 
   useEffect(() => {
@@ -86,8 +92,6 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
 
   useEffect(() => {
     if (authedUser) {
-      console.log(preferences);
-      console.log(authedUser);
       let hasEmptyFields =
         Object.values(authedUser).some(
           (val: any) => val === "" || val === null
@@ -108,9 +112,8 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
   const checkIfUserIsSignedIn = async () => {
     const refreshToken = getCookie(COOKIE_REFRESH_TOKEN);
     if (refreshToken) {
-      // 1. fetch the accessToken and save it as a cookie
       await handleFetchUserAccessToken(refreshToken);
-      // 2. fetch and save userData
+
       const signedInUser = await callApi<any>({
         query: getQueryUsersGetCurrentUser(),
         auth: { setAuthedUser },

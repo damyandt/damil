@@ -1,3 +1,9 @@
+import { useNavigate } from "react-router-dom";
+import { useAuthedContext } from "../context/AuthContext";
+import {
+  handleFetchUserAccessToken,
+  handleUserSignOut,
+} from "../context/authContextUtils";
 import { getCookie } from "../Global/Utils/commonFunctions";
 import { Gym } from "../pages/usersPages/userTypes";
 export const COOKIE_ACCESS_TOKEN = "accessToken";
@@ -34,10 +40,10 @@ export type CallApiParams = {
  * been made once and this is the second call to it.
  */
 const callApi = async <T>(
-  params: CallApiParams
-  // requestIsReMade: boolean = false
+  params: CallApiParams,
+  requestIsReMade: boolean = false
 ): Promise<T> => {
-  const { query } = params;
+  const { query, auth } = params;
   const {
     endpoint,
     method,
@@ -47,7 +53,6 @@ const callApi = async <T>(
     returnJson = true,
     triggerDownload,
   } = query;
-
   const endpointToUse = "https://fitmanage-b0bb9372ef38.herokuapp.com/api/v1/";
   let response: Response;
   const accessToken = getCookie(COOKIE_ACCESS_TOKEN);
@@ -68,7 +73,6 @@ const callApi = async <T>(
       },
       credentials: "include",
     });
-
     // 🔽 Handle download if requested
     if (triggerDownload && response.ok) {
       const disposition = response.headers.get("content-disposition");
@@ -187,21 +191,21 @@ const callApi = async <T>(
   // if expired accessToken and valid refresh token -> fetch new access token
   // this block of code only runs if the callApi function is not called for
   // a second time and the <auth> param is present.
-  // if (auth && !requestIsReMade && response.status === 401) {
-  //   const jsonData: { detail: string } = await response.json();
-  //   if (jsonData.detail === "Invalid access token") {
-  //     const refreshToken = getCookie(COOKIE_REFRESH_TOKEN);
-  //     const accessToken = await handleFetchUserAccessToken(refreshToken);
-  //     if (accessToken) {
-  //       // we have fetched and saved the accessToken
-  //       return await callApi({ query, auth }, true);
-  //     } else {
-  //       // accessToken not fetched, log out the user due to invalid
-  //       // or expired refresh token
-  //       handleUserSignOut();
-  //     }
-  //   }
-  // }
+  if (auth && !requestIsReMade && response.status === 401) {
+    const jsonData: { detail: string } = await response.json();
+    if (jsonData.detail === "Invalid access token") {
+      const refreshToken = getCookie(COOKIE_REFRESH_TOKEN);
+      const accessToken = await handleFetchUserAccessToken(refreshToken);
+      if (accessToken) {
+        // we have fetched and saved the accessToken
+        return await callApi({ query, auth }, true);
+      } else {
+        // accessToken not fetched, log out the user due to invalid
+        // or expired refresh token
+        handleUserSignOut();
+      }
+    }
+  }
 
   // if status code is not within 200, there is an error
   if (!response.status.toString().startsWith("2") && !receiveErrorMessage) {

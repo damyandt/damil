@@ -3,11 +3,14 @@ import { Box, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Theme } from "@mui/material";
 import { css, keyframes } from "@emotion/react";
-import { AUTH_LAYOUT_PADDING, LEFT_NAV_WIDTH, TOP_NAV_SPACING_WITH_SITE_CONTENT } from "../../Layout/layoutVariables";
+import {
+  AUTH_LAYOUT_PADDING,
+  LEFT_NAV_WIDTH,
+  TOP_NAV_SPACING_WITH_SITE_CONTENT,
+} from "../../Layout/layoutVariables";
 import { useLanguageContext } from "../../context/LanguageContext";
 import LetterGlitch from "../ogl/hacker";
 import cssLayoutStyles from "../../Global/Styles/layout";
-
 
 const float = keyframes`
   0%, 100% { transform: translateY(0); }
@@ -78,9 +81,9 @@ const PageNotFound: React.FC = () => {
       >
         <LetterGlitch
           glitchColors={[
-            theme.palette.mode === "dark" ? "#fff" : "#333", // First color: white in dark mode, dark gray in light mode
-            theme.palette.primary.main, // Middle color (always primary color)
-            theme.palette.mode === "dark" ? "#000" : "#666", // Last color: black in dark mode, medium gray in light mode
+            theme.palette.mode === "dark" ? "#fff" : "#333",
+            theme.palette.primary.main,
+            theme.palette.mode === "dark" ? "#000" : "#666",
           ]}
           glitchSpeed={50}
           centerVignette={false}

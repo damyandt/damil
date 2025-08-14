@@ -124,7 +124,7 @@ const theme = (mode: PaletteMode, mainColor: string) => {
         dark:
           mode === "light" ? darken(mainColor, 0.2) : darken(mainColor, 0.1),
         contrastText: "#FFFFFF",
-        light100: lighten(mainColor, 0.4),
+        light100: lighten(mainColor, 0.6),
         light200: lighten(mainColor, 0.3),
         light300: lighten(mainColor, 0.2),
         light400: lighten(mainColor, 0.1),

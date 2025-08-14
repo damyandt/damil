@@ -34,6 +34,8 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   useEffect(() => {
     setThemeMode(preferences.mode);
     setPrimaryColor(preferences.themeColor);
+    localStorage.setItem("themeMode", preferences.mode);
+    localStorage.setItem("themeColor", preferences.themeColor);
   }, [preferences]);
   const value: ThemeContextType = {
     themeMode,

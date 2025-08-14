@@ -92,6 +92,7 @@ export type PreferencesType = {
   mode: "light" | "dark";
   language: string;
   currency: string;
+  homeFilters: string[];
 };
 
 export type EnumMap = {
