@@ -102,6 +102,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
       [field]: value,
     }));
   };
+
   const handleChangSubscription = (field: string, value: string): void => {
     setSubscriptionData((prev: any) => ({
       ...prev,
@@ -459,7 +460,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
               setRefreshTable && setRefreshTable((prev: boolean) => !prev);
             }}
             color="primary"
-            variant="contained"
+            variant="outlined"
           >
             {t("Confirm")}
           </Button>

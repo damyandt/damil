@@ -42,3 +42,8 @@ export const getQueryOptions = (url: string): Query => ({
   endpoint: `${url}`,
   method: "GET",
 });
+
+export const getPeriodVisitors = (url: string): Query => ({
+  endpoint: `${url}`,
+  method: "GET",
+});

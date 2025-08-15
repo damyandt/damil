@@ -38,7 +38,6 @@ const StaffRolesPage = () => {
     } else {
       setExtraRightNavMenu(
         <RightMenu
-          configurations={tableData?.config ?? {}}
           setRefreshTable={setRefreshTable}
           columns={tableData?.columns ?? []}
           // configurations={tableData.config ?? {}}
@@ -138,7 +137,6 @@ const StaffRolesPage = () => {
                 displayName: "PHYSIOTHERAPIST (Predefined)",
               },
             ]}
-            configurations={{}}
             // columns={tableData.columns || []}
             // rows={tableData.rows || []}
             // setRefreshTable={setRefreshTable}

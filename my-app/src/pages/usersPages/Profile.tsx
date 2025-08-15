@@ -14,6 +14,7 @@ import {
   Tabs,
   Tab,
   Slide,
+  MenuItem,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -30,7 +31,7 @@ import { PreferencesType, Response } from "../../Global/Types/commonTypes";
 import { completeProfile, savePreferences } from "./api/postQuery";
 import { Fade } from "../../components/MaterialUI/FormFields/Fade";
 const ProfilePage = () => {
-  const { t } = useLanguageContext();
+  const { t, setLanguage } = useLanguageContext();
   const theme = useTheme();
   const { authedUser, setAuthedUser, preferences } = useAuthedContext();
   const { themeMode, setThemeMode, setPrimaryColor, primaryColor } =
@@ -126,8 +127,9 @@ const ProfilePage = () => {
   };
   const handleChangePreferences = (
     field: string | number,
-    value: string | number
+    value: string
   ): void => {
+    field === "language" && setLanguage(value);
     setPreferencesData((prev: PreferencesType) => ({
       ...prev,
       [field]: value,
@@ -316,29 +318,40 @@ const ProfilePage = () => {
                 <Box sx={{ minHeight: 66 }}>
                   {editModeAccount ? (
                     <Grid container spacing={2}>
-                      {preferencesInfo.map(
-                        (col: { label: string; field: string | number }) => (
-                          <Grid size={6} key={col.field}>
-                            <TextField
-                              fullWidth
-                              label={col.label}
-                              onChange={(e: any) =>
-                                handleChangePreferences(
-                                  col.field,
-                                  e.target.value
-                                )
-                              }
-                              value={
-                                preferencesData
-                                  ? preferencesData[
-                                      col.field as keyof PreferencesType
-                                    ]
-                                  : ""
-                              }
-                            />
-                          </Grid>
-                        )
-                      )}
+                      <Grid size={6}>
+                        <TextField
+                          fullWidth
+                          label={t("Currency")}
+                          onChange={(e: any) =>
+                            handleChangePreferences("currency", e.target.value)
+                          }
+                          value={
+                            preferencesData ? preferencesData["currency"] : ""
+                          }
+                        />
+                      </Grid>
+                      <Grid size={6}>
+                        <TextField
+                          select
+                          fullWidth
+                          label={t("Language")}
+                          onChange={(e: any) =>
+                            handleChangePreferences("language", e.target.value)
+                          }
+                          value={
+                            preferencesData ? preferencesData["language"] : ""
+                          }
+                        >
+                          {[
+                            { title: "BG", value: "bg" },
+                            { title: "EN", value: "en" },
+                          ].map((lang) => (
+                            <MenuItem key={lang.value} value={lang.value}>
+                              {lang.title}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </Grid>
                     </Grid>
                   ) : (
                     <Grid container spacing={3}>

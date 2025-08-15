@@ -81,49 +81,7 @@ const StaffPage = () => {
         <Box>
           <TableComponent
             columns={tableData?.columns || []}
-            // rows={tableData.rows}
-            rows={[
-              {
-                id: 1,
-                firstName: "Alice",
-                lastName: "Johnson",
-                staffRoleId: 101,
-                staffRoleName: "Manager",
-                phone: "+1-555-123-4567",
-              },
-              {
-                id: 2,
-                firstName: "Bob",
-                lastName: "Smith",
-                staffRoleId: 102,
-                staffRoleName: "Supervisor",
-                phone: "+1-555-987-6543",
-              },
-              {
-                id: 3,
-                firstName: "Charlie",
-                lastName: "Williams",
-                staffRoleId: 103,
-                staffRoleName: "Technician",
-                phone: "+1-555-246-8101",
-              },
-              {
-                id: 4,
-                firstName: "Dana",
-                lastName: "Lee",
-                staffRoleId: 104,
-                staffRoleName: "HR Specialist",
-                phone: "+1-555-333-7788",
-              },
-              {
-                id: 5,
-                firstName: "Ethan",
-                lastName: "Nguyen",
-                staffRoleId: 105,
-                staffRoleName: "Administrator",
-                phone: "+1-555-111-2222",
-              },
-            ]}
+            rows={tableData?.rows || []}
             configurations={tableData?.config}
             setRefreshTable={setRefreshTable}
             title={t("All Staff Members")}

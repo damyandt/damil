@@ -1,134 +1,123 @@
-import { Box } from "@mui/material";
+import { Box, CircularProgress, Grid } from "@mui/material";
 import TableComponent from "../../components/MaterialUI/Table/Table";
+import { useOutletContext, useParams } from "react-router-dom";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import callApi from "../../API/callApi";
+import { getClientsTable, getPeriodVisitors } from "./API/getQueries";
+import { useAuthedContext } from "../../context/AuthContext";
+import { Column, FormStatuses, Row } from "../../Global/Types/commonTypes";
+import { AppRouterProps } from "../../Layout/layoutVariables";
 import { useLanguageContext } from "../../context/LanguageContext";
-type Client = {
-  name: string;
-  birthday: string;
-  egn: string;
-  last_visit: string;
+import ClientsRightMenu from "../../components/pageComponents/Clients/ClientsRightNav";
+import NextPlanIcon from "@mui/icons-material/NextPlan";
+import NewSubscriptionPlan from "../../components/pageComponents/Clients/NewSubscriptionPlan";
+export type Client = {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  subscription?: string;
 };
 
-const columns: any = [
-  { header: "Name", field: "name" },
-  { header: "Birthday", field: "birthday", align: "right" },
-  { header: "EGN", field: "egn", align: "right" },
-  { header: "Last Visit", field: "last_visit", align: "right" },
-];
-
-const allRows: Client[] = [
-  {
-    name: "Preslava Todorova",
-    birthday: "1992-05-12",
-    egn: "9205123456",
-    last_visit: "2025-06-13",
-  },
-  {
-    name: "Danaila Todorova",
-    birthday: "1988-11-23",
-    egn: "8811237890",
-    last_visit: "2025-06-14",
-  },
-  {
-    name: "Stefan Dimitrov",
-    birthday: "2001-04-03",
-    egn: "0104031122",
-    last_visit: "2025-06-15",
-  },
-  {
-    name: "Sasho Petrov",
-    birthday: "1992-05-12",
-    egn: "9205123456",
-    last_visit: "2025-06-13",
-  },
-  {
-    name: "Petq Georgieva",
-    birthday: "1988-11-23",
-    egn: "8811237890",
-    last_visit: "2025-06-14",
-  },
-  {
-    name: "Stefan Dimitrov",
-    birthday: "2001-04-03",
-    egn: "0104031122",
-    last_visit: "2025-06-15",
-  },
-  {
-    name: "Nikolay Ivanov",
-    birthday: "1990-02-28",
-    egn: "9002284567",
-    last_visit: "2025-06-12",
-  },
-  {
-    name: "Ivan Petrov",
-    birthday: "1992-05-12",
-    egn: "9205123456",
-    last_visit: "2025-06-13",
-  },
-  {
-    name: "Maria Georgieva",
-    birthday: "1988-11-23",
-    egn: "8811237890",
-    last_visit: "2025-06-14",
-  },
-  {
-    name: "Stefan Dimitrov",
-    birthday: "2001-04-03",
-    egn: "0104031122",
-    last_visit: "2025-06-15",
-  },
-  {
-    name: "Sasho Petrov",
-    birthday: "1992-05-12",
-    egn: "9205123456",
-    last_visit: "2025-06-13",
-  },
-  {
-    name: "Petq Georgieva",
-    birthday: "1988-11-23",
-    egn: "8811237890",
-    last_visit: "2025-06-14",
-  },
-  {
-    name: "Stefan Dimitrov",
-    birthday: "2001-04-03",
-    egn: "0104031122",
-    last_visit: "2025-06-15",
-  },
-  {
-    name: "Nikolay Ivanov",
-    birthday: "1990-02-28",
-    egn: "9002284567",
-    last_visit: "2025-06-12",
-  },
-];
-
 const DailyVisitors = () => {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
-  const day = String(today.getDate()).padStart(2, "0");
-  const customFormat = `${year}-${month}-${day}`;
   const { t } = useLanguageContext();
+  const { filter } = useParams();
+  const [refreshTable, setRefreshTable] = useState<boolean>(false);
+  const [tableData, setTableData] = useState<any>();
+  const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
+  const { setAuthedUser } = useAuthedContext();
+  const { smMediaQuery, setExtraRightNavMenu } =
+    useOutletContext<AppRouterProps>();
+
+  useEffect(() => {
+    setPageStatus("loading");
+    fetchData();
+  }, [refreshTable]);
+
+  useEffect(() => {
+    if (smMediaQuery) {
+      setExtraRightNavMenu(null);
+    } else {
+      setExtraRightNavMenu(
+        <ClientsRightMenu
+          setRefreshTable={setRefreshTable}
+          columns={tableData?.columns ?? []}
+        />
+      );
+    }
+
+    return () => {
+      setExtraRightNavMenu(null);
+    };
+  }, [smMediaQuery, tableData]);
+
+  const fetchData = async () => {
+    try {
+      const data = await callApi<any>({
+        query: getPeriodVisitors("visits/period/1/2020-10-10/2025-12-12"),
+        auth: { setAuthedUser },
+      });
+      setTableData(data.data);
+    } catch (err) {
+      console.log(err);
+    }
+
+    setPageStatus(null);
+  };
+
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-      }}
-    >
-      <TableComponent
-        columns={columns}
-        rows={allRows}
-        configurations={{
-          pagination: {
-            pageSize: 7,
-          },
-        }}
-        title={`${t("All Visitors for Today")}(${customFormat})`}
-      />
-    </Box>
+    <>
+      {pageStatus === "loading" ? (
+        <Box
+          component="div"
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            height: " -webkit-fill-available",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Box>
+          <TableComponent
+            columns={tableData?.columns || []}
+            rows={tableData?.rows || []}
+            configurations={tableData?.config || {}}
+            setRefreshTable={setRefreshTable}
+            title={t("All Registered Clients")}
+            customActions={clientCustomActions}
+          />
+        </Box>
+      )}
+    </>
   );
 };
 
 export default DailyVisitors;
+
+const clientCustomActions = [
+  {
+    id: "assignSubscriptionPlan",
+    icon: <NextPlanIcon fontSize="small" />,
+    tooltip: "Assign Subscription Plan",
+    modalTitle: "Assign Subscription Plan",
+    modalWidth: "lg" as const,
+    modalStyle: "create" as const,
+    modalTitleIcon: "create" as const,
+    renderContent: (
+      rowData: Row,
+      setOpen: Dispatch<SetStateAction<boolean>>,
+      columns: Column[],
+      setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>
+    ) => (
+      <NewSubscriptionPlan
+        rowData={rowData}
+        setOpen={setOpen}
+        columns={columns}
+        setRefreshTable={setRefreshTable}
+      />
+    ),
+  },
+];

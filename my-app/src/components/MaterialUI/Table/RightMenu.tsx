@@ -51,7 +51,7 @@ const RightMenu: React.FC<RightMenuProps> = ({
             setRefreshTable={setRefreshTable}
             columns={columns}
             configurations={configurations}
-            actionUrl="gym-members/members"
+            actionUrl="staff-members/staff"
             setModalTitle={setModalTitle}
           />
         )}

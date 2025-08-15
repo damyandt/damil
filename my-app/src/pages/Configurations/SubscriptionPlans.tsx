@@ -19,6 +19,7 @@ import {
 } from "../../Global/Types/commonTypes";
 import { useLanguageContext } from "../../context/LanguageContext";
 import {
+  getCurrentSubscriptionPlans,
   getSubscriptionPlans,
   getSubscriptionPlansTable,
 } from "./API/getQueries";
@@ -33,6 +34,7 @@ const SubscriptionPlans = () => {
   const [refreshTable, setRefreshTable] = useState<boolean>(false);
   const [tableData, setTableData] = useState<Table>();
   const [plansOptions, setPlansOptions] = useState<Enum[]>([]);
+  const [currentPlans, setCurrentPlans] = useState<Enum[]>([]);
   const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
   const { smMediaQuery, setExtraRightNavMenu } =
     useOutletContext<AppRouterProps>();
@@ -47,19 +49,21 @@ const SubscriptionPlans = () => {
     if (smMediaQuery) {
       setExtraRightNavMenu(null);
     } else {
-      setExtraRightNavMenu(
-        <PlansRightMenu
-          plansOptions={plansOptions}
-          setRefreshTable={setRefreshTable}
-          withoutThis={tableData?.rows || []}
-        />
-      );
+      plansOptions.length !== currentPlans.length
+        ? setExtraRightNavMenu(
+            <PlansRightMenu
+              plansOptions={plansOptions}
+              setRefreshTable={setRefreshTable}
+              withoutThis={currentPlans || []}
+            />
+          )
+        : setExtraRightNavMenu(null);
     }
 
     return () => {
       setExtraRightNavMenu(null);
     };
-  }, [smMediaQuery, tableData, plansOptions]);
+  }, [smMediaQuery, tableData, plansOptions, currentPlans]);
 
   const fetchData = async () => {
     try {
@@ -74,13 +78,19 @@ const SubscriptionPlans = () => {
         auth: { setAuthedUser },
       });
       setPlansOptions(plansRes.data);
+
+      const currentPlansRes = await callApi<Response<Enum[]>>({
+        query: getCurrentSubscriptionPlans(),
+        auth: { setAuthedUser },
+      });
+      setCurrentPlans(currentPlansRes.data);
     } catch (err) {
       console.log(err);
     }
 
     setPageStatus(null);
   };
-  console.log(tableData?.rows.length);
+
   return (
     <>
       {pageStatus === "loading" ? (

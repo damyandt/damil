@@ -1,4 +1,4 @@
-import { Box, List, Typography, useTheme } from "@mui/material";
+import { Box, Grid, List, Typography, useTheme } from "@mui/material";
 import CustomModal from "../../components/MaterialUI/Modal";
 import Checkbox from "../../components/MaterialUI/FormFields/Checkbox";
 import Button from "../../components/MaterialUI/Button";
@@ -78,7 +78,7 @@ const FiltersModal: React.FC<SearchModalProps> = ({
     });
     onClose();
   };
-
+  console.log(options);
   return (
     <CustomModal
       open={openFilterConfig}
@@ -86,47 +86,62 @@ const FiltersModal: React.FC<SearchModalProps> = ({
       title={"Customize Filters"}
       width={"lg"}
     >
-      <List dense>
-        {availableFields.map((field) => (
-          <Box key={field} sx={{ mb: 1 }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5 }}>
-              {descriptionMap[field]}:
-            </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {options[field]?.map((opt) => {
-                const key = `${field} - ${opt.value}`;
-                return (
-                  <Box
-                    key={key}
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      border: `1px solid #ddd`,
-                      borderRadius: "8px",
-                      pr: 2,
-                      pl: 0.5,
-                      py: 0.5,
-                      cursor: "pointer",
-                      color: tempSelected.includes(key)
-                        ? theme.palette.text.primary
-                        : "inherit",
-                    }}
-                    onClick={() => handleToggle(key)}
-                  >
-                    <Checkbox
-                      checked={tempSelected.includes(key)}
-                      size="small"
-                    />
-                    <Typography variant="body2">{opt.title}</Typography>
-                  </Box>
-                );
-              })}
-            </Box>
-          </Box>
-        ))}
-      </List>
-
-      <Button onClick={handleSave}>Save</Button>
+      <Grid container spacing={2}>
+        <Grid size={12}>
+          <List dense>
+            {availableFields.map((field) => (
+              <Box key={field} sx={{ mb: 1 }}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{ fontWeight: 600, mb: 1.5 }}
+                >
+                  {field}:
+                </Typography>
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                  {options[field]?.map((opt) => {
+                    const key = `${field} - ${opt.value}`;
+                    return (
+                      <Box
+                        key={key}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          border: `1px solid #ddd`,
+                          borderRadius: "8px",
+                          pr: 2,
+                          pl: 0.5,
+                          py: 0.5,
+                          cursor: "pointer",
+                          color: tempSelected.includes(key)
+                            ? theme.palette.text.primary
+                            : "inherit",
+                        }}
+                        onClick={() => handleToggle(key)}
+                      >
+                        <Checkbox
+                          checked={tempSelected.includes(key)}
+                          size="small"
+                        />
+                        <Typography variant="body2">{opt.title}</Typography>
+                      </Box>
+                    );
+                  })}
+                </Box>
+              </Box>
+            ))}
+          </List>
+        </Grid>
+      </Grid>
+      <Grid container spacing={2} justifyContent={"flex-end"}>
+        <Grid>
+          <Button onClick={onClose} color="error">
+            Cancel
+          </Button>
+        </Grid>
+        <Grid>
+          <Button onClick={handleSave}>Save</Button>
+        </Grid>
+      </Grid>
     </CustomModal>
   );
 };

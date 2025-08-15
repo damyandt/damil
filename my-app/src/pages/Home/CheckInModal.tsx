@@ -204,14 +204,14 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
             </Grid>
           </Grid>
 
-          <Grid container spacing={2} mt={3} justifyContent="space-between">
+          <Grid container spacing={2} mt={3} justifyContent="flex-end">
             <Grid>
-              <Button variant="outlined" onClick={handleBack}>
+              <Button variant="outlined" onClick={handleBack} color="error">
                 {t("Back")}
               </Button>
             </Grid>
             <Grid>
-              <Button variant="contained" onClick={handleFinish}>
+              <Button variant="outlined" onClick={handleFinish}>
                 {t("Check In")}
               </Button>
             </Grid>

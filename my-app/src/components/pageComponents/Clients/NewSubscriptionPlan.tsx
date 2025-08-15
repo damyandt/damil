@@ -1,4 +1,12 @@
-import { Box, Grid, MenuItem, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  MenuItem,
+  Paper,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from "@mui/material";
 import TextField from "../../MaterialUI/FormFields/TextField";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import {
@@ -34,6 +42,19 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
   const { setAuthedUser } = useAuthedContext();
   const [subscriptionData, setSubscriptionData] = useState<any>({});
   const [options, setOptions] = useState<EnumMap>({});
+  const [step, setStep] = useState<number>(0);
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "cash" | null>(
+    null
+  );
+
+  const handlePaymentMethodChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newMethod: "card" | "cash" | null
+  ) => {
+    if (newMethod !== null) {
+      setPaymentMethod(newMethod);
+    }
+  };
 
   const handleChangSubscription = (field: string, value: string): void => {
     setSubscriptionData((prev: any) => ({
@@ -41,6 +62,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
       [field]: value,
     }));
   };
+
   useEffect(() => {
     const fetchAllOptions = async () => {
       if (!columns) return;
@@ -74,101 +96,192 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
 
     fetchAllOptions();
   }, [columns]);
+  console.log(subscriptionData);
   return (
     <>
-      <Grid container spacing={2} p={2}>
-        <Grid size={12}>
-          <Typography variant="h5" gutterBottom>
-            {t("Update Subscription for")} {rowData.firstName}{" "}
-            {rowData.lastName}
-          </Typography>
-        </Grid>
+      {step === 0 && (
+        <Grid container spacing={2} p={2}>
+          <Grid size={12}>
+            <Typography variant="h5" gutterBottom>
+              {t("Update Subscription for")} {rowData.firstName}{" "}
+              {rowData.lastName}
+            </Typography>
+          </Grid>
 
-        <Grid size={6}>
-          <TextField
-            select
-            label={t("Subcription Plan")}
-            value={subscriptionData.subscriptionPlan}
-            onChange={(e) =>
-              handleChangSubscription("subscriptionPlan", e.target.value)
-            }
-            fullWidth
-          >
-            {!options["subscriptionPlan"] ? (
-              <MenuItem value="loading">{t("Loading...")}</MenuItem>
-            ) : (
-              options["subscriptionPlan"].map(
-                (option: { title: string; value: string | number }) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.title}
-                  </MenuItem>
-                )
-              )
-            )}
-          </TextField>
-        </Grid>
-        <Grid size={6}>
-          <TextField
-            select
-            label={t("Employment")}
-            value={subscriptionData.subscriptionPlan}
-            onChange={(e) =>
-              handleChangSubscription("employment", e.target.value)
-            }
-            fullWidth
-          >
-            {!options["employment"] ? (
-              <MenuItem value="loading">{t("Loading...")}</MenuItem>
-            ) : (
-              options["employment"].map(
-                (option: { title: string; value: string | number }) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.title}
-                  </MenuItem>
-                )
-              )
-            )}
-          </TextField>
-        </Grid>
-        {subscriptionData.subscriptionPlan === "VISIT_PASS" && (
           <Grid size={6}>
             <TextField
               select
-              label={t("Visit Limit")}
-              value={subscriptionData.visitLimit}
-              type="number"
+              label={t("Subcription Plan")}
+              value={subscriptionData.subscriptionPlan}
               onChange={(e) =>
-                handleChangSubscription("visitLimit", e.target.value)
+                handleChangSubscription("subscriptionPlan", e.target.value)
               }
-              inputProps={{ min: 1 }}
               fullWidth
             >
-              {[3, 6, 12, 24].map((count) => (
-                <MenuItem key={count} value={count}>
-                  {count}
-                </MenuItem>
-              ))}
+              {!options["subscriptionPlan"] ? (
+                <MenuItem value="loading">{t("Loading...")}</MenuItem>
+              ) : (
+                options["subscriptionPlan"].map(
+                  (option: { title: string; value: string | number }) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.title}
+                    </MenuItem>
+                  )
+                )
+              )}
             </TextField>
           </Grid>
-        )}
-      </Grid>
+          <Grid size={6}>
+            <TextField
+              select
+              label={t("Employment")}
+              value={subscriptionData.employment}
+              onChange={(e) =>
+                handleChangSubscription("employment", e.target.value)
+              }
+              fullWidth
+            >
+              {!options["employment"] ? (
+                <MenuItem value="loading">{t("Loading...")}</MenuItem>
+              ) : (
+                options["employment"].map(
+                  (option: { title: string; value: string | number }) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.title}
+                    </MenuItem>
+                  )
+                )
+              )}
+            </TextField>
+          </Grid>
+          {subscriptionData.subscriptionPlan === "VISIT_PASS" && (
+            <Grid size={6}>
+              <TextField
+                select
+                label={t("Visit Limit")}
+                value={subscriptionData.visitLimit}
+                type="number"
+                onChange={(e) =>
+                  handleChangSubscription("visitLimit", e.target.value)
+                }
+                inputProps={{ min: 1 }}
+                fullWidth
+              >
+                {[3, 6, 12, 24].map((count) => (
+                  <MenuItem key={count} value={count}>
+                    {count}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+          )}
+        </Grid>
+      )}
+      {step === 1 && (
+        <Box
+          sx={{ maxWidth: 500, margin: "0 auto", textAlign: "center", p: 2 }}
+        >
+          <Typography variant="h5" gutterBottom>
+            {t("Total Price")}
+          </Typography>
+          <Typography variant="h3" color="primary" gutterBottom>
+            {t(" $29.99")}
+          </Typography>
+
+          <Typography variant="subtitle1" gutterBottom>
+            {t("Choose your payment method:")}
+          </Typography>
+
+          <ToggleButtonGroup
+            color="primary"
+            value={paymentMethod}
+            exclusive
+            onChange={handlePaymentMethodChange}
+            aria-label="Payment Method"
+            sx={{ mt: 2 }}
+          >
+            <ToggleButton value="card" sx={{ width: 150, height: 80 }}>
+              {t("Pay by Card")}
+            </ToggleButton>
+            <ToggleButton value="cash" sx={{ width: 150, height: 80 }}>
+              {t("Pay by Cash")}
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+      )}
+      {step === 2 && (
+        <>
+          <Paper
+            elevation={3}
+            sx={{
+              p: 2,
+              mb: 3,
+              textAlign: "center",
+              background: (theme) => theme.palette.success.light,
+              color: (theme) => theme.palette.success.contrastText,
+              borderRadius: 2,
+            }}
+          >
+            <Typography variant="h5" fontWeight="bold">
+              {t("Total Price")}: ${subscriptionData.price || "0.00"}
+            </Typography>
+          </Paper>
+
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {t("Are you sure you want to proceed with this subscription?")}
+          </Typography>
+
+          <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, mb: 3 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+              {t("Plan")}:{" "}
+              <Typography component="span" fontWeight="normal">
+                {subscriptionData.subscriptionPlan}
+              </Typography>
+            </Typography>
+
+            <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+              {t("Employment")}:{" "}
+              <Typography component="span" fontWeight="normal">
+                {subscriptionData.employment}
+              </Typography>
+            </Typography>
+
+            <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+              {t("Payment Method")}:{" "}
+              <Typography component="span" fontWeight="normal">
+                {paymentMethod}
+              </Typography>
+            </Typography>
+          </Paper>
+        </>
+      )}
       <Box display="flex" justifyContent="flex-end" gap={2}>
-        <Button onClick={() => setOpen(false)} color="error" variant="outlined">
-          {t("Cancel")}
+        <Button
+          onClick={() => {
+            step === 0 && setOpen(false);
+            step !== 0 && setStep((prev: number) => (prev -= 1));
+          }}
+          color="error"
+          variant="outlined"
+        >
+          {step === 0 ? t("Cancel") : t("Back")}
         </Button>
         <Button
           onClick={async () => {
-            await callApi<Response<any>>({
-              query: postSubscription(subscriptionData, rowData.id),
-              auth: { setAuthedUser },
-            });
-            setOpen(false);
-            setRefreshTable && setRefreshTable((prev: boolean) => !prev);
+            step !== 2 && setStep((prev: number) => (prev += 1));
+
+            step == 2 &&
+              (await callApi<Response<any>>({
+                query: postSubscription(subscriptionData, rowData.id),
+                auth: { setAuthedUser },
+              }));
+            step == 2 && setOpen(false);
+            step == 2 && setRefreshTable?.((prev: boolean) => !prev);
           }}
           color="primary"
-          variant="contained"
+          variant="outlined"
         >
-          {t("Confirm")}
+          {t("Next")}
         </Button>
       </Box>
     </>

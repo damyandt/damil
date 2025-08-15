@@ -1,4 +1,4 @@
-import React, { JSX, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   alpha,
   Box,
@@ -22,29 +22,25 @@ import SearchModal from "./SearchModal";
 import tinycolor from "tinycolor2";
 import { useLanguageContext } from "../../context/LanguageContext";
 import FiltersModal from "./FiltersModal";
-import PeopleIcon from "@mui/icons-material/People"; // Gender
-import WorkOutlineIcon from "@mui/icons-material/WorkOutline"; // Employment
-import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
-import CardMembershipIcon from "@mui/icons-material/CardMembership"; // SubscriptionPlan
+import GaugeChartHome from "../Analystics/guageChart";
 
-const iconMap: Record<string, JSX.Element> = {
-  Gender: <PeopleIcon color="primary" sx={{ fontSize: 40, mb: 1 }} />,
-  Employment: (
-    <WorkOutlineIcon color="secondary" sx={{ fontSize: 40, mb: 1 }} />
-  ),
-  SubscriptionStatus: (
-    <QuestionMarkIcon color="success" sx={{ fontSize: 40, mb: 1 }} />
-  ),
-  SubscriptionPlan: (
-    <CardMembershipIcon color="info" sx={{ fontSize: 40, mb: 1 }} />
-  ),
-};
-
-export const descriptionMap: Record<string, string> = {
-  Gender: "All Members with Gender",
-  Employment: "All Members with Employment Type",
-  SubscriptionStatus: "All Members with Subscription Status",
-  SubscriptionPlan: "All Members with Subscription Plan",
+export const descriptionMap = (type: string, word: string) => {
+  let final = "";
+  switch (type) {
+    case "Gender":
+      final = `${word} Members`;
+      break;
+    case "Employment":
+      final = `${word} Members`;
+      break;
+    case "SubscriptionPlan":
+      final = `${word} Plans`;
+      break;
+    case "SubscriptionStatus":
+      final = `${word} Members`;
+      break;
+  }
+  return final;
 };
 
 export const shiftHue = (color: string, amount: number) =>
@@ -79,6 +75,49 @@ const HomePage: React.FC = () => {
     ? shiftHue(darken(primary, 0.2), 20)
     : shiftHue(lighten(primary, 0.3), 20);
   console.log(selectedFilters);
+  type FlatDataKeys =
+    | "MALE"
+    | "FEMALE"
+    | "REGULAR"
+    | "STUDENT"
+    | "SENIOR"
+    | "HANDICAP"
+    | "ACTIVE"
+    | "INACTIVE"
+    | "PENDING"
+    | "CANCELLED"
+    | "VISIT_PASS"
+    | "MONTHLY"
+    | "DAY_PASS"
+    | "WEEKLY_PASS"
+    | "BIANNUAL"
+    | "ANNUAL";
+
+  type FlatData = {
+    [key in FlatDataKeys]: number;
+  };
+  const flatData: FlatData = {
+    MALE: 90,
+    FEMALE: 10,
+
+    REGULAR: 50,
+    STUDENT: 20,
+    SENIOR: 20,
+    HANDICAP: 10,
+
+    ACTIVE: 20,
+    INACTIVE: 80,
+    PENDING: 5,
+    CANCELLED: 5,
+
+    VISIT_PASS: 10,
+    MONTHLY: 25,
+    DAY_PASS: 15,
+    WEEKLY_PASS: 10,
+    BIANNUAL: 20,
+    ANNUAL: 20,
+  };
+
   return (
     <>
       <Box sx={{ p: 2 }}>
@@ -115,9 +154,10 @@ const HomePage: React.FC = () => {
           spacing={2}
           sx={{
             p: 3,
-            border: `1px solid ${theme.palette.primary.light100}`,
             borderRadius: "20px",
             justifyContent: "flex-start",
+            // backgroundColor: theme.palette.customColors?.darkBackgroundColor,
+            boxShadow: `inset ${theme.palette.customColors?.shodow}`,
           }}
         >
           <Grid size={12}>
@@ -129,6 +169,15 @@ const HomePage: React.FC = () => {
             <Button
               fullWidth
               variant="outlined"
+              sx={{
+                backgroundColor: "#fff",
+                boxShadow: theme.palette.customColors?.shodow,
+                border: "none",
+                transition: "transform 0.3s ease",
+                "&:hover": {
+                  transform: "scale(0.97)",
+                },
+              }}
               color="primary"
               startIcon={<LoginIcon />}
               onClick={() => setOpenCheckIn(true)}
@@ -139,8 +188,17 @@ const HomePage: React.FC = () => {
           <Grid size={4}>
             <Button
               fullWidth
-              variant="contained"
-              color="primary"
+              variant="outlined"
+              sx={{
+                background: `linear-gradient(90deg, ${colorStart}, ${colorEnd})`,
+                boxShadow: theme.palette.customColors?.shodow,
+                border: "none",
+                color: "#fff",
+                transition: "transform 0.3s ease",
+                "&:hover": {
+                  transform: "scale(0.97)",
+                },
+              }}
               startIcon={<PersonAddIcon />}
               onClick={() => navigate("/DAMIL-Access-Control/All-Clients")}
             >
@@ -153,6 +211,15 @@ const HomePage: React.FC = () => {
               fullWidth
               variant="outlined"
               startIcon={<SearchIcon />}
+              sx={{
+                backgroundColor: "#fff",
+                boxShadow: theme.palette.customColors?.shodow,
+                border: "none",
+                transition: "transform 0.3s ease",
+                "&:hover": {
+                  transform: "scale(0.97)",
+                },
+              }}
               onClick={handleSearchMember}
             >
               {t("Search Member")}
@@ -165,7 +232,17 @@ const HomePage: React.FC = () => {
               fullWidth
               variant="outlined"
               color="primary"
-              sx={{ border: `1px solid ${theme.palette.primary.light100}` }}
+              sx={{
+                border: "none",
+                background: `linear-gradient(90deg, ${colorStart}, ${colorEnd})`,
+                color: "#fff",
+                boxShadow: `inset ${theme.palette.customColors?.shodow}`,
+                transition: "transform 0.3s ease",
+                "&:hover": {
+                  transform: "scale(0.97)",
+                  cursor: "pointer",
+                },
+              }}
               startIcon={<SettingsIcon />}
               onClick={() => setOpenFilterConfig(true)}
             >
@@ -173,7 +250,7 @@ const HomePage: React.FC = () => {
             </Button>
           </Grid>
           <Grid size={12}>
-            <Grid container spacing={3}>
+            <Grid container spacing={2}>
               {selectedFilters.map((filter: string, index: number) => {
                 const [field, value] = filter.split(" - ");
 
@@ -181,21 +258,19 @@ const HomePage: React.FC = () => {
                   <Grid
                     size={3}
                     key={index}
-                    sx={{ cursor: "pointer", aspectRatio: 1 / 0.8 }}
+                    sx={{ cursor: "pointer", aspectRatio: 1 / 1 }}
                   >
                     <Box
                       sx={{
-                        border: `1px solid ${theme.palette.primary.light100}`,
-                        px: 2,
-                        borderRadius: "20px",
+                        px: 0,
+                        borderRadius: "50%",
                         textAlign: "center",
                         transition: "transform 0.3s ease",
                         alignContent: "center",
+                        cursor: "pointer",
                         height: "100%",
                         "&:hover": {
-                          transform: "scale(1.03)",
-                          boxShadow: "0 8px 24px rgba(0, 0, 0, 0.1)",
-                          cursor: "pointer",
+                          transform: "scale(0.97)",
                         },
                       }}
                       onClick={() =>
@@ -204,10 +279,14 @@ const HomePage: React.FC = () => {
                         )
                       }
                     >
-                      {iconMap[field]}
-                      <Typography variant="body2">
-                        {descriptionMap[field]} <b>{value}</b>
-                      </Typography>
+                      <GaugeChartHome
+                        data={[
+                          {
+                            value: flatData[value as keyof FlatData],
+                            name: descriptionMap(field, value),
+                          },
+                        ]}
+                      />
                     </Box>
                   </Grid>
                 );
@@ -216,7 +295,8 @@ const HomePage: React.FC = () => {
                 <Box
                   sx={{
                     p: 2,
-                    border: `1px solid ${theme.palette.primary.light100}`,
+
+                    boxShadow: `inset ${theme.palette.customColors?.shodow}`,
                     borderRadius: "20px",
                   }}
                 >

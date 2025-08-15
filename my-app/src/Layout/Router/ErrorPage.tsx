@@ -90,7 +90,7 @@ export default function ErrorPage() {
         {statusInfo}
 
         <Button
-          variant="contained"
+          variant="outlined"
           color="error"
           sx={{ mt: 3 }}
           onClick={handleBack}

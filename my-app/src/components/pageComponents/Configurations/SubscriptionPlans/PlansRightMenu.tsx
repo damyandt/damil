@@ -10,7 +10,7 @@ import { Enum, Row } from "../../../../Global/Types/commonTypes";
 interface PlansRightMenuProps {
   plansOptions: Enum[];
   setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>;
-  withoutThis: SubscriptionPlan[];
+  withoutThis: Enum[];
 }
 
 const PlansRightMenu: React.FC<PlansRightMenuProps> = ({
@@ -39,8 +39,8 @@ const PlansRightMenu: React.FC<PlansRightMenuProps> = ({
       <CustomModal
         open={!!modalTitle}
         onClose={() => setModalTitle(null)}
-        title="Add New Client"
-        width={"sm"}
+        title="Add New Subscription Plan"
+        width={"md"}
         style="create"
         titleIcon="create"
       >
@@ -58,6 +58,7 @@ const PlansRightMenu: React.FC<PlansRightMenuProps> = ({
             withoutThis={withoutThis}
             plansOptions={plansOptions}
             setRefreshTable={setRefreshTable}
+            setModalTitle={setModalTitle}
           />
         </Box>
       </CustomModal>

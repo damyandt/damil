@@ -26,13 +26,15 @@ export interface SubscriptionPlan {
 type AddNewPlansPaperProps = {
   plansOptions: Enum[];
   setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>;
-  withoutThis?: SubscriptionPlan[];
+  withoutThis?: Enum[];
+  setModalTitle?: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 const AddNewPlansPaper = ({
   plansOptions,
   setRefreshTable,
   withoutThis,
+  setModalTitle,
 }: AddNewPlansPaperProps) => {
   console.log(plansOptions);
   console.log(withoutThis);
@@ -40,9 +42,7 @@ const AddNewPlansPaper = ({
     withoutThis?.length !== 0
       ? plansOptions.filter(
           (option: Enum) =>
-            !withoutThis?.some(
-              (plan: SubscriptionPlan) => plan.subscriptionPlan === option.value
-            )
+            !withoutThis?.some((plan: Enum) => plan.value === option.value)
         )
       : plansOptions;
   const [selectedPlans, setSelectedPlans] = useState<string[]>([]);
@@ -67,6 +67,7 @@ const AddNewPlansPaper = ({
       });
 
       console.log("Plans saved:", plans);
+      setModalTitle?.(null);
       setRefreshTable((prev: boolean) => !prev);
     } catch (error) {
       console.error("Error saving plans:", error);
@@ -74,11 +75,14 @@ const AddNewPlansPaper = ({
   };
 
   return (
-    <Box width={"100%"} sx={{ display: "flex", flexDirection: "column" }}>
-      <Grid container spacing={1}>
-        <FormGroup sx={{ pl: 1 }}>
+    <Box
+      width={"100%"}
+      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+    >
+      <FormGroup sx={{ pl: 1 }}>
+        <Grid container spacing={1}>
           {finalOptions.map((plan: Enum) => (
-            <Grid size={12}>
+            <Grid size={4}>
               <FormControlLabel
                 key={plan.value}
                 control={
@@ -95,8 +99,9 @@ const AddNewPlansPaper = ({
               />
             </Grid>
           ))}
-        </FormGroup>
-      </Grid>
+        </Grid>
+      </FormGroup>
+
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           variant="outlined"

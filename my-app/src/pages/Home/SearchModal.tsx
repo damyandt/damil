@@ -206,12 +206,12 @@ const SearchModal: React.FC<SearchModalProps> = ({
 
           <Grid container spacing={2} mt={3} justifyContent="space-between">
             <Grid>
-              <Button variant="outlined" onClick={handleBack}>
+              <Button variant="outlined" onClick={handleBack} color="error">
                 {t("Back")}
               </Button>
             </Grid>
             <Grid>
-              <Button variant="contained" onClick={handleClose}>
+              <Button variant="outlined" onClick={handleClose} color="error">
                 {t("Close")}
               </Button>
             </Grid>
