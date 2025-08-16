@@ -22,22 +22,22 @@ import SearchModal from "./SearchModal";
 import tinycolor from "tinycolor2";
 import { useLanguageContext } from "../../context/LanguageContext";
 import FiltersModal from "./FiltersModal";
-import GaugeChartHome from "../Analystics/guageChart";
+import GaugeChartHome from "../Analystics/GuageChart";
 
-export const descriptionMap = (type: string, word: string) => {
+export const descriptionMap = (type: string, word: string, t: any) => {
   let final = "";
   switch (type) {
     case "Gender":
-      final = `${word} Members`;
+      final = `${word} ${t("Members")}`;
       break;
     case "Employment":
-      final = `${word} Members`;
+      final = `${word} ${t("Members")}`;
       break;
     case "SubscriptionPlan":
-      final = `${word} Plans`;
+      final = `${word} ${t("Plans")}`;
       break;
     case "SubscriptionStatus":
-      final = `${word} Members`;
+      final = `${word} ${t("Members")}`;
       break;
   }
   return final;
@@ -236,7 +236,7 @@ const HomePage: React.FC = () => {
                 border: "none",
                 background: `linear-gradient(90deg, ${colorStart}, ${colorEnd})`,
                 color: "#fff",
-                boxShadow: `inset ${theme.palette.customColors?.shodow}`,
+                boxShadow: `${theme.palette.customColors?.shodow}`,
                 transition: "transform 0.3s ease",
                 "&:hover": {
                   transform: "scale(0.97)",
@@ -246,7 +246,7 @@ const HomePage: React.FC = () => {
               startIcon={<SettingsIcon />}
               onClick={() => setOpenFilterConfig(true)}
             >
-              {t("Configure Filters")}
+              {t("Customize Analytics")}
             </Button>
           </Grid>
           <Grid size={12}>
@@ -283,7 +283,7 @@ const HomePage: React.FC = () => {
                         data={[
                           {
                             value: flatData[value as keyof FlatData],
-                            name: descriptionMap(field, value),
+                            name: descriptionMap(field, value, t),
                           },
                         ]}
                       />

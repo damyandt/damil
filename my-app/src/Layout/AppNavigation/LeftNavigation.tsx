@@ -111,7 +111,13 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
   const [anchorElSettings, setAnchorElSettings] = useState<any>(null);
   const { authedUser } = useAuthedContext();
   const styles = { ...cssStyles(openLeftNav, theme) };
-  const { NAV_DAMIL_HOME, NAV_DAMIL_ANALYTICS } = useTranslatedNav();
+  const {
+    NAV_DAMIL_HOME,
+    NAV_DAMIL_ANALYTICS,
+    NAV_DAMIL_STAFF,
+    NAV_DAMIL_ACCESS_CONTROL,
+    NAV_DAMIL_CONFIGURATIONS,
+  } = useTranslatedNav();
 
   return (
     <Drawer

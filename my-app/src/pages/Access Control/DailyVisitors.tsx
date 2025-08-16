@@ -11,6 +11,8 @@ import { useLanguageContext } from "../../context/LanguageContext";
 import ClientsRightMenu from "../../components/pageComponents/Clients/ClientsRightNav";
 import NextPlanIcon from "@mui/icons-material/NextPlan";
 import NewSubscriptionPlan from "../../components/pageComponents/Clients/NewSubscriptionPlan";
+import dayjs, { Dayjs } from "dayjs";
+import VisitorsRightMenu from "../../components/pageComponents/Clients/DailyVisitorsRightMenu";
 export type Client = {
   firstName: string;
   lastName: string;
@@ -20,12 +22,14 @@ export type Client = {
 };
 
 const DailyVisitors = () => {
+  const today = dayjs().startOf("day");
   const { t } = useLanguageContext();
-  const { filter } = useParams();
   const [refreshTable, setRefreshTable] = useState<boolean>(false);
   const [tableData, setTableData] = useState<any>();
   const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
-  const { setAuthedUser } = useAuthedContext();
+  const [startDate, setStartDate] = useState<Dayjs>(today);
+  const [endDate, setEndDate] = useState<Dayjs>(today);
+  const { setAuthedUser, authedUser } = useAuthedContext();
   const { smMediaQuery, setExtraRightNavMenu } =
     useOutletContext<AppRouterProps>();
 
@@ -39,9 +43,12 @@ const DailyVisitors = () => {
       setExtraRightNavMenu(null);
     } else {
       setExtraRightNavMenu(
-        <ClientsRightMenu
+        <VisitorsRightMenu
           setRefreshTable={setRefreshTable}
-          columns={tableData?.columns ?? []}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
         />
       );
     }
@@ -52,9 +59,15 @@ const DailyVisitors = () => {
   }, [smMediaQuery, tableData]);
 
   const fetchData = async () => {
+    console.log(startDate);
+    console.log(endDate);
     try {
       const data = await callApi<any>({
-        query: getPeriodVisitors("visits/period/1/2020-10-10/2025-12-12"),
+        query: getPeriodVisitors(
+          authedUser.id || "",
+          startDate.format("YYYY-MM-DD"),
+          endDate.format("YYYY-MM-DD")
+        ),
         auth: { setAuthedUser },
       });
       setTableData(data.data);
@@ -86,7 +99,7 @@ const DailyVisitors = () => {
             rows={tableData?.rows || []}
             configurations={tableData?.config || {}}
             setRefreshTable={setRefreshTable}
-            title={t("All Registered Clients")}
+            title={`${t("Visits")} (${startDate.format("YYYY-MM-DD")} - ${endDate.format("YYYY-MM-DD")})`}
             customActions={clientCustomActions}
           />
         </Box>

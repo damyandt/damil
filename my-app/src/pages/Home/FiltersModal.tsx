@@ -9,6 +9,7 @@ import callApi from "../../API/callApi";
 import { useAuthedContext } from "../../context/AuthContext";
 import { descriptionMap } from "./Home";
 import { savePreferences } from "../usersPages/api/postQuery";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 interface SearchModalProps {
   openFilterConfig: boolean;
@@ -22,6 +23,7 @@ const FiltersModal: React.FC<SearchModalProps> = ({
   selectedFilters,
   setSelectedFilters,
 }) => {
+  const { t } = useLanguageContext();
   const { setAuthedUser } = useAuthedContext();
   const theme = useTheme();
   const availableFields = [
@@ -32,10 +34,10 @@ const FiltersModal: React.FC<SearchModalProps> = ({
   ];
 
   const [options, setOptions] = useState<EnumMap>({});
-  const [tempSelected, setTempSelected] = useState<string[]>([]); // local selection
+  const [tempSelected, setTempSelected] = useState<string[]>([]);
 
   useEffect(() => {
-    setTempSelected(selectedFilters); // reset temp selection when modal opens
+    setTempSelected(selectedFilters);
   }, [openFilterConfig, selectedFilters]);
 
   useEffect(() => {
@@ -64,12 +66,18 @@ const FiltersModal: React.FC<SearchModalProps> = ({
 
   const handleToggle = (key: string) => {
     if (tempSelected.includes(key)) {
+      // remove if already selected
       setTempSelected(tempSelected.filter((f) => f !== key));
     } else {
-      setTempSelected([...tempSelected, key]);
+      // add new selection
+      if (tempSelected.length < 4) {
+        setTempSelected([...tempSelected, key]);
+      } else {
+        // remove the first and add the new one
+        setTempSelected([...tempSelected.slice(1), key]);
+      }
     }
   };
-
   const handleSave = async () => {
     setSelectedFilters(tempSelected);
     await callApi<Response<any>>({
@@ -83,7 +91,7 @@ const FiltersModal: React.FC<SearchModalProps> = ({
     <CustomModal
       open={openFilterConfig}
       onClose={onClose}
-      title={"Customize Filters"}
+      title={t("Customize Filters")}
       width={"lg"}
     >
       <Grid container spacing={2}>

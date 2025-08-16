@@ -1,6 +1,10 @@
+import { useLanguageContext } from "../../context/LanguageContext";
 import {
+  NAV_DAMIL_ACCESS_CONTROL,
   NAV_DAMIL_ANALYTICS,
+  NAV_DAMIL_CONFIGURATIONS,
   NAV_DAMIL_HOME,
+  NAV_DAMIL_STAFF,
 } from "../../Layout/AppNavigation/leftNavData";
 import { LeftNavSingleItem } from "../../Layout/layoutVariables";
 
@@ -23,15 +27,31 @@ const translateNavItem = (
 };
 
 export const useTranslatedNav = () => {
-  // const { t } = useLanguageContext();
+  const { t } = useLanguageContext();
   return {
     NAV_DAMIL_HOME: {
       ...NAV_DAMIL_HOME,
-      list: NAV_DAMIL_HOME.list,
+      list: NAV_DAMIL_HOME.list.map((item) => translateNavItem(item, t)),
     },
     NAV_DAMIL_ANALYTICS: {
       ...NAV_DAMIL_ANALYTICS,
-      list: NAV_DAMIL_ANALYTICS.list,
+      list: NAV_DAMIL_ANALYTICS.list.map((item) => translateNavItem(item, t)),
+    },
+    NAV_DAMIL_CONFIGURATIONS: {
+      ...NAV_DAMIL_CONFIGURATIONS,
+      list: NAV_DAMIL_CONFIGURATIONS.list.map((item) =>
+        translateNavItem(item, t)
+      ),
+    },
+    NAV_DAMIL_ACCESS_CONTROL: {
+      ...NAV_DAMIL_ACCESS_CONTROL,
+      list: NAV_DAMIL_ACCESS_CONTROL.list.map((item) =>
+        translateNavItem(item, t)
+      ),
+    },
+    NAV_DAMIL_STAFF: {
+      ...NAV_DAMIL_STAFF,
+      list: NAV_DAMIL_STAFF.list.map((item) => translateNavItem(item, t)),
     },
   };
 };

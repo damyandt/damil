@@ -236,7 +236,14 @@ const TableComponent = ({
           </TableHead>
           <TableBody>
             {paginatedRows.length === 0 ? (
-              <Typography>{t("No Data...")}</Typography>
+              <TableRow>
+                <TableCell
+                  align="center"
+                  sx={{ borderBottom: "none", border: "none" }}
+                >
+                  <Typography>{t("No Data...")}</Typography>
+                </TableCell>
+              </TableRow>
             ) : (
               paginatedRows?.map((row: Row) => {
                 const isDeleting = isRowDeleting(row.id);

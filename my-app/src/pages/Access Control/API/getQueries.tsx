@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import { Query } from "../../../API/callApi";
 
 export const getClientsTable = (filter?: string): Query => {
@@ -43,7 +44,16 @@ export const getQueryOptions = (url: string): Query => ({
   method: "GET",
 });
 
-export const getPeriodVisitors = (url: string): Query => ({
-  endpoint: `${url}`,
+export const getPeriodVisitors = (
+  id: string,
+  startDate: string,
+  endDate: string
+): Query => ({
+  endpoint: `visits/period/${id}/${startDate}/${endDate}`,
+  method: "GET",
+});
+
+export const getClientVisits = (id: string): Query => ({
+  endpoint: `visits/member/${id}`,
   method: "GET",
 });

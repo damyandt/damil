@@ -33,8 +33,8 @@ const GaugeChartHome: React.FC<GaugeChartHomeProps> = ({ data }) => {
     series: [
       {
         type: "gauge",
-        // startAngle: 90,
-        // endAngle: -270,
+        startAngle: 90,
+        endAngle: -270,
         radius: "100%",
         center: ["50%", "50%"],
         pointer: { show: false },
