@@ -60,7 +60,7 @@ const LoginPage = () => {
         sx={{
           p: 4,
 
-          height: "100vh",
+          height: "100dvh",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -81,7 +81,7 @@ const LoginPage = () => {
             transformOrigin: "center",
             zIndex: 2,
             width: "100vw",
-            height: "100vh",
+            height: "100dvh",
             backgroundColor: theme.palette.customColors?.darkBackgroundColor,
           }}
         >
