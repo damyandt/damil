@@ -58,6 +58,8 @@ const LoginPage = () => {
       </CustomTooltip>
       <Box
         sx={{
+          p: 4,
+
           height: "100vh",
           display: "flex",
           flexDirection: "column",
@@ -71,6 +73,12 @@ const LoginPage = () => {
             position: "fixed",
             top: 0,
             left: 0,
+            transform: {
+              xs: "scale(1.8)", // mobile
+              sm: "scale(1.2)", // tablets
+              md: "scale(1)", // desktop and up
+            },
+            transformOrigin: "center",
             zIndex: 2,
             width: "100vw",
             height: "100vh",
