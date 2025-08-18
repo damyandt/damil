@@ -171,6 +171,9 @@
   "Events": "Events",
   "Configurations": "Configurations",
   "Member Plans": "Member Plans",
-  "// NEW STRINGS BELOW - TRANSLATE THESE": "",
-  "Configure Analytics": "Configure Analytics"
+  "Configure Analytics": "Configure Analytics",
+  "Customize Filters": "Customize Filters",
+  "Customize Analytics": "Customize Analytics",
+  "Account Details": "Account Details",
+  "Preferences": "Preferences"
 }

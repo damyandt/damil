@@ -61,7 +61,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: sizeMap[width] || width,
+          maxWidth: sizeMap[width] || width,
           bgcolor: theme.palette.customColors?.sectionBackgroundColor,
           borderRadius: 1,
           boxShadow: theme.palette.customColors?.shodow,
@@ -72,9 +72,9 @@ const CustomModal: React.FC<CustomModalProps> = ({
           height: height ?? "auto",
           maxHeight: "95vh",
           overflow: "scroll",
-          scrollbarWidth: "none", // for Firefox
+          scrollbarWidth: "none",
           "&::-webkit-scrollbar": {
-            display: "none", // for Chrome, Safari, and Edge
+            display: "none",
           },
         }}
       >

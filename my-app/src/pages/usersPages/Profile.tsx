@@ -195,8 +195,8 @@ const ProfilePage = () => {
       </Grid>
       <Grid size={6} p={2} overflow={"scroll"}>
         <Tabs value={selectedTab} onChange={handleTabChange} sx={{ mb: 3 }}>
-          <Tab label="Account Details" />
-          <Tab label="Preferences" />
+          <Tab label={t("Account Details")} />
+          <Tab label={t("Preferences")} />
         </Tabs>
         <Slide
           direction={selectedTab === 0 ? "right" : "left"}

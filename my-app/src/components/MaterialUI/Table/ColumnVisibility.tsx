@@ -55,7 +55,7 @@ const ColumnVisibilityModal = ({
     >
       <Grid container spacing={2}>
         {Object.entries(localVisibility).map(([key, isVisible]) => (
-          <Grid size={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <FormControlLabel
               key={key}
               control={

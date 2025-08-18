@@ -6,8 +6,6 @@ import GoalMembersGaugeChart from "../Analystics/Goal";
 import Memberships from "../Analystics/Memberships";
 import { useLanguageContext } from "../../context/LanguageContext";
 
-
-
 const ChartDisplay = () => {
   const { t } = useLanguageContext();
   const chartOptions: { label: string; value: string }[] = [
@@ -36,7 +34,7 @@ const ChartDisplay = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid size={4}>
+      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
         <Select
           fullWidth
           value={selectedChart}

@@ -13,6 +13,10 @@ import {
   InputAdornment,
   MenuItem,
   useTheme,
+  useMediaQuery,
+  Box,
+  Card,
+  CardContent,
 } from "@mui/material";
 import CustomTooltip from "../CustomTooltip";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -77,7 +81,7 @@ const TableComponent = ({
       value?.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
-
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   let sortedRows = [...(filteredRows || [])];
   if (configurations?.sortable?.field) {
     const { field, desc } = configurations.sortable;
@@ -121,13 +125,14 @@ const TableComponent = ({
   return (
     <>
       <Grid container spacing={2} alignItems={"center"} py={2}>
-        <Grid size={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <TextField
             size="small"
             label={t("Search...")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            sx={{ width: "250px" }}
+            // sx={{ width: "250px" }}
+            fullWidth
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -137,13 +142,13 @@ const TableComponent = ({
             }}
           />
         </Grid>
-        <Grid size={6}>
+        <Grid size={{ xs: 12, sm: 12, md: 6 }}>
           <Typography variant="h4" sx={{ textAlign: "center", flexGrow: 1 }}>
             {title}
           </Typography>
         </Grid>
-
-        <Grid size={1} alignItems="right">
+        {/* <Grid size={{ xs: 12, sm: 6, md: 1 }}></Grid> */}
+        <Grid size={{ xs: 6, sm: 6, md: 1 }}>
           <TextField
             select
             size="small"
@@ -161,10 +166,11 @@ const TableComponent = ({
             ))}
           </TextField>
         </Grid>
-        <Grid size={2} alignItems="right">
+        <Grid size={{ xs: 6, sm: 6, md: 2 }} alignItems="right">
           <Button
             borderWidth={1}
             borderColor="#ccc"
+            fullWidth
             color="inherit"
             onClick={() => setModalOpen(true)}
             startIcon={<SettingsIcon fontSize="small" />}
@@ -183,184 +189,235 @@ const TableComponent = ({
           </Button>
         </Grid>
       </Grid>
-      <TableContainer
-        sx={{
-          backgroundColor: theme.palette.customColors?.tableBackground,
-          paddingX: "5px",
-          marginBottom: "10vh",
-        }}
-      >
-        <MuiTable
+      {!isMobile && (
+        <TableContainer
           sx={{
-            borderCollapse: "separate",
-            borderSpacing: "0px 4px",
-            "& .MuiTableCell-root": {
-              paddingTop: "4px",
-              paddingBottom: "4px",
-              height: "3em",
-            },
-            "& .MuiTableRow-root": {
-              height: "3em",
-            },
-            "& thead > tr:first-of-type > th": {
-              borderBottom: "none",
-              backgroundColor: theme.palette.customColors?.tableBackground,
-            },
+            backgroundColor: theme.palette.customColors?.tableBackground,
+            paddingX: "5px",
+            marginBottom: "10vh",
           }}
         >
-          <TableHead>
-            <TableRow
-              sx={{
+          <MuiTable
+            sx={{
+              borderCollapse: "separate",
+              borderSpacing: "0px 4px",
+              "& .MuiTableCell-root": {
+                paddingTop: "4px",
+                paddingBottom: "4px",
+                height: "3em",
+              },
+              "& .MuiTableRow-root": {
+                height: "3em",
+              },
+              "& thead > tr:first-of-type > th": {
+                borderBottom: "none",
                 backgroundColor: theme.palette.customColors?.tableBackground,
-              }}
-            >
-              {visibleColumns?.map((col: Column) => (
-                <TableCell
-                  key={col.field as string}
-                  align={col.align || "left"}
-                  sx={{
-                    paddingLeft: "2em",
-                    fontWeight: "400",
-                    minWidth: col.header.toLowerCase() === "id" ? 50 : 180,
-                  }}
-                >
-                  {col.header}
-                </TableCell>
-              ))}
-              {configurations?.actions && (
-                <TableCell sx={{ fontWeight: "400" }} align="right">
-                  {t("Actions")}
-                </TableCell>
-              )}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paginatedRows.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  align="center"
-                  sx={{ borderBottom: "none", border: "none" }}
-                >
-                  <Typography>{t("No Data...")}</Typography>
-                </TableCell>
-              </TableRow>
-            ) : (
-              paginatedRows?.map((row: Row) => {
-                const isDeleting = isRowDeleting(row.id);
-                const progress = deleteQueue[row.id]?.progress || 0;
-
-                return (
-                  <TableRow
-                    onClick={() => {
-                      if (
-                        configurations?.actions?.find(
-                          (action: TableAction) => action.id === "details"
-                        )
-                      ) {
-                        setOpenDetails(true);
-                        setAnchorEl("closeOnlyAnchor");
-                        setSelectedRow(row);
-                      }
-                    }}
-                    key={row.id}
+              },
+            }}
+          >
+            <TableHead>
+              <TableRow
+                sx={{
+                  backgroundColor: theme.palette.customColors?.tableBackground,
+                }}
+              >
+                {visibleColumns?.map((col: Column) => (
+                  <TableCell
+                    key={col.field as string}
+                    align={col.align || "left"}
                     sx={{
-                      position: "relative",
-                      backgroundColor: isDeleting
-                        ? theme.palette.mode === "dark"
-                          ? "#5a2a2a"
-                          : "#ffe6e6"
-                        : theme.palette.customColors?.tableRow,
-                      transition: "background-color 0.3s ease",
-                      boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
-                      "&:hover": {
-                        backgroundColor:
-                          theme.palette.mode === "dark"
-                            ? "rgba(96, 96, 96, 0.78)"
-                            : "#fff",
-                        cursor: "pointer",
-                        // transform: "scale(0.99)",
-                        zIndex: 10,
-                        position: "relative",
-                      },
+                      paddingLeft: "2em",
+                      fontWeight: "400",
+                      minWidth: col.header.toLowerCase() === "id" ? 50 : 180,
                     }}
                   >
-                    {visibleColumns.map((col: Column) => {
-                      return (
-                        <TableCell
-                          align={col.align}
-                          key={col.field}
-                          sx={{ borderBottom: "none", border: "none" }}
-                        >
-                          <CellRenderer
+                    {col.header}
+                  </TableCell>
+                ))}
+                {configurations?.actions && (
+                  <TableCell sx={{ fontWeight: "400" }} align="right">
+                    {t("Actions")}
+                  </TableCell>
+                )}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {paginatedRows.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    align="center"
+                    sx={{ borderBottom: "none", border: "none" }}
+                  >
+                    <Typography>{t("No Data...")}</Typography>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                paginatedRows?.map((row: Row) => {
+                  const isDeleting = isRowDeleting(row.id);
+                  const progress = deleteQueue[row.id]?.progress || 0;
+
+                  return (
+                    <TableRow
+                      onClick={() => {
+                        if (
+                          configurations?.actions?.find(
+                            (action: TableAction) => action.id === "details"
+                          )
+                        ) {
+                          setOpenDetails(true);
+                          setAnchorEl("closeOnlyAnchor");
+                          setSelectedRow(row);
+                        }
+                      }}
+                      key={row.id}
+                      sx={{
+                        position: "relative",
+                        backgroundColor: isDeleting
+                          ? theme.palette.mode === "dark"
+                            ? "#5a2a2a"
+                            : "#ffe6e6"
+                          : theme.palette.customColors?.tableRow,
+                        transition: "background-color 0.3s ease",
+                        boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+                        "&:hover": {
+                          backgroundColor:
+                            theme.palette.mode === "dark"
+                              ? "rgba(96, 96, 96, 0.78)"
+                              : "#fff",
+                          cursor: "pointer",
+                          // transform: "scale(0.99)",
+                          zIndex: 10,
+                          position: "relative",
+                        },
+                      }}
+                    >
+                      {visibleColumns.map((col: Column) => {
+                        return (
+                          <TableCell
+                            align={col.align}
                             key={col.field}
-                            value={row[col.field]}
-                            dataType={col.type}
-                            table={true}
-                          />
-                        </TableCell>
-                      );
-                    })}
-
-                    {(configurations?.actions || customActions) && (
-                      <TableCell
-                        align="right"
-                        sx={{
-                          zIndex: 100,
-                          borderBottom: "none",
-                          display: "flex",
-                          alignItems: "flex-end",
-                        }}
-                      >
-                        {isDeleting ? (
-                          <DeleteUndo
-                            deleteQueue={deleteQueue}
-                            setDeleteQueue={setDeleteQueue}
-                            rowId={row.id}
-                          />
-                        ) : (
-                          <CustomTooltip
-                            title="Show Actions"
-                            placement="left"
-                            sx={{ width: "fit-content" }}
+                            sx={{ borderBottom: "none", border: "none" }}
                           >
-                            <IconButton
-                              size="small"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleMenuOpen(e, row);
-                              }}
-                            >
-                              <MoreHorizIcon />
-                            </IconButton>
-                          </CustomTooltip>
-                        )}
-                      </TableCell>
-                    )}
+                            <CellRenderer
+                              key={col.field}
+                              value={row[col.field]}
+                              dataType={col.type}
+                              table={true}
+                            />
+                          </TableCell>
+                        );
+                      })}
 
-                    {isDeleting && (
-                      <LinearProgress
-                        variant="determinate"
-                        value={progress}
-                        sx={{
-                          position: "absolute",
-                          bottom: 0,
-                          left: 0,
-                          width: "100%",
-                          height: 3,
-                          backgroundColor: "#fdd",
-                          "& .MuiLinearProgress-bar": {
-                            backgroundColor: "#d32f2f",
-                          },
-                        }}
-                      />
-                    )}
-                  </TableRow>
-                );
-              })
-            )}
-          </TableBody>
-        </MuiTable>
-      </TableContainer>
+                      {(configurations?.actions || customActions) && (
+                        <TableCell
+                          align="right"
+                          sx={{
+                            zIndex: 100,
+                            borderBottom: "none",
+                            display: "flex",
+                            alignItems: "flex-end",
+                          }}
+                        >
+                          {isDeleting ? (
+                            <DeleteUndo
+                              deleteQueue={deleteQueue}
+                              setDeleteQueue={setDeleteQueue}
+                              rowId={row.id}
+                            />
+                          ) : (
+                            <CustomTooltip
+                              title="Show Actions"
+                              placement="left"
+                              sx={{ width: "fit-content" }}
+                            >
+                              <IconButton
+                                size="small"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleMenuOpen(e, row);
+                                }}
+                              >
+                                <MoreHorizIcon />
+                              </IconButton>
+                            </CustomTooltip>
+                          )}
+                        </TableCell>
+                      )}
+
+                      {isDeleting && (
+                        <LinearProgress
+                          variant="determinate"
+                          value={progress}
+                          sx={{
+                            position: "absolute",
+                            bottom: 0,
+                            left: 0,
+                            width: "100%",
+                            height: 3,
+                            backgroundColor: "#fdd",
+                            "& .MuiLinearProgress-bar": {
+                              backgroundColor: "#d32f2f",
+                            },
+                          }}
+                        />
+                      )}
+                    </TableRow>
+                  );
+                })
+              )}
+            </TableBody>
+          </MuiTable>
+        </TableContainer>
+      )}
+      {isMobile && (
+        <Box display="flex" flexDirection="column" gap={2}>
+          {paginatedRows.length === 0 ? (
+            <Typography align="center">{t("No Data...")}</Typography>
+          ) : (
+            paginatedRows.map((row: Row) => (
+              <Card
+                key={row.id}
+                sx={{
+                  backgroundColor: theme.palette.customColors?.tableRow,
+                  boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+                }}
+              >
+                <CardContent>
+                  {visibleColumns.map((col: Column) => (
+                    <Box key={col.field} mb={1}>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ fontWeight: 500 }}
+                      >
+                        {col.header}
+                      </Typography>
+                      <Typography variant="body2">
+                        <CellRenderer
+                          value={row[col.field]}
+                          dataType={col.type}
+                          table={false}
+                        />
+                      </Typography>
+                    </Box>
+                  ))}
+
+                  {configurations?.actions && (
+                    <Box mt={1} display="flex" justifyContent="flex-end">
+                      <IconButton
+                        size="small"
+                        onClick={(e) => handleMenuOpen(e, row)}
+                      >
+                        <MoreHorizIcon />
+                      </IconButton>
+                    </Box>
+                  )}
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </Box>
+      )}
 
       <MenuActions
         setDeleteQueue={setDeleteQueue}

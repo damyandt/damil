@@ -89,8 +89,34 @@ const staticThemeColors = {
     900: "#555555",
   },
 };
-
+const getTypographyAdjustments = (theme: Theme) => ({
+  body1: {
+    ...theme.typography.body1,
+    [theme.breakpoints.down("md")]: {
+      fontSize: "0.9rem",
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "0.8rem",
+    },
+  },
+  body2: {
+    ...theme.typography.body2,
+    [theme.breakpoints.down("md")]: {
+      fontSize: "0.775rem",
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "0.675rem",
+    },
+  },
+  caption: {
+    ...theme.typography.caption,
+    [theme.breakpoints.down("md")]: {
+      fontSize: "0.65rem",
+    },
+  },
+});
 const theme = (mode: PaletteMode, mainColor: string) => {
+  const baseTheme = createTheme();
   const customTheme: ThemeOptions = {
     components: {
       MuiCssBaseline: {
@@ -216,18 +242,21 @@ const theme = (mode: PaletteMode, mainColor: string) => {
         letterSpacing: "0.00938em",
       },
       body2: {
+        ...getTypographyAdjustments(baseTheme).body1,
         fontSize: "0.875rem", // 14px
         fontWeight: 400,
         lineHeight: 1.43,
         letterSpacing: "0.01071em",
       },
       caption: {
+        ...getTypographyAdjustments(baseTheme).body1,
         fontSize: "0.75rem", // 12px
         fontWeight: 400,
         lineHeight: 1.66,
         letterSpacing: "0.03333em",
       },
       button: {
+        ...getTypographyAdjustments(baseTheme).body1,
         fontSize: "0.875rem", // 14px
         fontWeight: 500,
         lineHeight: 1.75,

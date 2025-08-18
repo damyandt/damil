@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Box, CircularProgress, Grid, MenuItem } from "@mui/material";
+import { Box, CircularProgress, MenuItem } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import { useAuthedContext } from "../../context/AuthContext";
 import { useLanguageContext } from "../../context/LanguageContext";
 import callApi, { Query } from "../../API/callApi";
@@ -173,7 +174,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
             .map((col: any) => {
               const value = formValues[col.field] || "";
               return (
-                <Grid key={col.field} size={6}>
+                <Grid key={col.field} size={{ xs: 12, md: 6 }}>
                   {(() => {
                     switch (col.type) {
                       case "text":

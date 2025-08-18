@@ -7,6 +7,7 @@ import {
   Grid,
   lighten,
   Typography,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -117,10 +118,10 @@ const HomePage: React.FC = () => {
     BIANNUAL: 20,
     ANNUAL: 20,
   };
-
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <>
-      <Box sx={{ p: 2 }}>
+      <Box sx={isMobile ? { p: 0 } : { p: 2 }}>
         <Box
           sx={{
             textAlign: "center",
@@ -165,7 +166,7 @@ const HomePage: React.FC = () => {
               {t("Quick Actions")}
             </Typography>
           </Grid>
-          <Grid size={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Button
               fullWidth
               variant="outlined"
@@ -185,7 +186,7 @@ const HomePage: React.FC = () => {
               {t("Check In")}
             </Button>
           </Grid>
-          <Grid size={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Button
               fullWidth
               variant="outlined"
@@ -206,7 +207,7 @@ const HomePage: React.FC = () => {
             </Button>
           </Grid>
 
-          <Grid size={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Button
               fullWidth
               variant="outlined"
@@ -256,7 +257,7 @@ const HomePage: React.FC = () => {
 
                 return (
                   <Grid
-                    size={3}
+                    size={{ xs: 12, sm: 6, md: 3 }}
                     key={index}
                     sx={{ cursor: "pointer", aspectRatio: 1 / 1 }}
                   >

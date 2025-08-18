@@ -14,11 +14,6 @@ import {
 import { LEFT_NAV_WIDTH } from "../layoutVariables";
 import LeftNavListMenu from "./LeftNavListMenu";
 import { useTranslatedNav } from "../../Global/Hooks/useTranslatedNav";
-import {
-  NAV_DAMIL_ACCESS_CONTROL,
-  NAV_DAMIL_CONFIGURATIONS,
-  NAV_DAMIL_STAFF,
-} from "./leftNavData";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";

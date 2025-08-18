@@ -80,7 +80,17 @@ const cssStyles = (
     height: `100vh`,
     flexGrow: 1,
     position: "relative",
-    padding: AUTH_LAYOUT_PADDING,
+    // padding: AUTH_LAYOUT_PADDING,
+    padding: AUTH_LAYOUT_PADDING.xs,
+    [theme.breakpoints.up("sm")]: {
+      padding: AUTH_LAYOUT_PADDING.sm,
+    },
+    [theme.breakpoints.up("md")]: {
+      padding: AUTH_LAYOUT_PADDING.md,
+    },
+    [theme.breakpoints.up("lg")]: {
+      padding: AUTH_LAYOUT_PADDING.lg,
+    },
     backgroundColor: theme.palette.customColors?.darkBackgroundColor,
     ...(!mobileLeftNav && {
       transition: "margin 0.4s ease",
@@ -100,7 +110,7 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
   const [isRightNavVisible, setIsRightNavVisible] = useState<boolean>(true);
   const [extraRightNavMenu, setExtraRightNavMenu] =
     useState<React.ReactNode | null>(null);
-  const [openLeftNav, setOpenLeftNav] = useState<boolean>(!lgMediaQuery);
+  const [openLeftNav, setOpenLeftNav] = useState<boolean>(lgMediaQuery);
   const styles = {
     ...cssStyles(
       theme,
