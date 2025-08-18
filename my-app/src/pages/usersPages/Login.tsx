@@ -59,7 +59,7 @@ const LoginPage = () => {
       <Box
         sx={{
           p: 4,
-
+          overflow: "hidden",
           height: "100dvh",
           display: "flex",
           flexDirection: "column",
