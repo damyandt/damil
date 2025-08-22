@@ -18,10 +18,14 @@ const float = keyframes`
   50% { transform: translateY(-20px); }
 `;
 
-const cssStyles = (theme: Theme, leftNavIsOpen: boolean, mobileLeftNav: boolean) => ({
+const cssStyles = (
+  theme: Theme,
+  leftNavIsOpen: boolean,
+  mobileLeftNav: boolean
+) => ({
   pageNotFoundContent: css({
     flexGrow: 1,
-    padding: AUTH_LAYOUT_PADDING,
+    padding: AUTH_LAYOUT_PADDING.xs,
     backgroundColor:
       theme.palette.mode === "light"
         ? AUTH_LAYOUT_BACKGROUND_COLOR
@@ -51,7 +55,7 @@ const ComingSoonPage: React.FC = () => {
   const { t } = useLanguageContext();
   const theme = useTheme();
   const lgMediaQuery = useMediaQuery("(max-width:1199px)");
-  const [openLeftNav, setOpenLeftNav] = useState<boolean>(!lgMediaQuery);
+  const [openLeftNav, setOpenLeftNav] = useState<boolean>(true);
   const styles = {
     ...cssLayoutStyles,
     ...cssStyles(theme, openLeftNav, lgMediaQuery),
@@ -59,7 +63,7 @@ const ComingSoonPage: React.FC = () => {
 
   useEffect(() => {
     if (lgMediaQuery && openLeftNav) {
-      setOpenLeftNav(false);
+      setOpenLeftNav(true);
     }
   }, [lgMediaQuery]);
 
@@ -72,7 +76,11 @@ const ComingSoonPage: React.FC = () => {
       <Box component="div" sx={styles.floating}>
         <img src="/coming-soon.png" alt="Coming-Soon" width="360" />
       </Box>
-      <Typography variant="h1" mt={3} sx={{ color: theme.palette.customColors?.darkGray }}>
+      <Typography
+        variant="h1"
+        mt={3}
+        sx={{ color: theme.palette.customColors?.darkGray }}
+      >
         {t("Coming Soon!")}
       </Typography>
     </Box>

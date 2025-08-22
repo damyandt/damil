@@ -25,18 +25,18 @@ export const codeVerification = (input: any): Query => ({
 });
 
 export const completeProfile = (input: any): Query => ({
-  endpoint: `gym/basic-info`,
-  method: "POST",
+  endpoint: `user/update`,
+  method: "PUT",
   variables: input,
 });
 
 export const savePreferences = (input: any): Query => ({
-  endpoint: `gym/account-settings/update/me`,
+  endpoint: `users/settings/update/me`,
   method: "PUT",
   variables: input,
 });
 
 export const getPreferences = (): Query => ({
-  endpoint: `gym/account-settings/me`,
+  endpoint: `users/settings/me`,
   method: "GET",
 });

@@ -2,7 +2,7 @@ import { Dayjs } from "dayjs";
 import { Query } from "../../../API/callApi";
 
 export const getClientsTable = (filter?: string): Query => {
-  let endpoint = "gym-members/table";
+  let endpoint = "users/members";
 
   filter && (endpoint += `?${filter}`);
 
@@ -15,7 +15,7 @@ export const getMember = (
   gymID: string,
   searchQuery: string | number
 ): Query => ({
-  endpoint: `gym-members/${gymID}/search?query=${searchQuery}`,
+  endpoint: `users/members/${gymID}/search?query=${searchQuery}`,
   method: "GET",
 });
 
@@ -28,13 +28,13 @@ export const checkInMember = (
 });
 
 export const postMember = (formData: any): Query => ({
-  endpoint: `gym-members/members`,
+  endpoint: `users/members`,
   method: "POST",
   variables: formData,
 });
 
 export const postSubscription = (formData: any, id: any): Query => ({
-  endpoint: `gym-members/${id}/subscription`,
+  endpoint: `users/members/${id}/subscription`,
   method: "PATCH",
   variables: formData,
 });
