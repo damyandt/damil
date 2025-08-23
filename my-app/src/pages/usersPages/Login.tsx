@@ -86,9 +86,9 @@ const LoginPage = () => {
         <Typography variant="h2" fontWeight={600} mb={4} zIndex={10}>
           <TextType
             text={[
-              t("Sign in to your Gym."),
-              t("Sign in to your Gym."),
-              t("Sign in to your Gym."),
+              t("Sign in to your Profile."),
+              t("Sign in to your Profile."),
+              t("Sign in to your Profile."),
             ]}
             typingSpeed={75}
             pauseDuration={1500}

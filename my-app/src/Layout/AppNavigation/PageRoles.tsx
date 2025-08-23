@@ -1,3 +1,4 @@
+import { LeftNavSingleItem } from "../layoutVariables";
 import { LEFT_NAV_SECTION } from "./leftNavData";
 
 export const pageRoles: Record<string, string[]> = {
@@ -68,15 +69,7 @@ export const filterNavByRole = (menu: LeftNavMenu[], userRole: any) => {
   }));
 };
 
-type LeftNavItem = {
-  text: string;
-  url: string | null;
-  Icon: React.ElementType;
-  disabled: boolean;
-  nested?: LeftNavItem[];
-};
-
 type LeftNavMenu = {
   title: keyof typeof LEFT_NAV_SECTION;
-  list: LeftNavItem[];
+  list: LeftNavSingleItem[];
 };

@@ -96,23 +96,12 @@ interface LeftNavigationProps {
   mobileLeftNav: boolean;
 }
 
-// const filterNavByRole = (
-//   navList: LeftNavSingleItem[],
-//   userRole: any
-// ): LeftNavSingleItem[] => {
-//   console.log(userRole);
-//   return navList
-//     .filter(
-//       (item) =>
-//         !item.roles ||
-//         item.roles.includes(userRole[0].name) ||
-//         item.roles.includes("ALL")
-//     )
-//     .map((item) => ({
-//       ...item,
-//       nested: item.nested ? filterNavByRole(item.nested, userRole) : undefined,
-//     }));
-// };
+export const roleDisplayNames: Record<string, string> = {
+  FACILITY_MEMBER: "Facility Member",
+  FACILITY_ADMIN: "Facility Administrator",
+  SYSTEM_ADMIN: "System Administrator",
+  FACILITY_STAFF: "Facility Staff",
+};
 
 const LeftNavigation: React.FC<LeftNavigationProps> = ({
   openLeftNav,
@@ -132,37 +121,6 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
     NAV_DAMIL_ACCESS_CONTROL,
     NAV_DAMIL_CONFIGURATIONS,
   } = useTranslatedNav();
-  // const filteredHomeNav = filterNavByRole(NAV_DAMIL_HOME.list, authedUser.role);
-  // const filteredAnalyticsNav = filterNavByRole(
-  //   NAV_DAMIL_ANALYTICS.list,
-  //   authedUser.role
-  // );
-  // const filteredAccessNav = filterNavByRole(
-  //   NAV_DAMIL_ACCESS_CONTROL.list,
-  //   authedUser.role
-  // );
-  // const filteredStaffNav = filterNavByRole(
-  //   NAV_DAMIL_STAFF.list,
-  //   authedUser.role
-  // );
-  // const filteredConfigNav = filterNavByRole(
-  //   NAV_DAMIL_CONFIGURATIONS.list,
-  //   authedUser.role
-  // );
-
-  // console.log(filteredConfigNav);
-  // const navSections = [
-  //   { list: filteredHomeNav, title: "Home" },
-  //   { list: filteredAccessNav, title: NAV_DAMIL_ACCESS_CONTROL.title },
-  //   { list: filteredStaffNav, title: NAV_DAMIL_STAFF.title },
-  //   { list: filteredAnalyticsNav, title: NAV_DAMIL_ANALYTICS.title },
-  //   { list: filteredConfigNav, title: NAV_DAMIL_CONFIGURATIONS.title },
-  // ];
-
-  // // Filter out empty sections
-  // const visibleSections = navSections.filter(
-  //   (section) => section.list.length > 0
-  // );
   const userRoles = authedUser?.role?.map((r: any) => r.name) || ["ALL"];
 
   const filteredNavSections: any = filterNavByRole(
@@ -281,7 +239,8 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
                 {authedUser?.username}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {t(`${authedUser.role[0].name}`)}
+                {roleDisplayNames[authedUser.role[0].name as string] ||
+                  authedUser.role[0].name}
               </Typography>
             </Box>
             <Box sx={{ display: "flex" }}>

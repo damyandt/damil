@@ -23,7 +23,6 @@ import { getRolesForPage } from "./PageRoles";
 export enum LEFT_NAV_SECTION {
   "Home" = "Home",
   "DAMIL Analytics" = "DAMIL Analytics",
-  "DAMIL Gyms" = "DAMIL Gyms",
   "DAMIL Access Control" = "DAMIL Access Control",
   "DAMIL Staff Members" = "DAMIL Staff Members",
   "DAMIL Configurations" = "DAMIL Configurations",
@@ -67,7 +66,7 @@ export const NAV_DAMIL_ANALYTICS: LeftNavMenu = {
           // roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
         },
         {
-          text: "Gym Visits",
+          text: "Visits",
           url: "/DAMIL-Analytics/Visits",
           Icon: BarChartIcon,
           disabled: false,

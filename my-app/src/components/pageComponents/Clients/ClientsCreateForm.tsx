@@ -148,13 +148,6 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
     switch (step) {
       case 0:
         return (
-          //   <CreateForm
-          //     setRefreshTable={setRefreshTable}
-          //     columns={columns}
-          //     configurations={configurations}
-          //     setActiveStep={setActiveStep}
-          //     actionUrl="gym-members/members"
-          //   />
           <Grid container spacing={2} p={2}>
             <Grid size={6}>
               <TextField

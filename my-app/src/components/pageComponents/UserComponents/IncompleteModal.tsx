@@ -36,7 +36,6 @@ const IncompleteProfileModal = () => {
   const [step, setStep] = useState(0);
 
   const [formData, setFormData] = useState<Partial<Business>>({
-    // gymName: authedUser?.gymName || "",
     username: authedUser?.username || "",
     city: authedUser?.city || "",
     phone: authedUser?.phone || "",
@@ -82,11 +81,11 @@ const IncompleteProfileModal = () => {
         }
       } else if (step === 1) {
         console.log("Updated profile data:", formData);
-        const gymInfo = await callApi<Response<any>>({
+        const info = await callApi<Response<any>>({
           query: completeProfile(formData),
           auth: { setAuthedUser },
         });
-        gymInfo.success === true && setStep(2);
+        info.success === true && setStep(2);
       } else if (step === 2) {
         const preferencesInfo = await callApi<Response<any>>({
           query: savePreferences(preferancesData),
