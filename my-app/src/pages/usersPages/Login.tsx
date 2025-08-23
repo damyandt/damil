@@ -24,17 +24,6 @@ export const hexToVec3 = (hex: string): [number, number, number] => {
   return [r, g, b];
 };
 
-export const errorMessages = (t: (key: string) => string) => {
-  return {
-    invalidEmail: t("Account with this email does not exists."),
-    invalidPassword: t("Wrong password. Please double-check and try again."),
-    unverified: t("Account not verified. Please verify your account"),
-    invalidCode: t("Invalid code."),
-    internalServerError: t(
-      "Oops, something happpend! Please try again in 5 min."
-    ),
-  };
-};
 const LoginPage = () => {
   const { t, setLanguage, language } = useLanguageContext();
   const theme = useTheme();

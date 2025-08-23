@@ -18,6 +18,6 @@ export const getSubscriptionPlans = (): Query => ({
 });
 
 export const getCurrentSubscriptionPlans = (): Query => ({
-  endpoint: `gym-members/subscription_plans/customized_fields`,
+  endpoint: `users/members/subscription_plans/customized_fields`,
   method: "GET",
 });

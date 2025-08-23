@@ -18,7 +18,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { useAuthedContext } from "../../context/AuthContext";
 import ChartDisplay from "./ChartsDisplayed";
 import CheckInModal from "./CheckInModal";
-import IncompleteProfileModal from "../../components/pageComponents/Profile/IncompleteModal";
+import IncompleteProfileModal from "../../components/pageComponents/UserComponents/IncompleteModal";
 import SearchModal from "./SearchModal";
 import tinycolor from "tinycolor2";
 import { useLanguageContext } from "../../context/LanguageContext";

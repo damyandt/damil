@@ -23,7 +23,7 @@ export const checkInMember = (
   gymID: string,
   searchQuery: string | number
 ): Query => ({
-  endpoint: `gym-members/${gymID}/check-in?query=${searchQuery}`,
+  endpoint: `users/members/${gymID}/check-in?query=${searchQuery}`,
   method: "POST",
 });
 

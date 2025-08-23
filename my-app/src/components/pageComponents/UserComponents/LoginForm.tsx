@@ -13,19 +13,20 @@ import Visibility from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import Collapse from "../../MaterialUI/Collapse";
 import { useLanguageContext } from "../../../context/LanguageContext";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   codeVerification,
+  codeVerificationResend,
   postLogin,
   validateEmail,
 } from "../../../pages/usersPages/api/postQuery";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../../../API/callApi";
-import { errorMessages } from "../../../pages/usersPages/Login";
 import { setCookie } from "../../../Global/Utils/commonFunctions";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { SetCookieParams } from "../../../Auth/authTypes";
 import CustomModal from "../../MaterialUI/Modal";
+import { errorMessagesEN } from "../../../pages/usersPages/api/userTypes";
 
 const LoginForm = () => {
   const { setUserSignedIn } = useAuthedContext();
@@ -43,6 +44,7 @@ const LoginForm = () => {
     email: "",
     password: "",
   });
+
   const validator = (onlyEmial: boolean) => {
     const newErrors: { [key: string]: string } = {};
     if (
@@ -76,7 +78,7 @@ const LoginForm = () => {
       });
 
       if (responce.success === false) {
-        return setErrors({ email: errorMessages(t).invalidEmail });
+        return setErrors({ email: responce.message });
       }
 
       setShowPasswordField(true);
@@ -86,9 +88,9 @@ const LoginForm = () => {
       }, 100);
     } catch (error) {
       console.error("Failed:", error);
-      setErrors({
-        email: errorMessages(t).internalServerError,
-      });
+      // setErrors({
+      //   email: errorMessages(t).internalServerError,
+      // });
     }
   };
   const handleChange = (field: string, value: any) => {
@@ -114,12 +116,12 @@ const LoginForm = () => {
         auth: null,
       });
 
-      if (responce.success === false) {
-        return setErrors({
-          password: errorMessages(t).invalidPassword,
-        });
-      } else if (responce.message === errorMessages(t).unverified) {
+      if (responce.message === errorMessagesEN.unverified) {
         return setOpenModal(true);
+      } else if (responce.success === false) {
+        return setErrors({
+          password: responce.message,
+        });
       }
 
       const refresh_token = responce.refreshToken;
@@ -138,9 +140,9 @@ const LoginForm = () => {
       window.location.reload();
     } catch (error) {
       console.error("Login failed:", error);
-      setErrors({
-        password: errorMessages(t).internalServerError,
-      });
+      // setErrors({
+      //   password: errorMessages(t).internalServerError,
+      // });
     }
   };
 
@@ -158,21 +160,50 @@ const LoginForm = () => {
         }),
         auth: null,
       });
-      setOpenModal(false);
-      handleLogin();
+      responce.success === true && setOpenModal(false);
+      responce.success === true && handleLogin();
       responce.success === true && navigate("/");
       responce.success === false && setErrors(responce.validationErrors);
     } catch (error) {
       console.log("Verification failed:", error);
     }
   };
-  const handleResend = () => {
+
+  const handleResend = async () => {
     if (resendCooldown === 0) {
-      console.log("Code resent!");
       localStorage.setItem("lastResendTimestamp", Date.now().toString());
       setResendCooldown(60);
+      await callApi<any>({
+        query: codeVerificationResend({
+          email: formData.email,
+        }),
+        auth: null,
+      });
     }
   };
+
+  useEffect(() => {
+    const lastResend = localStorage.getItem("lastResendTimestamp");
+    if (lastResend) {
+      const secondsPassed = Math.floor(
+        (Date.now() - Number(lastResend)) / 1000
+      );
+      const remaining = 60 - secondsPassed;
+      if (remaining > 0) {
+        setResendCooldown(remaining);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setInterval(() => {
+        setResendCooldown((prev) => prev - 1);
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [resendCooldown]);
 
   return (
     <>

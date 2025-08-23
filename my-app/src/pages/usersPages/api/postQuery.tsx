@@ -6,10 +6,10 @@ export const postLogin = (input: any): Query => ({
   variables: input,
 });
 
-export const postRegister = (input: any): Query => ({
+export const postRegister = (business: any, admin: any): Query => ({
   endpoint: `auth/register`,
   method: "POST",
-  variables: input,
+  variables: { business, admin },
 });
 
 export const validateEmail = (input: any): Query => ({
@@ -20,6 +20,12 @@ export const validateEmail = (input: any): Query => ({
 
 export const codeVerification = (input: any): Query => ({
   endpoint: `auth/verify`,
+  method: "POST",
+  variables: input,
+});
+
+export const codeVerificationResend = (input: any): Query => ({
+  endpoint: `auth/resend`,
   method: "POST",
   variables: input,
 });
