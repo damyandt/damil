@@ -35,6 +35,11 @@ export const completeProfile = (input: any): Query => ({
   method: "PUT",
   variables: input,
 });
+export const updateProfile = (input: any, id: string): Query => ({
+  endpoint: `user/${id}`,
+  method: "PATCH",
+  variables: input,
+});
 
 export const savePreferences = (input: any): Query => ({
   endpoint: `users/settings/update/me`,

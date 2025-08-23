@@ -17,7 +17,7 @@ import {
 import callApi from "../../../API/callApi";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import { useNavigate } from "react-router-dom";
-import { Gym } from "../../../pages/usersPages/userTypes";
+import { Business } from "../../../pages/usersPages/userTypes";
 import Checkbox from "../../MaterialUI/FormFields/Checkbox";
 import { useCustomThemeProviderContext } from "../../../context/ThemeContext";
 import { PreferencesType, Response } from "../../../Global/Types/commonTypes";
@@ -35,8 +35,8 @@ const IncompleteProfileModal = () => {
   const { t } = useLanguageContext();
   const [step, setStep] = useState(0);
 
-  const [formData, setFormData] = useState<Gym>({
-    gymName: authedUser?.gymName || "",
+  const [formData, setFormData] = useState<Partial<Business>>({
+    // gymName: authedUser?.gymName || "",
     username: authedUser?.username || "",
     city: authedUser?.city || "",
     phone: authedUser?.phone || "",
@@ -48,6 +48,7 @@ const IncompleteProfileModal = () => {
     language: preferences.language || "",
     mode: preferences.mode || "",
     themeColor: preferences.themeColor || "",
+    homeFilters: preferences.homeFilters || [],
   });
   const navigate = useNavigate();
   const handleChange = (field: keyof typeof formData, value: string) => {
@@ -135,12 +136,12 @@ const IncompleteProfileModal = () => {
               onChange={(e) => handleChange("username", e.target.value)}
               fullWidth
             />
-            <TextField
+            {/* <TextField
               label={t("Gym Name")}
               value={formData.gymName}
               onChange={(e) => handleChange("gymName", e.target.value)}
               fullWidth
-            />
+            /> */}
 
             <TextField
               label={t("City")}

@@ -1,18 +1,18 @@
 import { createContext, JSX, useContext, useEffect, useState } from "react";
 import { getCookie } from "../Global/Utils/commonFunctions";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../API/callApi";
-import { Gym } from "../pages/usersPages/userTypes";
+import { Business } from "../pages/usersPages/userTypes";
 import { getQueryUsersGetCurrentUser } from "../Auth/API/apiAuthGetQueries";
 import { handleFetchUserAccessToken } from "./authContextUtils";
 import { PreferencesType, Response } from "../Global/Types/commonTypes";
 import { getPreferences } from "../pages/usersPages/api/postQuery";
 import { PaletteMode } from "@mui/material";
 
-export type GetQueryUsersGetCurrentUserSnippet = { user: Gym };
+export type GetQueryUsersGetCurrentUserSnippet = { user: Business };
 
 interface UserContextType {
-  authedUser: Gym;
-  setAuthedUser: (value: React.SetStateAction<Gym>) => void;
+  authedUser: Business;
+  setAuthedUser: (value: React.SetStateAction<Business>) => void;
   setUserSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
   authedUserLoading: boolean;
   showIncompleteModal: boolean;
@@ -27,8 +27,7 @@ interface AuthContextProps {
 }
 
 const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
-  const [authedUser, setAuthedUser] = useState<Gym>({
-    gymName: "error",
+  const [authedUser, setAuthedUser] = useState<Business>({
     username: "error",
     email: "error",
     phone: "error",
@@ -36,6 +35,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
     city: "error",
     membersCount: 0,
     subscriptionActive: false,
+    role: "FACILITY_MEMBER",
   });
   const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -45,7 +45,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
     themeColor: localStorage.getItem("themeColor") || "#a250fa",
     mode: (localStorage.getItem("themeMode") as PaletteMode) || "light",
     currency: "BGN",
-    language: "bg",
+    language: "en",
     homeFilters: [
       "Gender - MALE",
       "SubscriptionStatus - ACTIVE",

@@ -34,7 +34,7 @@ export const postMember = (formData: any): Query => ({
 });
 
 export const postSubscription = (formData: any, id: any): Query => ({
-  endpoint: `users/members/${id}/subscription`,
+  endpoint: `users/members/${id}`,
   method: "PATCH",
   variables: formData,
 });

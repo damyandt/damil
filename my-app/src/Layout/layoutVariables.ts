@@ -21,6 +21,7 @@ export type LeftNavSingleItem = {
   nested?: LeftNavSingleItem[];
   disabled: boolean;
   open?: boolean;
+  // roles?: string[];
 };
 
 export type LeftNavList = LeftNavSingleItem[];

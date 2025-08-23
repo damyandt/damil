@@ -11,7 +11,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { LEFT_NAV_WIDTH } from "../layoutVariables";
+import { LEFT_NAV_WIDTH, LeftNavSingleItem } from "../layoutVariables";
 import LeftNavListMenu from "./LeftNavListMenu";
 import { useTranslatedNav } from "../../Global/Hooks/useTranslatedNav";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -25,6 +25,7 @@ import { handleUserSignOut } from "../../context/authContextUtils";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuthedContext } from "../../context/AuthContext";
+import { filterNavByRole } from "./PageRoles";
 
 const cssStyles = (openLeftNav: boolean, theme: any) => ({
   drawer: css({
@@ -95,6 +96,24 @@ interface LeftNavigationProps {
   mobileLeftNav: boolean;
 }
 
+// const filterNavByRole = (
+//   navList: LeftNavSingleItem[],
+//   userRole: any
+// ): LeftNavSingleItem[] => {
+//   console.log(userRole);
+//   return navList
+//     .filter(
+//       (item) =>
+//         !item.roles ||
+//         item.roles.includes(userRole[0].name) ||
+//         item.roles.includes("ALL")
+//     )
+//     .map((item) => ({
+//       ...item,
+//       nested: item.nested ? filterNavByRole(item.nested, userRole) : undefined,
+//     }));
+// };
+
 const LeftNavigation: React.FC<LeftNavigationProps> = ({
   openLeftNav,
   setOpenLeftNav,
@@ -113,7 +132,60 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
     NAV_DAMIL_ACCESS_CONTROL,
     NAV_DAMIL_CONFIGURATIONS,
   } = useTranslatedNav();
+  // const filteredHomeNav = filterNavByRole(NAV_DAMIL_HOME.list, authedUser.role);
+  // const filteredAnalyticsNav = filterNavByRole(
+  //   NAV_DAMIL_ANALYTICS.list,
+  //   authedUser.role
+  // );
+  // const filteredAccessNav = filterNavByRole(
+  //   NAV_DAMIL_ACCESS_CONTROL.list,
+  //   authedUser.role
+  // );
+  // const filteredStaffNav = filterNavByRole(
+  //   NAV_DAMIL_STAFF.list,
+  //   authedUser.role
+  // );
+  // const filteredConfigNav = filterNavByRole(
+  //   NAV_DAMIL_CONFIGURATIONS.list,
+  //   authedUser.role
+  // );
 
+  // console.log(filteredConfigNav);
+  // const navSections = [
+  //   { list: filteredHomeNav, title: "Home" },
+  //   { list: filteredAccessNav, title: NAV_DAMIL_ACCESS_CONTROL.title },
+  //   { list: filteredStaffNav, title: NAV_DAMIL_STAFF.title },
+  //   { list: filteredAnalyticsNav, title: NAV_DAMIL_ANALYTICS.title },
+  //   { list: filteredConfigNav, title: NAV_DAMIL_CONFIGURATIONS.title },
+  // ];
+
+  // // Filter out empty sections
+  // const visibleSections = navSections.filter(
+  //   (section) => section.list.length > 0
+  // );
+  const userRoles = authedUser?.role?.map((r: any) => r.name) || ["ALL"];
+
+  const filteredNavSections: any = filterNavByRole(
+    [
+      { title: "Home", list: NAV_DAMIL_HOME.list },
+      {
+        title: NAV_DAMIL_ACCESS_CONTROL.title,
+        list: NAV_DAMIL_ACCESS_CONTROL.list,
+      },
+      { title: NAV_DAMIL_STAFF.title, list: NAV_DAMIL_STAFF.list },
+      { title: NAV_DAMIL_ANALYTICS.title, list: NAV_DAMIL_ANALYTICS.list },
+      {
+        title: NAV_DAMIL_CONFIGURATIONS.title,
+        list: NAV_DAMIL_CONFIGURATIONS.list,
+      },
+    ],
+    userRoles
+  );
+
+  // Filter out empty sections
+  const visibleSections = filteredNavSections.filter(
+    (section: any) => section.list.length > 0
+  );
   return (
     <Drawer
       sx={styles.drawer}
@@ -157,46 +229,23 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
             </IconButton>
           </CustomTooltip>
         </Box>
+
         <Box component="div" sx={styles.leftNavContent}>
-          <LeftNavListMenu
-            navList={NAV_DAMIL_HOME.list}
-            listTitle="Home"
-            openLeftNav={openLeftNav}
-            mobileLeftNav={mobileLeftNav}
-            setOpenLeftNav={setOpenLeftNav}
-          />
-          <Divider variant="middle" />
-          <LeftNavListMenu
-            navList={NAV_DAMIL_ACCESS_CONTROL.list}
-            listTitle={NAV_DAMIL_ACCESS_CONTROL.title}
-            openLeftNav={openLeftNav}
-            mobileLeftNav={mobileLeftNav}
-            setOpenLeftNav={setOpenLeftNav}
-          />
-          <Divider variant="middle" />
-          <LeftNavListMenu
-            navList={NAV_DAMIL_STAFF.list}
-            listTitle={NAV_DAMIL_STAFF.title}
-            openLeftNav={openLeftNav}
-            mobileLeftNav={mobileLeftNav}
-            setOpenLeftNav={setOpenLeftNav}
-          />
-          <Divider variant="middle" />
-          <LeftNavListMenu
-            navList={NAV_DAMIL_ANALYTICS.list}
-            listTitle={NAV_DAMIL_ANALYTICS.title}
-            openLeftNav={openLeftNav}
-            mobileLeftNav={mobileLeftNav}
-            setOpenLeftNav={setOpenLeftNav}
-          />
-          <Divider variant="middle" />
-          <LeftNavListMenu
-            navList={NAV_DAMIL_CONFIGURATIONS.list}
-            listTitle={NAV_DAMIL_CONFIGURATIONS.title}
-            openLeftNav={openLeftNav}
-            mobileLeftNav={mobileLeftNav}
-            setOpenLeftNav={setOpenLeftNav}
-          />
+          {visibleSections.map((section: any, index: any) => (
+            <div key={section.title}>
+              <LeftNavListMenu
+                navList={section.list}
+                listTitle={section.title}
+                openLeftNav={openLeftNav}
+                mobileLeftNav={mobileLeftNav}
+                setOpenLeftNav={setOpenLeftNav}
+              />
+              {/* Render divider only if not the last visible section */}
+              {index < visibleSections.length - 1 && (
+                <Divider variant="middle" />
+              )}
+            </div>
+          ))}
         </Box>
 
         <Box component="div" sx={styles.profile}>
@@ -232,7 +281,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
                 {authedUser?.username}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {t("Gym")}
+                {t(`${authedUser.role[0].name}`)}
               </Typography>
             </Box>
             <Box sx={{ display: "flex" }}>

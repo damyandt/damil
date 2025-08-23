@@ -24,13 +24,13 @@ export const EditAction = ({
 }: EditActionProps) => {
   const { t } = useLanguageContext();
 
-  const [open, setOpen] = useState<boolean | null>(false);
+  const [open, setOpen] = useState<string | null>(null);
   return (
     <>
       <CustomTooltip title="Edit" placement="bottom">
         <IconButton
           onClick={() => {
-            setOpen(true);
+            setOpen("open");
             setAnchorEl("closeOnlyAnchor");
           }}
         >
@@ -40,7 +40,7 @@ export const EditAction = ({
 
       <CustomModal
         open={!!open}
-        onClose={() => setOpen(false)}
+        onClose={() => setOpen(null)}
         title={t("Edit")}
         width={"lg"}
         style="edit"

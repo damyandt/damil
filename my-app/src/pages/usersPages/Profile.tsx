@@ -23,12 +23,16 @@ import CellRenderer from "../../components/MaterialUI/Table/CellRenderer";
 import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
 import { useLanguageContext } from "../../context/LanguageContext";
 import { useAuthedContext } from "../../context/AuthContext";
-import { Gym } from "./userTypes";
+import { Business } from "./userTypes";
 import { useCustomThemeProviderContext } from "../../context/ThemeContext";
 import PlanCard from "./PlanCard";
 import callApi from "../../API/callApi";
 import { PreferencesType, Response } from "../../Global/Types/commonTypes";
-import { completeProfile, savePreferences } from "./api/postQuery";
+import {
+  completeProfile,
+  savePreferences,
+  updateProfile,
+} from "./api/postQuery";
 import { Fade } from "../../components/MaterialUI/FormFields/Fade";
 const ProfilePage = () => {
   const { t, setLanguage } = useLanguageContext();
@@ -36,9 +40,10 @@ const ProfilePage = () => {
   const { authedUser, setAuthedUser, preferences } = useAuthedContext();
   const { themeMode, setThemeMode, setPrimaryColor, primaryColor } =
     useCustomThemeProviderContext();
-  const [editModeGymInfo, setEditModeGymInfo] = useState<boolean>(false);
+  const [editModeBusinessInfo, setEditModeBusinessInfo] =
+    useState<boolean>(false);
   const [editModeAccount, setEditModeAccount] = useState<boolean>(false);
-  const [formData, setFormData] = useState<Gym>(authedUser);
+  const [formData, setFormData] = useState<Business>(authedUser);
   const [preferencesData, setPreferencesData] =
     useState<PreferencesType>(preferences);
   const [hovered, setHovered] = useState<boolean>(false);
@@ -47,7 +52,6 @@ const ProfilePage = () => {
   const [saved, setSaved] = useState(false);
 
   const info: { label: string; field: string }[] = [
-    { label: t("Gym Name"), field: "gymName" },
     { label: t("Email"), field: "email" },
     { label: t("Username"), field: "username" },
     { label: t("City"), field: "city" },
@@ -79,11 +83,32 @@ const ProfilePage = () => {
   };
 
   const handleSaveChanges = async () => {
+    const changes: Record<
+      string,
+      string | number | boolean | Date | undefined
+    > = {};
+
+    // Compare formData and authedUser to get only changed fields
+    for (const key in formData) {
+      if (
+        formData[key as keyof Business] !== authedUser[key as keyof Business]
+      ) {
+        changes[key] = formData[key as keyof Business];
+      }
+    }
+
+    if (Object.keys(changes).length === 0) {
+      console.log("No changes to update.");
+      setEditModeBusinessInfo(false);
+      return;
+    }
+
     await callApi<Response<any>>({
-      query: completeProfile(formData),
+      query: updateProfile(changes, authedUser.id || ""), // ✅ only send changed fields
       auth: { setAuthedUser },
     });
-    setEditModeGymInfo(false);
+
+    setEditModeBusinessInfo(false);
   };
 
   const handleSaveChangesTheme = async () => {
@@ -120,7 +145,7 @@ const ProfilePage = () => {
     field: string | number,
     value: string | number
   ): void => {
-    setFormData((prev: Gym) => ({
+    setFormData((prev: Business) => ({
       ...prev,
       [field]: value,
     }));
@@ -215,20 +240,20 @@ const ProfilePage = () => {
                     alignSelf={"center"}
                     margin={0}
                   >
-                    {t("Gym Info")}
+                    {t("Business Info")}
                   </Typography>
                   <CustomTooltip
-                    title={editModeGymInfo ? t("Save") : t("Edit")}
+                    title={editModeBusinessInfo ? t("Save") : t("Edit")}
                     placement="right"
                   >
-                    {editModeGymInfo ? (
+                    {editModeBusinessInfo ? (
                       <IconButton onClick={() => handleSaveChanges()}>
                         <SaveIcon fontSize="small" />
                       </IconButton>
                     ) : (
                       <IconButton
                         onClick={() =>
-                          setEditModeGymInfo((prev: boolean) => !prev)
+                          setEditModeBusinessInfo((prev: boolean) => !prev)
                         }
                       >
                         <EditIcon fontSize="small" />
@@ -242,7 +267,7 @@ const ProfilePage = () => {
                     minHeight: 200,
                   }}
                 >
-                  {editModeGymInfo ? (
+                  {editModeBusinessInfo ? (
                     <Grid container spacing={2}>
                       {info.map((col: { label: string; field: string }) => (
                         <Grid size={6} key={col.field}>
@@ -254,7 +279,9 @@ const ProfilePage = () => {
                               handleChange(col.field, e.target.value)
                             }
                             value={
-                              formData ? formData[col.field as keyof Gym] : ""
+                              formData
+                                ? formData[col.field as keyof Business]
+                                : ""
                             }
                           />
                         </Grid>
@@ -274,7 +301,9 @@ const ProfilePage = () => {
                             fontWeight={400}
                             key={col.field}
                             value={
-                              formData ? formData[col.field as keyof Gym] : ""
+                              formData
+                                ? formData[col.field as keyof Business]
+                                : ""
                             }
                             dataType={"string"}
                             table={false}
