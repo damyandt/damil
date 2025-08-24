@@ -11,11 +11,8 @@ export const getClientsTable = (filter?: string): Query => {
     method: "GET",
   };
 };
-export const getMember = (
-  gymID: string,
-  searchQuery: string | number
-): Query => ({
-  endpoint: `users/members/${gymID}/search?query=${searchQuery}`,
+export const getMember = (searchQuery: string | number): Query => ({
+  endpoint: `users/members/search?id=${searchQuery}`,
   method: "GET",
 });
 

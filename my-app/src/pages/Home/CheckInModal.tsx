@@ -31,7 +31,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
   const handleNext = async () => {
     try {
       const userDetails = await callApi<any>({
-        query: getMember(authedUser?.id || "", searchInput),
+        query: getMember(searchInput),
         auth: { setAuthedUser },
       });
       if (activeStep === 0) {

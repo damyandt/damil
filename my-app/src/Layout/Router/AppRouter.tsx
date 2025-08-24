@@ -18,11 +18,13 @@ import PlansPage from "../../pages/usersPages/PlansPage";
 import PageNotFound from "../../components/pageComponents/PageNotFound";
 import SubscriptionPlans from "../../pages/Configurations/SubscriptionPlans";
 import { getRolesForPage } from "../AppNavigation/PageRoles";
+import MembersHome from "../../pages/Home/MembersHome";
+import { useAuthedContext } from "../../context/AuthContext";
 
 const getRoutesForRole = (role: string) => {
   if (role === "SYSTEM_ADMIN") return allRoutes;
-
-  return allRoutes.filter(
+  const routes = allRoutes();
+  return routes.filter(
     (route) =>
       getRolesForPage(route.path!).includes(role) ||
       getRolesForPage(route.path!).includes("ALL")
@@ -37,101 +39,95 @@ export const createAppRouter = (
     | "FACILITY_STAFF"
 ) => {
   const roleRoutes = getRoutesForRole(userType);
+  const resolvedRoutes =
+    typeof roleRoutes === "function" ? roleRoutes() : roleRoutes;
   return createBrowserRouter([
     {
       path: "/",
       element: <Layout />,
       errorElement: <ErrorPage />,
-      children: [...roleRoutes, { path: "*", element: <PageNotFound /> }],
+      children: [...resolvedRoutes, { path: "*", element: <PageNotFound /> }],
     },
   ]);
 };
+const allRoutes = () => {
+  const { authedUser } = useAuthedContext();
+  return [
+    {
+      path: "/",
+      element:
+        authedUser.role[0].name === "FACILITY_MEMBER" ? (
+          <MembersHome />
+        ) : (
+          <HomePage />
+        ),
+    },
+    {
+      path: "/DAMIL-Analytics/Overview",
+      element: <OverviewPage />,
+    },
+    {
+      path: "/DAMIL-Analytics/Visits",
+      element: <GymVisitsChart height={92} />,
+    },
+    {
+      path: "/DAMIL-Analytics/Goal",
+      element: <GoalMembersGaugeChart value={68} height={92} />,
+    },
+    {
+      path: "/DAMIL-Analytics/Ages",
+      element: <AgeDistributionChart height={92} />,
+    },
+    {
+      path: "/DAMIL-Analytics/Memberships",
+      element: <Memberships />,
+      roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
+    },
 
-const allRoutes = [
-  {
-    path: "/",
-    element: <HomePage />,
-    // roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  },
-  {
-    path: "/DAMIL-Analytics/Overview",
-    element: <OverviewPage />,
-    // roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  },
-  {
-    path: "/DAMIL-Analytics/Visits",
-    element: <GymVisitsChart height={92} />,
-    // roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  },
-  {
-    path: "/DAMIL-Analytics/Goal",
-    element: <GoalMembersGaugeChart value={68} height={92} />,
-    // roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  },
-  {
-    path: "/DAMIL-Analytics/Ages",
-    element: <AgeDistributionChart height={92} />,
-    // roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  },
-  {
-    path: "/DAMIL-Analytics/Memberships",
-    element: <Memberships />,
-    roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  },
+    // Access Control
+    {
+      path: "/DAMIL-Access-Control/All-Clients",
+      element: <ClientsPage />,
+    },
+    {
+      path: "/DAMIL-Access-Control/All-Clients/:filter",
+      element: <ClientsPage />,
+    },
+    {
+      path: "/DAMIL-Access-Control/Daily-Visitors",
+      element: <DailyVisitors />,
+    },
 
-  // Access Control
-  {
-    path: "/DAMIL-Access-Control/All-Clients",
-    element: <ClientsPage />,
-    // roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  },
-  {
-    path: "/DAMIL-Access-Control/All-Clients/:filter",
-    element: <ClientsPage />,
-    // roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  },
-  {
-    path: "/DAMIL-Access-Control/Daily-Visitors",
-    element: <DailyVisitors />,
-    // roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  },
+    // Staff
+    {
+      path: "/DAMIL-Staff/All",
+      element: <StaffPage />,
+    },
+    {
+      path: "/DAMIL-Staff/Roles",
+      element: <StaffRolesPage />,
+    },
+    {
+      path: "/DAMIL-Staff/Shifts",
+      element: <StaffShifts />,
+    },
+    {
+      path: "/DAMIL-Staff/Events",
+      element: <EmployeeCalendar />,
+    },
 
-  // Staff
-  {
-    path: "/DAMIL-Staff/All",
-    element: <StaffPage />,
-    // roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  },
-  {
-    path: "/DAMIL-Staff/Roles",
-    element: <StaffRolesPage />,
-    // roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  },
-  {
-    path: "/DAMIL-Staff/Shifts",
-    element: <StaffShifts />,
-    // roles: ["FACILITY_ADMIN", "FACILITY_STAFF", "SYSTEM_ADMIN"],
-  },
-  {
-    path: "/DAMIL-Staff/Events",
-    element: <EmployeeCalendar />,
-    // roles: ["FACILITY_ADMIN", "FACILITY_STAFF", "SYSTEM_ADMIN"],
-  },
-
-  // Configurations
-  {
-    path: "/DAMIL-Configurations/Profile",
-    element: <ProfilePage />,
-    // roles: ["ALL"],
-  },
-  {
-    path: "/DAMIL-Configurations/Member-Plans",
-    element: <SubscriptionPlans />,
-    // roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  },
-  {
-    path: "/DAMIL-Configurations/Subscription-Plans",
-    element: <PlansPage />,
-    // roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  },
-];
+    // Configurations
+    {
+      path: "/DAMIL-Configurations/Profile",
+      element: <ProfilePage />,
+    },
+    {
+      path: "/DAMIL-Configurations/Member-Plans",
+      element: <SubscriptionPlans />,
+    },
+    {
+      path: "/DAMIL-Configurations/Subscription-Plans",
+      element: <PlansPage />,
+    },
+  ];
+};

@@ -75,7 +75,6 @@ const HomePage: React.FC = () => {
   const colorEnd = isDark
     ? shiftHue(darken(primary, 0.2), 20)
     : shiftHue(lighten(primary, 0.3), 20);
-  console.log(selectedFilters);
   type FlatDataKeys =
     | "MALE"
     | "FEMALE"

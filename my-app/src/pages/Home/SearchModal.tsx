@@ -28,7 +28,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
   openSearch,
   setOpenSearch,
 }) => {
-  const { setAuthedUser, authedUser } = useAuthedContext();
+  const { setAuthedUser } = useAuthedContext();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const { t } = useLanguageContext();
@@ -41,7 +41,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
   const handleNext = async () => {
     try {
       const userDetails = await callApi<Response<any>>({
-        query: getMember(authedUser?.id || "", searchInput),
+        query: getMember(searchInput),
         auth: { setAuthedUser },
       });
       if (activeStep === 0) {

@@ -86,7 +86,6 @@ const FiltersModal: React.FC<SearchModalProps> = ({
     });
     onClose();
   };
-  console.log(options);
   return (
     <CustomModal
       open={openFilterConfig}

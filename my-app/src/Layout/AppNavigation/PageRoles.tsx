@@ -3,7 +3,9 @@ import { LEFT_NAV_SECTION } from "./leftNavData";
 
 export const pageRoles: Record<string, string[]> = {
   // Home
+
   "/": ["FACILITY_ADMIN", "SYSTEM_ADMIN", "FACILITY_MEMBER"],
+  "/members-home": ["FACILITY_MEMBER"],
 
   // DAMIL Analytics
   "/DAMIL-Analytics/Overview": ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
@@ -13,11 +15,7 @@ export const pageRoles: Record<string, string[]> = {
   "/DAMIL-Analytics/Memberships": ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
 
   // DAMIL Access Control
-  "/DAMIL-Access-Control/All-Clients": [
-    "FACILITY_ADMIN",
-    "SYSTEM_ADMIN",
-    "FACILITY_MEMBER",
-  ],
+  "/DAMIL-Access-Control/All-Clients": ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
   "/DAMIL-Access-Control/All-Clients/:filter": [
     "FACILITY_ADMIN",
     "SYSTEM_ADMIN",
@@ -44,7 +42,6 @@ export const getRolesForPage = (url: string): string[] => {
 };
 
 export const filterNavByRole = (menu: LeftNavMenu[], userRole: any) => {
-  console.log(userRole);
   return menu.map((section) => ({
     ...section,
     list: section.list
