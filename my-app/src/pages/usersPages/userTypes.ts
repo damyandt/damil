@@ -1,5 +1,5 @@
 export type User = {
-  id?: string;
+  id?: string | number;
   firstName?: string;
   lastName?: string;
   gender?: string;
@@ -8,14 +8,14 @@ export type User = {
   phone?: string;
   address?: string;
   city?: string;
-  created_at?: Date;
+  birthDate?: string | null;
+  createdAt?: string;
+  // created_at?: Date;
   membersCount?: number;
   subscriptionActive?: boolean;
-  role: any;
-  // | "FACILITY_MEMBER"
-  // | "FACILITY_ADMIN"
-  // | "SYSTEM_ADMIN"
-  // | "FACILITY_STAFF";
+  roles: Array<
+    "FACILITY_MEMBER" | "FACILITY_ADMIN" | "SYSTEM_ADMIN" | "FACILITY_STAFF"
+  >;
 };
 
 // export type Business = {

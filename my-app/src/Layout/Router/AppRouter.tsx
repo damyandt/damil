@@ -56,7 +56,7 @@ const allRoutes = () => {
     {
       path: "/",
       element:
-        authedUser.role[0].name === "FACILITY_MEMBER" ? (
+        authedUser.roles[0] === "FACILITY_MEMBER" ? (
           <MembersHome />
         ) : (
           <HomePage />

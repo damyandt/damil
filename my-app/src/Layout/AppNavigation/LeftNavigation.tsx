@@ -121,7 +121,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
     NAV_DAMIL_ACCESS_CONTROL,
     NAV_DAMIL_CONFIGURATIONS,
   } = useTranslatedNav();
-  const userRoles = authedUser?.role?.map((r: any) => r.name) || ["ALL"];
+  const userRoles = authedUser?.roles || ["ALL"];
 
   const filteredNavSections: any = filterNavByRole(
     [
@@ -239,8 +239,13 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
                 {authedUser?.username}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {roleDisplayNames[authedUser.role[0].name as string] ||
-                  authedUser.role[0].name}
+                {roleDisplayNames[
+                  authedUser.roles[0] as
+                    | "FACILITY_MEMBER"
+                    | "FACILITY_ADMIN"
+                    | "SYSTEM_ADMIN"
+                    | "FACILITY_STAFF"
+                ] || authedUser.roles[0]}
               </Typography>
             </Box>
             <Box sx={{ display: "flex" }}>

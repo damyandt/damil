@@ -5,7 +5,6 @@ export const pageRoles: Record<string, string[]> = {
   // Home
 
   "/": ["FACILITY_ADMIN", "SYSTEM_ADMIN", "FACILITY_MEMBER"],
-  "/members-home": ["FACILITY_MEMBER"],
 
   // DAMIL Analytics
   "/DAMIL-Analytics/Overview": ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
