@@ -3,6 +3,8 @@ import {
   FormControl,
   FormGroup,
   FormLabel,
+  Grid,
+  MenuItem,
   Typography,
 } from "@mui/material";
 import { useAuthedContext } from "../../../context/AuthContext";
@@ -11,8 +13,8 @@ import Button from "../../MaterialUI/Button";
 import TextField from "../../MaterialUI/FormFields/TextField";
 import { useState } from "react";
 import {
-  completeProfile,
   savePreferences,
+  updateProfile,
 } from "../../../pages/usersPages/api/postQuery";
 import callApi from "../../../API/callApi";
 import { useLanguageContext } from "../../../context/LanguageContext";
@@ -37,10 +39,13 @@ const IncompleteProfileModal = () => {
 
   const [formData, setFormData] = useState<Partial<User>>({
     username: authedUser?.username || "",
+    firstName: authedUser?.firstName || "",
+    lastName: authedUser?.lastName || "",
     city: authedUser?.city || "",
     phone: authedUser?.phone || "",
     address: authedUser?.address || "",
     email: authedUser?.email || "",
+    gender: authedUser?.gender || "",
   });
   const [preferancesData, setPreferencesData] = useState<PreferencesType>({
     currency: preferences.currency || "",
@@ -81,8 +86,22 @@ const IncompleteProfileModal = () => {
         }
       } else if (step === 1) {
         console.log("Updated profile data:", formData);
+        const changes: Record<string, any> = {};
+
+        // Compare formData and authedUser to get only changed fields
+        for (const key in formData) {
+          if (formData[key as keyof User] !== authedUser[key as keyof User]) {
+            changes[key] = formData[key as keyof User];
+          }
+        }
+
+        if (Object.keys(changes).length === 0) {
+          console.log("No changes to update.");
+          return;
+        }
+
         const info = await callApi<Response<any>>({
-          query: completeProfile(formData),
+          query: updateProfile(changes, authedUser.id || ""),
           auth: { setAuthedUser },
         });
         info.success === true && setStep(2);
@@ -108,7 +127,7 @@ const IncompleteProfileModal = () => {
       open={showIncompleteModal}
       onClose={() => snoozeModal(60)}
       title="👋 Complete Your Profile"
-      width={"md"}
+      // width={"lg"}
     >
       <Box>
         {step === 0 && (
@@ -118,151 +137,212 @@ const IncompleteProfileModal = () => {
             )}
           </Typography>
         )}
-
         {step === 1 && (
-          <Box display="flex" flexDirection="column" gap={2}>
-            <TextField
-              disabled={true}
-              label={t("Email")}
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-              fullWidth
-            />
-            <TextField
-              label={t("Username")}
-              value={formData.username}
-              onChange={(e) => handleChange("username", e.target.value)}
-              fullWidth
-            />
-            {/* <TextField
-              label={t("Gym Name")}
-              value={formData.gymName}
-              onChange={(e) => handleChange("gymName", e.target.value)}
-              fullWidth
-            /> */}
+          <Grid container spacing={2}>
+            {/* Email */}
 
-            <TextField
-              label={t("City")}
-              value={formData.city}
-              onChange={(e) => handleChange("city", e.target.value)}
-              fullWidth
-            />
-            <TextField
-              label={t("Address")}
-              value={formData.address}
-              onChange={(e) => handleChange("address", e.target.value)}
-              fullWidth
-            />
-            <TextField
-              label={t("Phone")}
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => handleChange("phone", e.target.value)}
-              fullWidth
-            />
-          </Box>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+              <TextField
+                disabled
+                label={t("Email")}
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+                fullWidth
+              />
+            </Grid>
+
+            {/* First Name */}
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+              <TextField
+                label={t("First Name")}
+                value={formData.firstName}
+                onChange={(e) => handleChange("firstName", e.target.value)}
+                fullWidth
+              />
+            </Grid>
+
+            {/* Last Name */}
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+              <TextField
+                label={t("Last Name")}
+                value={formData.lastName}
+                onChange={(e) => handleChange("lastName", e.target.value)}
+                fullWidth
+              />
+            </Grid>
+
+            {/* Username */}
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+              <TextField
+                label={t("Username")}
+                value={formData.username}
+                onChange={(e) => handleChange("username", e.target.value)}
+                fullWidth
+              />
+            </Grid>
+
+            {/* City */}
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+              <TextField
+                label={t("City")}
+                value={formData.city}
+                onChange={(e) => handleChange("city", e.target.value)}
+                fullWidth
+              />
+            </Grid>
+
+            {/* Address */}
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+              <TextField
+                label={t("Address")}
+                value={formData.address}
+                onChange={(e) => handleChange("address", e.target.value)}
+                fullWidth
+              />
+            </Grid>
+
+            {/* Phone */}
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+              <TextField
+                label={t("Phone")}
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => handleChange("phone", e.target.value)}
+                fullWidth
+              />
+            </Grid>
+
+            {/* Gender */}
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+              <TextField
+                select
+                fullWidth
+                label={t("Gender")}
+                onChange={(e) => handleChange("gender", e.target.value)}
+                value={formData.gender}
+              >
+                {[
+                  { title: "Male", value: "MALE" },
+                  { title: "Female", value: "FEMALE" },
+                ].map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.title}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+          </Grid>
         )}
         {step === 2 && (
-          <Box display="flex" flexDirection="column" gap={2}>
-            <TextField
-              label={t("Currency")}
-              type="currency"
-              value={preferancesData.currency}
-              onChange={(e) =>
-                handleChangePreferences("currency", e.target.value)
-              }
-              fullWidth
-            />
-            <TextField
-              label={t("Language")}
-              type="language"
-              value={preferancesData.language}
-              onChange={(e) =>
-                handleChangePreferences("language", e.target.value)
-              }
-              fullWidth
-            />
-            <FormControl component="fieldset">
-              <FormLabel component="legend">{t("Dark/Light Mode")}</FormLabel>
-              <FormGroup row>
-                {[
-                  {
-                    name: "Light",
-                    color: "#f5f5f5",
-                    mode: "light",
-                  },
-                  {
-                    name: "Dark",
-                    color: "#1e1e1e",
-                    mode: "dark",
-                  },
-                ].map((option: any) => (
-                  <Box
-                    key={option.name}
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="center"
-                    mr={2}
-                    mt={2}
-                  >
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+              <TextField
+                label={t("Currency")}
+                type="currency"
+                value={preferancesData.currency}
+                onChange={(e) =>
+                  handleChangePreferences("currency", e.target.value)
+                }
+                fullWidth
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+              <TextField
+                label={t("Language")}
+                type="language"
+                value={preferancesData.language}
+                onChange={(e) =>
+                  handleChangePreferences("language", e.target.value)
+                }
+                fullWidth
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">{t("Dark/Light Mode")}</FormLabel>
+                <FormGroup row>
+                  {[
+                    {
+                      name: "Light",
+                      color: "#f5f5f5",
+                      mode: "light",
+                    },
+                    {
+                      name: "Dark",
+                      color: "#1e1e1e",
+                      mode: "dark",
+                    },
+                  ].map((option: any) => (
                     <Box
-                      sx={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: "10%",
-                        backgroundColor: option.color,
-                        border: "2px solid #ccc",
-                      }}
-                    />
-                    <Checkbox
-                      checked={themeMode === option.mode}
-                      // onChange={() => setThemeMode(option.mode)}
-                      onChange={() => {
-                        handleChangePreferences("mode", option.mode);
-                        setThemeMode(option.mode);
-                      }}
-                      sx={{ mt: 1 }}
-                    />
-                  </Box>
-                ))}
-              </FormGroup>
-            </FormControl>
-
-            <FormControl component="fieldset">
-              <FormLabel component="legend">{t("Primary App Color")}</FormLabel>
-              <FormGroup row>
-                {colorOptions.map((option) => (
-                  <Box
-                    key={option.name}
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="center"
-                    mr={2}
-                    mt={2}
-                  >
+                      key={option.name}
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                      mr={2}
+                      mt={2}
+                    >
+                      <Box
+                        sx={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: "10%",
+                          backgroundColor: option.color,
+                          border: "2px solid #ccc",
+                        }}
+                      />
+                      <Checkbox
+                        checked={themeMode === option.mode}
+                        // onChange={() => setThemeMode(option.mode)}
+                        onChange={() => {
+                          handleChangePreferences("mode", option.mode);
+                          setThemeMode(option.mode);
+                        }}
+                        sx={{ mt: 1 }}
+                      />
+                    </Box>
+                  ))}
+                </FormGroup>
+              </FormControl>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">
+                  {t("Primary App Color")}
+                </FormLabel>
+                <FormGroup row>
+                  {colorOptions.map((option) => (
                     <Box
-                      sx={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: "10%",
-                        backgroundColor: option.color,
-                        border: "2px solid #ccc",
-                      }}
-                    />
-                    <Checkbox
-                      checked={primaryColor === option.color}
-                      onChange={() => {
-                        handleChangePreferences("themeColor", option.color);
-                        setPrimaryColor(option.color);
-                      }}
-                      sx={{ mt: 1 }}
-                    />
-                  </Box>
-                ))}
-              </FormGroup>
-            </FormControl>
-          </Box>
+                      key={option.name}
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                      mr={2}
+                      mt={2}
+                    >
+                      <Box
+                        sx={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: "10%",
+                          backgroundColor: option.color,
+                          border: "2px solid #ccc",
+                        }}
+                      />
+                      <Checkbox
+                        checked={primaryColor === option.color}
+                        onChange={() => {
+                          handleChangePreferences("themeColor", option.color);
+                          setPrimaryColor(option.color);
+                        }}
+                        sx={{ mt: 1 }}
+                      />
+                    </Box>
+                  ))}
+                </FormGroup>
+              </FormControl>
+            </Grid>
+          </Grid>
         )}
         {step === 3 && (
           <Box

@@ -24,10 +24,16 @@ interface CustomModalProps extends Pick<MuiModalProps, "open" | "onClose"> {
   titleIcon?: "info" | "edit" | "create" | "search" | "login";
 }
 
-const sizeMap: { [key: string]: string } = {
-  sm: "400px",
-  md: "600px",
-  lg: "800px",
+const sizeMap: { [key: string]: any } = {
+  sm: {
+    width: { xs: "90%", sm: "400px" },
+  },
+  md: {
+    width: { xs: "90%", sm: "500px", md: "600px" },
+  },
+  lg: {
+    width: { xs: "90%", sm: "600px", md: "800px" },
+  },
 };
 
 const CustomModal: React.FC<CustomModalProps> = ({
@@ -35,7 +41,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
   onClose,
   title,
   height,
-  width = 450,
+  width = "80vw",
   children,
   style,
   titleIcon,
@@ -61,7 +67,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          maxWidth: sizeMap[width] || width,
+          // width: "100%",
+          width: sizeMap[width] || width,
           bgcolor: theme.palette.customColors?.sectionBackgroundColor,
           borderRadius: 1,
           boxShadow: theme.palette.customColors?.shodow,

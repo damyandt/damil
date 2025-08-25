@@ -62,7 +62,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
     }
     try {
       const responce = await callApi<Response<any>>({
-        query: postRegister(business, admin),
+        query: postRegister({ tenantDto: business, userDto: admin }),
         auth: null,
       });
       if (responce.success === false) {

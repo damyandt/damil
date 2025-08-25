@@ -1,0 +1,160 @@
+import { Box, Grid, IconButton, MenuItem, Typography } from "@mui/material";
+import CustomTooltip from "../../MaterialUI/CustomTooltip";
+import TextField from "../../MaterialUI/FormFields/TextField";
+import CellRenderer from "../../MaterialUI/Table/CellRenderer";
+import { User } from "../../../pages/usersPages/userTypes";
+import { useLanguageContext } from "../../../context/LanguageContext";
+import { useState } from "react";
+import SaveIcon from "@mui/icons-material/Save";
+import DoneIcon from "@mui/icons-material/Done";
+import EditIcon from "@mui/icons-material/Edit";
+import callApi from "../../../API/callApi";
+import { updateProfile } from "../../../pages/usersPages/api/postQuery";
+import { Response } from "../../../Global/Types/commonTypes";
+import { useAuthedContext } from "../../../context/AuthContext";
+import { Fade } from "../../MaterialUI/FormFields/Fade";
+
+const AccountDetails = () => {
+  const { t } = useLanguageContext();
+  const { setAuthedUser, authedUser } = useAuthedContext();
+  const [saved, setSaved] = useState<boolean>(false);
+  const [editMode, setEditMode] = useState<boolean>(false);
+  const [formData, setFormData] = useState<Partial<User>>(authedUser);
+  const info: { label: string; field: string }[] = [
+    { label: t("Email"), field: "email" },
+    { label: t("Username"), field: "username" },
+    { label: t("City"), field: "city" },
+    { label: t("Phone"), field: "phone" },
+    { label: t("Address"), field: "address" },
+    { label: t("Gender"), field: "gender" },
+  ];
+  const handleSaveChanges = async () => {
+    const changes: Record<string, any> = {};
+
+    // Compare formData and authedUser to get only changed fields
+    for (const key in formData) {
+      if (formData[key as keyof User] !== authedUser[key as keyof User]) {
+        changes[key] = formData[key as keyof User];
+      }
+    }
+
+    if (Object.keys(changes).length === 0) {
+      console.log("No changes to update.");
+      setEditMode(false);
+      return;
+    }
+
+    await callApi<Response<any>>({
+      query: updateProfile(changes, authedUser.id || ""),
+      auth: { setAuthedUser },
+    });
+
+    setEditMode(false);
+    setSaved(true);
+
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  const handleChange = (field: any, value: any): void => {
+    setFormData((prev: Partial<User>) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  return (
+    <Box>
+      <Box
+        component={"div"}
+        display={"flex"}
+        mb={2.8}
+        sx={{ alignItems: "center", cursor: "default" }}
+        gap={2}
+      >
+        <Typography variant="h4" gutterBottom alignSelf={"center"} margin={0}>
+          {t("Account Info")}
+        </Typography>
+        <CustomTooltip title={editMode ? t("Save") : t("Edit")} placement="top">
+          {editMode ? (
+            <IconButton onClick={() => handleSaveChanges()}>
+              <SaveIcon fontSize="small" />
+            </IconButton>
+          ) : (
+            <IconButton onClick={() => setEditMode((prev: boolean) => !prev)}>
+              <EditIcon fontSize="small" />
+            </IconButton>
+          )}
+        </CustomTooltip>
+        <Fade in={saved}>
+          <IconButton sx={{ cursor: "default" }}>
+            <DoneIcon fontSize="small" color="success" />
+          </IconButton>
+        </Fade>
+      </Box>
+
+      <Box
+        sx={{
+          minHeight: 200,
+        }}
+      >
+        {editMode ? (
+          <Grid container spacing={2}>
+            {info.map((col: { label: string; field: string }) => (
+              <Grid size={6} key={col.field}>
+                {col.label === "Gender" ? (
+                  <TextField
+                    select
+                    fullWidth
+                    label={col.label}
+                    onChange={(e: any) =>
+                      handleChange(col.field, e.target.value)
+                    }
+                    value={formData ? formData[col.field as keyof User] : ""}
+                  >
+                    {[
+                      { title: "Male", value: "MALE" },
+                      { title: "Female", value: "FEMALE" },
+                    ].map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.title}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                ) : (
+                  <TextField
+                    disabled={col.label === "Email"}
+                    fullWidth
+                    label={col.label}
+                    onChange={(e: any) =>
+                      handleChange(col.field, e.target.value)
+                    }
+                    value={formData ? formData[col.field as keyof User] : ""}
+                  />
+                )}
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <Grid container spacing={3}>
+            {info.map((col: { label: string; field: string }) => (
+              <Grid size={6} key={col.field}>
+                <Typography variant="subtitle2" color="text.secondary">
+                  {col.label}
+                </Typography>
+                <CellRenderer
+                  fontWeight={400}
+                  key={col.field}
+                  value={formData ? formData[col.field as keyof User] : ""}
+                  dataType={col.label === "Gender" ? "dropdown" : "string"}
+                  table={false}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Box>
+    </Box>
+  );
+};
+
+export default AccountDetails;

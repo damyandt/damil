@@ -35,7 +35,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
     city: "error",
     membersCount: 0,
     subscriptionActive: false,
-    roles: ["FACILITY_MEMBER"],
+    roles: ["Facility Member"],
   });
   const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);

@@ -6,10 +6,16 @@ export const postLogin = (input: any): Query => ({
   variables: input,
 });
 
-export const postRegister = (business: any, admin: any): Query => ({
+export const postRegister = (info: {
+  tenantDto: any;
+  userDto: any;
+}): Query => ({
   endpoint: `auth/register`,
   method: "POST",
-  variables: { business, admin },
+  variables: {
+    tenantDto: info.tenantDto,
+    userDto: info.userDto,
+  },
 });
 
 export const validateEmail = (input: any): Query => ({
@@ -35,7 +41,7 @@ export const completeProfile = (input: any): Query => ({
   method: "PUT",
   variables: input,
 });
-export const updateProfile = (input: any, id: string): Query => ({
+export const updateProfile = (input: any, id: string | number): Query => ({
   endpoint: `user/${id}`,
   method: "PATCH",
   variables: input,

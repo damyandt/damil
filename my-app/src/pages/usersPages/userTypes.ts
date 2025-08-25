@@ -14,7 +14,7 @@ export type User = {
   membersCount?: number;
   subscriptionActive?: boolean;
   roles: Array<
-    "FACILITY_MEMBER" | "FACILITY_ADMIN" | "SYSTEM_ADMIN" | "FACILITY_STAFF"
+    "Facility Member" | "Facility Admin" | "System Admin" | "Facility Staff"
   >;
 };
 

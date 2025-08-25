@@ -96,13 +96,6 @@ interface LeftNavigationProps {
   mobileLeftNav: boolean;
 }
 
-export const roleDisplayNames: Record<string, string> = {
-  FACILITY_MEMBER: "Facility Member",
-  FACILITY_ADMIN: "Facility Administrator",
-  SYSTEM_ADMIN: "System Administrator",
-  FACILITY_STAFF: "Facility Staff",
-};
-
 const LeftNavigation: React.FC<LeftNavigationProps> = ({
   openLeftNav,
   setOpenLeftNav,
@@ -209,7 +202,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
         <Box component="div" sx={styles.profile}>
           <Avatar
             alt={authedUser?.username}
-            src="/profile.jpg"
+            src="/profile.jpeg"
             sx={{ width: 40, height: 40, ml: "0.4em", cursor: "pointer" }}
             onClick={(event: any) => {
               if (openLeftNav) {
@@ -218,7 +211,9 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
                 setAnchorElSettings(event.currentTarget);
               }
             }}
-          />
+          >
+            {authedUser?.firstName?.charAt(0)}
+          </Avatar>
 
           <Box
             sx={{
@@ -236,16 +231,11 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
               }}
             >
               <Typography variant="body1" fontWeight={500}>
-                {authedUser?.username}
+                {authedUser?.firstName || authedUser?.username}{" "}
+                {authedUser?.lastName}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {roleDisplayNames[
-                  authedUser.roles[0] as
-                    | "FACILITY_MEMBER"
-                    | "FACILITY_ADMIN"
-                    | "SYSTEM_ADMIN"
-                    | "FACILITY_STAFF"
-                ] || authedUser.roles[0]}
+                {authedUser.roles.join(", ")}
               </Typography>
             </Box>
             <Box sx={{ display: "flex" }}>

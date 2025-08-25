@@ -11,13 +11,13 @@ const App: React.FC = () => {
   if (authedUserLoading) {
     return <LoadingScreen />;
   }
+  const role:
+    | "Facility Member"
+    | "Facility Admin"
+    | "System Admin"
+    | "Facility Staff" = authedUser.roles[0];
+  const appRouter = createAppRouter(role);
   if (authedUser.email !== "error") {
-    const role:
-      | "FACILITY_MEMBER"
-      | "FACILITY_ADMIN"
-      | "SYSTEM_ADMIN"
-      | "FACILITY_STAFF" = authedUser.roles[0];
-    const appRouter = createAppRouter(role);
     return (
       <Box component="main">
         <RouterProvider router={appRouter} />

@@ -33,10 +33,10 @@ const getRoutesForRole = (role: string) => {
 
 export const createAppRouter = (
   userType:
-    | "FACILITY_MEMBER"
-    | "FACILITY_ADMIN"
-    | "SYSTEM_ADMIN"
-    | "FACILITY_STAFF"
+    | "Facility Member"
+    | "Facility Admin"
+    | "System Admin"
+    | "Facility Staff"
 ) => {
   const roleRoutes = getRoutesForRole(userType);
   const resolvedRoutes =
@@ -56,7 +56,7 @@ const allRoutes = () => {
     {
       path: "/",
       element:
-        authedUser.roles[0] === "FACILITY_MEMBER" ? (
+        authedUser.roles[0] === "Facility Member" ? (
           <MembersHome />
         ) : (
           <HomePage />
@@ -81,7 +81,6 @@ const allRoutes = () => {
     {
       path: "/DAMIL-Analytics/Memberships",
       element: <Memberships />,
-      roles: ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
     },
 
     // Access Control

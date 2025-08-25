@@ -4,35 +4,35 @@ import { LEFT_NAV_SECTION } from "./leftNavData";
 export const pageRoles: Record<string, string[]> = {
   // Home
 
-  "/": ["FACILITY_ADMIN", "SYSTEM_ADMIN", "FACILITY_MEMBER"],
+  "/": ["Facility Admin", "System Admin", "Facility Member"],
 
   // DAMIL Analytics
-  "/DAMIL-Analytics/Overview": ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  "/DAMIL-Analytics/Visits": ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  "/DAMIL-Analytics/Goal": ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  "/DAMIL-Analytics/Ages": ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  "/DAMIL-Analytics/Memberships": ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
+  "/DAMIL-Analytics/Overview": ["Facility Admin", "System Admin"],
+  "/DAMIL-Analytics/Visits": ["Facility Admin", "System Admin"],
+  "/DAMIL-Analytics/Goal": ["Facility Admin", "System Admin"],
+  "/DAMIL-Analytics/Ages": ["Facility Admin", "System Admin"],
+  "/DAMIL-Analytics/Memberships": ["Facility Admin", "System Admin"],
 
   // DAMIL Access Control
-  "/DAMIL-Access-Control/All-Clients": ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
+  "/DAMIL-Access-Control/All-Clients": ["Facility Admin", "System Admin"],
   "/DAMIL-Access-Control/All-Clients/:filter": [
-    "FACILITY_ADMIN",
-    "SYSTEM_ADMIN",
+    "Facility Admin",
+    "System Admin",
   ],
-  "/DAMIL-Access-Control/Daily-Visitors": ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
+  "/DAMIL-Access-Control/Daily-Visitors": ["Facility Admin", "System Admin"],
 
   // DAMIL Staff Members
-  "/DAMIL-Staff/All": ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  "/DAMIL-Staff/Roles": ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
-  "/DAMIL-Staff/Shifts": ["FACILITY_ADMIN", "FACILITY_STAFF", "SYSTEM_ADMIN"],
-  "/DAMIL-Staff/Events": ["FACILITY_ADMIN", "FACILITY_STAFF", "SYSTEM_ADMIN"],
+  "/DAMIL-Staff/All": ["Facility Admin", "System Admin"],
+  "/DAMIL-Staff/Roles": ["Facility Admin", "System Admin"],
+  "/DAMIL-Staff/Shifts": ["Facility Admin", "Facility Staff", "System Admin"],
+  "/DAMIL-Staff/Events": ["Facility Admin", "Facility Staff", "System Admin"],
 
   // DAMIL Configurations
   "/DAMIL-Configurations/Profile": ["ALL"],
-  "/DAMIL-Configurations/Member-Plans": ["FACILITY_ADMIN", "SYSTEM_ADMIN"],
+  "/DAMIL-Configurations/Member-Plans": ["Facility Admin", "System Admin"],
   "/DAMIL-Configurations/Subscription-Plans": [
-    "FACILITY_ADMIN",
-    "SYSTEM_ADMIN",
+    "Facility Admin",
+    "System Admin",
   ],
 };
 
