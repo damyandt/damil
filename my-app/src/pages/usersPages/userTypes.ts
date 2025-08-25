@@ -1,6 +1,8 @@
-export type Business = {
+export type User = {
   id?: string;
-  // gymName: string;
+  firstName?: string;
+  lastName?: string;
+  gender?: string;
   username: string;
   email: string;
   phone?: string;
@@ -15,3 +17,7 @@ export type Business = {
   // | "SYSTEM_ADMIN"
   // | "FACILITY_STAFF";
 };
+
+// export type Business = {
+
+// }

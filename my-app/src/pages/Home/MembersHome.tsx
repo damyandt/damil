@@ -17,8 +17,10 @@ import {
 import { useState } from "react";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { shiftHue } from "./Home";
+import { useAuthedContext } from "../../context/AuthContext";
 
 const MembersHome = () => {
+  const { authedUser } = useAuthedContext();
   const [tab, setTab] = useState(0);
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
@@ -95,7 +97,7 @@ const MembersHome = () => {
       >
         <Box>
           <Typography variant="h4" fontWeight={700}>
-            Hi, Eva!
+            {`Hi, ${authedUser.firstName}!`}
           </Typography>
           <Typography variant="subtitle1">
             Ready? Get set. Sweat. Repeat!

@@ -17,7 +17,7 @@ import {
 import callApi from "../../../API/callApi";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import { useNavigate } from "react-router-dom";
-import { Business } from "../../../pages/usersPages/userTypes";
+import { User } from "../../../pages/usersPages/userTypes";
 import Checkbox from "../../MaterialUI/FormFields/Checkbox";
 import { useCustomThemeProviderContext } from "../../../context/ThemeContext";
 import { PreferencesType, Response } from "../../../Global/Types/commonTypes";
@@ -35,7 +35,7 @@ const IncompleteProfileModal = () => {
   const { t } = useLanguageContext();
   const [step, setStep] = useState(0);
 
-  const [formData, setFormData] = useState<Partial<Business>>({
+  const [formData, setFormData] = useState<Partial<User>>({
     username: authedUser?.username || "",
     city: authedUser?.city || "",
     phone: authedUser?.phone || "",

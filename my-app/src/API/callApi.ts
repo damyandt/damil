@@ -5,7 +5,7 @@ import {
   handleUserSignOut,
 } from "../context/authContextUtils";
 import { getCookie } from "../Global/Utils/commonFunctions";
-import { Business } from "../pages/usersPages/userTypes";
+import { User } from "../pages/usersPages/userTypes";
 export const COOKIE_ACCESS_TOKEN = "accessToken";
 export const COOKIE_REFRESH_TOKEN = "refreshToken";
 
@@ -28,7 +28,7 @@ export type Query = {
 export type CallApiParams = {
   query: Query;
   auth: {
-    setAuthedUser: React.Dispatch<React.SetStateAction<Business>>;
+    setAuthedUser: React.Dispatch<React.SetStateAction<User>>;
   } | null;
 };
 

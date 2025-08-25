@@ -1,18 +1,18 @@
 import { createContext, JSX, useContext, useEffect, useState } from "react";
 import { getCookie } from "../Global/Utils/commonFunctions";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../API/callApi";
-import { Business } from "../pages/usersPages/userTypes";
+import { User } from "../pages/usersPages/userTypes";
 import { getQueryUsersGetCurrentUser } from "../Auth/API/apiAuthGetQueries";
 import { handleFetchUserAccessToken } from "./authContextUtils";
 import { PreferencesType, Response } from "../Global/Types/commonTypes";
 import { getPreferences } from "../pages/usersPages/api/postQuery";
 import { PaletteMode } from "@mui/material";
 
-export type GetQueryUsersGetCurrentUserSnippet = { user: Business };
+export type GetQueryUsersGetCurrentUserSnippet = { user: User };
 
 interface UserContextType {
-  authedUser: Business;
-  setAuthedUser: (value: React.SetStateAction<Business>) => void;
+  authedUser: User;
+  setAuthedUser: (value: React.SetStateAction<User>) => void;
   setUserSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
   authedUserLoading: boolean;
   showIncompleteModal: boolean;
@@ -27,7 +27,7 @@ interface AuthContextProps {
 }
 
 const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
-  const [authedUser, setAuthedUser] = useState<Business>({
+  const [authedUser, setAuthedUser] = useState<User>({
     username: "error",
     email: "error",
     phone: "error",

@@ -5,6 +5,8 @@ import MaleIcon from "@mui/icons-material/Male";
 import CloseIcon from "@mui/icons-material/Close";
 import EventIcon from "@mui/icons-material/Event";
 import { ColumnType } from "../../../Global/Types/commonTypes";
+import CustomTooltip from "../CustomTooltip";
+import { useEffect, useRef, useState } from "react";
 
 type CellRendererProps = {
   value: any;
@@ -22,6 +24,16 @@ const CellRenderer = ({
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
   let displayValue: React.ReactNode = String(value);
+  const textRef = useRef<HTMLSpanElement>(null);
+  const [isOverflowed, setIsOverflowed] = useState(false);
+
+  useEffect(() => {
+    if (textRef.current) {
+      setIsOverflowed(
+        textRef.current.scrollWidth > textRef.current.clientWidth
+      );
+    }
+  }, [value]);
   let style: React.CSSProperties = {
     margin: 0,
     border: "none",
@@ -240,11 +252,49 @@ const CellRenderer = ({
     );
   }
 
+  const textElement = (
+    <Typography
+      ref={textRef}
+      fontWeight={fontWeight}
+      border={"none"}
+      display={"block"}
+      sx={{
+        display: "block",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        width: "100%",
+      }}
+    >
+      {displayValue}
+    </Typography>
+  );
+
   return (
-    <Box component="div" sx={style}>
-      <Typography fontWeight={fontWeight} border={"none"}>
-        {displayValue}
-      </Typography>
+    // <Box component="div" sx={style}>
+    //   <Typography
+    //     fontWeight={fontWeight}
+    //     border={"none"}
+    //     display={"block"}
+    //     sx={{
+    //       display: "block",
+    //       overflow: "hidden",
+    //       textOverflow: "ellipsis",
+    //       whiteSpace: "nowrap",
+    //       width: "100%",
+    //     }}
+    //   >
+    //     {displayValue}
+    //   </Typography>
+    // </Box>
+    <Box component="div" sx={{ ...style, width: "100%" }}>
+      {isOverflowed ? (
+        <CustomTooltip title={String(value)} arrow placement="top">
+          {textElement}
+        </CustomTooltip>
+      ) : (
+        textElement
+      )}
     </Box>
   );
 };

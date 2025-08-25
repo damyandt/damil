@@ -23,16 +23,12 @@ import CellRenderer from "../../components/MaterialUI/Table/CellRenderer";
 import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
 import { useLanguageContext } from "../../context/LanguageContext";
 import { useAuthedContext } from "../../context/AuthContext";
-import { Business } from "./userTypes";
+import { User } from "./userTypes";
 import { useCustomThemeProviderContext } from "../../context/ThemeContext";
 import PlanCard from "./PlanCard";
 import callApi from "../../API/callApi";
 import { PreferencesType, Response } from "../../Global/Types/commonTypes";
-import {
-  completeProfile,
-  savePreferences,
-  updateProfile,
-} from "./api/postQuery";
+import { savePreferences, updateProfile } from "./api/postQuery";
 import { Fade } from "../../components/MaterialUI/FormFields/Fade";
 const ProfilePage = () => {
   const { t, setLanguage } = useLanguageContext();
@@ -40,10 +36,10 @@ const ProfilePage = () => {
   const { authedUser, setAuthedUser, preferences } = useAuthedContext();
   const { themeMode, setThemeMode, setPrimaryColor, primaryColor } =
     useCustomThemeProviderContext();
-  const [editModeBusinessInfo, setEditModeBusinessInfo] =
+  const [editModeAccountInfo, setEditModeAccountInfo] =
     useState<boolean>(false);
   const [editModeAccount, setEditModeAccount] = useState<boolean>(false);
-  const [formData, setFormData] = useState<Business>(authedUser);
+  const [formData, setFormData] = useState<User>(authedUser);
   const [preferencesData, setPreferencesData] =
     useState<PreferencesType>(preferences);
   const [hovered, setHovered] = useState<boolean>(false);
@@ -90,16 +86,14 @@ const ProfilePage = () => {
 
     // Compare formData and authedUser to get only changed fields
     for (const key in formData) {
-      if (
-        formData[key as keyof Business] !== authedUser[key as keyof Business]
-      ) {
-        changes[key] = formData[key as keyof Business];
+      if (formData[key as keyof User] !== authedUser[key as keyof User]) {
+        changes[key] = formData[key as keyof User];
       }
     }
 
     if (Object.keys(changes).length === 0) {
       console.log("No changes to update.");
-      setEditModeBusinessInfo(false);
+      setEditModeAccountInfo(false);
       return;
     }
 
@@ -108,7 +102,7 @@ const ProfilePage = () => {
       auth: { setAuthedUser },
     });
 
-    setEditModeBusinessInfo(false);
+    setEditModeAccountInfo(false);
   };
 
   const handleSaveChangesTheme = async () => {
@@ -145,7 +139,7 @@ const ProfilePage = () => {
     field: string | number,
     value: string | number
   ): void => {
-    setFormData((prev: Business) => ({
+    setFormData((prev: User) => ({
       ...prev,
       [field]: value,
     }));
@@ -222,6 +216,7 @@ const ProfilePage = () => {
         <Tabs value={selectedTab} onChange={handleTabChange} sx={{ mb: 3 }}>
           <Tab label={t("Account Details")} />
           <Tab label={t("Preferences")} />
+          <Tab label={t("Bussiness Details")} />
         </Tabs>
         <Slide
           direction={selectedTab === 0 ? "right" : "left"}
@@ -231,7 +226,7 @@ const ProfilePage = () => {
           unmountOnExit
         >
           <Box key={selectedTab}>
-            {selectedTab === 0 ? (
+            {selectedTab === 0 && (
               <Box>
                 <Box component={"div"} display={"flex"} gap={2} mb={2}>
                   <Typography
@@ -240,20 +235,20 @@ const ProfilePage = () => {
                     alignSelf={"center"}
                     margin={0}
                   >
-                    {t("Business Info")}
+                    {t("Account Info")}
                   </Typography>
                   <CustomTooltip
-                    title={editModeBusinessInfo ? t("Save") : t("Edit")}
+                    title={editModeAccountInfo ? t("Save") : t("Edit")}
                     placement="right"
                   >
-                    {editModeBusinessInfo ? (
+                    {editModeAccountInfo ? (
                       <IconButton onClick={() => handleSaveChanges()}>
                         <SaveIcon fontSize="small" />
                       </IconButton>
                     ) : (
                       <IconButton
                         onClick={() =>
-                          setEditModeBusinessInfo((prev: boolean) => !prev)
+                          setEditModeAccountInfo((prev: boolean) => !prev)
                         }
                       >
                         <EditIcon fontSize="small" />
@@ -267,7 +262,7 @@ const ProfilePage = () => {
                     minHeight: 200,
                   }}
                 >
-                  {editModeBusinessInfo ? (
+                  {editModeAccountInfo ? (
                     <Grid container spacing={2}>
                       {info.map((col: { label: string; field: string }) => (
                         <Grid size={6} key={col.field}>
@@ -279,9 +274,7 @@ const ProfilePage = () => {
                               handleChange(col.field, e.target.value)
                             }
                             value={
-                              formData
-                                ? formData[col.field as keyof Business]
-                                : ""
+                              formData ? formData[col.field as keyof User] : ""
                             }
                           />
                         </Grid>
@@ -301,9 +294,7 @@ const ProfilePage = () => {
                             fontWeight={400}
                             key={col.field}
                             value={
-                              formData
-                                ? formData[col.field as keyof Business]
-                                : ""
+                              formData ? formData[col.field as keyof User] : ""
                             }
                             dataType={"string"}
                             table={false}
@@ -314,7 +305,8 @@ const ProfilePage = () => {
                   )}
                 </Box>
               </Box>
-            ) : (
+            )}
+            {selectedTab === 1 && (
               <Box>
                 <Box component={"div"} display={"flex"} gap={2} mb={2}>
                   <Typography
