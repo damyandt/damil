@@ -115,7 +115,7 @@ const MembersHome = () => {
       {/* News Card */}
       <Grid container spacing={2} py={2}>
         <Grid
-          size={6}
+          size={{ xs: 12, sm: 6, md: 4 }}
           borderRadius={"20px"}
           boxShadow={
             isDark
@@ -133,7 +133,7 @@ const MembersHome = () => {
           </Box>
         </Grid>
         <Grid
-          size={6}
+          size={{ xs: 12, sm: 6, md: 4 }}
           borderRadius={"20px"}
           boxShadow={
             isDark
@@ -147,6 +147,24 @@ const MembersHome = () => {
             </Typography>
             <Typography variant="body1">
               2 more classes and you will reach level 4!
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid
+          size={{ xs: 12, sm: 6, md: 4 }}
+          borderRadius={"20px"}
+          boxShadow={
+            isDark
+              ? `0 3px 12px ${alpha(primary, 0.3)}`
+              : `0 3px 12px ${alpha("#000", 0.06)}`
+          }
+        >
+          <Box sx={{ borderRadius: "20px", p: 2 }}>
+            <Typography variant="subtitle2" color="text.secondary">
+              News
+            </Typography>
+            <Typography variant="body1">
+              Start working out to boost your fitness level!
             </Typography>
           </Box>
         </Grid>
@@ -195,7 +213,7 @@ const MembersHome = () => {
         </Box>
         <Grid container spacing={2}>
           {classes.map((cls, index) => (
-            <Grid size={4} key={index}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
               <Box
                 sx={{
                   borderRadius: "20px",
