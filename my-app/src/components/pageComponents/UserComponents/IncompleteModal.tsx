@@ -23,6 +23,8 @@ import { User } from "../../../pages/usersPages/userTypes";
 import Checkbox from "../../MaterialUI/FormFields/Checkbox";
 import { useCustomThemeProviderContext } from "../../../context/ThemeContext";
 import { PreferencesType, Response } from "../../../Global/Types/commonTypes";
+import DatePickerComponent from "../../MaterialUI/FormFields/DatePicker";
+import dayjs from "dayjs";
 
 const IncompleteProfileModal = () => {
   const {
@@ -37,23 +39,28 @@ const IncompleteProfileModal = () => {
   const { t } = useLanguageContext();
   const [step, setStep] = useState(0);
 
-  const [formData, setFormData] = useState<Partial<User>>({
-    username: authedUser?.username || "",
-    firstName: authedUser?.firstName || "",
-    lastName: authedUser?.lastName || "",
-    city: authedUser?.city || "",
-    phone: authedUser?.phone || "",
-    address: authedUser?.address || "",
-    email: authedUser?.email || "",
-    gender: authedUser?.gender || "",
-  });
-  const [preferancesData, setPreferencesData] = useState<PreferencesType>({
-    currency: preferences.currency || "",
-    language: preferences.language || "",
-    mode: preferences.mode || "",
-    themeColor: preferences.themeColor || "",
-    homeFilters: preferences.homeFilters || [],
-  });
+  const [formData, setFormData] = useState<Partial<User>>(
+    authedUser
+    // username: authedUser?.username || "",
+    // firstName: authedUser?.firstName || "",
+    // lastName: authedUser?.lastName || "",
+    // city: authedUser?.city || "",
+    // phone: authedUser?.phone || "",
+    // address: authedUser?.address || "",
+    // email: authedUser?.email || "",
+    // gender: authedUser?.gender || "",
+    // birthDate: authedUser?.birthDate ? dayjs(authedUser.birthDate) : dayjs(),
+  );
+  const [preferancesData, setPreferencesData] = useState<PreferencesType>(
+    preferences
+    //   {
+    //   currency: preferences.currency || "",
+    //   language: preferences.language || "",
+    //   mode: preferences.mode || "",
+    //   themeColor: preferences.themeColor || "",
+    //   homeFilters: preferences.homeFilters || [],
+    // }
+  );
   const navigate = useNavigate();
   const handleChange = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -78,6 +85,10 @@ const IncompleteProfileModal = () => {
         const isFormDataIncomplete = Object.values(formData).some(
           (val) => !val || val === ""
         );
+        Object.values(formData).map(
+          (val) => (!val || val === "") && console.log(val)
+        );
+        console.log(isFormDataIncomplete);
 
         if (!isFormDataIncomplete) {
           setStep(2);
@@ -210,6 +221,16 @@ const IncompleteProfileModal = () => {
                 value={formData.phone}
                 onChange={(e) => handleChange("phone", e.target.value)}
                 fullWidth
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+              <DatePickerComponent
+                sx={{ width: "100%", margin: 0 }}
+                label={t("Birthday")}
+                value={dayjs(formData.birthDate)}
+                onChange={(newValue: any) =>
+                  handleChange("birthDate", newValue)
+                }
               />
             </Grid>
 

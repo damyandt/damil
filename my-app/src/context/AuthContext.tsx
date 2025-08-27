@@ -41,9 +41,13 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
   const [loading, setLoading] = useState<boolean>(true);
   const [showIncompleteModal, setShowIncompleteModal] =
     useState<boolean>(false);
+  const storedMode = localStorage.getItem("themeMode");
+  const defaultMode: PaletteMode =
+    storedMode === "dark" || storedMode === "light" ? storedMode : "light";
+
   const [preferences, setPreferences] = useState<PreferencesType>({
     themeColor: localStorage.getItem("themeColor") || "#a250fa",
-    mode: (localStorage.getItem("themeMode") as PaletteMode) || "light",
+    mode: defaultMode,
     currency: "BGN",
     language: "en",
     homeFilters: [
@@ -99,7 +103,6 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         Object.values(preferences).some(
           (val: any) => val === "" || val === null
         );
-
       const snoozeUntil = localStorage.getItem("incompleteProfileSnooze");
       const now = Date.now();
 

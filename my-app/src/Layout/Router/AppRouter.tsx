@@ -19,18 +19,6 @@ import PageNotFound from "../../components/pageComponents/PageNotFound";
 import SubscriptionPlans from "../../pages/Configurations/SubscriptionPlans";
 import { getRolesForPage } from "../AppNavigation/PageRoles";
 import MembersHome from "../../pages/Home/MembersHome";
-import { useAuthedContext } from "../../context/AuthContext";
-
-const getRoutesForRole = (role: string) => {
-  if (role === "SYSTEM_ADMIN") return allRoutes;
-  const routes = allRoutes();
-  return routes.filter(
-    (route) =>
-      getRolesForPage(route.path!).includes(role) ||
-      getRolesForPage(route.path!).includes("ALL")
-  );
-};
-
 export const createAppRouter = (
   userType:
     | "Facility Member"
@@ -39,28 +27,33 @@ export const createAppRouter = (
     | "Facility Staff"
 ) => {
   const roleRoutes = getRoutesForRole(userType);
-  const resolvedRoutes =
-    typeof roleRoutes === "function" ? roleRoutes() : roleRoutes;
+  // const resolvedRoutes =
+  //   typeof roleRoutes === "function" ? roleRoutes() : roleRoutes;
   return createBrowserRouter([
     {
       path: "/",
       element: <Layout />,
       errorElement: <ErrorPage />,
-      children: [...resolvedRoutes, { path: "*", element: <PageNotFound /> }],
+      children: [...roleRoutes, { path: "*", element: <PageNotFound /> }],
     },
   ]);
 };
-const allRoutes = () => {
-  const { authedUser } = useAuthedContext();
+
+const getRoutesForRole = (role: string) => {
+  if (role === "System Admin") return allRoutes(role);
+  const routes = allRoutes(role);
+  return routes.filter(
+    (route) =>
+      getRolesForPage(route.path!).includes(role) ||
+      getRolesForPage(route.path!).includes("ALL")
+  );
+};
+
+const allRoutes = (role: string) => {
   return [
     {
       path: "/",
-      element:
-        authedUser.roles[0] === "Facility Member" ? (
-          <MembersHome />
-        ) : (
-          <HomePage />
-        ),
+      element: role === "Facility Member" ? <MembersHome /> : <HomePage />,
     },
     {
       path: "/DAMIL-Analytics/Overview",

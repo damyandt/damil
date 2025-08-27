@@ -24,13 +24,13 @@ import { PreferencesType, Response } from "../../../Global/Types/commonTypes";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { useCustomThemeProviderContext } from "../../../context/ThemeContext";
 const PreferencesDetails = () => {
-  const { setAuthedUser } = useAuthedContext();
+  const { setAuthedUser, preferences } = useAuthedContext();
   const { t, setLanguage } = useLanguageContext();
   const { themeMode, setThemeMode, setPrimaryColor, primaryColor } =
     useCustomThemeProviderContext();
   const [editMode, setEditMode] = useState<boolean>(false);
   const [saved, setSaved] = useState<boolean>(false);
-  const [formData, setFormData] = useState<any>();
+  const [formData, setFormData] = useState<any>(preferences);
 
   const preferencesInfo: { label: string; field: string | number }[] = [
     { label: t("Currency"), field: "currency" },

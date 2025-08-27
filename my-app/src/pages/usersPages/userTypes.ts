@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 export type User = {
   id?: string | number;
   firstName?: string;
@@ -8,7 +10,7 @@ export type User = {
   phone?: string;
   address?: string;
   city?: string;
-  birthDate?: string | null;
+  birthDate?: Dayjs | null;
   createdAt?: string;
   // created_at?: Date;
   membersCount?: number;

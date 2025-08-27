@@ -27,9 +27,11 @@ type ThemeProviderProps = {
 
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const { preferences } = useAuthedContext();
-  const [themeMode, setThemeMode] = useState<PaletteMode>(preferences.mode);
+  const [themeMode, setThemeMode] = useState<PaletteMode>(
+    preferences.mode || localStorage.getItem("themeMode") || "light"
+  );
   const [primaryColor, setPrimaryColor] = useState<string>(
-    preferences.themeColor
+    preferences.themeColor || localStorage.getItem("themeColor") || "#a250fa"
   );
   useEffect(() => {
     setThemeMode(preferences.mode);
