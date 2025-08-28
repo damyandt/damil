@@ -42,7 +42,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
   const [searchInput, setSearchInput] = useState<string>("");
   const [usersFound, setUsersFound] = useState<any>(null);
   const [userDetails, setUserDetails] = useState<any>(null);
-  const { setAuthedUser, authedUser } = useAuthedContext();
+  const { setAuthedUser } = useAuthedContext();
   const steps = [
     t("Search Member"),
     t("Confirm Details"),
@@ -57,8 +57,14 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
       setUsersFound(userDetails.data);
       userDetails.data && setUserDetails(userDetails?.data);
       userDetails.success === true && setErrors({});
-      userDetails.success === true && setActiveStep((prev) => prev + 1);
+      userDetails.success === true &&
+        userDetails.data.length !== 0 &&
+        setActiveStep((prev) => prev + 1);
       userDetails.success === false &&
+        setErrors({
+          search: t(`Can't find user with ${searchType} - ${searchInput}`),
+        });
+      userDetails.data.length === 0 &&
         setErrors({
           search: t(`Can't find user with ${searchType} - ${searchInput}`),
         });
@@ -110,21 +116,6 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
       {/* Step 1 */}
       {activeStep === 0 && (
         <Grid container spacing={2}>
-          {/* <Grid size={12} mb={2}>
-            <FormControl fullWidth>
-              <InputLabel>{t("Search By")}</InputLabel>
-              <Select
-                value={searchType}
-                label={t("Search By")}
-                onChange={(e) => setSearchType(e.target.value as any)}
-              >
-                <MenuItem value="id">{t("ID")}</MenuItem>
-                <MenuItem value="name">{t("Name")}</MenuItem>
-                <MenuItem value="email">{t("Email")}</MenuItem>
-                <MenuItem value="phone">{t("Phone")}</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid> */}
           <Grid size={12}>
             <Typography>{t("Search By")}</Typography>
 
@@ -135,8 +126,6 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
               width={"70%"}
               margin={"0 auto"}
             >
-              {/* <FormControl component="fieldset"> */}
-              {/* <FormGroup row > */}
               {[
                 {
                   name: t("ID"),

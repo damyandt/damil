@@ -1,12 +1,4 @@
-import {
-  Box,
-  Chip,
-  Grid,
-  Step,
-  StepLabel,
-  Stepper,
-  Typography,
-} from "@mui/material";
+import { Box, Grid, Step, StepLabel, Stepper, Typography } from "@mui/material";
 import CustomModal from "../../components/MaterialUI/Modal";
 import TextField from "../../components/MaterialUI/FormFields/TextField";
 import { useLanguageContext } from "../../context/LanguageContext";
@@ -18,6 +10,8 @@ import { useAuthedContext } from "../../context/AuthContext";
 import Alert from "../../components/MaterialUI/Alert";
 import CellRenderer from "../../components/MaterialUI/Table/CellRenderer";
 import { Response } from "../../Global/Types/commonTypes";
+import Checkbox from "../../components/MaterialUI/FormFields/Checkbox";
+import { User } from "../usersPages/userTypes";
 
 interface SearchModalProps {
   openSearch: boolean;
@@ -33,25 +27,37 @@ const SearchModal: React.FC<SearchModalProps> = ({
 
   const { t } = useLanguageContext();
   const [searchInput, setSearchInput] = useState("");
-
+  const [usersFound, setUsersFound] = useState<any>(null);
   const [userDetails, setUserDetails] = useState<any>(null);
   const [activeStep, setActiveStep] = useState(0);
+  const [searchType, setSearchType] = useState<
+    "ID" | "Name" | "Email" | "Phone"
+  >("ID");
   const steps = [t("Search Member"), t("View Details")];
 
   const handleNext = async () => {
     try {
-      const userDetails = await callApi<Response<any>>({
-        query: getMember(searchInput),
+      const userDetails: Response<Array<Partial<User>>> = await callApi<any>({
+        query: getMember(searchInput, searchType.toLowerCase()),
         auth: { setAuthedUser },
       });
-      if (activeStep === 0) {
-        setUserDetails(userDetails.data);
-      }
+      setUsersFound(userDetails.data);
+      userDetails.data && setUserDetails(userDetails?.data);
       userDetails.success === true && setErrors({});
-      userDetails.success === true && setActiveStep((prev) => prev + 1);
+      userDetails.success === true &&
+        userDetails.data.length !== 0 &&
+        setActiveStep((prev) => prev + 1);
+      userDetails.success === false &&
+        setErrors({
+          search: t(`Can't find user with ${searchType} - ${searchInput}`),
+        });
+      userDetails.data.length === 0 &&
+        setErrors({
+          search: t(`Can't find user with ${searchType} - ${searchInput}`),
+        });
     } catch (error) {
       console.log(error);
-      setErrors({ search: "Can't find user with this information!" });
+      setErrors({ search: t("Can't find user with this information!") });
     }
   };
 
@@ -84,140 +90,231 @@ const SearchModal: React.FC<SearchModalProps> = ({
         </Stepper>
       </Box>
 
-      {/* Step Content */}
+      {/* Step 1 */}
       {activeStep === 0 && (
-        <Box>
-          <Typography variant="subtitle1" mb={2}>
-            {t("Enter Member ID or Name")}
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid size={12}>
-              <TextField
-                fullWidth
-                label={t("Search")}
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleNext()}
-              />
-            </Grid>
-            <Grid size={12} display="flex" justifyContent="flex-end">
-              <Button onClick={handleNext} disabled={!searchInput.trim()}>
-                {t("Next")}
-              </Button>
-            </Grid>
-            <Grid size={12}>
-              <Alert
-                message={errors["search"]}
-                showAlert={!!errors["search"]}
-                severity="error"
-              />
-            </Grid>
+        <Grid container spacing={2}>
+          <Grid size={12}>
+            <Typography>{t("Search By")}</Typography>
+
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              flexWrap="wrap"
+              width={"70%"}
+              margin={"0 auto"}
+            >
+              {[
+                {
+                  name: t("ID"),
+                  value: "ID",
+                },
+                {
+                  name: t("Name"),
+                  value: "Name",
+                },
+                {
+                  name: t("Email"),
+                  value: "Email",
+                },
+                {
+                  name: t("Phone"),
+                  value: "Phone",
+                },
+              ].map((option) => (
+                <Box
+                  key={option.value}
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  mt={2}
+                >
+                  <Checkbox
+                    checked={searchType === option.value}
+                    onChange={() => setSearchType(option.value as any)}
+                    sx={{ mt: 1 }}
+                  />
+                  <Typography variant="caption">{option.name}</Typography>
+                </Box>
+              ))}
+              {/* </FormGroup> */}
+              {/* </FormControl> */}
+            </Box>
           </Grid>
-        </Box>
+
+          <Grid size={12}>
+            <Typography mb={2}>{t(`Enter Member ${searchType}`)}</Typography>
+          </Grid>
+          <Grid size={12}>
+            <TextField
+              fullWidth
+              label={t("Search")}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleNext()}
+            />
+          </Grid>
+
+          <Grid size={12}>
+            <Alert
+              message={errors["search"]}
+              showAlert={!!errors["search"]}
+              severity="error"
+            />
+          </Grid>
+          <Grid size={12} textAlign="right" mt={2}>
+            <Button disabled={!searchInput.trim()} onClick={handleNext}>
+              Next
+            </Button>
+          </Grid>
+        </Grid>
       )}
 
-      {activeStep === 1 && userDetails && (
-        <Box>
-          <Typography variant="h6" mb={2}>
-            {t("Member Details")}
-          </Typography>
+      {/* Step 2 */}
+      {activeStep === 1 &&
+        (userDetails.length > 1 ? (
           <Grid container spacing={2}>
-            <Grid size={4}>
-              <Typography variant="subtitle2">{t("Name")}</Typography>
-              <Typography>
-                <CellRenderer
-                  key={t("Name")}
-                  value={`${userDetails.firstName} ${userDetails.lastName}`}
-                  dataType={"string"}
-                  table={false}
-                />
-              </Typography>
+            <Grid size={12}>
+              <Typography mb={2}>{t("Select a member")}</Typography>
             </Grid>
-            <Grid size={4}>
-              <Typography variant="subtitle2">{t("Email")}</Typography>
-
-              <CellRenderer
-                key={t("Email")}
-                value={userDetails.email}
-                dataType={"string"}
-                table={false}
-              />
+            <Grid container spacing={2}>
+              {usersFound?.map((user: any, idx: number) => (
+                <Grid size={12} key={idx}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    sx={{ mb: 1, textAlign: "left" }}
+                    onClick={() => {
+                      setUserDetails([user]);
+                    }}
+                  >
+                    {user.firstName} {user.lastName} — {user.email} -{" "}
+                    {user.phone}
+                  </Button>
+                </Grid>
+              ))}
             </Grid>
-            <Grid size={4}>
-              <Typography variant="subtitle2">{t("Phone")}</Typography>
-              <CellRenderer
-                key={t("Phone")}
-                value={userDetails.phone || "-"}
-                dataType={"string"}
-                table={false}
-              />
-            </Grid>
-            <Grid size={4}>
-              <Typography variant="subtitle2">{t("Gender")}</Typography>
-              <CellRenderer
-                key={t("Gender")}
-                value={userDetails.gender}
-                dataType={"enum"}
-                table={false}
-              />
-            </Grid>
-            <Grid size={4}>
-              <Typography variant="subtitle2">
-                {t("Subscription Plan")}
-              </Typography>
-
-              <CellRenderer
-                key={t("Subscription Plan")}
-                value={userDetails.subscriptionPlan}
-                dataType={"enum"}
-                table={false}
-              />
-            </Grid>
-            <Grid size={4}>
-              <Typography variant="subtitle2">
-                {t("Subscription Status")}
-              </Typography>
-              <CellRenderer
-                key={t("Subscription Status")}
-                value={userDetails.subscriptionStatus}
-                dataType={"enum"}
-                table={false}
-              />
-            </Grid>
-            <Grid size={4}>
-              <Typography variant="subtitle2">{t("Start Date")}</Typography>
-              <CellRenderer
-                key={t("Start Date")}
-                value={userDetails.subscriptionStartDate}
-                dataType={"date"}
-                table={false}
-              />
-            </Grid>
-            <Grid size={4}>
-              <Typography variant="subtitle2">{t("End Date")}</Typography>
-              <CellRenderer
-                key={t("Start Date")}
-                value={userDetails.subscriptionEndDate}
-                dataType={"date"}
-                table={false}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={2} mt={3} justifyContent="space-between">
-            <Grid>
-              <Button variant="outlined" onClick={handleBack} color="error">
+            <Grid size={12} justifyContent={"flex-end"} display={"flex"}>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => {
+                  setActiveStep((prev: number) => (prev -= 1));
+                }}
+              >
                 {t("Back")}
               </Button>
             </Grid>
-            <Grid>
-              <Button variant="outlined" onClick={handleClose} color="error">
-                {t("Close")}
-              </Button>
-            </Grid>
           </Grid>
-        </Box>
-      )}
+        ) : (
+          <Box>
+            <Typography variant="h6" mb={2}>
+              {t("Member Details")}
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid size={4}>
+                <Typography variant="subtitle2">{t("Name")}</Typography>
+                <Typography>
+                  <CellRenderer
+                    key={t("Name")}
+                    value={`${userDetails?.[0].firstName} ${userDetails?.[0].lastName}`}
+                    dataType={"string"}
+                    table={false}
+                  />
+                </Typography>
+              </Grid>
+              <Grid size={4}>
+                <Typography variant="subtitle2">{t("Email")}</Typography>
+
+                <CellRenderer
+                  key={t("Email")}
+                  value={userDetails?.[0].email}
+                  dataType={"string"}
+                  table={false}
+                />
+              </Grid>
+              <Grid size={4}>
+                <Typography variant="subtitle2">{t("Phone")}</Typography>
+                <CellRenderer
+                  key={t("Phone")}
+                  value={userDetails?.[0].phone || "-"}
+                  dataType={"string"}
+                  table={false}
+                />
+              </Grid>
+              <Grid size={4}>
+                <Typography variant="subtitle2">{t("Gender")}</Typography>
+                <CellRenderer
+                  key={t("Gender")}
+                  value={userDetails?.[0].gender}
+                  dataType={"enum"}
+                  table={false}
+                />
+              </Grid>
+              <Grid size={4}>
+                <Typography variant="subtitle2">
+                  {t("Subscription Plan")}
+                </Typography>
+
+                <CellRenderer
+                  key={t("Subscription Plan")}
+                  value={userDetails?.[0].subscriptionPlan}
+                  dataType={"enum"}
+                  table={false}
+                />
+              </Grid>
+              <Grid size={4}>
+                <Typography variant="subtitle2">
+                  {t("Subscription Status")}
+                </Typography>
+                <CellRenderer
+                  key={t("Subscription Status")}
+                  value={userDetails?.[0].subscriptionStatus}
+                  dataType={"enum"}
+                  table={false}
+                />
+              </Grid>
+              <Grid size={4}>
+                <Typography variant="subtitle2">{t("Start Date")}</Typography>
+                <CellRenderer
+                  key={t("Start Date")}
+                  value={userDetails?.[0].subscriptionStartDate}
+                  dataType={"date"}
+                  table={false}
+                />
+              </Grid>
+              <Grid size={4}>
+                <Typography variant="subtitle2">{t("End Date")}</Typography>
+                <CellRenderer
+                  key={t("Start Date")}
+                  value={userDetails?.[0].subscriptionEndDate}
+                  dataType={"date"}
+                  table={false}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={2} mt={3} justifyContent="flex-end">
+              <Grid>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    usersFound.length > 1
+                      ? setUserDetails(usersFound)
+                      : setActiveStep((prev: any) => (prev -= 1));
+                  }}
+                  color="error"
+                >
+                  {t("Back")}
+                </Button>
+              </Grid>
+              <Grid>
+                <Button variant="outlined" onClick={() => setOpenSearch(false)}>
+                  {t("Check In")}
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        ))}
     </CustomModal>
   );
 };

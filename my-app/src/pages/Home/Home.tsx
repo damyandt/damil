@@ -191,6 +191,7 @@ const HomePage: React.FC = () => {
               variant="outlined"
               sx={{
                 background: `linear-gradient(90deg, ${colorStart}, ${colorEnd})`,
+
                 boxShadow: theme.palette.customColors?.shodow,
                 border: "none",
                 color: "#fff",
