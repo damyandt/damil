@@ -289,11 +289,11 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
               <Grid size={6}>
                 <TextField
                   select
-                  label={t("Visit Limit")}
-                  value={formData.visitLimit}
+                  label={t("Allowed Visits")}
+                  value={formData.allowedVisits}
                   type="number"
                   onChange={(e) =>
-                    handleChangSubscription("visitLimit", e.target.value)
+                    handleChangSubscription("allowedVisits", e.target.value)
                   }
                   inputProps={{ min: 1 }}
                   fullWidth

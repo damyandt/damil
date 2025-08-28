@@ -158,11 +158,11 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
             <Grid size={6}>
               <TextField
                 select
-                label={t("Visit Limit")}
-                value={subscriptionData.visitLimit}
+                label={t("Allowed Visits")}
+                value={subscriptionData.allowedVisits}
                 type="number"
                 onChange={(e) =>
-                  handleChangSubscription("visitLimit", e.target.value)
+                  handleChangSubscription("allowedVisits", e.target.value)
                 }
                 inputProps={{ min: 1 }}
                 fullWidth

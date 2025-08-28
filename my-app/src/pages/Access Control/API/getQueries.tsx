@@ -1,4 +1,3 @@
-import { Dayjs } from "dayjs";
 import { Query } from "../../../API/callApi";
 
 export const getClientsTable = (filter?: string): Query => {
@@ -11,16 +10,41 @@ export const getClientsTable = (filter?: string): Query => {
     method: "GET",
   };
 };
-export const getMember = (searchQuery: string | number): Query => ({
-  endpoint: `users/members/search?id=${searchQuery}`,
-  method: "GET",
-});
 
-export const checkInMember = (
-  gymID: string,
-  searchQuery: string | number
-): Query => ({
-  endpoint: `users/members/${gymID}/check-in?query=${searchQuery}`,
+export const getMember = (
+  searchQuery: string | number,
+  searchType: any = "id"
+): Query => {
+  let endpoint = "users/members/search?";
+
+  switch (searchType) {
+    case "id":
+      endpoint += `id=${searchQuery}`;
+      break;
+    case "name":
+      const [firstName, ...rest] = String(searchQuery).trim().split(" ");
+      const lastName = rest.join(" "); // join remaining parts for last name
+      endpoint += `firstName=${encodeURIComponent(firstName)}`;
+      if (lastName) {
+        endpoint += `&lastName=${encodeURIComponent(lastName)}`;
+      }
+      break;
+    case "email":
+      endpoint += `email=${encodeURIComponent(searchQuery)}`;
+      break;
+    case "phone":
+      endpoint += `phone=${encodeURIComponent(searchQuery)}`;
+      break;
+  }
+
+  return {
+    endpoint,
+    method: "GET",
+  };
+};
+
+export const checkInMember = (searchQuery: string | number): Query => ({
+  endpoint: `users/members/${searchQuery}/check-in`,
   method: "POST",
 });
 
@@ -31,8 +55,8 @@ export const postMember = (formData: any): Query => ({
 });
 
 export const postSubscription = (formData: any, id: any): Query => ({
-  endpoint: `users/members/${id}`,
-  method: "PATCH",
+  endpoint: `users/membership/${id}`,
+  method: "PUT",
   variables: formData,
 });
 
@@ -46,11 +70,11 @@ export const getPeriodVisitors = (
   startDate: string,
   endDate: string
 ): Query => ({
-  endpoint: `visits/period/${id}/${startDate}/${endDate}`,
+  endpoint: `members/period/${id}/${startDate}/${endDate}`,
   method: "GET",
 });
 
 export const getClientVisits = (id: string): Query => ({
-  endpoint: `visits/member/${id}`,
+  endpoint: `members/${id}/visits`,
   method: "GET",
 });
