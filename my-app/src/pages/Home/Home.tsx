@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   alpha,
   Box,
@@ -49,7 +49,7 @@ export const shiftHue = (color: string, amount: number) =>
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { authedUser, preferences } = useAuthedContext();
+  const { authedUser, preferences, setRefreshUserData } = useAuthedContext();
   const [openCheckIn, setOpenCheckIn] = useState<boolean>(false);
   const [selectedFilters, setSelectedFilters] = useState<any>(
     preferences.homeFilters ?? [
@@ -59,6 +59,11 @@ const HomePage: React.FC = () => {
       "SubscriptionPlan - MONTHLY",
     ]
   );
+
+  useEffect(() => {
+    setRefreshUserData((prev: boolean) => !prev);
+  }, []);
+
   const [openFilterConfig, setOpenFilterConfig] = useState<boolean>(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const { t } = useLanguageContext();

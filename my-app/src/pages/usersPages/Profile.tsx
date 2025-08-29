@@ -95,7 +95,7 @@ const ProfilePage = () => {
         <Tabs value={selectedTab} onChange={handleTabChange} sx={{ mb: 3 }}>
           <Tab label={t("Account Details")} />
           <Tab label={t("Preferences")} />
-          {!authedUser.roles.includes("Facility Member") && (
+          {!authedUser?.roles?.includes("Facility Member") && (
             <Tab label={t("Business Details")} />
           )}
         </Tabs>

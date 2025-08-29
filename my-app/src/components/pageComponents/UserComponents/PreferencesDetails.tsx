@@ -24,7 +24,7 @@ import { PreferencesType, Response } from "../../../Global/Types/commonTypes";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { useCustomThemeProviderContext } from "../../../context/ThemeContext";
 const PreferencesDetails = () => {
-  const { setAuthedUser, preferences } = useAuthedContext();
+  const { setAuthedUser, preferences, setRefreshUserData } = useAuthedContext();
   const { t, setLanguage } = useLanguageContext();
   const { themeMode, setThemeMode, setPrimaryColor, primaryColor } =
     useCustomThemeProviderContext();
@@ -55,7 +55,7 @@ const PreferencesDetails = () => {
       query: savePreferences(accountData),
       auth: { setAuthedUser },
     });
-
+    setRefreshUserData((prev: boolean) => !prev);
     setEditMode(false);
   };
 
@@ -79,6 +79,7 @@ const PreferencesDetails = () => {
     });
     localStorage.setItem("themeMode", formData.mode);
     localStorage.setItem("themeColor", formData.themeColor);
+    setRefreshUserData((prev: boolean) => !prev);
     setSaved(true);
 
     setTimeout(() => setSaved(false), 2000);

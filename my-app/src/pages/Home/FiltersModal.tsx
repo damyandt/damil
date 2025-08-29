@@ -60,8 +60,7 @@ const FiltersModal: React.FC<SearchModalProps> = ({
       }
       setOptions(optionsMap);
     };
-
-    fetchAllOptions();
+    openFilterConfig && fetchAllOptions();
   }, [openFilterConfig]);
 
   const handleToggle = (key: string) => {

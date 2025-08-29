@@ -28,7 +28,7 @@ export type Query = {
 export type CallApiParams = {
   query: Query;
   auth: {
-    setAuthedUser: React.Dispatch<React.SetStateAction<User>>;
+    setAuthedUser: React.Dispatch<React.SetStateAction<Partial<User>>>;
   } | null;
 };
 

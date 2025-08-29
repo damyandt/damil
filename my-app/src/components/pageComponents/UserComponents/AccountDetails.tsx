@@ -16,7 +16,7 @@ import { Fade } from "../../MaterialUI/FormFields/Fade";
 
 const AccountDetails = () => {
   const { t } = useLanguageContext();
-  const { setAuthedUser, authedUser } = useAuthedContext();
+  const { setAuthedUser, authedUser, setRefreshUserData } = useAuthedContext();
   const [saved, setSaved] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [formData, setFormData] = useState<Partial<User>>(authedUser);
@@ -51,7 +51,7 @@ const AccountDetails = () => {
 
     setEditMode(false);
     setSaved(true);
-
+    setRefreshUserData((prev: boolean) => !prev);
     setTimeout(() => setSaved(false), 2000);
   };
 

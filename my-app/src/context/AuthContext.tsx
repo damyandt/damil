@@ -11,9 +11,10 @@ import { PaletteMode } from "@mui/material";
 export type GetQueryUsersGetCurrentUserSnippet = { user: User };
 
 interface UserContextType {
-  authedUser: User;
-  setAuthedUser: (value: React.SetStateAction<User>) => void;
+  authedUser: Partial<User>;
+  setAuthedUser: (value: React.SetStateAction<Partial<User>>) => void;
   setUserSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setRefreshUserData: React.Dispatch<React.SetStateAction<boolean>>;
   authedUserLoading: boolean;
   showIncompleteModal: boolean;
   snoozeModal: (minutes?: number) => void;
@@ -27,18 +28,19 @@ interface AuthContextProps {
 }
 
 const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
-  const [authedUser, setAuthedUser] = useState<User>({
-    username: "error",
+  const [authedUser, setAuthedUser] = useState<Partial<User>>({
+    // username: "error",
     email: "error",
-    phone: "error",
-    address: "error",
-    city: "error",
-    membersCount: 0,
-    subscriptionActive: false,
-    roles: ["Facility Member"],
+    // phone: "error",
+    // address: "error",
+    // city: "error",
+    // membersCount: 0,
+    // subscriptionActive: false,
+    // roles: ["Facility Member"],
   });
   const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [refreshUserData, setRefreshUserData] = useState<boolean>(false);
   const [showIncompleteModal, setShowIncompleteModal] =
     useState<boolean>(false);
   const storedMode = localStorage.getItem("themeMode");
@@ -70,7 +72,20 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
     };
 
     authedUser && fetchPreferences();
-  }, [setAuthedUser]);
+  }, [setAuthedUser, refreshUserData]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userInfo = await callApi<Response<any>>({
+        query: getQueryUsersGetCurrentUser(),
+        auth: { setAuthedUser },
+      });
+
+      userInfo.success && userInfo.data && setAuthedUser(userInfo.data);
+    };
+
+    authedUser && fetchUserData();
+  }, [setAuthedUser, refreshUserData]);
 
   useEffect(() => {
     if (authedUser.email === "error" && userSignedIn) {
@@ -126,6 +141,14 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         ...signedInUser.data,
       });
 
+      // const preferencesInfo = await callApi<Response<any>>({
+      //   query: getPreferences(),
+      //   auth: { setAuthedUser },
+      // });
+      // preferencesInfo.success &&
+      //   preferencesInfo.data.settings &&
+      //   setPreferences(preferencesInfo.data.settings);
+
       return;
     }
   };
@@ -146,6 +169,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         showIncompleteModal,
         snoozeModal,
         preferences,
+        setRefreshUserData,
       }}
     >
       {children}

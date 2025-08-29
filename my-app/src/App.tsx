@@ -15,7 +15,7 @@ const App: React.FC = () => {
     | "Facility Member"
     | "Facility Admin"
     | "System Admin"
-    | "Facility Staff" = authedUser.roles[0];
+    | "Facility Staff" = authedUser?.roles?.[0] || "Facility Member";
   const appRouter = createAppRouter(role);
   if (authedUser.email !== "error") {
     return (
