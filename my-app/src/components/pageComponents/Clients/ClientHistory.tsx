@@ -17,7 +17,6 @@ const ClientHistory: React.FC<ClientHistoryProps> = ({ rowData }) => {
   const { setAuthedUser } = useAuthedContext();
   const [visits, setVisits] = useState<any[]>([]);
   const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
   useEffect(() => {
     const fetchAllOptions = async () => {
       try {
@@ -45,13 +44,27 @@ const ClientHistory: React.FC<ClientHistoryProps> = ({ rowData }) => {
       end: end.toISOString(), // Set end time
     };
   });
+  useEffect(() => {
+    if (visits.length) {
+      setTimeout(() => {
+        window.dispatchEvent(new Event("resize"));
+      }, 100);
+    }
+  }, [visits]);
 
   if (!visits.length) {
     return <Typography>No visits found</Typography>;
   }
   return (
     <>
-      <Box>
+      <Box
+        sx={{
+          // Today highlight
+          "& .fc-daygrid-day.fc-day-today": {
+            backgroundColor: `${theme.palette.primary.main} !important`,
+          },
+        }}
+      >
         <FullCalendar
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"

@@ -91,7 +91,7 @@ const ProfilePage = () => {
           {authedUser?.firstName} {authedUser?.lastName}
         </Typography>
       </Grid>
-      <Grid size={6} p={2} overflow={"scroll"}>
+      <Grid size={{ xs: 12, sm: 12, lg: 6 }} p={2} overflow={"scroll"}>
         <Tabs value={selectedTab} onChange={handleTabChange} sx={{ mb: 3 }}>
           <Tab label={t("Account Details")} />
           <Tab label={t("Preferences")} />
@@ -113,8 +113,12 @@ const ProfilePage = () => {
           </Box>
         </Slide>
       </Grid>
-      <Grid size={6} justifyContent={"center"} display={"flex"}>
-        <Box minWidth={"60%"}>
+      <Grid
+        size={{ xs: 12, sm: 12, lg: 6 }}
+        justifyContent={"center"}
+        display={"flex"}
+      >
+        <Box minWidth={{ xs: "90%", sm: "60%" }} maxHeight={"30em"}>
           <PlanCard
             plan={{
               name: "Standart",

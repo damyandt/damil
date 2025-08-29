@@ -37,20 +37,25 @@ interface ClientsCreateFormProps {
   setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>;
   columns: Column[];
   setModalTitle: React.Dispatch<React.SetStateAction<string | null>>;
+  // loading: boolean;
+  // setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const steps = ["Person Info", "Plan", "Payment"];
+const steps = ["Person Info", "Plan", "Payment", "Confirm Info"];
 
 const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
   setRefreshTable,
   setModalTitle,
   columns,
+  // loading,
+  // setLoading,
 }) => {
   const { setAuthedUser } = useAuthedContext();
   const { t } = useLanguageContext();
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [options, setOptions] = useState<EnumMap>({});
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<any>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [subscriptionData, setSubscriptionData] = useState<any>({});
@@ -69,6 +74,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
   };
 
   const handleNext = async () => {
+    setLoading(true);
     if (activeStep === 0) {
       const response = await callApi<any>({
         query: postMember(formData),
@@ -85,8 +91,20 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
         Math.min(prevActiveStep + 1, steps.length - 1)
       );
     } else if (activeStep === 2) {
-      setOpenConfirm(true);
+      setActiveStep((prevActiveStep) =>
+        Math.min(prevActiveStep + 1, steps.length - 1)
+      );
+    } else if (activeStep === 3) {
+      await callApi<Response<any>>({
+        query: postSubscription(subscriptionData, id),
+        auth: { setAuthedUser },
+      });
+      setOpenConfirm(false);
+      setModalTitle(null);
+      setRefreshTable && setRefreshTable((prev: boolean) => !prev);
     }
+
+    setLoading(false);
   };
 
   const handleBack = () => {
@@ -100,6 +118,10 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
     setFormData((prev: any) => ({
       ...prev,
       [field]: value,
+    }));
+    setErrors((prev: any) => ({
+      ...prev,
+      [field]: "",
     }));
   };
 
@@ -229,16 +251,6 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
       case 1:
         return (
           <Grid container spacing={2} p={2}>
-            <Grid size={12}>
-              <Alert
-                message={t(
-                  "Succcessfuly created new member! Now choose a plan"
-                )}
-                showAlert={true}
-                severity="success"
-                autoClose
-              />
-            </Grid>
             <Grid size={6}>
               <TextField
                 select
@@ -341,7 +353,57 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
             </ToggleButtonGroup>
           </Box>
         );
+      case 3:
+        return (
+          <>
+            {/* Price Highlight */}
+            <Paper
+              elevation={3}
+              sx={{
+                p: 2,
+                mb: 3,
+                textAlign: "center",
+                background: (theme) => theme.palette.success.light,
+                color: (theme) => theme.palette.success.contrastText,
+                borderRadius: 2,
+              }}
+            >
+              <Typography variant="h5" fontWeight="bold">
+                {t("Total Price")}: ${subscriptionData.price || "0.00"}
+              </Typography>
+            </Paper>
 
+            {/* Confirmation Text */}
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              {t("Are you sure you want to add this subscription to")}{" "}
+              {formData.firstName || "this user"} {formData.lastName || ""}?
+            </Typography>
+
+            {/* Subscription Details */}
+            <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, mb: 3 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                {t("Plan")}:{" "}
+                <Typography component="span" fontWeight="normal">
+                  {subscriptionData.subscriptionPlan}
+                </Typography>
+              </Typography>
+
+              <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                {t("Employment")}:{" "}
+                <Typography component="span" fontWeight="normal">
+                  {subscriptionData.employment}
+                </Typography>
+              </Typography>
+
+              <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                {t("Payment Method")}:{" "}
+                <Typography component="span" fontWeight="normal">
+                  {paymentMethod}
+                </Typography>
+              </Typography>
+            </Paper>
+          </>
+        );
       default:
         return "Unknown step";
     }
@@ -360,6 +422,21 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
 
         <Box sx={{ mt: 2, mb: 1 }}>{getStepContent(activeStep)}</Box>
 
+        <Grid size={12}>
+          <Alert
+            message={t("Loading...")}
+            showAlert={loading}
+            severity="loading"
+          />
+        </Grid>
+        <Grid size={12}>
+          <Alert
+            message={t("Succcessfuly created new member! Now choose a plan")}
+            showAlert={activeStep === 1}
+            severity="success"
+            autoClose
+          />
+        </Grid>
         <Grid
           container
           spacing={2}
@@ -369,96 +446,39 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
             mt: 2,
           }}
         >
-          {activeStep !== 0 && (
+          {(activeStep === 2 || activeStep === 3) && (
             <Grid>
-              <Button color="error" onClick={() => handleBack()}>
+              <Button
+                color="error"
+                onClick={() => handleBack()}
+                loading={loading}
+              >
                 {t("Back")}
+              </Button>
+            </Grid>
+          )}
+          {activeStep === 1 && (
+            <Grid>
+              <Button
+                color="error"
+                onClick={() => {
+                  setModalTitle(null);
+                  setRefreshTable && setRefreshTable((prev: boolean) => !prev);
+                }}
+                loading={loading}
+              >
+                {t("Add Plan Later")}
               </Button>
             </Grid>
           )}
 
           <Grid>
-            <Button onClick={() => handleNext()}>{t("Next")}</Button>
+            <Button onClick={() => handleNext()} loading={loading}>
+              {t("Next")}
+            </Button>
           </Grid>
         </Grid>
       </Box>
-      <CustomModal
-        open={openConfirm}
-        onClose={() => setOpenConfirm(false)}
-        title={t("Confirm Subscription")}
-        width={"md"}
-      >
-        {/* Price Highlight */}
-        <Paper
-          elevation={3}
-          sx={{
-            p: 2,
-            mb: 3,
-            textAlign: "center",
-            background: (theme) => theme.palette.success.light,
-            color: (theme) => theme.palette.success.contrastText,
-            borderRadius: 2,
-          }}
-        >
-          <Typography variant="h5" fontWeight="bold">
-            {t("Total Price")}: ${subscriptionData.price || "0.00"}
-          </Typography>
-        </Paper>
-
-        {/* Confirmation Text */}
-        <Typography variant="body1" sx={{ mb: 2 }}>
-          {t("Are you sure you want to proceed with this subscription?")}
-        </Typography>
-
-        {/* Subscription Details */}
-        <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, mb: 3 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-            {t("Plan")}:{" "}
-            <Typography component="span" fontWeight="normal">
-              {subscriptionData.subscriptionPlan}
-            </Typography>
-          </Typography>
-
-          <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-            {t("Employment")}:{" "}
-            <Typography component="span" fontWeight="normal">
-              {subscriptionData.employment}
-            </Typography>
-          </Typography>
-
-          <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-            {t("Payment Method")}:{" "}
-            <Typography component="span" fontWeight="normal">
-              {paymentMethod}
-            </Typography>
-          </Typography>
-        </Paper>
-
-        <Box display="flex" justifyContent="flex-end" gap={2}>
-          <Button
-            onClick={() => setOpenConfirm(false)}
-            color="error"
-            variant="outlined"
-          >
-            {t("Cancel")}
-          </Button>
-          <Button
-            onClick={async () => {
-              await callApi<Response<any>>({
-                query: postSubscription(subscriptionData, id),
-                auth: { setAuthedUser },
-              });
-              setOpenConfirm(false);
-              setModalTitle(null);
-              setRefreshTable && setRefreshTable((prev: boolean) => !prev);
-            }}
-            color="primary"
-            variant="outlined"
-          >
-            {t("Confirm")}
-          </Button>
-        </Box>
-      </CustomModal>
     </>
   );
 };

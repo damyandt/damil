@@ -18,6 +18,6 @@ export const getSubscriptionPlans = (): Query => ({
 });
 
 export const getCurrentSubscriptionPlans = (): Query => ({
-  endpoint: `users/membership/subscription-plans/customized-fields`,
+  endpoint: `users/membership/plans/options`,
   method: "GET",
 });

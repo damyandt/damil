@@ -185,91 +185,90 @@ const PreferencesDetails = () => {
                 </Fade>
               </Box>
             </Grid>
-            <Grid size={12}>
-              <Box display="flex" justifyContent={"space-between"}>
-                <FormControl component="fieldset">
-                  <FormLabel component="legend">
-                    {t("Dark/Light Mode")}
-                  </FormLabel>
-                  <FormGroup row>
-                    {[
-                      {
-                        name: "Light",
-                        color: "#f5f5f5",
-                        mode: "light",
-                      },
-                      {
-                        name: "Dark",
-                        color: "#1e1e1e",
-                        mode: "dark",
-                      },
-                    ].map((option: any) => (
+            <Grid size={{ xs: 12, sm: 12, lg: 4 }}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" sx={{ height: "2em" }}>
+                  {t("Dark/Light Mode")}
+                </FormLabel>
+                <FormGroup row>
+                  {[
+                    {
+                      name: "Light",
+                      color: "#f5f5f5",
+                      mode: "light",
+                    },
+                    {
+                      name: "Dark",
+                      color: "#1e1e1e",
+                      mode: "dark",
+                    },
+                  ].map((option: any) => (
+                    <Box
+                      key={option.name}
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                      mr={2}
+                      mt={2}
+                    >
                       <Box
-                        key={option.name}
-                        display="flex"
-                        flexDirection="column"
-                        alignItems="center"
-                        mr={2}
-                        mt={2}
-                      >
-                        <Box
-                          sx={{
-                            width: 32,
-                            height: 32,
-                            borderRadius: "10%",
-                            backgroundColor: option.color,
-                            border: "2px solid #ccc",
-                          }}
-                        />
-                        <Checkbox
-                          checked={themeMode === option.mode}
-                          onChange={() => {
-                            setThemeMode(option.mode);
-                            handleChange("mode", option.mode);
-                          }}
-                          sx={{ mt: 1 }}
-                        />
-                      </Box>
-                    ))}
-                  </FormGroup>
-                </FormControl>
-
-                <FormControl component="fieldset">
-                  <FormLabel component="legend">
-                    {t("Primary App Color")}
-                  </FormLabel>
-                  <FormGroup row>
-                    {colorOptions.map((option) => (
+                        sx={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: "10%",
+                          backgroundColor: option.color,
+                          border: "2px solid #ccc",
+                        }}
+                      />
+                      <Checkbox
+                        checked={themeMode === option.mode}
+                        onChange={() => {
+                          setThemeMode(option.mode);
+                          handleChange("mode", option.mode);
+                        }}
+                        sx={{ mt: 1 }}
+                      />
+                    </Box>
+                  ))}
+                </FormGroup>
+              </FormControl>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 12, lg: 8 }}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" sx={{ height: "2em" }}>
+                  {t("Primary App Color")}
+                </FormLabel>
+                <FormGroup row>
+                  {colorOptions.map((option) => (
+                    <Box
+                      key={option.name}
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                      mr={2}
+                      mt={2}
+                    >
                       <Box
-                        key={option.name}
-                        display="flex"
-                        flexDirection="column"
-                        alignItems="center"
-                        mr={2}
-                        mt={2}
-                      >
-                        <Box
-                          sx={{
-                            width: 32,
-                            height: 32,
-                            borderRadius: "10%",
-                            backgroundColor: option.color,
-                            border: "2px solid #ccc",
-                          }}
-                        />
-                        <Checkbox
-                          checked={primaryColor === option.color}
-                          onChange={() => {
-                            setPrimaryColor(option.color);
-                            handleChange("themeColor", option.color);
-                          }}
-                          sx={{ mt: 1 }}
-                        />
-                      </Box>
-                    ))}
-                  </FormGroup>
-                </FormControl>
-              </Box>
+                        sx={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: "10%",
+                          backgroundColor: option.color,
+                          border: "2px solid #ccc",
+                        }}
+                      />
+                      <Checkbox
+                        checked={primaryColor === option.color}
+                        onChange={() => {
+                          setPrimaryColor(option.color);
+                          handleChange("themeColor", option.color);
+                        }}
+                        sx={{ mt: 1 }}
+                      />
+                    </Box>
+                  ))}
+                </FormGroup>
+              </FormControl>
             </Grid>
           </Grid>
         </Grid>

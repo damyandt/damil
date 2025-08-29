@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Box, CircularProgress, MenuItem } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useAuthedContext } from "../../context/AuthContext";
@@ -42,6 +42,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
   removeButtons = false,
   setActiveStep,
 }) => {
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const { id, ...rest } = (selectedRow ?? {}) as {
     id?: string | number;
     [key: string]: any;
@@ -171,11 +172,21 @@ const CreateForm: React.FC<CreateFormProps> = ({
             .filter(
               (col: any) => !excludedKeys.includes(col.header?.toLowerCase())
             )
-            .map((col: any) => {
+            .map((col: any, index: number) => {
               const value = formValues[col.field] || "";
               return (
                 <Grid key={col.field} size={{ xs: 12, md: 6 }}>
                   {(() => {
+                    const handleKeyDown = (e: React.KeyboardEvent) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (index < createFieldsColumns.length - 1) {
+                          inputRefs.current[index + 1]?.focus();
+                        } else {
+                          handleSave();
+                        }
+                      }
+                    };
                     switch (col.type) {
                       case "text":
                       case "string":
@@ -192,6 +203,10 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             error={!!errors[col.field]}
                             helperText={errors[col.field] || ""}
                             disabled={disabled || false}
+                            inputRef={(el: HTMLInputElement) => {
+                              inputRefs.current[index] = el;
+                            }}
+                            onKeyDown={handleKeyDown}
                           />
                         );
 
@@ -209,6 +224,10 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             error={!!errors[col.field]}
                             helperText={errors[col.field] || ""}
                             disabled={disabled || false}
+                            inputRef={(el: HTMLInputElement) => {
+                              inputRefs.current[index] = el;
+                            }}
+                            onKeyDown={handleKeyDown}
                           />
                         );
 
@@ -266,6 +285,10 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             error={!!errors[col.field]}
                             helperText={errors[col.field] || ""}
                             disabled={disabled || false}
+                            inputRef={(el: HTMLInputElement) => {
+                              inputRefs.current[index] = el;
+                            }}
+                            onKeyDown={handleKeyDown}
                           >
                             {menuItems}
                           </TextField>
@@ -297,6 +320,10 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             error={!!errors[col.field]}
                             helperText={errors[col.field] || ""}
                             disabled={disabled || false}
+                            inputRef={(el: HTMLInputElement) => {
+                              inputRefs.current[index] = el;
+                            }}
+                            onKeyDown={handleKeyDown}
                           />
                         );
                     }

@@ -116,25 +116,25 @@ const StaffRolesPage = () => {
                 id: "predefined:TRAINER",
                 name: "TRAINER",
                 type: "predefined",
-                displayName: "TRAINER (Predefined)",
+                displayName: "TRAINER",
               },
               {
                 id: "predefined:RECEPTIONIST",
                 name: "RECEPTIONIST",
                 type: "predefined",
-                displayName: "RECEPTIONIST (Predefined)",
+                displayName: "RECEPTIONIST",
               },
               {
                 id: "predefined:CLEANER",
                 name: "CLEANER",
                 type: "predefined",
-                displayName: "CLEANER (Predefined)",
+                displayName: "CLEANER ",
               },
               {
                 id: "predefined:PHYSIOTHERAPIST",
                 name: "PHYSIOTHERAPIST",
                 type: "predefined",
-                displayName: "PHYSIOTHERAPIST (Predefined)",
+                displayName: "PHYSIOTHERAPIST",
               },
             ]}
             // columns={tableData.columns || []}

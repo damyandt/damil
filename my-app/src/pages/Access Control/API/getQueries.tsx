@@ -66,7 +66,7 @@ export const getQueryOptions = (url: string): Query => ({
 });
 
 export const getPeriodVisitors = (
-  id: string,
+  id: string | number,
   startDate: string,
   endDate: string
 ): Query => ({

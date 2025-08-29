@@ -3,6 +3,9 @@ import {
   Grid,
   MenuItem,
   Paper,
+  Step,
+  StepLabel,
+  Stepper,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
@@ -46,7 +49,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
   const [paymentMethod, setPaymentMethod] = useState<"card" | "cash" | null>(
     null
   );
-
+  const steps = ["New Plan", "Payment", "Confirm Info"];
   const handlePaymentMethodChange = (
     event: React.MouseEvent<HTMLElement>,
     newMethod: "card" | "cash" | null
@@ -99,6 +102,13 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
   console.log(subscriptionData);
   return (
     <>
+      <Stepper activeStep={step} alternativeLabel>
+        {steps.map((label) => (
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
       {step === 0 && (
         <Grid container spacing={2} p={2}>
           <Grid size={12}>
@@ -185,7 +195,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
             {t("Total Price")}
           </Typography>
           <Typography variant="h3" color="primary" gutterBottom>
-            {t(" $29.99")}
+            {t("$29.99")}
           </Typography>
 
           <Typography variant="subtitle1" gutterBottom>
@@ -211,6 +221,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
       )}
       {step === 2 && (
         <>
+          {/* Price Highlight */}
           <Paper
             elevation={3}
             sx={{
@@ -227,10 +238,13 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
             </Typography>
           </Paper>
 
+          {/* Confirmation Text */}
           <Typography variant="body1" sx={{ mb: 2 }}>
-            {t("Are you sure you want to proceed with this subscription?")}
+            {t("Are you sure you want to add this subscription to")}{" "}
+            {rowData.firstName || "this user"} {rowData.lastName || ""}?
           </Typography>
 
+          {/* Subscription Details */}
           <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, mb: 3 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
               {t("Plan")}:{" "}

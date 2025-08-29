@@ -35,7 +35,10 @@ const ClientsRightMenu: React.FC<ClientsRightMenuProps> = ({
 
       <CustomModal
         open={!!modalTitle}
-        onClose={() => setModalTitle(null)}
+        onClose={() => {
+          setModalTitle(null);
+          setRefreshTable((prev: boolean) => !prev);
+        }}
         title="Add New Client"
         width={"lg"}
         style="create"

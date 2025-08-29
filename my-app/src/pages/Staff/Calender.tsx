@@ -208,7 +208,7 @@ const EmployeeCalendar = () => {
 
   return (
     <Box sx={{ p: 0, height: "100%" }}>
-      <Box
+      {/* <Box
         sx={{
           // Base calendar container
           "& .fc": {
@@ -278,8 +278,30 @@ const EmployeeCalendar = () => {
           eventClick={handleEventClick}
           height="92vh"
         />
+      </Box> */}
+      <Box
+        sx={{
+          // Today highlight
+          "& .fc-daygrid-day.fc-day-today": {
+            backgroundColor: `${theme.palette.primary.main} !important`,
+          },
+        }}
+      >
+        <FullCalendar
+          ref={calendarRef}
+          plugins={[dayGridPlugin, interactionPlugin]}
+          initialView="dayGridMonth"
+          events={events}
+          dateClick={handleDateClick}
+          eventClick={handleEventClick}
+          headerToolbar={{
+            left: "prev next today",
+            center: "title",
+            right: "dayGridYear dayGridMonth dayGridWeek",
+          }}
+          height="92vh"
+        />
       </Box>
-
       <CustomModal
         title="Add Event"
         open={open}
