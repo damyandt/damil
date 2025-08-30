@@ -122,6 +122,7 @@ const TableComponent = ({
   const visibleColumns = columnVisibilityConfig
     ? columns.filter((col: Column) => columnVisibilityConfig[col.field])
     : columns;
+
   return (
     <>
       <Grid container spacing={2} alignItems={"center"} py={2}>
@@ -221,7 +222,10 @@ const TableComponent = ({
                   backgroundColor: theme.palette.customColors?.tableBackground,
                 }}
               >
-                {visibleColumns?.map((col: Column) => (
+                {(visibleColumns && visibleColumns.length > 0
+                  ? visibleColumns
+                  : columns
+                )?.map((col: Column) => (
                   <TableCell
                     key={col.field as string}
                     align={col.align || "left"}
@@ -291,7 +295,10 @@ const TableComponent = ({
                         },
                       }}
                     >
-                      {visibleColumns.map((col: Column) => {
+                      {(visibleColumns && visibleColumns.length > 0
+                        ? visibleColumns
+                        : columns
+                      ).map((col: Column) => {
                         return (
                           <TableCell
                             align={col.align}
