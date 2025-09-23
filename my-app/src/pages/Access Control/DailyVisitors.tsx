@@ -59,8 +59,6 @@ const DailyVisitors = () => {
   }, [smMediaQuery, tableData]);
 
   const fetchData = async () => {
-    console.log(startDate);
-    console.log(endDate);
     try {
       const data = await callApi<any>({
         query: getPeriodVisitors(

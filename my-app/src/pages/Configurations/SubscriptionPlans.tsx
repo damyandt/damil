@@ -22,12 +22,14 @@ import {
   getCurrentSubscriptionPlans,
   getSubscriptionPlans,
   getSubscriptionPlansTable,
+  postPlans,
 } from "./API/getQueries";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { useOutletContext } from "react-router-dom";
 import PlansRightMenu from "../../components/pageComponents/Configurations/SubscriptionPlans/PlansRightMenu";
 import AddNewPlansPaper from "../../components/pageComponents/Configurations/SubscriptionPlans/AddNewPlanPaper";
 import AssignmentTurnedIn from "@mui/icons-material/AssignmentTurnedIn";
+import DefinePricesForm from "./DefinePricesSubPlans";
 
 const SubscriptionPlans = () => {
   const { t } = useLanguageContext();
@@ -36,6 +38,9 @@ const SubscriptionPlans = () => {
   const [plansOptions, setPlansOptions] = useState<Enum[]>([]);
   const [currentPlans, setCurrentPlans] = useState<Enum[]>([]);
   const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
+  const [step, setStep] = useState<number>(1);
+  const [selectedPlans, setSelectedPlans] = useState<string[]>([]);
+
   const { smMediaQuery, setExtraRightNavMenu } =
     useOutletContext<AppRouterProps>();
   const { setAuthedUser } = useAuthedContext();
@@ -124,7 +129,13 @@ const SubscriptionPlans = () => {
             minHeight: "90vh",
           }}
         >
-          <Card sx={{ maxWidth: 500, width: "100%", boxShadow: 4 }}>
+          <Card
+            sx={{
+              maxWidth: step === 1 ? 500 : 2000,
+              width: "100%",
+              boxShadow: 4,
+            }}
+          >
             <CardHeader
               avatar={<AssignmentTurnedIn color="primary" />}
               title={
@@ -136,10 +147,32 @@ const SubscriptionPlans = () => {
             />
             <Divider />
             <CardContent>
-              <AddNewPlansPaper
-                plansOptions={plansOptions}
-                setRefreshTable={setRefreshTable}
-              />
+              {step === 1 ? (
+                <AddNewPlansPaper
+                  plansOptions={plansOptions}
+                  onNext={(plans: string[]) => {
+                    setSelectedPlans(plans);
+                    setStep(2);
+                  }}
+                />
+              ) : (
+                <DefinePricesForm
+                  plans={selectedPlans}
+                  onBack={() => setStep(1)}
+                  onSubmit={async (plansWithPrices: any) => {
+                    try {
+                      await callApi<Response<any>>({
+                        query: postPlans(plansWithPrices),
+                        auth: { setAuthedUser },
+                      });
+                      setRefreshTable((prev) => !prev);
+                      setStep(1);
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
+                />
+              )}
             </CardContent>
           </Card>
         </Box>

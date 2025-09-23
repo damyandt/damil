@@ -2,7 +2,10 @@ import { createContext, JSX, useContext, useEffect, useState } from "react";
 import { getCookie } from "../Global/Utils/commonFunctions";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../API/callApi";
 import { User } from "../pages/usersPages/userTypes";
-import { getQueryUsersGetCurrentUser } from "../Auth/API/apiAuthGetQueries";
+import {
+  getQueryUsersGetCurrentUser,
+  getQueryUserTenant,
+} from "../Auth/API/apiAuthGetQueries";
 import { handleFetchUserAccessToken } from "./authContextUtils";
 import { PreferencesType, Response } from "../Global/Types/commonTypes";
 import { getPreferences } from "../pages/usersPages/api/postQuery";
@@ -19,6 +22,7 @@ interface UserContextType {
   showIncompleteModal: boolean;
   snoozeModal: (minutes?: number) => void;
   preferences: PreferencesType;
+  tenant: any;
 }
 
 const UserContext = createContext<UserContextType>({} as UserContextType);
@@ -29,15 +33,9 @@ interface AuthContextProps {
 
 const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
   const [authedUser, setAuthedUser] = useState<Partial<User>>({
-    // username: "error",
     email: "error",
-    // phone: "error",
-    // address: "error",
-    // city: "error",
-    // membersCount: 0,
-    // subscriptionActive: false,
-    // roles: ["Facility Member"],
   });
+  const [tenant, setTenant] = useState<any>({});
   const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshUserData, setRefreshUserData] = useState<boolean>(false);
@@ -124,8 +122,23 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
       if (hasEmptyFields && (!snoozeUntil || now > parseInt(snoozeUntil))) {
         setShowIncompleteModal(true);
       }
+      if (authedUser.roles?.includes("Facility Admin")) {
+        fetchTenant();
+      }
     }
   }, [authedUser, preferences]);
+
+  const fetchTenant = async () => {
+    try {
+      const tenantInfo = await callApi<any>({
+        query: getQueryUserTenant(),
+        auth: { setAuthedUser },
+      });
+      tenantInfo.success === true && setTenant(tenantInfo.data);
+    } catch (err) {
+      console.log("Tenant fetch error", err);
+    }
+  };
 
   const checkIfUserIsSignedIn = async () => {
     const refreshToken = getCookie(COOKIE_REFRESH_TOKEN);
@@ -170,6 +183,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         snoozeModal,
         preferences,
         setRefreshUserData,
+        tenant,
       }}
     >
       {children}

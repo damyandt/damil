@@ -13,6 +13,7 @@ import { updateProfile } from "../../../pages/usersPages/api/postQuery";
 import { Response } from "../../../Global/Types/commonTypes";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { Fade } from "../../MaterialUI/FormFields/Fade";
+import { useNavigate } from "react-router-dom";
 
 const AccountDetails = () => {
   const { t } = useLanguageContext();
@@ -20,8 +21,9 @@ const AccountDetails = () => {
   const [saved, setSaved] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [formData, setFormData] = useState<Partial<User>>(authedUser);
+  const navigate = useNavigate();
   const info: { label: string; field: string }[] = [
-    { label: t("Email"), field: "email" },
+    { label: t("Email and Password"), field: "email" },
     { label: t("Username"), field: "username" },
     { label: t("City"), field: "city" },
     { label: t("Phone"), field: "phone" },
@@ -33,6 +35,7 @@ const AccountDetails = () => {
 
     // Compare formData and authedUser to get only changed fields
     for (const key in formData) {
+      if (key === "roles") continue;
       if (formData[key as keyof User] !== authedUser[key as keyof User]) {
         changes[key] = formData[key as keyof User];
       }
@@ -45,7 +48,7 @@ const AccountDetails = () => {
     }
 
     await callApi<Response<any>>({
-      query: updateProfile(changes, authedUser.id || ""),
+      query: updateProfile(changes),
       auth: { setAuthedUser },
     });
 
@@ -99,9 +102,28 @@ const AccountDetails = () => {
       >
         {editMode ? (
           <Grid container spacing={2}>
-            {info.map((col: { label: string; field: string }) => (
+            {info.map((col) => (
               <Grid size={6} key={col.field}>
-                {col.label === "Gender" ? (
+                {col.label === "Email and Password" ? (
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <TextField
+                      disabled
+                      fullWidth
+                      label={t("Email and Password")}
+                      value={`${formData?.email || ""} - ********`}
+                    />
+                    <CustomTooltip
+                      title={t("Change Email/Password")}
+                      placement="top"
+                    >
+                      <IconButton
+                        onClick={() => navigate("/account/change-credentials")}
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </CustomTooltip>
+                  </Box>
+                ) : col.label === "Gender" ? (
                   <TextField
                     select
                     fullWidth
@@ -122,7 +144,6 @@ const AccountDetails = () => {
                   </TextField>
                 ) : (
                   <TextField
-                    disabled={col.label === "Email"}
                     fullWidth
                     label={col.label}
                     onChange={(e: any) =>
@@ -144,7 +165,13 @@ const AccountDetails = () => {
                 <CellRenderer
                   fontWeight={400}
                   key={col.field}
-                  value={formData ? formData[col.field as keyof User] : ""}
+                  value={
+                    formData
+                      ? col.field === "email"
+                        ? `${formData[col.field as keyof User]} - ********`
+                        : formData[col.field as keyof User]
+                      : ""
+                  }
                   dataType={col.label === "Gender" ? "dropdown" : "string"}
                   table={false}
                 />

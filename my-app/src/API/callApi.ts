@@ -73,7 +73,7 @@ const callApi = async <T>(
       },
       credentials: "include",
     });
-    // 🔽 Handle download if requested
+
     if (triggerDownload && response.ok) {
       const disposition = response.headers.get("content-disposition");
       if (disposition && disposition.includes("attachment")) {
@@ -81,7 +81,6 @@ const callApi = async <T>(
         const downloadUrl = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
 
-        // Try to extract filename or use fallback
         const filenameMatch = disposition.match(/filename="?(.+?)"?$/);
         const filename = filenameMatch?.[1] || "download";
 

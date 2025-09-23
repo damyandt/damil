@@ -4,6 +4,7 @@ import { createAppRouter } from "./Layout/Router/AppRouter";
 import GuestLayout from "./Layout/GuestLayout";
 import { useAuthedContext } from "./context/AuthContext";
 import LoadingScreen from "./components/pageComponents/LoadingPage";
+import GlobalBarcodeScanner from "./context/BarcodeProvider";
 
 const App: React.FC = () => {
   const { authedUser, authedUserLoading } = useAuthedContext();
@@ -20,6 +21,7 @@ const App: React.FC = () => {
   if (authedUser.email !== "error") {
     return (
       <Box component="main">
+        <GlobalBarcodeScanner />
         <RouterProvider router={appRouter} />
       </Box>
     );

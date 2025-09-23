@@ -35,6 +35,9 @@ export const getMember = (
     case "phone":
       endpoint += `phone=${encodeURIComponent(searchQuery)}`;
       break;
+    case "qrToken":
+      endpoint += `qrToken=${encodeURIComponent(searchQuery)}`;
+      break;
   }
 
   return {
@@ -76,5 +79,10 @@ export const getPeriodVisitors = (
 
 export const getClientVisits = (id: string): Query => ({
   endpoint: `members/${id}/visits`,
+  method: "GET",
+});
+
+export const getQRCode = (id: any): Query => ({
+  endpoint: `qr/${id}`,
   method: "GET",
 });

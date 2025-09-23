@@ -21,7 +21,8 @@ export type Client = {
 const StaffRolesPage = () => {
   const { t } = useLanguageContext();
   const [refreshTable, setRefreshTable] = useState<boolean>(false);
-  const [tableData, setTableData] = useState<Table>();
+  // const [tableData, setTableData] = useState<Table>();
+  const [tableData, setTableData] = useState<any>();
   const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
   const { setAuthedUser } = useAuthedContext();
   const { smMediaQuery, setExtraRightNavMenu } =
@@ -83,63 +84,10 @@ const StaffRolesPage = () => {
       ) : (
         <Box>
           <TableComponent
-            columns={[
-              {
-                field: "id",
-                header: "ID",
-                type: "string",
-                dropDownConfig: undefined,
-              },
-              {
-                field: "name",
-                header: "Name",
-                type: "string",
-                dropDownConfig: undefined,
-              },
-              {
-                field: "type",
-                header: "Type",
-                type: "enum",
-                dropDownConfig: {
-                  url: "/v1/role-types",
-                },
-              },
-              {
-                field: "displayName",
-                header: "Display Name",
-                type: "string",
-                dropDownConfig: undefined,
-              },
-            ]}
-            rows={[
-              {
-                id: "predefined:TRAINER",
-                name: "TRAINER",
-                type: "predefined",
-                displayName: "TRAINER",
-              },
-              {
-                id: "predefined:RECEPTIONIST",
-                name: "RECEPTIONIST",
-                type: "predefined",
-                displayName: "RECEPTIONIST",
-              },
-              {
-                id: "predefined:CLEANER",
-                name: "CLEANER",
-                type: "predefined",
-                displayName: "CLEANER ",
-              },
-              {
-                id: "predefined:PHYSIOTHERAPIST",
-                name: "PHYSIOTHERAPIST",
-                type: "predefined",
-                displayName: "PHYSIOTHERAPIST",
-              },
-            ]}
-            // columns={tableData.columns || []}
-            // rows={tableData.rows || []}
-            // setRefreshTable={setRefreshTable}
+            columns={tableData?.columns || []}
+            rows={tableData?.rows || []}
+            configurations={tableData?.config || {}}
+            setRefreshTable={setRefreshTable}
             title={t("All Staff Roles")}
           />
         </Box>

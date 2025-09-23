@@ -14,17 +14,26 @@ export const pageRoles: Record<string, string[]> = {
   "/DAMIL-Analytics/Memberships": ["Facility Admin", "System Admin"],
 
   // DAMIL Access Control
-  "/DAMIL-Access-Control/All-Clients": ["Facility Admin", "System Admin"],
+  "/DAMIL-Access-Control/All-Clients": [
+    "Facility Admin",
+    "System Admin",
+    "Facility Staff",
+  ],
   "/DAMIL-Access-Control/All-Clients/:filter": [
     "Facility Admin",
     "System Admin",
+    "Facility Staff",
   ],
-  "/DAMIL-Access-Control/Daily-Visitors": ["Facility Admin", "System Admin"],
+  "/DAMIL-Access-Control/Daily-Visitors": [
+    "Facility Admin",
+    "System Admin",
+    "Facility Staff",
+  ],
 
   // DAMIL Staff Members
   "/DAMIL-Staff/All": ["Facility Admin", "System Admin"],
   "/DAMIL-Staff/Roles": ["Facility Admin", "System Admin"],
-  "/DAMIL-Staff/Shifts": ["Facility Admin", "Facility Staff", "System Admin"],
+  "/DAMIL-Staff/Shifts": ["Facility Admin", "System Admin"],
   "/DAMIL-Staff/Events": ["Facility Admin", "Facility Staff", "System Admin"],
 
   // DAMIL Configurations
@@ -34,6 +43,7 @@ export const pageRoles: Record<string, string[]> = {
     "Facility Admin",
     "System Admin",
   ],
+  "/account/change-credentials": ["ALL"],
 };
 
 export const getRolesForPage = (url: string): string[] => {

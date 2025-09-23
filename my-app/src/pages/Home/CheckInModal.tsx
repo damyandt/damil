@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Stepper,
@@ -30,9 +30,14 @@ import Checkbox from "../../components/MaterialUI/FormFields/Checkbox";
 interface CheckInModalProps {
   open: boolean;
   onClose: () => void;
+  userInfo?: Partial<User>;
 }
 
-const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
+const CheckInModal: React.FC<CheckInModalProps> = ({
+  open,
+  onClose,
+  userInfo = null,
+}) => {
   const { t } = useLanguageContext();
   const [searchType, setSearchType] = useState<
     "ID" | "Name" | "Email" | "Phone"
@@ -41,13 +46,18 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [searchInput, setSearchInput] = useState<string>("");
   const [usersFound, setUsersFound] = useState<any>(null);
-  const [userDetails, setUserDetails] = useState<any>(null);
+  const [userDetails, setUserDetails] = useState<any>(userInfo);
   const { setAuthedUser } = useAuthedContext();
   const steps = [
     t("Search Member"),
     t("Confirm Details"),
     t("Check-In Complete"),
   ];
+
+  useEffect(() => {
+    setActiveStep(1);
+  }, [userInfo]);
+
   const handleNext = async () => {
     try {
       const userDetails: Response<Array<Partial<User>>> = await callApi<any>({
@@ -94,7 +104,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
     setErrors({});
     closeModal && onClose();
   };
-  console.log(userDetails);
+
   return (
     <CustomModal
       title={t("Member Check-In")}
@@ -194,7 +204,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({ open, onClose }) => {
 
       {/* Step 2 */}
       {activeStep === 1 &&
-        (userDetails.length > 1 ? (
+        (userDetails?.length > 1 ? (
           <Grid container spacing={2}>
             <Grid size={12}>
               <Typography mb={2}>{t("Select a member")}</Typography>

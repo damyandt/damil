@@ -42,7 +42,6 @@ const VisitorsRightMenu: React.FC<VisitorsRightMenuProps> = ({
   const handleClose = () => {
     setAnchorEl(null);
     setActivePicker(null);
-    // setRefreshTable((prev) => !prev);
   };
 
   const open = Boolean(anchorEl);
@@ -63,7 +62,7 @@ const VisitorsRightMenu: React.FC<VisitorsRightMenuProps> = ({
           <EventBusyIcon />
         </IconButton>
       </CustomTooltip>
-      <Popover
+      {/* <Popover
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
@@ -109,7 +108,60 @@ const VisitorsRightMenu: React.FC<VisitorsRightMenuProps> = ({
               }}
             />
           )}
-          {/* <Button>{t("Save")}</Button> */}
+        </Box>
+      </Popover> */}
+      <Popover
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "center",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "center",
+          horizontal: "right",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            p: 2,
+            gap: 2,
+            width: 250, // Adjust width if needed
+          }}
+        >
+          {activePicker && (
+            <>
+              <DatePickerComponent
+                label={
+                  activePicker === "start" ? t("Start Date") : t("End Date")
+                }
+                value={activePicker === "start" ? startDate : endDate}
+                onChange={(newValue: Dayjs | null) => {
+                  if (newValue) {
+                    if (activePicker === "start") {
+                      setStartDate(newValue.startOf("day"));
+                    } else {
+                      setEndDate(newValue.startOf("day"));
+                    }
+                  }
+                }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  setRefreshTable((prev) => !prev);
+                  handleClose();
+                }}
+                fullWidth
+              >
+                {t("Apply")}
+              </Button>
+            </>
+          )}
         </Box>
       </Popover>
     </Stack>

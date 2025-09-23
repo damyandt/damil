@@ -5,7 +5,11 @@ import { useLanguageContext } from "../../../../context/LanguageContext";
 import { useState } from "react";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import AddNewPlansPaper, { SubscriptionPlan } from "./AddNewPlanPaper";
-import { Enum, Row } from "../../../../Global/Types/commonTypes";
+import { Enum, Response, Row } from "../../../../Global/Types/commonTypes";
+import DefinePricesForm from "../../../../pages/Configurations/DefinePricesSubPlans";
+import callApi from "../../../../API/callApi";
+import { postPlans } from "../../../../pages/Configurations/API/getQueries";
+import { useAuthedContext } from "../../../../context/AuthContext";
 
 interface PlansRightMenuProps {
   plansOptions: Enum[];
@@ -18,8 +22,10 @@ const PlansRightMenu: React.FC<PlansRightMenuProps> = ({
   setRefreshTable,
   withoutThis,
 }) => {
+  const { setAuthedUser } = useAuthedContext();
   const { t } = useLanguageContext();
-
+  const [step, setStep] = useState<number>(1);
+  const [selectedPlans, setSelectedPlans] = useState<string[]>([]);
   const [modalTitle, setModalTitle] = useState<string | null>(null);
   return (
     <>
@@ -40,7 +46,7 @@ const PlansRightMenu: React.FC<PlansRightMenuProps> = ({
         open={!!modalTitle}
         onClose={() => setModalTitle(null)}
         title="Add New Subscription Plan"
-        width={"md"}
+        width={step === 2 ? "lg" : "md"}
         style="create"
         titleIcon="create"
       >
@@ -54,12 +60,36 @@ const PlansRightMenu: React.FC<PlansRightMenuProps> = ({
             width: "100%",
           }}
         >
-          <AddNewPlansPaper
-            withoutThis={withoutThis}
-            plansOptions={plansOptions}
-            setRefreshTable={setRefreshTable}
-            setModalTitle={setModalTitle}
-          />
+          {step === 1 ? (
+            <AddNewPlansPaper
+              withoutThis={withoutThis}
+              plansOptions={plansOptions}
+              onNext={(plans: string[]) => {
+                setSelectedPlans(plans);
+
+                setStep(2);
+              }}
+            />
+          ) : (
+            <DefinePricesForm
+              inModal={true}
+              plans={selectedPlans}
+              onBack={() => setStep(1)}
+              onSubmit={async (plansWithPrices: any) => {
+                try {
+                  await callApi<Response<any>>({
+                    query: postPlans(plansWithPrices),
+                    auth: { setAuthedUser },
+                  });
+                  setModalTitle(null);
+                  setRefreshTable((prev) => !prev);
+                  setStep(1);
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
+            />
+          )}
         </Box>
       </CustomModal>
     </>

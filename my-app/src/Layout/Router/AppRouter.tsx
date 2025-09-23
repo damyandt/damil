@@ -19,6 +19,7 @@ import PageNotFound from "../../components/pageComponents/PageNotFound";
 import SubscriptionPlans from "../../pages/Configurations/SubscriptionPlans";
 import { getRolesForPage } from "../AppNavigation/PageRoles";
 import MembersHome from "../../pages/Home/MembersHome";
+import AccountCredentials from "../../components/pageComponents/UserComponents/AccountCredentials";
 export const createAppRouter = (
   userType:
     | "Facility Member"
@@ -120,6 +121,10 @@ const allRoutes = (role: string) => {
     {
       path: "/DAMIL-Configurations/Subscription-Plans",
       element: <PlansPage />,
+    },
+    {
+      path: "/account/change-credentials",
+      element: <AccountCredentials />,
     },
   ];
 };

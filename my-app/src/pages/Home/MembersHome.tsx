@@ -18,6 +18,7 @@ import { useState } from "react";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { shiftHue } from "./Home";
 import { useAuthedContext } from "../../context/AuthContext";
+import QRCode from "./QRCode";
 
 const MembersHome = () => {
   const { authedUser } = useAuthedContext();
@@ -135,19 +136,29 @@ const MembersHome = () => {
         <Grid
           size={{ xs: 12, sm: 6, md: 4 }}
           borderRadius={"20px"}
+          alignContent="center"
           boxShadow={
             isDark
               ? `0 3px 12px ${alpha(primary, 0.3)}`
               : `0 3px 12px ${alpha("#000", 0.06)}`
           }
         >
-          <Box sx={{ borderRadius: "20px", p: 2 }}>
-            <Typography variant="subtitle2" color="text.secondary">
+          <Box
+            sx={{
+              borderRadius: "20px",
+              // p: 2,
+              alignContent: "center",
+              textAlign: "center",
+              alignItems: "center",
+            }}
+          >
+            {/* <Typography variant="subtitle2" color="text.secondary">
               News
             </Typography>
             <Typography variant="body1">
               2 more classes and you will reach level 4!
-            </Typography>
+            </Typography> */}
+            <QRCode />
           </Box>
         </Grid>
         <Grid

@@ -25,6 +25,7 @@ import { useCustomThemeProviderContext } from "../../../context/ThemeContext";
 import { PreferencesType, Response } from "../../../Global/Types/commonTypes";
 import DatePickerComponent from "../../MaterialUI/FormFields/DatePicker";
 import dayjs from "dayjs";
+import Alert from "../../MaterialUI/Alert";
 
 const IncompleteProfileModal = () => {
   const {
@@ -37,19 +38,21 @@ const IncompleteProfileModal = () => {
   const { themeMode, setThemeMode, setPrimaryColor, primaryColor } =
     useCustomThemeProviderContext();
   const { t } = useLanguageContext();
-  const [step, setStep] = useState(0);
-
+  const [step, setStep] = useState<number>(0);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState<Partial<User>>(
-    authedUser
-    // username: authedUser?.username || "",
-    // firstName: authedUser?.firstName || "",
-    // lastName: authedUser?.lastName || "",
-    // city: authedUser?.city || "",
-    // phone: authedUser?.phone || "",
-    // address: authedUser?.address || "",
-    // email: authedUser?.email || "",
-    // gender: authedUser?.gender || "",
-    // birthDate: authedUser?.birthDate ? dayjs(authedUser.birthDate) : dayjs(),
+    // authedUser
+    {
+      username: authedUser?.username || "",
+      firstName: authedUser?.firstName || "",
+      lastName: authedUser?.lastName || "",
+      city: authedUser?.city || "",
+      phone: authedUser?.phone || "",
+      address: authedUser?.address || "",
+      email: authedUser?.email || "",
+      gender: authedUser?.gender || "",
+      birthDate: authedUser?.birthDate ? dayjs(authedUser.birthDate) : dayjs(),
+    }
   );
   const [preferancesData, setPreferencesData] = useState<PreferencesType>(
     preferences
@@ -96,7 +99,6 @@ const IncompleteProfileModal = () => {
           setStep(1);
         }
       } else if (step === 1) {
-        console.log("Updated profile data:", formData);
         const changes: Record<string, any> = {};
 
         // Compare formData and authedUser to get only changed fields
@@ -112,10 +114,12 @@ const IncompleteProfileModal = () => {
         }
 
         const info = await callApi<Response<any>>({
-          query: updateProfile(changes, authedUser.id || ""),
+          query: updateProfile(changes),
           auth: { setAuthedUser },
         });
         info.success === true && setStep(2);
+        info.success === true && setErrors({});
+        info.success === false && setErrors(info.validationErrors || {});
       } else if (step === 2) {
         const preferencesInfo = await callApi<Response<any>>({
           query: savePreferences(preferancesData),
@@ -395,6 +399,13 @@ const IncompleteProfileModal = () => {
             </Typography>
           </Box>
         )}
+        <Box sx={{ mt: 2 }}>
+          <Alert
+            message={Object.values(errors)[0]}
+            showAlert={errors && Object.keys(errors).length > 0}
+            severity="error"
+          />
+        </Box>
 
         <Box mt={3} display="flex" justifyContent="flex-end" gap={1}>
           {step === 0 && (

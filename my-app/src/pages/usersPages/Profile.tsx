@@ -92,7 +92,11 @@ const ProfilePage = () => {
         </Typography>
       </Grid>
       <Grid size={{ xs: 12, sm: 12, lg: 6 }} p={2} overflow={"scroll"}>
-        <Tabs value={selectedTab} onChange={handleTabChange} sx={{ mb: 3 }}>
+        <Tabs
+          value={selectedTab}
+          onChange={handleTabChange}
+          sx={{ mb: 3, justifySelf: "anchor-center" }}
+        >
           <Tab label={t("Account Details")} />
           <Tab label={t("Preferences")} />
           {!authedUser?.roles?.includes("Facility Member") && (

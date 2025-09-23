@@ -1,7 +1,4 @@
 import { useState } from "react";
-import { useAuthedContext } from "../../../../context/AuthContext";
-import callApi from "../../../../API/callApi";
-import { postPlans } from "../../../../pages/Configurations/API/getQueries";
 import {
   Box,
   Checkbox,
@@ -25,19 +22,15 @@ export interface SubscriptionPlan {
 
 type AddNewPlansPaperProps = {
   plansOptions: Enum[];
-  setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>;
   withoutThis?: Enum[];
-  setModalTitle?: React.Dispatch<React.SetStateAction<string | null>>;
+  onNext?: (plans: string[]) => void;
 };
 
 const AddNewPlansPaper = ({
   plansOptions,
-  setRefreshTable,
   withoutThis,
-  setModalTitle,
+  onNext,
 }: AddNewPlansPaperProps) => {
-  console.log(plansOptions);
-  console.log(withoutThis);
   const finalOptions =
     withoutThis?.length !== 0
       ? plansOptions.filter(
@@ -46,7 +39,6 @@ const AddNewPlansPaper = ({
         )
       : plansOptions;
   const [selectedPlans, setSelectedPlans] = useState<string[]>([]);
-  const { setAuthedUser } = useAuthedContext();
   const { t } = useLanguageContext();
   const handlePlanToggle = (planId: string) => {
     setSelectedPlans((prev) =>
@@ -56,22 +48,22 @@ const AddNewPlansPaper = ({
     );
   };
   const handleSavePlans = async () => {
-    try {
-      const plans: SubscriptionPlan[] = selectedPlans.map((planType) => ({
-        subscriptionPlan: planType,
-      }));
+    onNext?.(selectedPlans);
+    // try {
+    //   const plans: SubscriptionPlan[] = selectedPlans.map((planType) => ({
+    //     subscriptionPlan: planType,
+    //   }));
 
-      await callApi<Response<any>>({
-        query: postPlans(plans),
-        auth: { setAuthedUser },
-      });
+    //   await callApi<Response<any>>({
+    //     query: postPlans(plans),
+    //     auth: { setAuthedUser },
+    //   });
 
-      console.log("Plans saved:", plans);
-      setModalTitle?.(null);
-      setRefreshTable((prev: boolean) => !prev);
-    } catch (error) {
-      console.error("Error saving plans:", error);
-    }
+    //   console.log("Plans saved:", plans);
+
+    // } catch (error) {
+    //   console.error("Error saving plans:", error);
+    // }
   };
 
   return (

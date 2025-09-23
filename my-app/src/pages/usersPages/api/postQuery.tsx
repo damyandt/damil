@@ -41,8 +41,8 @@ export const completeProfile = (input: any): Query => ({
   method: "PUT",
   variables: input,
 });
-export const updateProfile = (input: any, id: string | number): Query => ({
-  endpoint: `user/${id}`,
+export const updateProfile = (input: any): Query => ({
+  endpoint: `user`,
   method: "PATCH",
   variables: input,
 });
