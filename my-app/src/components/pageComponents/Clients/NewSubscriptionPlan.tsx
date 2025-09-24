@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import Button from "../../MaterialUI/Button";
 import callApi from "../../../API/callApi";
 import {
+  getPrice,
   getQueryOptions,
   postSubscription,
 } from "../../../pages/Access Control/API/getQueries";
@@ -43,6 +44,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
 }) => {
   const { t } = useLanguageContext();
   const { setAuthedUser } = useAuthedContext();
+  const [price, setPrice] = useState<number>(0);
   const [subscriptionData, setSubscriptionData] = useState<any>({});
   const [options, setOptions] = useState<EnumMap>({});
   const [step, setStep] = useState<number>(0);
@@ -196,7 +198,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
               {t("Total Price")}
             </Typography>
             <Typography variant="h3" color="primary" gutterBottom>
-              {t("$29.99")}
+              {`$${price.toFixed(2)}`}
             </Typography>
 
             <Typography variant="subtitle1" gutterBottom>
@@ -235,7 +237,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
               }}
             >
               <Typography variant="h5" fontWeight="bold">
-                {t("Total Price")}: ${subscriptionData.price || "0.00"}
+                {t("Total Price")}: ${price.toFixed() || "0.00"}
               </Typography>
             </Paper>
 
@@ -283,6 +285,16 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
           </Button>
           <Button
             onClick={async () => {
+              if (step === 0) {
+                const response = await callApi<Response<any>>({
+                  query: getPrice(
+                    subscriptionData.subscriptionPlan,
+                    subscriptionData.employment
+                  ),
+                  auth: { setAuthedUser },
+                });
+                response.success && setPrice(response.data.price);
+              }
               step !== 2 && setStep((prev: number) => (prev += 1));
 
               step == 2 &&
@@ -302,7 +314,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
       </>
     );
   };
-  console.log(rowData);
+
   const ActiveForm = () => {
     return (
       <Box sx={{ p: 2 }}>

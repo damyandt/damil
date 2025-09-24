@@ -1,4 +1,11 @@
-import { Box, Grid, List, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Grid,
+  List,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import CustomModal from "../../components/MaterialUI/Modal";
 import Checkbox from "../../components/MaterialUI/FormFields/Checkbox";
 import Button from "../../components/MaterialUI/Button";
@@ -10,6 +17,7 @@ import { useAuthedContext } from "../../context/AuthContext";
 import { descriptionMap } from "./Home";
 import { savePreferences } from "../usersPages/api/postQuery";
 import { useLanguageContext } from "../../context/LanguageContext";
+import LoadingScreen from "../../components/pageComponents/LoadingPage";
 
 interface SearchModalProps {
   openFilterConfig: boolean;
@@ -23,6 +31,7 @@ const FiltersModal: React.FC<SearchModalProps> = ({
   selectedFilters,
   setSelectedFilters,
 }) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const { t } = useLanguageContext();
   const { setAuthedUser } = useAuthedContext();
   const theme = useTheme();
@@ -42,6 +51,7 @@ const FiltersModal: React.FC<SearchModalProps> = ({
 
   useEffect(() => {
     const fetchAllOptions = async () => {
+      setLoading(true);
       const optionsMap: EnumMap = {};
 
       for (const field of availableFields) {
@@ -59,6 +69,7 @@ const FiltersModal: React.FC<SearchModalProps> = ({
         }
       }
       setOptions(optionsMap);
+      setLoading(false);
     };
     openFilterConfig && fetchAllOptions();
   }, [openFilterConfig]);
@@ -85,6 +96,21 @@ const FiltersModal: React.FC<SearchModalProps> = ({
     });
     onClose();
   };
+  if (loading) {
+    return (
+      <CustomModal
+        open={openFilterConfig}
+        onClose={onClose}
+        title={t("Customize Filters")}
+        width={"lg"}
+      >
+        <Box sx={{ textAlign: "center", py: 4 }}>
+          <CircularProgress />
+        </Box>
+      </CustomModal>
+    );
+  }
+
   return (
     <CustomModal
       open={openFilterConfig}

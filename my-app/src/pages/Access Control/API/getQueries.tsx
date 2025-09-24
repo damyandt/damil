@@ -67,6 +67,13 @@ export const getQueryOptions = (url: string): Query => ({
   endpoint: `${url}`,
   method: "GET",
 });
+export const getPrice = (
+  subscriptionPlan: string,
+  employment: string
+): Query => ({
+  endpoint: `membership-plans/${subscriptionPlan}/${employment}`,
+  method: "GET",
+});
 
 export const getPeriodVisitors = (
   id: string | number,
