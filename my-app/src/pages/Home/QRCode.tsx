@@ -23,7 +23,7 @@ const QRCode = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    if (qrCodeUrl) URL.revokeObjectURL(qrCodeUrl); // ✅ cleanup memory
+    if (qrCodeUrl) URL.revokeObjectURL(qrCodeUrl);
     setQrCodeUrl(null);
     setError(null);
   };

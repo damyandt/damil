@@ -46,7 +46,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [searchInput, setSearchInput] = useState<string>("");
   const [usersFound, setUsersFound] = useState<any>(null);
-  const [userDetails, setUserDetails] = useState<any>(userInfo);
+  const [userDetails, setUserDetails] = useState<any>(userInfo || null);
   const { setAuthedUser } = useAuthedContext();
   const steps = [
     t("Search Member"),
@@ -55,7 +55,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
   ];
 
   useEffect(() => {
-    setActiveStep(1);
+    userInfo && setActiveStep(1);
   }, [userInfo]);
 
   const handleNext = async () => {
@@ -95,6 +95,13 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
     checkIn.success === true
       ? setActiveStep((prev) => prev + 1)
       : setErrors({ noVisits: checkIn.message });
+
+    if (checkIn.success === true) {
+      setSearchInput("");
+      setUserDetails(null);
+      setActiveStep(0);
+      setErrors({});
+    }
   };
 
   const handleReset = (closeModal: boolean) => {

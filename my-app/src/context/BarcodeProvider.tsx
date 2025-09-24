@@ -1,13 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Typography,
-  Button,
-} from "@mui/material";
-import { Response } from "../Global/Types/commonTypes";
-import { User } from "../pages/usersPages/userTypes";
 import callApi from "../API/callApi";
 import { getMember } from "../pages/Access Control/API/getQueries";
 import { useAuthedContext } from "./AuthContext";
@@ -54,24 +45,13 @@ const GlobalBarcodeScanner: React.FC = () => {
   };
 
   return (
-    // <Dialog open={open} onClose={() => setOpen(false)}>
-    //   <DialogTitle>Scanned Code</DialogTitle>
-    //   <DialogContent>
-    //     <Typography variant="h6">{scannedCode}</Typography>
-    //     <Button
-    //       onClick={() => setOpen(false)}
-    //       variant="contained"
-    //       sx={{ mt: 2 }}
-    //     >
-    //       Close
-    //     </Button>
-    //   </DialogContent>
-    // </Dialog>
-
     info !== null && (
       <CheckInModal
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          setInfo(null);
+        }}
         userInfo={info}
       />
     )
