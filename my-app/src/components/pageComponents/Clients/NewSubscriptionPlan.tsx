@@ -43,18 +43,18 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
   setRefreshTable,
 }) => {
   const { t } = useLanguageContext();
-  const { setAuthedUser } = useAuthedContext();
+  const { setAuthedUser, preferences } = useAuthedContext();
   const [price, setPrice] = useState<number>(0);
   const [subscriptionData, setSubscriptionData] = useState<any>({});
   const [options, setOptions] = useState<EnumMap>({});
   const [step, setStep] = useState<number>(0);
-  const [paymentMethod, setPaymentMethod] = useState<"card" | "cash" | null>(
-    null
+  const [paymentMethod, setPaymentMethod] = useState<"CARD" | "CASH" | null>(
+    "CASH"
   );
   const steps = ["New Plan", "Payment", "Confirm Info"];
   const handlePaymentMethodChange = (
     event: React.MouseEvent<HTMLElement>,
-    newMethod: "card" | "cash" | null
+    newMethod: "CARD" | "CASH" | null
   ) => {
     if (newMethod !== null) {
       setPaymentMethod(newMethod);
@@ -198,7 +198,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
               {t("Total Price")}
             </Typography>
             <Typography variant="h3" color="primary" gutterBottom>
-              {`$${price.toFixed(2)}`}
+              {`${price.toFixed(2)} ${preferences.currency || "EUR"}`}
             </Typography>
 
             <Typography variant="subtitle1" gutterBottom>
@@ -213,10 +213,10 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
               aria-label="Payment Method"
               sx={{ mt: 2 }}
             >
-              <ToggleButton value="card" sx={{ width: 150, height: 80 }}>
+              <ToggleButton value="CARD" sx={{ width: 150, height: 80 }}>
                 {t("Pay by Card")}
               </ToggleButton>
-              <ToggleButton value="cash" sx={{ width: 150, height: 80 }}>
+              <ToggleButton value="CASH" sx={{ width: 150, height: 80 }}>
                 {t("Pay by Cash")}
               </ToggleButton>
             </ToggleButtonGroup>
@@ -231,45 +231,100 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
                 p: 2,
                 mb: 3,
                 textAlign: "center",
-                background: (theme) => theme.palette.success.light,
+                background: (theme) => theme.palette.primary.main,
                 color: (theme) => theme.palette.success.contrastText,
-                borderRadius: 2,
+                borderRadius: 1,
               }}
             >
               <Typography variant="h5" fontWeight="bold">
-                {t("Total Price")}: ${price.toFixed() || "0.00"}
+                {t("Total Price")}: {price.toFixed() || "0.00"}{" "}
+                {preferences.currency || "EUR"}
               </Typography>
             </Paper>
 
             {/* Confirmation Text */}
-            <Typography variant="body1" sx={{ mb: 2 }}>
+            <Typography
+              variant="body1"
+              sx={{ mb: 2, textAlign: "center", width: "100%" }}
+            >
               {t("Are you sure you want to add this subscription to")}{" "}
               {rowData.firstName || "this user"} {rowData.lastName || ""}?
             </Typography>
 
             {/* Subscription Details */}
-            <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, mb: 3 }}>
-              <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                {t("Plan")}:{" "}
-                <Typography component="span" fontWeight="normal">
-                  {subscriptionData.subscriptionPlan}
-                </Typography>
-              </Typography>
+            <Grid container spacing={2}>
+              {/* Plan */}
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <Box
+                  sx={{
+                    p: 2,
+                    textAlign: "center",
+                    borderRadius: 3,
+                    border: "1px solid",
+                    borderColor: "divider",
+                    bgcolor: "background.default",
+                  }}
+                >
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ fontWeight: "bold", mb: 1 }}
+                  >
+                    {t("Plan")}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    {subscriptionData.subscriptionPlan}
+                  </Typography>
+                </Box>
+              </Grid>
 
-              <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                {t("Employment")}:{" "}
-                <Typography component="span" fontWeight="normal">
-                  {subscriptionData.employment}
-                </Typography>
-              </Typography>
+              {/* Employment */}
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <Box
+                  sx={{
+                    p: 2,
+                    textAlign: "center",
+                    borderRadius: 3,
+                    border: "1px solid",
+                    borderColor: "divider",
+                    bgcolor: "background.default",
+                  }}
+                >
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ fontWeight: "bold", mb: 1 }}
+                  >
+                    {t("Employment")}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    {subscriptionData.employment}
+                  </Typography>
+                </Box>
+              </Grid>
 
-              <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                {t("Payment Method")}:{" "}
-                <Typography component="span" fontWeight="normal">
-                  {paymentMethod}
-                </Typography>
-              </Typography>
-            </Paper>
+              {/* Payment Method */}
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <Box
+                  sx={{
+                    p: 2,
+                    textAlign: "center",
+                    borderRadius: 3,
+                    border: "1px solid",
+                    borderColor: "divider",
+                    bgcolor: "background.default",
+                  }}
+                >
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ fontWeight: "bold", mb: 1 }}
+                  >
+                    {t("Payment Method")}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    {paymentMethod}
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
           </>
         )}
         <Box display="flex" justifyContent="flex-end" gap={2}>
@@ -308,7 +363,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
             color="primary"
             variant="outlined"
           >
-            {t("Next")}
+            {step == 2 ? t("Finish") : t("Next")}
           </Button>
         </Box>
       </>
@@ -318,40 +373,30 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
   const ActiveForm = () => {
     return (
       <Box sx={{ p: 2 }}>
-        <Paper
-          elevation={3}
-          sx={{
-            p: 3,
-            mb: 3,
-            borderRadius: 2,
-            backgroundColor: (theme) => theme.palette.grey[100],
-          }}
-        >
-          <Typography variant="h5" gutterBottom>
-            {t("Current Subscription")}
-          </Typography>
+        <Typography variant="h5" gutterBottom>
+          {t("Current Subscription")}
+        </Typography>
 
+        <Typography variant="subtitle1" sx={{ mb: 1 }}>
+          <strong>{t("Plan")}:</strong> {rowData.subscriptionPlan}
+        </Typography>
+        <Typography variant="subtitle1" sx={{ mb: 1 }}>
+          <strong>{t("Status")}:</strong>{" "}
+          {rowData.subscriptionStatus || t("Active")}
+        </Typography>
+        {rowData.subscriptionPlan === "Flexible Visit Plan" ? (
           <Typography variant="subtitle1" sx={{ mb: 1 }}>
-            <strong>{t("Plan")}:</strong> {rowData.subscriptionPlan}
+            <strong>{t("Remaining Visits")}:</strong>{" "}
+            {`${rowData.remainingVisits} from ${rowData.allowedVisits}`}
           </Typography>
+        ) : (
           <Typography variant="subtitle1" sx={{ mb: 1 }}>
-            <strong>{t("Status")}:</strong>{" "}
-            {rowData.subscriptionStatus || t("Active")}
+            <strong>{t("Expires On")}:</strong>{" "}
+            {rowData.expiryDate
+              ? new Date(rowData.expiryDate).toLocaleDateString()
+              : t("No Expiry")}
           </Typography>
-          {rowData.subscriptionPlan === "Flexible Visit Plan" ? (
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>
-              <strong>{t("Remaining Visits")}:</strong>{" "}
-              {`${rowData.remainingVisits} from ${rowData.allowedVisits}`}
-            </Typography>
-          ) : (
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>
-              <strong>{t("Expires On")}:</strong>{" "}
-              {rowData.expiryDate
-                ? new Date(rowData.expiryDate).toLocaleDateString()
-                : t("No Expiry")}
-            </Typography>
-          )}
-        </Paper>
+        )}
 
         <Box display="flex" justifyContent="flex-end" gap={2}>
           <Button

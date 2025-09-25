@@ -110,11 +110,21 @@ const PreferencesDetails = () => {
           <Grid container spacing={2}>
             <Grid size={6}>
               <TextField
+                select
                 fullWidth
                 label={t("Currency")}
                 onChange={(e: any) => handleChange("currency", e.target.value)}
                 value={formData ? formData["currency"] : ""}
-              />
+              >
+                {[
+                  { title: "BGN", value: "BGN" },
+                  { title: "EUR", value: "EUR" },
+                ].map((lang) => (
+                  <MenuItem key={lang.value} value={lang.value}>
+                    {lang.title}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
             <Grid size={6}>
               <TextField
