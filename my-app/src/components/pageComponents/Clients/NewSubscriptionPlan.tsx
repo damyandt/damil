@@ -48,9 +48,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
   const [subscriptionData, setSubscriptionData] = useState<any>({});
   const [options, setOptions] = useState<EnumMap>({});
   const [step, setStep] = useState<number>(0);
-  const [paymentMethod, setPaymentMethod] = useState<"CARD" | "CASH" | null>(
-    "CASH"
-  );
+  const [paymentMethod, setPaymentMethod] = useState<"CARD" | "CASH">("CASH");
   const steps = ["New Plan", "Payment", "Confirm Info"];
   const handlePaymentMethodChange = (
     event: React.MouseEvent<HTMLElement>,

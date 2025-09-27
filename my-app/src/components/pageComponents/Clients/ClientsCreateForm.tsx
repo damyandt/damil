@@ -18,6 +18,7 @@ import callApi, { Query } from "../../../API/callApi";
 import { useAuthedContext } from "../../../context/AuthContext";
 import Button from "../../MaterialUI/Button";
 import {
+  getPrice,
   getQueryOptions,
   postMember,
   postSubscription,
@@ -50,7 +51,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
   // loading,
   // setLoading,
 }) => {
-  const { setAuthedUser } = useAuthedContext();
+  const { setAuthedUser, preferences } = useAuthedContext();
   const { t } = useLanguageContext();
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -60,17 +61,14 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [subscriptionData, setSubscriptionData] = useState<any>({});
   const [id, setId] = useState<any>({});
-  const [paymentMethod, setPaymentMethod] = useState<"card" | "cash" | null>(
-    null
-  );
+  const [paymentMethod, setPaymentMethod] = useState<"CARD" | "CASH">("CASH");
+  const [price, setPrice] = useState<number>(0);
 
   const handlePaymentMethodChange = (
     event: React.MouseEvent<HTMLElement>,
-    newMethod: "card" | "cash" | null
+    newMethod: "CARD" | "CASH"
   ) => {
-    if (newMethod !== null) {
-      setPaymentMethod(newMethod);
-    }
+    setPaymentMethod(newMethod);
   };
 
   const handleNext = async () => {
@@ -87,6 +85,14 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
           Math.min(prevActiveStep + 1, steps.length - 1)
         );
     } else if (activeStep === 1) {
+      const response = await callApi<Response<any>>({
+        query: getPrice(
+          subscriptionData.subscriptionPlan,
+          subscriptionData.employment
+        ),
+        auth: { setAuthedUser },
+      });
+      response.success && setPrice(response.data.price);
       setActiveStep((prevActiveStep) =>
         Math.min(prevActiveStep + 1, steps.length - 1)
       );
@@ -326,14 +332,14 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
             sx={{ maxWidth: 500, margin: "0 auto", textAlign: "center", p: 2 }}
           >
             <Typography variant="h5" gutterBottom>
-              Total Price
+              {t("Total Price")}
             </Typography>
             <Typography variant="h3" color="primary" gutterBottom>
-              $29.99
+              {`${price.toFixed(2)} ${preferences.currency || "EUR"}`}
             </Typography>
 
             <Typography variant="subtitle1" gutterBottom>
-              Choose your payment method:
+              {t("Choose your payment method:")}
             </Typography>
 
             <ToggleButtonGroup
@@ -344,10 +350,10 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
               aria-label="Payment Method"
               sx={{ mt: 2 }}
             >
-              <ToggleButton value="card" sx={{ width: 150, height: 80 }}>
+              <ToggleButton value="CARD" sx={{ width: 150, height: 80 }}>
                 {t("Pay by Card")}
               </ToggleButton>
-              <ToggleButton value="cash" sx={{ width: 150, height: 80 }}>
+              <ToggleButton value="CASH" sx={{ width: 150, height: 80 }}>
                 {t("Pay by Cash")}
               </ToggleButton>
             </ToggleButtonGroup>

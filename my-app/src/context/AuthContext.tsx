@@ -1,4 +1,11 @@
-import { createContext, JSX, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  JSX,
+  use,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { getCookie } from "../Global/Utils/commonFunctions";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../API/callApi";
 import { User } from "../pages/usersPages/userTypes";
@@ -58,32 +65,50 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
     ],
   });
 
-  useEffect(() => {
-    const fetchPreferences = async () => {
-      const preferencesInfo = await callApi<Response<any>>({
-        query: getPreferences(),
-        auth: { setAuthedUser },
-      });
-      preferencesInfo.success &&
-        preferencesInfo.data.settings &&
-        setPreferences(preferencesInfo.data.settings);
-    };
+  const fetchUserData = async () => {
+    const userInfo = await callApi<Response<any>>({
+      query: getQueryUsersGetCurrentUser(),
+      auth: { setAuthedUser },
+    });
 
-    authedUser && fetchPreferences();
-  }, [setAuthedUser, refreshUserData]);
+    userInfo.success && userInfo.data && setAuthedUser(userInfo.data);
+  };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const userInfo = await callApi<Response<any>>({
-        query: getQueryUsersGetCurrentUser(),
+    refreshUserData && fetchUserData();
+    setRefreshUserData(false);
+  }, [refreshUserData]);
+
+  const fetchPreferences = async () => {
+    const preferencesInfo = await callApi<Response<any>>({
+      query: getPreferences(),
+      auth: { setAuthedUser },
+    });
+    preferencesInfo.success &&
+      preferencesInfo.data.settings &&
+      setPreferences(preferencesInfo.data.settings);
+  };
+
+  const fetchTenant = async () => {
+    try {
+      const tenantInfo = await callApi<any>({
+        query: getQueryUserTenant(),
         auth: { setAuthedUser },
       });
+      tenantInfo.success === true && setTenant(tenantInfo.data);
+    } catch (err) {
+      console.log("Tenant fetch error", err);
+    }
+  };
 
-      userInfo.success && userInfo.data && setAuthedUser(userInfo.data);
-    };
-
-    authedUser && fetchUserData();
-  }, [setAuthedUser, refreshUserData]);
+  useEffect(() => {
+    if (userSignedIn) {
+      fetchPreferences();
+      if (authedUser.roles?.includes("Facility Admin")) {
+        fetchTenant();
+      }
+    }
+  }, [userSignedIn]);
 
   useEffect(() => {
     if (authedUser.email === "error" && userSignedIn) {
@@ -122,23 +147,8 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
       if (hasEmptyFields && (!snoozeUntil || now > parseInt(snoozeUntil))) {
         setShowIncompleteModal(true);
       }
-      if (authedUser.roles?.includes("Facility Admin")) {
-        fetchTenant();
-      }
     }
   }, [authedUser, preferences]);
-
-  const fetchTenant = async () => {
-    try {
-      const tenantInfo = await callApi<any>({
-        query: getQueryUserTenant(),
-        auth: { setAuthedUser },
-      });
-      tenantInfo.success === true && setTenant(tenantInfo.data);
-    } catch (err) {
-      console.log("Tenant fetch error", err);
-    }
-  };
 
   const checkIfUserIsSignedIn = async () => {
     const refreshToken = getCookie(COOKIE_REFRESH_TOKEN);
@@ -153,14 +163,6 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
       setAuthedUser({
         ...signedInUser.data,
       });
-
-      // const preferencesInfo = await callApi<Response<any>>({
-      //   query: getPreferences(),
-      //   auth: { setAuthedUser },
-      // });
-      // preferencesInfo.success &&
-      //   preferencesInfo.data.settings &&
-      //   setPreferences(preferencesInfo.data.settings);
 
       return;
     }

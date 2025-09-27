@@ -1,8 +1,23 @@
-import React, { useEffect, useState } from "react";
+// const flatData: any = {
+//   Gender: { male: 90, female: 10 },
+//   Employment: { regular: 50, student: 20, senior: 20, handicap: 10 },
+//   SubscriptionStatus: { active: 20, inactive: 80, pending: 5, cancelled: 5 },
+//   SubscriptionPlan: {
+//     visit_pass: 10,
+//     monthly: 25,
+//     day_pass: 15,
+//     weekly_pass: 10,
+//     biannual: 20,
+//     annual: 20,
+//   },
+// };
+
+import React, { use, useEffect, useState } from "react";
 import {
   alpha,
   Box,
   Button,
+  CircularProgress,
   darken,
   Grid,
   lighten,
@@ -24,20 +39,23 @@ import tinycolor from "tinycolor2";
 import { useLanguageContext } from "../../context/LanguageContext";
 import FiltersModal from "./FiltersModal";
 import GaugeChartHome from "../Analystics/GuageChart";
+import callApi from "../../API/callApi";
+import { Response } from "../../Global/Types/commonTypes";
+import { getAnalyticsForHomePage } from "./API/getQueries";
 
 export const descriptionMap = (type: string, word: string, t: any) => {
   let final = "";
   switch (type) {
-    case "Gender":
+    case "gender":
       final = `${word} ${t("Members")}`;
       break;
-    case "Employment":
+    case "employment":
       final = `${word} ${t("Members")}`;
       break;
-    case "SubscriptionPlan":
+    case "plan":
       final = `${word} ${t("Plans")}`;
       break;
-    case "SubscriptionStatus":
+    case "status":
       final = `${word} ${t("Members")}`;
       break;
   }
@@ -49,21 +67,17 @@ export const shiftHue = (color: string, amount: number) =>
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { authedUser, preferences, setRefreshUserData } = useAuthedContext();
+  const [analyticsData, setAnalyticsData] = useState<any>(null);
+  const { authedUser, preferences, setAuthedUser } = useAuthedContext();
   const [openCheckIn, setOpenCheckIn] = useState<boolean>(false);
   const [selectedFilters, setSelectedFilters] = useState<any>(
     preferences.homeFilters ?? [
       "Gender - MALE",
-      "SubscriptionStatus - ACTIVE",
+      "Status - ACTIVE",
       "Employment - REGULAR",
-      "SubscriptionPlan - MONTHLY",
+      "Plan - MONTHLY",
     ]
   );
-
-  useEffect(() => {
-    setRefreshUserData((prev: boolean) => !prev);
-  }, []);
-
   const [openFilterConfig, setOpenFilterConfig] = useState<boolean>(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const { t } = useLanguageContext();
@@ -80,49 +94,25 @@ const HomePage: React.FC = () => {
   const colorEnd = isDark
     ? shiftHue(darken(primary, 0.2), 20)
     : shiftHue(lighten(primary, 0.3), 20);
-  type FlatDataKeys =
-    | "MALE"
-    | "FEMALE"
-    | "REGULAR"
-    | "STUDENT"
-    | "SENIOR"
-    | "HANDICAP"
-    | "ACTIVE"
-    | "INACTIVE"
-    | "PENDING"
-    | "CANCELLED"
-    | "VISIT_PASS"
-    | "MONTHLY"
-    | "DAY_PASS"
-    | "WEEKLY_PASS"
-    | "BIANNUAL"
-    | "ANNUAL";
 
-  type FlatData = {
-    [key in FlatDataKeys]: number;
+  useEffect(() => {
+    setSelectedFilters(preferences.homeFilters);
+  }, [preferences]);
+
+  const fetchAnalyticsData = async () => {
+    const response = await callApi<Response<any>>({
+      query: getAnalyticsForHomePage(),
+      auth: { setAuthedUser },
+    });
+    response.success && response.data && setAnalyticsData(response.data.ratios);
   };
-  const flatData: FlatData = {
-    MALE: 90,
-    FEMALE: 10,
 
-    REGULAR: 50,
-    STUDENT: 20,
-    SENIOR: 20,
-    HANDICAP: 10,
+  useEffect(() => {
+    fetchAnalyticsData();
+  }, []);
 
-    ACTIVE: 20,
-    INACTIVE: 80,
-    PENDING: 5,
-    CANCELLED: 5,
-
-    VISIT_PASS: 10,
-    MONTHLY: 25,
-    DAY_PASS: 15,
-    WEEKLY_PASS: 10,
-    BIANNUAL: 20,
-    ANNUAL: 20,
-  };
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <>
       <Box sx={isMobile ? { p: 0 } : { p: 2 }}>
@@ -260,7 +250,7 @@ const HomePage: React.FC = () => {
               {selectedFilters.map((filter: string, index: number) => {
                 const [field, value] = filter.split(" - ");
 
-                return (
+                return analyticsData ? (
                   <Grid
                     size={{ xs: 12, sm: 6, md: 3 }}
                     key={index}
@@ -288,12 +278,20 @@ const HomePage: React.FC = () => {
                       <GaugeChartHome
                         data={[
                           {
-                            value: flatData[value as keyof FlatData],
+                            value: analyticsData[field]?.[value] ?? 0,
                             name: descriptionMap(field, value, t),
                           },
                         ]}
                       />
                     </Box>
+                  </Grid>
+                ) : (
+                  <Grid
+                    size={{ xs: 12, sm: 6, md: 3 }}
+                    key={index}
+                    sx={{ cursor: "pointer", aspectRatio: 1 / 1 }}
+                  >
+                    <CircularProgress size={40} />
                   </Grid>
                 );
               })}
@@ -323,6 +321,7 @@ const HomePage: React.FC = () => {
         onClose={() => setOpenFilterConfig(false)}
         selectedFilters={selectedFilters}
         setSelectedFilters={setSelectedFilters}
+        flatData={analyticsData}
       />
     </>
   );
