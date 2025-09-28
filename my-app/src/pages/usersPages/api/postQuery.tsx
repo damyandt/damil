@@ -57,3 +57,14 @@ export const getPreferences = (): Query => ({
   endpoint: `users/settings/me`,
   method: "GET",
 });
+
+export const getUrlForredirect = (amount: number): Query => ({
+  endpoint: `payments/checkout?amount=${amount}`,
+  method: "POST",
+});
+
+export const stripePaymentIntent = (input: any): Query => ({
+  endpoint: `stripe/create-checkout-session`,
+  method: "POST",
+  variables: input,
+});

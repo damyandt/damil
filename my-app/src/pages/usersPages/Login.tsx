@@ -148,3 +148,199 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+// import React, { useEffect, useState } from "react";
+// import {
+//   Container,
+//   Typography,
+//   TextField,
+//   Button,
+//   Box,
+//   Card,
+//   CardContent,
+//   List,
+//   ListItem,
+//   ListItemText,
+// } from "@mui/material";
+
+// let damyandtExeptions = [
+//   "packa_spam",
+//   "tonkisa.p.rvt",
+//   "christinee_privv",
+//   "foolkstore",
+//   "simon_g_inderground",
+//   "jasonborntor",
+//   "dragosffrn",
+//   "dancho_swimming",
+//   "mbtbg",
+//   "garjokaa",
+//   "kp_the_specimen",
+//   "4a1axd",
+//   "nasi_svej",
+//   "013_memenca",
+//   "virgogotsauce",
+//   "kapomrn",
+//   "thepump",
+//   "pg_t19c",
+//   "daniels_laizans",
+//   "atanaskolev_official",
+//   "caliathletics_",
+//   "chocheev",
+//   "drink_t19c",
+//   "samihossny",
+//   "23gregoire",
+//   "kudeemusakata",
+//   "guyintheblueshirt",
+//   "emiltrf",
+//   "europeancomedy",
+//   "fyresofia",
+//   "mcgregorlifestyle",
+//   "austin_dunham",
+//   "memebok",
+//   "hristov_sw",
+//   "stanbrowney",
+//   "ebe_mi_sa_brat",
+//   "veche.znam",
+//   "east_boy_sofia",
+//   "chrisheria",
+//   "lucianoloco",
+//   "wibmerfabio",
+//   "thenotoriousmma",
+//   "clips",
+//   "alex_eubank15",
+//   "kingryan",
+//   "cbum",
+//   "champagnepapi",
+//   "loganpaul",
+//   "jakepaul",
+//   "mercedesbenz",
+//   "complex",
+//   "miketyson",
+//   "dimoffsl",
+//   "k.mbappe",
+//   "mr.daidadrupnaiaz",
+//   "prvt.stelka",
+//   "mitrevvvvv",
+//   "mihaylov681",
+//   "tonipetrov",
+//   "mekhtiev_v12",
+//   "freak.mma",
+//   "antonpetrovacademy",
+//   "blakehark777",
+//   "khamzat_chimaev",
+//   "factmafia",
+//   "valentingeorgievmt",
+//   "martin_petkov__",
+//   "seikowrld",
+//   "seventysaints.eu",
+//   "abos.whips",
+//   "shunakadsd",
+//   "code4web",
+//   "snowboard_jesus",
+//   "kristiankirilov13",
+//   "vokil2007",
+// ];
+
+// const LoginPage = () => {
+//   const [followers, setFollowers] = useState("");
+//   const [followersList, setFollowersList] = useState<any>("");
+//   const [followingList, setFollowingList] = useState<any>("");
+//   const [following, setFollowing] = useState("");
+//   const [nonFollowers, setNonFollowers] = useState<string[]>([]);
+
+//   const handleSubmit = () => {
+//     getUsernames(followers, setFollowersList);
+//     getUsernames(following, setFollowingList);
+
+//     const notFollowingBack: any = followingList.filter(
+//       (user: any) => !followersList.includes(user)
+//     );
+
+//     setNonFollowers(forDamyandt(notFollowingBack));
+//   };
+
+//   const getUsernames = (value: any, setter: any) => {
+//     const regex = /href="\/([^\/]+)\/"/g;
+//     const matches = [...value.matchAll(regex)];
+//     const extractedUsernames = [...new Set(matches.map((match) => match[1]))]; // Remove duplicates
+//     setter(extractedUsernames);
+//   };
+
+//   useEffect(() => {
+//     console.log(followersList);
+//     console.log(followingList);
+//   }, [followersList, followingList]);
+
+//   const forDamyandt = (dontFollowMe: any) => {
+//     let dontFollowMeEdited = [];
+//     for (let person of dontFollowMe) {
+//       if (!damyandtExeptions.includes(person)) {
+//         dontFollowMeEdited.push(person);
+//       }
+//     }
+
+//     return dontFollowMeEdited;
+//   };
+
+//   return (
+//     <Container maxWidth="sm" sx={{ mt: 6 }}>
+//       <Card elevation={4} sx={{ borderRadius: 3 }}>
+//         <CardContent>
+//           <Typography variant="h5" gutterBottom align="center">
+//             Instagram – Who Doesn't Follow You Back
+//           </Typography>
+
+//           <Box display="flex" flexDirection="column" gap={3} mt={2}>
+//             <TextField
+//               label="Followers"
+//               multiline
+//               rows={5}
+//               variant="outlined"
+//               value={followers}
+//               onChange={(e) => setFollowers(e.target.value)}
+//               fullWidth
+//             />
+//             <TextField
+//               label="Following"
+//               multiline
+//               rows={5}
+//               variant="outlined"
+//               value={following}
+//               onChange={(e) => setFollowing(e.target.value)}
+//               fullWidth
+//             />
+//             <Button
+//               variant="contained"
+//               size="large"
+//               onClick={handleSubmit}
+//               sx={{ borderRadius: 2 }}
+//             >
+//               Check
+//             </Button>
+//           </Box>
+
+//           <Box mt={4}>
+//             <Typography variant="h6" gutterBottom>
+//               Not Following You Back:
+//             </Typography>
+
+//             {nonFollowers.length > 0 ? (
+//               <List dense>
+//                 {nonFollowers.map((user, index) => (
+//                   <ListItem key={index} sx={{ pl: 0 }}>
+//                     <ListItemText primary={`• ${user}`} />
+//                   </ListItem>
+//                 ))}
+//               </List>
+//             ) : (
+//               <Typography color="text.secondary">
+//                 Everyone you follow is following you back 🎉
+//               </Typography>
+//             )}
+//           </Box>
+//         </CardContent>
+//       </Card>
+//     </Container>
+//   );
+// };
+
+// export default LoginPage;

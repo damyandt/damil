@@ -87,10 +87,10 @@ const FiltersModal: React.FC<SearchModalProps> = ({
             {Object.entries(flatData).map(([field, values]) => (
               <Box key={field} sx={{ mb: 1 }}>
                 <Typography
-                  variant="subtitle2"
+                  variant="subtitle1"
                   sx={{ fontWeight: 600, mb: 1.5 }}
                 >
-                  {field}:
+                  {field.charAt(0).toUpperCase() + field.slice(1)}
                 </Typography>
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                   {Object.entries(values as Record<string, number>).map(

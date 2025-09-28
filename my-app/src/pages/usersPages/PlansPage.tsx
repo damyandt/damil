@@ -11,6 +11,7 @@ import { useState } from "react";
 import { shiftHue } from "../Home/Home";
 import PlanCard from "./PlanCard";
 import { keyframes } from "@mui/system";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 const float = keyframes`
   0%   { transform: translateY(0px); }
@@ -19,58 +20,127 @@ const float = keyframes`
 `;
 const PricingPage = () => {
   const theme = useTheme();
+  const { t } = useLanguageContext();
   const [period, setPeriod] = useState<"monthly" | "yearly">("monthly");
+  // const plans = [
+  //   {
+  //     name: t("Starter"),
+  //     price: "€29",
+  //     priceYear: "€299",
+  //     description: "Идеален за малки фитнеси и индивидуални треньори.",
+  //     color: shiftHue(darken(theme.palette.primary.main, 0.2), -50),
+  //     features: [
+  //       "До 100 активни потребители",
+  //       "Система за чек-ин и присъствие",
+  //       "Преглед на клиентски профили и история",
+  //       "Основни статистики и анализи",
+  //       "Уеб достъп от всяко устройство",
+  //     ],
+  //     buttonText: "Започни сега",
+  //     active: false,
+  //   },
+  //   // {
+  //   //   name: "Basic",
+  //   //   price: "99.99",
+  //   //   priceYear: "999.99",
+  //   //   description: t("."),
+  //   //   color: shiftHue(darken(theme.palette.primary.main, 0.2), -50),
+
+  //   //   features: [
+  //   //     "Store up to 20 songs",
+  //   //     "2 collaborators",
+  //   //     "Unlimited shares",
+  //   //     "128-bit AES encryption",
+  //   //     "Mac, Android, Browser",
+  //   //   ],
+  //   //   buttonText: "Get Started Free",
+  //   //   active: false,
+  //   // },
+  //   {
+  //     name: "Standart",
+  //     price: "$15",
+  //     priceYear: "$165",
+  //     description: "Ideal for individual creators.",
+  //     color: theme.palette.primary.main,
+  //     features: [
+  //       "Everything in Basic",
+  //       "250GB of song storage",
+  //       "250GB of asset storage",
+  //       "2 collaborators",
+  //       "Password protection",
+  //     ],
+  //     buttonText: "Standart",
+  //     active: true,
+  //   },
+  //   {
+  //     name: "Professional",
+  //     price: "$25",
+  //     priceYear: "$275",
+  //     description: "Small teams with up to 10 users.",
+  //     color: shiftHue(darken(theme.palette.primary.main, 0.2), 50),
+  //     features: [
+  //       "Everything in Professional",
+  //       "Shared team workspace",
+  //       "Custom storage plans",
+  //       "Custom branding by team",
+  //     ],
+  //     buttonText: "Get Professional",
+  //     active: false,
+  //   },
+  // ];
   const plans = [
     {
-      name: "Basic",
-      price: "Free",
-      priceYear: "Free",
-      description: "Free plan for all users.",
+      name: "Starter",
+      price: "$29",
+      priceYear: "$299",
+      description: "Perfect for small gyms and personal trainers.",
       color: shiftHue(darken(theme.palette.primary.main, 0.2), -50),
-
       features: [
-        "Store up to 20 songs",
-        "2 collaborators",
-        "Unlimited shares",
-        "128-bit AES encryption",
-        "Mac, Android, Browser",
+        "Up to 100 active members",
+        "Check-in and attendance tracking",
+        "View client profiles and history",
+        "Basic analytics and reports",
+        "Access from any device (web & mobile)",
       ],
-      buttonText: "Get Started Free",
+      buttonText: "Get Started",
       active: false,
     },
     {
-      name: "Standart",
-      price: "$15",
-      priceYear: "$165",
-      description: "Ideal for individual creators.",
+      name: "Growth",
+      price: "$59",
+      priceYear: "$599",
+      description: "Best choice for growing gyms with more clients and staff.",
       color: theme.palette.primary.main,
       features: [
-        "Everything in Basic",
-        "250GB of song storage",
-        "250GB of asset storage",
-        "2 collaborators",
-        "Password protection",
+        "Everything in Starter",
+        "Unlimited members",
+        "Staff and roles management module",
+        "Detailed analytics and performance insights",
+        "Customizable client profiles",
+        "Email notifications and automation",
       ],
-      buttonText: "Standart",
+      buttonText: "Choose Growth",
       active: true,
     },
     {
-      name: "Professional",
-      price: "$25",
-      priceYear: "$275",
-      description: "Small teams with up to 10 users.",
+      name: "Pro",
+      price: "$99",
+      priceYear: "$999",
+      description:
+        "All-in-one solution for gym chains and large fitness centers.",
       color: shiftHue(darken(theme.palette.primary.main, 0.2), 50),
       features: [
-        "Everything in Professional",
-        "Shared team workspace",
-        "Custom storage plans",
-        "Custom branding by team",
+        "Everything in Growth",
+        "Multi-location support",
+        "Custom branding with your logo and colors",
+        "API access and third-party integrations",
+        "24/7 priority support",
+        "Advanced analytics and custom reporting",
       ],
-      buttonText: "Get Professional",
+      buttonText: "Upgrade to Pro",
       active: false,
     },
   ];
-
   return (
     <Box
       sx={{
@@ -137,7 +207,7 @@ const PricingPage = () => {
                   transform: "scale(1.05)",
                 },
                 animation:
-                  plan.name === "Professional"
+                  plan.name === "Pro"
                     ? `${float} 3s ease-in-out infinite`
                     : "none",
               }}

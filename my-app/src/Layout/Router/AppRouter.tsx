@@ -20,6 +20,8 @@ import SubscriptionPlans from "../../pages/Configurations/SubscriptionPlans";
 import { getRolesForPage } from "../AppNavigation/PageRoles";
 import MembersHome from "../../pages/Home/MembersHome";
 import AccountCredentials from "../../components/pageComponents/UserComponents/AccountCredentials";
+import path from "path";
+import SuccessPayment from "../../pages/usersPages/SuccessPayment";
 export const createAppRouter = (
   userType:
     | "Facility Member"
@@ -125,6 +127,12 @@ const allRoutes = (role: string) => {
     {
       path: "/account/change-credentials",
       element: <AccountCredentials />,
+    },
+
+    // Stripe
+    {
+      path: "/success",
+      element: <SuccessPayment />,
     },
   ];
 };

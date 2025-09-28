@@ -295,7 +295,7 @@ const HomePage: React.FC = () => {
                   </Grid>
                 );
               })}
-              <Grid size={12}>
+              {/* <Grid size={12}>
                 <Box
                   sx={{
                     p: 2,
@@ -306,7 +306,7 @@ const HomePage: React.FC = () => {
                 >
                   <ChartDisplay />
                 </Box>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Grid>
         </Grid>
