@@ -34,6 +34,7 @@ const IncompleteProfileModal = () => {
     authedUser,
     setAuthedUser,
     preferences,
+    setRefreshUserData,
   } = useAuthedContext();
   const { themeMode, setThemeMode, setPrimaryColor, primaryColor } =
     useCustomThemeProviderContext();
@@ -119,6 +120,7 @@ const IncompleteProfileModal = () => {
         });
         info.success === true && setStep(2);
         info.success === true && setErrors({});
+        info.success === true && setRefreshUserData(true);
         info.success === false && setErrors(info.validationErrors || {});
       } else if (step === 2) {
         const preferencesInfo = await callApi<Response<any>>({
@@ -129,6 +131,7 @@ const IncompleteProfileModal = () => {
         localStorage.setItem("themeMode", preferancesData.mode);
         localStorage.setItem("themeColor", preferancesData.themeColor);
         preferencesInfo.success === true && setStep(3);
+        preferencesInfo.success === true && setRefreshUserData(true);
       } else {
         navigate("DAMIL-Configurations/Member-Plans");
       }

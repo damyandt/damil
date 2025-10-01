@@ -202,7 +202,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
         <Box component="div" sx={styles.profile}>
           <Avatar
             alt={authedUser?.username}
-            src="/profile.jpeg"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbdebOgP53gHBxhUq8q1aorTto0oZGDQUt-QePP2ZCpobec1kW-hS0u-TEIne27gTxhrI&usqp=CAU"
             sx={{ width: 40, height: 40, ml: "0.4em", cursor: "pointer" }}
             onClick={(event: any) => {
               if (openLeftNav) {
@@ -235,7 +235,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
                 {authedUser?.lastName}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {authedUser.roles.join(", ")}
+                {authedUser?.roles?.join(", ")}
               </Typography>
             </Box>
             <Box sx={{ display: "flex" }}>

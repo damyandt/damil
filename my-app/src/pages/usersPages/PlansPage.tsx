@@ -20,74 +20,7 @@ const float = keyframes`
 `;
 const PricingPage = () => {
   const theme = useTheme();
-  const { t } = useLanguageContext();
-  const [period, setPeriod] = useState<"monthly" | "yearly">("monthly");
-  // const plans = [
-  //   {
-  //     name: t("Starter"),
-  //     price: "€29",
-  //     priceYear: "€299",
-  //     description: "Идеален за малки фитнеси и индивидуални треньори.",
-  //     color: shiftHue(darken(theme.palette.primary.main, 0.2), -50),
-  //     features: [
-  //       "До 100 активни потребители",
-  //       "Система за чек-ин и присъствие",
-  //       "Преглед на клиентски профили и история",
-  //       "Основни статистики и анализи",
-  //       "Уеб достъп от всяко устройство",
-  //     ],
-  //     buttonText: "Започни сега",
-  //     active: false,
-  //   },
-  //   // {
-  //   //   name: "Basic",
-  //   //   price: "99.99",
-  //   //   priceYear: "999.99",
-  //   //   description: t("."),
-  //   //   color: shiftHue(darken(theme.palette.primary.main, 0.2), -50),
-
-  //   //   features: [
-  //   //     "Store up to 20 songs",
-  //   //     "2 collaborators",
-  //   //     "Unlimited shares",
-  //   //     "128-bit AES encryption",
-  //   //     "Mac, Android, Browser",
-  //   //   ],
-  //   //   buttonText: "Get Started Free",
-  //   //   active: false,
-  //   // },
-  //   {
-  //     name: "Standart",
-  //     price: "$15",
-  //     priceYear: "$165",
-  //     description: "Ideal for individual creators.",
-  //     color: theme.palette.primary.main,
-  //     features: [
-  //       "Everything in Basic",
-  //       "250GB of song storage",
-  //       "250GB of asset storage",
-  //       "2 collaborators",
-  //       "Password protection",
-  //     ],
-  //     buttonText: "Standart",
-  //     active: true,
-  //   },
-  //   {
-  //     name: "Professional",
-  //     price: "$25",
-  //     priceYear: "$275",
-  //     description: "Small teams with up to 10 users.",
-  //     color: shiftHue(darken(theme.palette.primary.main, 0.2), 50),
-  //     features: [
-  //       "Everything in Professional",
-  //       "Shared team workspace",
-  //       "Custom storage plans",
-  //       "Custom branding by team",
-  //     ],
-  //     buttonText: "Get Professional",
-  //     active: false,
-  //   },
-  // ];
+  const [period, setPeriod] = useState<"monthly" | "annual">("monthly");
   const plans = [
     {
       name: "Starter",
@@ -165,10 +98,10 @@ const PricingPage = () => {
           <FormControlLabel
             control={
               <Switch
-                checked={period === "yearly"}
+                checked={period === "annual"}
                 onChange={() =>
                   setPeriod((prev) =>
-                    prev === "monthly" ? "yearly" : "monthly"
+                    prev === "monthly" ? "annual" : "monthly"
                   )
                 }
                 color="primary"
@@ -176,7 +109,7 @@ const PricingPage = () => {
             }
             label={
               <Typography variant="body2" color="textSecondary">
-                {period === "yearly"
+                {period === "annual"
                   ? "Yearly billing (Save 1 Month)"
                   : "Monthly billing"}
               </Typography>

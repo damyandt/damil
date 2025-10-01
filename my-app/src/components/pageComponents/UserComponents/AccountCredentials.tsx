@@ -19,7 +19,7 @@ import TextField from "../../MaterialUI/FormFields/TextField";
 import Button from "../../MaterialUI/Button";
 
 const AccountCredentials = () => {
-  const { authedUser, setAuthedUser } = useAuthedContext();
+  const { authedUser, setAuthedUser, setRefreshUserData } = useAuthedContext();
   const navigate = useNavigate();
   const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
@@ -45,6 +45,7 @@ const AccountCredentials = () => {
         auth: { setAuthedUser },
       });
 
+      emailRes.success === true && setRefreshUserData(true);
       emailRes.success === true &&
         setSuccessEmail("Email updated successfully.");
       emailRes.success === false &&
@@ -72,6 +73,7 @@ const AccountCredentials = () => {
         }),
         auth: { setAuthedUser },
       });
+      passwordResp.success === true && setRefreshUserData(true);
 
       passwordResp.success === true &&
         setSuccessPassword("Password updated successfully.");

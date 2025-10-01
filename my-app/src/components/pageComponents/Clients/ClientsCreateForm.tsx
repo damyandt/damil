@@ -369,45 +369,100 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 p: 2,
                 mb: 3,
                 textAlign: "center",
-                background: (theme) => theme.palette.success.light,
+                background: (theme) => theme.palette.primary.main,
                 color: (theme) => theme.palette.success.contrastText,
-                borderRadius: 2,
+                borderRadius: 1,
               }}
             >
               <Typography variant="h5" fontWeight="bold">
-                {t("Total Price")}: ${subscriptionData.price || "0.00"}
+                {t("Total Price")}: {price.toFixed() || "0.00"}{" "}
+                {preferences.currency || "EUR"}
               </Typography>
             </Paper>
 
             {/* Confirmation Text */}
-            <Typography variant="body1" sx={{ mb: 2 }}>
+            <Typography
+              variant="body1"
+              sx={{ mb: 2, textAlign: "center", width: "100%" }}
+            >
               {t("Are you sure you want to add this subscription to")}{" "}
               {formData.firstName || "this user"} {formData.lastName || ""}?
             </Typography>
 
             {/* Subscription Details */}
-            <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, mb: 3 }}>
-              <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                {t("Plan")}:{" "}
-                <Typography component="span" fontWeight="normal">
-                  {subscriptionData.subscriptionPlan}
-                </Typography>
-              </Typography>
+            <Grid container spacing={2}>
+              {/* Plan */}
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <Box
+                  sx={{
+                    p: 2,
+                    textAlign: "center",
+                    borderRadius: 3,
+                    border: "1px solid",
+                    borderColor: "divider",
+                    bgcolor: "background.default",
+                  }}
+                >
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ fontWeight: "bold", mb: 1 }}
+                  >
+                    {t("Plan")}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    {subscriptionData.subscriptionPlan}
+                  </Typography>
+                </Box>
+              </Grid>
 
-              <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                {t("Employment")}:{" "}
-                <Typography component="span" fontWeight="normal">
-                  {subscriptionData.employment}
-                </Typography>
-              </Typography>
+              {/* Employment */}
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <Box
+                  sx={{
+                    p: 2,
+                    textAlign: "center",
+                    borderRadius: 3,
+                    border: "1px solid",
+                    borderColor: "divider",
+                    bgcolor: "background.default",
+                  }}
+                >
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ fontWeight: "bold", mb: 1 }}
+                  >
+                    {t("Employment")}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    {subscriptionData.employment}
+                  </Typography>
+                </Box>
+              </Grid>
 
-              <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                {t("Payment Method")}:{" "}
-                <Typography component="span" fontWeight="normal">
-                  {paymentMethod}
-                </Typography>
-              </Typography>
-            </Paper>
+              {/* Payment Method */}
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <Box
+                  sx={{
+                    p: 2,
+                    textAlign: "center",
+                    borderRadius: 3,
+                    border: "1px solid",
+                    borderColor: "divider",
+                    bgcolor: "background.default",
+                  }}
+                >
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ fontWeight: "bold", mb: 1 }}
+                  >
+                    {t("Payment Method")}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    {paymentMethod}
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
           </>
         );
       default:

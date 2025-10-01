@@ -1,18 +1,4 @@
-// const flatData: any = {
-//   Gender: { male: 90, female: 10 },
-//   Employment: { regular: 50, student: 20, senior: 20, handicap: 10 },
-//   SubscriptionStatus: { active: 20, inactive: 80, pending: 5, cancelled: 5 },
-//   SubscriptionPlan: {
-//     visit_pass: 10,
-//     monthly: 25,
-//     day_pass: 15,
-//     weekly_pass: 10,
-//     biannual: 20,
-//     annual: 20,
-//   },
-// };
-
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   alpha,
   Box,
@@ -31,7 +17,6 @@ import { useNavigate } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useAuthedContext } from "../../context/AuthContext";
-import ChartDisplay from "./ChartsDisplayed";
 import CheckInModal from "./CheckInModal";
 import IncompleteProfileModal from "../../components/pageComponents/UserComponents/IncompleteModal";
 import SearchModal from "./SearchModal";
@@ -139,9 +124,10 @@ const HomePage: React.FC = () => {
           </Typography>
 
           <Typography variant="body2" color="#fff" mt={1}>
-            {authedUser?.subscriptionActive
-              ? `✅ ${t("Active Subscription")} · ${authedUser.membersCount} ${t("Member(s)")}`
-              : `🚫 ${t("No Active Subscription")}`}
+            {/* {authedUser?.abonnement */}
+            {/* ?  */}
+            `✅ ${t("Active Subscription")} · ${authedUser.membersCount} $
+            {t("Member(s)")}`{/* : `🚫 ${t("No Active Subscription")}`} */}
           </Typography>
         </Box>
         <Grid
@@ -279,7 +265,10 @@ const HomePage: React.FC = () => {
                         data={[
                           {
                             value: analyticsData[field]?.[value] ?? 0,
-                            name: descriptionMap(field, value, t),
+                            name: descriptionMap(field, value, t).replaceAll(
+                              "_",
+                              " "
+                            ),
                           },
                         ]}
                       />

@@ -118,7 +118,7 @@ const FiltersModal: React.FC<SearchModalProps> = ({
                             checked={tempSelected.includes(filterKey)}
                             size="small"
                           />
-                          <Typography variant="body2">{`${key}`}</Typography>
+                          <Typography variant="body2">{`${key.replaceAll("_", " ")}`}</Typography>
                         </Box>
                       );
                     }

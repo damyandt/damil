@@ -14,7 +14,7 @@ import PlanDetails from "./PlanDetails";
 
 interface PlanCardProps {
   plan: any;
-  period: string;
+  period: "monthly" | "annual";
 }
 
 const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
@@ -35,7 +35,6 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
           border: plan.active
             ? `2px solid ${theme.palette.mode === "dark" ? theme.palette.common.black : theme.palette.common.white}`
             : "none",
-          // backgroundColor: plan.color,
           background:
             plan.name === "Pro"
               ? `linear-gradient(90deg, ${colorStart}, ${colorEnd})`
@@ -172,7 +171,7 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
         title={"Details"}
         width={"lg"}
       >
-        <PlanDetails type={plan.name} />
+        <PlanDetails type={plan.name} period={period} />
       </CustomModal>
     </>
   );

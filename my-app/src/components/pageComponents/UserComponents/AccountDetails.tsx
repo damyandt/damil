@@ -100,85 +100,83 @@ const AccountDetails = () => {
           minHeight: 200,
         }}
       >
-        {editMode ? (
-          <Grid container spacing={2}>
-            {info.map((col) => (
-              <Grid size={6} key={col.field}>
-                {col.label === "Email and Password" ? (
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <TextField
-                      disabled
-                      fullWidth
-                      label={t("Email and Password")}
-                      value={`${formData?.email || ""} - ********`}
-                    />
-                    <CustomTooltip
-                      title={t("Change Email/Password")}
-                      placement="top"
-                    >
-                      <IconButton
-                        onClick={() => navigate("/account/change-credentials")}
-                      >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    </CustomTooltip>
-                  </Box>
-                ) : col.label === "Gender" ? (
+        {/* {editMode ? ( */}
+        <Grid container spacing={2}>
+          {info.map((col) => (
+            <Grid size={6} key={col.field}>
+              {col.label === "Email and Password" ? (
+                <Box display="flex" alignItems="center" gap={1}>
                   <TextField
-                    select
+                    disabled
                     fullWidth
-                    label={col.label}
-                    onChange={(e: any) =>
-                      handleChange(col.field, e.target.value)
-                    }
-                    value={formData ? formData[col.field as keyof User] : ""}
-                  >
-                    {[
-                      { title: "Male", value: "MALE" },
-                      { title: "Female", value: "FEMALE" },
-                    ].map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.title}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                ) : (
-                  <TextField
-                    fullWidth
-                    label={col.label}
-                    onChange={(e: any) =>
-                      handleChange(col.field, e.target.value)
-                    }
-                    value={formData ? formData[col.field as keyof User] : ""}
+                    label={t("Email and Password")}
+                    value={`${formData?.email || ""} - ********`}
                   />
-                )}
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Grid container spacing={3}>
-            {info.map((col: { label: string; field: string }) => (
-              <Grid size={6} key={col.field}>
-                <Typography variant="subtitle2" color="text.secondary">
-                  {col.label}
-                </Typography>
-                <CellRenderer
-                  fontWeight={400}
-                  key={col.field}
-                  value={
-                    formData
-                      ? col.field === "email"
-                        ? `${formData[col.field as keyof User]} - ********`
-                        : formData[col.field as keyof User]
-                      : ""
-                  }
-                  dataType={col.label === "Gender" ? "dropdown" : "string"}
-                  table={false}
+                  <CustomTooltip
+                    title={t("Change Email/Password")}
+                    placement="top"
+                  >
+                    <IconButton
+                      onClick={() => navigate("/account/change-credentials")}
+                    >
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                  </CustomTooltip>
+                </Box>
+              ) : col.label === "Gender" ? (
+                <TextField
+                  select
+                  fullWidth
+                  label={col.label}
+                  disabled={!editMode}
+                  onChange={(e: any) => handleChange(col.field, e.target.value)}
+                  value={formData ? formData[col.field as keyof User] : ""}
+                >
+                  {[
+                    { title: "Male", value: "MALE" },
+                    { title: "Female", value: "FEMALE" },
+                  ].map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.title}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              ) : (
+                <TextField
+                  fullWidth
+                  label={col.label}
+                  disabled={!editMode}
+                  onChange={(e: any) => handleChange(col.field, e.target.value)}
+                  value={formData ? formData[col.field as keyof User] : ""}
                 />
-              </Grid>
-            ))}
-          </Grid>
-        )}
+              )}
+            </Grid>
+          ))}
+        </Grid>
+        {/* // ) : (
+        //   <Grid container spacing={3}>
+        //     {info.map((col: { label: string; field: string }) => (
+        //       <Grid size={6} key={col.field}>
+        //         <Typography variant="subtitle2" color="text.secondary">
+        //           {col.label}
+        //         </Typography>
+        //         <CellRenderer
+        //           fontWeight={400}
+        //           key={col.field}
+        //           value={
+        //             formData
+        //               ? col.field === "email"
+        //                 ? `${formData[col.field as keyof User]} - ********`
+        //                 : formData[col.field as keyof User]
+        //               : ""
+        //           }
+        //           dataType={col.label === "Gender" ? "dropdown" : "string"}
+        //           table={false}
+        //         />
+        //       </Grid>
+        //     ))}
+        //   </Grid>
+        // )} */}
       </Box>
     </Box>
   );

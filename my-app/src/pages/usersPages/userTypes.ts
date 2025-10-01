@@ -12,14 +12,10 @@ export type User = {
   city?: string;
   birthDate?: Dayjs | null;
   createdAt?: string;
-  // created_at?: Date;
+  abonnement?: "Starter" | "Growth" | "Pro" | null;
   membersCount?: number;
   subscriptionActive?: boolean;
   roles: Array<
     "Facility Member" | "Facility Admin" | "System Admin" | "Facility Staff"
   >;
 };
-
-// export type Business = {
-
-// }
