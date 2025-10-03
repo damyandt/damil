@@ -11,7 +11,6 @@ import { useState } from "react";
 import { shiftHue } from "../Home/Home";
 import PlanCard from "./PlanCard";
 import { keyframes } from "@mui/system";
-import { useLanguageContext } from "../../context/LanguageContext";
 
 const float = keyframes`
   0%   { transform: translateY(0px); }
@@ -23,7 +22,7 @@ const PricingPage = () => {
   const [period, setPeriod] = useState<"monthly" | "annual">("monthly");
   const plans = [
     {
-      name: "Starter",
+      name: "STARTER",
       price: "$29",
       priceYear: "$299",
       description: "Perfect for small gyms and personal trainers.",
@@ -39,7 +38,7 @@ const PricingPage = () => {
       active: false,
     },
     {
-      name: "Growth",
+      name: "GROWTH",
       price: "$59",
       priceYear: "$599",
       description: "Best choice for growing gyms with more clients and staff.",
@@ -56,7 +55,7 @@ const PricingPage = () => {
       active: true,
     },
     {
-      name: "Pro",
+      name: "PRO",
       price: "$99",
       priceYear: "$999",
       description:
@@ -140,7 +139,7 @@ const PricingPage = () => {
                   transform: "scale(1.05)",
                 },
                 animation:
-                  plan.name === "Pro"
+                  plan.name === "PRO"
                     ? `${float} 3s ease-in-out infinite`
                     : "none",
               }}

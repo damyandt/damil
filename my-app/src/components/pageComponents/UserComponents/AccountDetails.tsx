@@ -103,7 +103,7 @@ const AccountDetails = () => {
         {/* {editMode ? ( */}
         <Grid container spacing={2}>
           {info.map((col) => (
-            <Grid size={6} key={col.field}>
+            <Grid size={{ xs: 12, sm: 6 }} key={col.field}>
               {col.label === "Email and Password" ? (
                 <Box display="flex" alignItems="center" gap={1}>
                   <TextField

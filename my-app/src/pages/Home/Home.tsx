@@ -124,11 +124,13 @@ const HomePage: React.FC = () => {
           </Typography>
 
           <Typography variant="body2" color="#fff" mt={1}>
-            {/* {authedUser?.abonnement */}
-            {/* ?  */}
-            `✅ ${t("Active Subscription")} · ${authedUser.membersCount} $
-            {t("Member(s)")}`{/* : `🚫 ${t("No Active Subscription")}`} */}
+            ✅ {t("Active Subscription")} · {t("PRO")} · {172} {t("Member(s)")}
           </Typography>
+          {/* <Typography variant="body2" color="#fff" mt={1}>
+            {authedUser?.abonnement
+              ? `✅ ${t("Active Subscription")} · ${t(authedUser.abonnement)} · ${authedUser.membersCount} ${t("Member(s)")}`
+              : `🚫 ${t("No Active Subscription")}`}
+          </Typography> */}
         </Box>
         <Grid
           container

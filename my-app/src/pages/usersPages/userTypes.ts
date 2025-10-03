@@ -12,7 +12,7 @@ export type User = {
   city?: string;
   birthDate?: Dayjs | null;
   createdAt?: string;
-  abonnement?: "Starter" | "Growth" | "Pro" | null;
+  abonnement?: "STARTER" | "GROWTH" | "PRO" | null;
   membersCount?: number;
   subscriptionActive?: boolean;
   roles: Array<

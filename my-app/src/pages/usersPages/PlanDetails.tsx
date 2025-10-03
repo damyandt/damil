@@ -8,18 +8,18 @@ import callApi from "../../API/callApi";
 import { stripePaymentIntent } from "./api/postQuery";
 
 interface PlanDetailsProps {
-  type: "Starter" | "Growth" | "Pro";
+  type: "STARTER" | "GROWTH" | "PRO";
   period: "monthly" | "annual";
 }
 
 const planData = {
-  Starter: {
+  STARTER: {
     headline: "Kickstart Your Gym’s Digital Journey",
     description:
       "All the essential tools you need to manage clients, track attendance, and keep your fitness business organized — perfect for small gyms and personal trainers.",
     icon: <FitnessCenterIcon sx={{ mr: 1, fontSize: 32 }} />,
   },
-  Growth: {
+  GROWTH: {
     headline: "Grow Your Gym With Powerful Tools",
     description:
       "Take your business to the next level with unlimited members, staff management, detailed analytics, and automation. Everything you need to scale your fitness operations with ease.",
@@ -27,7 +27,7 @@ const planData = {
       <RocketLaunchIcon sx={{ mr: 1, fontSize: 32, color: "primary.main" }} />
     ),
   },
-  Pro: {
+  PRO: {
     headline: "The Ultimate Solution for Fitness Businesses",
     description:
       "Unlock advanced analytics, multi-location support, custom branding, and API integrations. Designed for gym chains and large fitness centers that want complete control and top-tier performance.",
@@ -70,9 +70,9 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({ type, period }) => {
           variant="h4"
           sx={{ fontWeight: 700 }}
           color={
-            type === "Growth"
+            type === "GROWTH"
               ? "primary"
-              : type === "Pro"
+              : type === "PRO"
                 ? "secondary"
                 : "text.primary"
           }
@@ -93,7 +93,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({ type, period }) => {
 
       <Box width={"100%"} display={"flex"} justifyContent={"flex-end"}>
         <Button
-          color={type === "Pro" ? "secondary" : "primary"}
+          color={type === "PRO" ? "secondary" : "primary"}
           sx={{ py: 1.5 }}
           onClick={redirect}
         >

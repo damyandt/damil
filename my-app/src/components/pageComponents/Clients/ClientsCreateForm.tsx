@@ -25,7 +25,6 @@ import {
 } from "../../../pages/Access Control/API/getQueries";
 import Alert from "../../MaterialUI/Alert";
 import DatePickerComponent from "../../MaterialUI/FormFields/DatePicker";
-import CustomModal from "../../MaterialUI/Modal";
 import {
   Column,
   Enum,
@@ -53,7 +52,6 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
 }) => {
   const { setAuthedUser, preferences } = useAuthedContext();
   const { t } = useLanguageContext();
-  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [options, setOptions] = useState<EnumMap>({});
   const [loading, setLoading] = useState<boolean>(false);
@@ -105,7 +103,6 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
         query: postSubscription(subscriptionData, id),
         auth: { setAuthedUser },
       });
-      setOpenConfirm(false);
       setModalTitle(null);
       setRefreshTable && setRefreshTable((prev: boolean) => !prev);
     }

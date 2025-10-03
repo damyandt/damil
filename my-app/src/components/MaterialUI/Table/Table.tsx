@@ -18,10 +18,11 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
+//https://png.pngtree.com/png-vector/20250320/ourlarge/pngtree-no-data-concept-illustration-featuring-an-empty-folder-error-message-and-png-image_15773302.png
 import CustomTooltip from "../CustomTooltip";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CellRenderer from "./CellRenderer";
-
+import InboxIcon from "@mui/icons-material/Inbox";
 import { MenuActions } from "./MenuActions";
 import PaginationControls from "./PaginationControls";
 import TextField from "../FormFields/TextField";
@@ -247,14 +248,43 @@ const TableComponent = ({
             </TableHead>
             <TableBody>
               {paginatedRows.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    align="center"
-                    sx={{ borderBottom: "none", border: "none" }}
+                <TableCell
+                  colSpan={columns.length}
+                  align="center"
+                  // sx={{ py: 6 }}
+                  sx={{
+                    position: "relative",
+                    borderBottom: "none",
+                    backgroundColor: theme.palette.customColors?.tableRow,
+                    transition: "background-color 0.3s ease",
+                    boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+                    "&:hover": {
+                      backgroundColor:
+                        theme.palette.mode === "dark"
+                          ? "rgba(96, 96, 96, 0.78)"
+                          : "#fff",
+                      cursor: "pointer",
+                      // transform: "scale(0.99)",
+                      zIndex: 10,
+                      position: "relative",
+                    },
+                  }}
+                >
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    gap={2}
                   >
-                    <Typography>{t("No Data...")}</Typography>
-                  </TableCell>
-                </TableRow>
+                    <InboxIcon sx={{ fontSize: 60, color: "text.disabled" }} />
+                    <Typography variant="h6" color="text.secondary">
+                      {t("No Data Available")}
+                    </Typography>
+                    <Typography variant="body2" color="text.disabled">
+                      {t("There are no records to display yet.")}
+                    </Typography>
+                  </Box>
+                </TableCell>
               ) : (
                 paginatedRows?.map((row: Row) => {
                   const isDeleting = isRowDeleting(row.id);
@@ -276,6 +306,7 @@ const TableComponent = ({
                       key={row.id}
                       sx={{
                         position: "relative",
+                        borderBottom: "none",
                         backgroundColor: isDeleting
                           ? theme.palette.mode === "dark"
                             ? "#5a2a2a"
@@ -303,7 +334,11 @@ const TableComponent = ({
                           <TableCell
                             align={col.align}
                             key={col.field}
-                            sx={{ borderBottom: "none", border: "none" }}
+                            sx={{
+                              borderBottom: "none",
+                              border: "none",
+                              borderRight: "none",
+                            }}
                           >
                             <CellRenderer
                               key={col.field}

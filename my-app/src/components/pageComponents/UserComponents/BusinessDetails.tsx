@@ -75,7 +75,7 @@ const BusinessDetails = () => {
   };
 
   return (
-    <Box>
+    <Box width={"100%"}>
       <Box
         component={"div"}
         display={"flex"}
@@ -105,38 +105,38 @@ const BusinessDetails = () => {
       </Box>
 
       <Box sx={{ minHeight: 200 }}>
-        {editMode ? (
-          <Grid container spacing={2}>
-            {info.map((col) => (
-              <Grid size={6} key={col.field}>
-                <TextField
-                  disabled={col.field === "businessEmail"}
-                  fullWidth
-                  label={col.label}
-                  onChange={(e: any) => handleChange(col.field, e.target.value)}
-                  value={formData ? formData[col.field] || "" : ""}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Grid container spacing={3}>
-            {info.map((col) => (
-              <Grid size={6} key={col.field}>
-                <Typography variant="subtitle2" color="text.secondary">
-                  {col.label}
-                </Typography>
-                <CellRenderer
-                  fontWeight={400}
-                  key={col.field}
-                  value={formData ? formData[col.field] || "" : ""}
-                  dataType="string"
-                  table={false}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        )}
+        {/* {editMode ? ( */}
+        <Grid container spacing={2}>
+          {info.map((col) => (
+            <Grid size={{ xs: 12, sm: 6 }} key={col.field}>
+              <TextField
+                disabled={col.field === "businessEmail" || !editMode}
+                fullWidth
+                label={col.label}
+                onChange={(e: any) => handleChange(col.field, e.target.value)}
+                value={formData ? formData[col.field] || "" : ""}
+              />
+            </Grid>
+          ))}
+        </Grid>
+        {/* // ) : (
+        //   <Grid container spacing={3}>
+        //     {info.map((col) => (
+        //       <Grid size={6} key={col.field}>
+        //         <Typography variant="subtitle2" color="text.secondary">
+        //           {col.label}
+        //         </Typography>
+        //         <CellRenderer
+        //           fontWeight={400}
+        //           key={col.field}
+        //           value={formData ? formData[col.field] || "" : ""}
+        //           dataType="string"
+        //           table={false}
+        //         />
+        //       </Grid>
+        //     ))}
+        //   </Grid>
+        // )} */}
       </Box>
     </Box>
   );

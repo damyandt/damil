@@ -36,7 +36,7 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
             ? `2px solid ${theme.palette.mode === "dark" ? theme.palette.common.black : theme.palette.common.white}`
             : "none",
           background:
-            plan.name === "Pro"
+            plan.name === "PRO"
               ? `linear-gradient(90deg, ${colorStart}, ${colorEnd})`
               : theme.palette.mode === "dark"
                 ? "linear-gradient(160deg, #0e0b1d 0%, #1b1433 100%)"
@@ -52,14 +52,16 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
           sx={{
             display: "flex",
             flexDirection: "column",
+            width: "100%",
             height: "100%",
             color:
-              plan.name === "Pro" ? "#ffffffff" : theme.palette.common.black,
+              plan.name === "PRO" ? "#ffffffff" : theme.palette.common.black,
           }}
         >
           <Box
             component={"div"}
             display={"flex"}
+            width={"100%"}
             justifyContent={"space-between"}
             textAlign={"center"}
             alignItems={"center"}
@@ -99,22 +101,30 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
             {plan.description}
           </Typography>
 
-          <Box gap={2} display={"flex"} flexDirection={"column"} my={2}>
-            {plan.features.map((feature: any, idx: any) => (
+          <Box gap={2} display="flex" flexDirection="column" my={2}>
+            {plan.features.map((feature: string, idx: number) => (
               <Box
                 key={idx}
-                display={"flex"}
+                display="flex"
                 gap={1}
-                textAlign={"center"}
-                alignItems={"center"}
+                alignItems="flex-start"
+                textAlign="left"
               >
-                <DoneIcon />
+                <DoneIcon
+                  sx={{
+                    mt: "2px", // slight vertical alignment tweak
+                    fontSize: "1rem",
+                    color: plan.name === "PRO" ? "#fff" : "inherit",
+                  }}
+                />
                 <Typography
-                  fontSize={"0.85rem"}
+                  fontSize="0.9rem"
+                  lineHeight={1.4}
                   sx={{
                     textDecoration: "underline",
-                    textDecorationThickness: "1px", // thinner line
+                    textDecorationThickness: "1px",
                     textUnderlineOffset: "4px",
+                    wordBreak: "break-word",
                   }}
                 >
                   {feature}
@@ -131,13 +141,12 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
                 setOpenDetails(true);
               }}
               sx={
-                plan.name === "Pro"
+                plan.name === "PRO"
                   ? {
                       bgcolor: theme.palette.common.white,
                       color: theme.palette.common.black,
                       fontWeight: "bold",
                       borderRadius: 2,
-                      // textTransform: "none",
                       transition:
                         "ease 0.4s color, ease 0.4s background-color, transform 0.4s ease ",
                       "&:hover": {
