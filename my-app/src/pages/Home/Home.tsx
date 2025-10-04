@@ -53,7 +53,7 @@ export const shiftHue = (color: string, amount: number) =>
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [analyticsData, setAnalyticsData] = useState<any>(null);
-  const { authedUser, preferences, setAuthedUser } = useAuthedContext();
+  const { authedUser, preferences, setAuthedUser, tenant } = useAuthedContext();
   const [openCheckIn, setOpenCheckIn] = useState<boolean>(false);
   const [selectedFilters, setSelectedFilters] = useState<any>(
     preferences.homeFilters ?? [
@@ -100,7 +100,19 @@ const HomePage: React.FC = () => {
 
   return (
     <>
-      <Box sx={isMobile ? { p: 0 } : { p: 2 }}>
+      <Box
+        sx={
+          isMobile
+            ? { p: 0 }
+            : {
+                p: 2,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-around",
+                height: "100%",
+              }
+        }
+      >
         <Box
           sx={{
             textAlign: "center",
@@ -114,24 +126,62 @@ const HomePage: React.FC = () => {
           }}
         >
           <Typography variant="h2" fontWeight={700} color="#fff">
-            📋 {t("Dashboard")} – {authedUser?.username}
+            {t("Dashboard")} – {tenant?.name}
           </Typography>
 
           <Typography variant="subtitle1" color="#fff" mt={1}>
-            {authedUser?.email}
-            {authedUser?.city && ` · ${authedUser.city}`}
-            {authedUser?.phone && ` · ${authedUser.phone}`}
+            {tenant?.businessEmail}
+            {tenant?.address && ` · ${tenant.address}`}
           </Typography>
 
-          <Typography variant="body2" color="#fff" mt={1}>
-            ✅ {t("Active Subscription")} · {t("PRO")} · {172} {t("Member(s)")}
-          </Typography>
-          {/* <Typography variant="body2" color="#fff" mt={1}>
-            {authedUser?.abonnement
-              ? `✅ ${t("Active Subscription")} · ${t(authedUser.abonnement)} · ${authedUser.membersCount} ${t("Member(s)")}`
-              : `🚫 ${t("No Active Subscription")}`}
-          </Typography> */}
+          {/* Active Subscription Info */}
+          {tenant?.abonnement ? (
+            <Grid container spacing={2} justifyContent="center" mt={2}>
+              <Grid size={{ xs: 10, sm: 5, md: 4 }}>
+                <Box
+                  sx={{
+                    backgroundColor: "rgba(255, 255, 255, 0.15)",
+                    borderRadius: "12px",
+                    p: 2,
+                    boxShadow: `0 4px 10px ${alpha("#000", 0.15)}`,
+                    backdropFilter: "blur(6px)",
+                    color: "#fff",
+                    transition: "transform 0.3s ease",
+                    "&:hover": { transform: "scale(0.98)" },
+                  }}
+                >
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    {t("Active Subscription")} · {t(tenant.abonnement)}
+                  </Typography>
+                </Box>
+              </Grid>
+
+              <Grid size={{ xs: 10, sm: 5, md: 4 }}>
+                <Box
+                  sx={{
+                    backgroundColor: "rgba(255, 255, 255, 0.15)",
+                    borderRadius: "12px",
+                    p: 2,
+                    boxShadow: `0 4px 10px ${alpha("#000", 0.15)}`,
+                    backdropFilter: "blur(6px)",
+                    color: "#fff",
+                    transition: "transform 0.3s ease",
+                    "&:hover": { transform: "scale(0.98)" },
+                  }}
+                >
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    {tenant.membersCount} · {t("Member(s)")}
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          ) : (
+            <Typography variant="body2" color="#fff" mt={1}>
+              {t("No Active Subscription")}
+            </Typography>
+          )}
         </Box>
+
         <Grid
           container
           spacing={2}
@@ -139,15 +189,37 @@ const HomePage: React.FC = () => {
             p: 3,
             borderRadius: "20px",
             justifyContent: "flex-start",
-            // backgroundColor: theme.palette.customColors?.darkBackgroundColor,
             boxShadow: `inset ${theme.palette.customColors?.shodow}`,
+            height: "80%",
           }}
         >
-          <Grid size={12}>
-            <Typography variant="h6" gutterBottom textAlign={"center"}>
+          <Grid
+            size={12}
+            sx={{ display: "flex", justifyContent: "center", mb: 2 }}
+          >
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: "bold",
+                textTransform: "uppercase",
+                letterSpacing: 1,
+                position: "relative",
+                color: theme.palette.primary.main,
+                "&::after": {
+                  content: '""',
+                  display: "block",
+                  width: "60%",
+                  height: "3px",
+                  backgroundColor: theme.palette.primary.main,
+                  margin: "8px auto 0",
+                  borderRadius: "4px",
+                },
+              }}
+            >
               {t("Quick Actions")}
             </Typography>
           </Grid>
+
           <Grid size={{ xs: 12, md: 4 }}>
             <Button
               fullWidth
@@ -168,6 +240,7 @@ const HomePage: React.FC = () => {
               {t("Check In")}
             </Button>
           </Grid>
+
           <Grid size={{ xs: 12, md: 4 }}>
             <Button
               fullWidth
@@ -210,6 +283,7 @@ const HomePage: React.FC = () => {
             </Button>
           </Grid>
         </Grid>
+
         <Grid container spacing={3} pt={3}>
           <Grid size={12}>
             <Button

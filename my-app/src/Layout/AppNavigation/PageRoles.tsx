@@ -1,53 +1,85 @@
 import { LeftNavSingleItem } from "../layoutVariables";
 import { LEFT_NAV_SECTION } from "./leftNavData";
 
-export const pageRoles: Record<string, string[]> = {
+export const pageRoles: any = {
   // Home
-
-  "/": ["Facility Admin", "System Admin", "Facility Member"],
+  "/": {
+    roles: ["Facility Admin", "System Admin", "Facility Member"],
+    abonnement: ["ALL"],
+  },
 
   // DAMIL Analytics
-  "/DAMIL-Analytics/Overview": ["Facility Admin", "System Admin"],
-  "/DAMIL-Analytics/Visits": ["Facility Admin", "System Admin"],
-  "/DAMIL-Analytics/Goal": ["Facility Admin", "System Admin"],
-  "/DAMIL-Analytics/Ages": ["Facility Admin", "System Admin"],
-  "/DAMIL-Analytics/Memberships": ["Facility Admin", "System Admin"],
+  "/DAMIL-Analytics/Overview": {
+    roles: ["Facility Admin", "System Admin"],
+    abonnement: ["PRO"],
+  },
+  "/DAMIL-Analytics/Visits": {
+    roles: ["Facility Admin", "System Admin"],
+    abonnement: ["PRO"],
+  },
+  "/DAMIL-Analytics/Goal": {
+    roles: ["Facility Admin", "System Admin"],
+    abonnement: ["PRO"],
+  },
+  "/DAMIL-Analytics/Ages": {
+    roles: ["Facility Admin", "System Admin"],
+    abonnement: ["PRO"],
+  },
+  "/DAMIL-Analytics/Memberships": {
+    roles: ["Facility Admin", "System Admin"],
+    abonnement: ["PRO"],
+  },
 
   // DAMIL Access Control
-  "/DAMIL-Access-Control/All-Clients": [
-    "Facility Admin",
-    "System Admin",
-    "Facility Staff",
-  ],
-  "/DAMIL-Access-Control/All-Clients/:filter": [
-    "Facility Admin",
-    "System Admin",
-    "Facility Staff",
-  ],
-  "/DAMIL-Access-Control/Daily-Visitors": [
-    "Facility Admin",
-    "System Admin",
-    "Facility Staff",
-  ],
+  "/DAMIL-Access-Control/All-Clients": {
+    roles: ["Facility Admin", "System Admin", "Facility Staff"],
+    abonnement: ["BASIC", "GROWTH", "PRO"],
+  },
+  "/DAMIL-Access-Control/All-Clients/:filter": {
+    roles: ["Facility Admin", "System Admin", "Facility Staff"],
+    abonnement: ["BASIC", "GROWTH", "PRO"],
+  },
+  "/DAMIL-Access-Control/Daily-Visitors": {
+    roles: ["Facility Admin", "System Admin", "Facility Staff"],
+    abonnement: ["BASIC", "GROWTH", "PRO"],
+  },
 
   // DAMIL Staff Members
-  "/DAMIL-Staff/All": ["Facility Admin", "System Admin"],
-  "/DAMIL-Staff/Roles": ["Facility Admin", "System Admin"],
-  "/DAMIL-Staff/Shifts": ["Facility Admin", "System Admin"],
-  "/DAMIL-Staff/Events": ["Facility Admin", "Facility Staff", "System Admin"],
+  "/DAMIL-Staff/All": {
+    roles: ["Facility Admin", "System Admin"],
+    abonnement: ["PRO"],
+  },
+  "/DAMIL-Staff/Roles": {
+    roles: ["Facility Admin", "System Admin"],
+    abonnement: ["PRO"],
+  },
+  "/DAMIL-Staff/Shifts": {
+    roles: ["Facility Admin", "System Admin"],
+    abonnement: ["PRO"],
+  },
+  "/DAMIL-Staff/Events": {
+    roles: ["Facility Admin", "System Admin"],
+    abonnement: ["PRO"],
+  },
 
   // DAMIL Configurations
-  "/DAMIL-Configurations/Profile": ["ALL"],
-  "/DAMIL-Configurations/Member-Plans": ["Facility Admin", "System Admin"],
-  "/DAMIL-Configurations/Subscription-Plans": [
-    "Facility Admin",
-    "System Admin",
-  ],
-  "/account/change-credentials": ["ALL"],
+  "/DAMIL-Configurations/Profile": { roles: ["ALL"], abonnement: ["ALL"] },
+  "/DAMIL-Configurations/Member-Plans": {
+    roles: ["Facility Admin", "System Admin"],
+    abonnement: ["PRO"],
+  },
+  "/DAMIL-Configurations/Subscription-Plans": {
+    roles: ["Facility Admin", "System Admin"],
+    abonnement: ["PRO"],
+  },
+  "/account/change-credentials": { roles: ["ALL"], abonnement: ["ALL"] },
 };
 
 export const getRolesForPage = (url: string): string[] => {
-  return pageRoles[url] || ["ALL"];
+  return pageRoles[url]?.roles || ["ALL"];
+};
+export const getAbonnementsForPage = (url: string): string[] => {
+  return pageRoles[url]?.abonnement || ["ALL"];
 };
 
 export const filterNavByRole = (menu: LeftNavMenu[], userRole: any) => {
@@ -75,7 +107,36 @@ export const filterNavByRole = (menu: LeftNavMenu[], userRole: any) => {
   }));
 };
 
+export const filterNavByAbonnement = (
+  menu: LeftNavMenu[],
+  userAbonnement: string
+) => {
+  return menu.map((section) => ({
+    ...section,
+    list: section.list
+      .map((item) => ({
+        ...item,
+        nested: item.nested
+          ? item.nested.filter((nestedItem) => {
+              if (!nestedItem.url) return false;
+              const roles = getAbonnementsForPage(nestedItem.url);
+              return roles.includes(userAbonnement) || roles.includes("ALL");
+            })
+          : undefined,
+      }))
+      .filter((item) => {
+        if (!item.url && !item.nested?.length) return false;
+        if (item.url) {
+          const roles = getAbonnementsForPage(item.url);
+          return roles.includes(userAbonnement) || roles.includes("ALL");
+        }
+        return item.nested && item.nested.length > 0;
+      }),
+  }));
+};
+
 type LeftNavMenu = {
   title: keyof typeof LEFT_NAV_SECTION;
   list: LeftNavSingleItem[];
+  abonnement?: string[] | null;
 };

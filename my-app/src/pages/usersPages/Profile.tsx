@@ -127,9 +127,11 @@ const ProfilePage = () => {
           <Tab label={t("Account Details")} />
           <Tab label={t("Preferences")} />
           {!authedUser?.roles?.includes("Facility Member") && (
+            <Tab label={t("Subscription")} />
+          )}
+          {!authedUser?.roles?.includes("Facility Member") && (
             <Tab label={t("Business Details")} />
           )}
-          <Tab label={t("Subscription")} />
         </Tabs>
         <Grid
           size={{ xs: 12, sm: 10, lg: 8 }}
@@ -146,8 +148,7 @@ const ProfilePage = () => {
             <Box key={selectedTab} justifyContent={"center"} display={"flex"}>
               {selectedTab === 0 && <AccountDetails />}
               {selectedTab === 1 && <PreferencesDetails />}
-              {selectedTab === 2 && <BusinessDetails />}
-              {selectedTab === 3 && (
+              {selectedTab === 2 && (
                 <Grid size={{ xs: 12 }} width={"100%"}>
                   <Box
                     p={4}
@@ -213,6 +214,7 @@ const ProfilePage = () => {
                   </Box>
                 </Grid>
               )}
+              {selectedTab === 3 && <BusinessDetails />}
             </Box>
           </Slide>
         </Grid>

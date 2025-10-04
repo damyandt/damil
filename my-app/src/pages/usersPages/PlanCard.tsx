@@ -11,6 +11,7 @@ import { shiftHue } from "../Home/Home";
 import { useState } from "react";
 import CustomModal from "../../components/MaterialUI/Modal";
 import PlanDetails from "./PlanDetails";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 interface PlanCardProps {
   plan: any;
@@ -19,6 +20,7 @@ interface PlanCardProps {
 
 const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
   const [openDetails, setOpenDetails] = useState<boolean>(false);
+  const { t } = useLanguageContext();
   const theme = useTheme();
   const colorStart =
     theme.palette.mode === "dark"
@@ -86,13 +88,13 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
                   boxShadow: 1,
                 }}
               >
-                Current Plan
+                {t("Current Plan")}
               </Typography>
             )}
           </Box>
 
           <Typography variant="h2" fontWeight={600}>
-            {period === "monthly" ? plan.price : plan.priceYear}
+            ${period === "monthly" ? plan.price : plan.priceYear}
             <Typography component="span" variant="body1">
               {period === "monthly" ? "/month" : "/year"}
             </Typography>
@@ -180,7 +182,11 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
         title={"Details"}
         width={"lg"}
       >
-        <PlanDetails type={plan.name} period={period} />
+        <PlanDetails
+          type={plan.name}
+          period={period}
+          price={period === "monthly" ? plan.price : plan.priceYear}
+        />
       </CustomModal>
     </>
   );

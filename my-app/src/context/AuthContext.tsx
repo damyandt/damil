@@ -80,13 +80,15 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
   }, [refreshUserData]);
 
   const fetchPreferences = async () => {
-    const preferencesInfo = await callApi<Response<any>>({
-      query: getPreferences(),
-      auth: { setAuthedUser },
-    });
-    preferencesInfo.success &&
-      preferencesInfo.data.settings &&
-      setPreferences(preferencesInfo.data.settings);
+    if (!authedUser.roles?.includes("Facility Member")) {
+      const preferencesInfo = await callApi<Response<any>>({
+        query: getPreferences(),
+        auth: { setAuthedUser },
+      });
+      preferencesInfo.success &&
+        preferencesInfo.data.settings &&
+        setPreferences(preferencesInfo.data.settings);
+    }
   };
 
   const fetchTenant = async () => {

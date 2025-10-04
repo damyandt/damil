@@ -17,46 +17,72 @@ import ProfilePage from "../../pages/usersPages/Profile";
 import PlansPage from "../../pages/usersPages/PlansPage";
 import PageNotFound from "../../components/pageComponents/PageNotFound";
 import SubscriptionPlans from "../../pages/Configurations/SubscriptionPlans";
-import { getRolesForPage } from "../AppNavigation/PageRoles";
+import {
+  getAbonnementsForPage,
+  getRolesForPage,
+} from "../AppNavigation/PageRoles";
 import MembersHome from "../../pages/Home/MembersHome";
 import AccountCredentials from "../../components/pageComponents/UserComponents/AccountCredentials";
-import path from "path";
 import SuccessPayment from "../../pages/usersPages/SuccessPayment";
 export const createAppRouter = (
   userType:
     | "Facility Member"
     | "Facility Admin"
     | "System Admin"
-    | "Facility Staff"
+    | "Facility Staff",
+  abonnement: "PRO" | "BASIC" | "GROWTH" | null
 ) => {
-  const roleRoutes = getRoutesForRole(userType);
-  // const resolvedRoutes =
-  //   typeof roleRoutes === "function" ? roleRoutes() : roleRoutes;
+  let roleRoutes = getRoutesForRole(userType, abonnement);
+  const finalRoutes = getRoutesForAbonnement(userType, abonnement, roleRoutes);
   return createBrowserRouter([
     {
       path: "/",
       element: <Layout />,
       errorElement: <ErrorPage />,
-      children: [...roleRoutes, { path: "*", element: <PageNotFound /> }],
+      children: [...finalRoutes, { path: "*", element: <PageNotFound /> }],
     },
   ]);
 };
 
-const getRoutesForRole = (role: string) => {
-  if (role === "System Admin") return allRoutes(role);
-  const routes = allRoutes(role);
+const getRoutesForRole = (role: string, abonnement: string | null) => {
+  if (role === "System Admin") return allRoutes(role, abonnement);
+  const routes = allRoutes(role, abonnement);
   return routes.filter(
     (route) =>
       getRolesForPage(route.path!).includes(role) ||
       getRolesForPage(route.path!).includes("ALL")
   );
 };
+const getRoutesForAbonnement = (
+  role: string,
+  abonnement: string | null,
+  roleRoutes: any
+) => {
+  if (abonnement === "PRO") return roleRoutes;
+  // const routes = allRoutes(role, abonnement);
+  return roleRoutes.filter(
+    (route: any) =>
+      getAbonnementsForPage(route.path!).includes(role) ||
+      getAbonnementsForPage(route.path!).includes("ALL")
+  );
+};
 
-const allRoutes = (role: string) => {
+const allRoutes = (role: string, abonnement: string | null) => {
   return [
     {
       path: "/",
-      element: role === "Facility Member" ? <MembersHome /> : <HomePage />,
+      element:
+        //  abonnement ? (
+        role === "Facility Member" ? (
+          <MembersHome />
+        ) : abonnement ? (
+          <HomePage />
+        ) : (
+          <PlansPage />
+        ),
+      // ) : (
+      //   <PlansPage />
+      // ),
     },
     {
       path: "/DAMIL-Analytics/Overview",

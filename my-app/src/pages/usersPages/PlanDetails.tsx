@@ -10,6 +10,7 @@ import { stripePaymentIntent } from "./api/postQuery";
 interface PlanDetailsProps {
   type: "STARTER" | "GROWTH" | "PRO";
   period: "monthly" | "annual";
+  price: number;
 }
 
 const planData = {
@@ -37,14 +38,14 @@ const planData = {
   },
 };
 
-const PlanDetails: React.FC<PlanDetailsProps> = ({ type, period }) => {
+const PlanDetails: React.FC<PlanDetailsProps> = ({ type, period, price }) => {
   const { headline, description, icon } = planData[type];
   const { tenant } = useAuthedContext();
   const { setAuthedUser } = useAuthedContext();
   const redirect = async () => {
     try {
       const input = {
-        amount: 1000,
+        amount: price * 100,
         currency: "usd",
         plan: type,
         abonnementDuration: period,

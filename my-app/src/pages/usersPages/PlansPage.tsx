@@ -11,6 +11,7 @@ import { useState } from "react";
 import { shiftHue } from "../Home/Home";
 import PlanCard from "./PlanCard";
 import { keyframes } from "@mui/system";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 const float = keyframes`
   0%   { transform: translateY(0px); }
@@ -19,12 +20,13 @@ const float = keyframes`
 `;
 const PricingPage = () => {
   const theme = useTheme();
+  const { t } = useLanguageContext();
   const [period, setPeriod] = useState<"monthly" | "annual">("monthly");
   const plans = [
     {
       name: "STARTER",
-      price: "$29",
-      priceYear: "$299",
+      price: 29,
+      priceYear: 299,
       description: "Perfect for small gyms and personal trainers.",
       color: shiftHue(darken(theme.palette.primary.main, 0.2), -50),
       features: [
@@ -39,8 +41,8 @@ const PricingPage = () => {
     },
     {
       name: "GROWTH",
-      price: "$59",
-      priceYear: "$599",
+      price: 59,
+      priceYear: 599,
       description: "Best choice for growing gyms with more clients and staff.",
       color: theme.palette.primary.main,
       features: [
@@ -56,8 +58,8 @@ const PricingPage = () => {
     },
     {
       name: "PRO",
-      price: "$99",
-      priceYear: "$999",
+      price: 99,
+      priceYear: 999,
       description:
         "All-in-one solution for gym chains and large fitness centers.",
       color: shiftHue(darken(theme.palette.primary.main, 0.2), 50),
@@ -91,7 +93,7 @@ const PricingPage = () => {
         height={"fit-content"}
       >
         <Typography variant="h3" align="center" gutterBottom>
-          Pricing
+          {t("Pricing")}
         </Typography>
         <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
           <FormControlLabel

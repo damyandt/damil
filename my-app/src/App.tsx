@@ -7,7 +7,7 @@ import LoadingScreen from "./components/pageComponents/LoadingPage";
 import GlobalBarcodeScanner from "./context/BarcodeProvider";
 
 const App: React.FC = () => {
-  const { authedUser, authedUserLoading } = useAuthedContext();
+  const { authedUser, authedUserLoading, tenant } = useAuthedContext();
 
   if (authedUserLoading) {
     return <LoadingScreen />;
@@ -17,7 +17,8 @@ const App: React.FC = () => {
     | "Facility Admin"
     | "System Admin"
     | "Facility Staff" = authedUser?.roles?.[0] || "Facility Member";
-  const appRouter = createAppRouter(role);
+  const abonnement: "PRO" | "BASIC" | "GROWTH" | null = tenant?.abonnement;
+  const appRouter = createAppRouter(role, abonnement);
   if (authedUser.email !== "error") {
     return (
       <Box component="main">

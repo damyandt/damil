@@ -25,7 +25,7 @@ import { handleUserSignOut } from "../../context/authContextUtils";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuthedContext } from "../../context/AuthContext";
-import { filterNavByRole } from "./PageRoles";
+import { filterNavByAbonnement, filterNavByRole } from "./PageRoles";
 
 const cssStyles = (openLeftNav: boolean, theme: any) => ({
   drawer: css({
@@ -105,7 +105,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
   const { t, setLanguage, language } = useLanguageContext();
   const theme = useTheme();
   const [anchorElSettings, setAnchorElSettings] = useState<any>(null);
-  const { authedUser } = useAuthedContext();
+  const { authedUser, tenant } = useAuthedContext();
   const styles = { ...cssStyles(openLeftNav, theme) };
   const {
     NAV_DAMIL_HOME,
@@ -115,16 +115,26 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
     NAV_DAMIL_CONFIGURATIONS,
   } = useTranslatedNav();
   const userRoles = authedUser?.roles || ["ALL"];
+  const abonnement = tenant?.abonnement || ["ALL"];
 
-  const filteredNavSections: any = filterNavByRole(
+  const filteredNavSectionsByRole: any = filterNavByRole(
     [
-      { title: "Home", list: NAV_DAMIL_HOME.list },
+      {
+        title: "Home",
+        list: NAV_DAMIL_HOME.list,
+      },
       {
         title: NAV_DAMIL_ACCESS_CONTROL.title,
         list: NAV_DAMIL_ACCESS_CONTROL.list,
       },
-      { title: NAV_DAMIL_STAFF.title, list: NAV_DAMIL_STAFF.list },
-      { title: NAV_DAMIL_ANALYTICS.title, list: NAV_DAMIL_ANALYTICS.list },
+      {
+        title: NAV_DAMIL_STAFF.title,
+        list: NAV_DAMIL_STAFF.list,
+      },
+      {
+        title: NAV_DAMIL_ANALYTICS.title,
+        list: NAV_DAMIL_ANALYTICS.list,
+      },
       {
         title: NAV_DAMIL_CONFIGURATIONS.title,
         list: NAV_DAMIL_CONFIGURATIONS.list,
@@ -133,7 +143,11 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
     userRoles
   );
 
-  // Filter out empty sections
+  const filteredNavSections: any = filterNavByAbonnement(
+    filteredNavSectionsByRole,
+    abonnement
+  );
+
   const visibleSections = filteredNavSections.filter(
     (section: any) => section.list.length > 0
   );
