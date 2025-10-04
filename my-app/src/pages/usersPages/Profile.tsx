@@ -23,7 +23,7 @@ const ProfilePage = () => {
   const { t } = useLanguageContext();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { authedUser } = useAuthedContext();
+  const { authedUser, tenant } = useAuthedContext();
   const [hovered, setHovered] = useState<boolean>(false);
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [slideIn, setSlideIn] = useState(true);
@@ -175,7 +175,7 @@ const ProfilePage = () => {
                         {t("Plan")}
                       </Typography>
                       <Typography fontWeight={500} color="primary">
-                        Free
+                        {t(tenant?.abonnement || "Free")}
                       </Typography>
                     </Box>
 
@@ -187,7 +187,7 @@ const ProfilePage = () => {
                       <Typography color="text.secondary">
                         {t("Billing Period")}
                       </Typography>
-                      <Typography fontWeight={500}>Monthly</Typography>
+                      <Typography fontWeight={500}>{"-"}</Typography>
                     </Box>
 
                     <Box
@@ -198,7 +198,9 @@ const ProfilePage = () => {
                       <Typography color="text.secondary">
                         {t("Next Payment")}
                       </Typography>
-                      <Typography fontWeight={500}>29/10/2025</Typography>
+                      <Typography fontWeight={500}>
+                        {tenant?.subscription_valid_until || "-"}
+                      </Typography>
                     </Box>
 
                     <Box mt={3} display="flex" justifyContent="center">

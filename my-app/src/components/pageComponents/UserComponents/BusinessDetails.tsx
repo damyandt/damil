@@ -25,12 +25,14 @@ const BusinessDetails = () => {
   const { setRefreshUserData, tenant } = useAuthedContext();
   const [saved, setSaved] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [formData, setFormData] = useState<Partial<Business>>({
-    name: "babaFit",
-    businessEmail: "babaFit@abv.bg",
-    address: "ul. Byala Reka",
-    city: "Dobrich",
-  });
+  const [formData, setFormData] = useState<Partial<Business>>(
+    tenant || {
+      name: "",
+      businessEmail: "",
+      address: "",
+      city: "",
+    }
+  );
 
   const info: { label: string; field: keyof Business }[] = [
     { label: t("Business Name"), field: "name" },
