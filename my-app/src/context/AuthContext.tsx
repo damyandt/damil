@@ -26,6 +26,7 @@ interface UserContextType {
   setUserSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
   setRefreshUserData: React.Dispatch<React.SetStateAction<boolean>>;
   authedUserLoading: boolean;
+  tenantLoading: boolean;
   showIncompleteModal: boolean;
   snoozeModal: (minutes?: number) => void;
   preferences: PreferencesType;
@@ -45,6 +46,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
   const [tenant, setTenant] = useState<any>({});
   const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingTenant, setLoadingTenant] = useState<boolean>(false);
   const [refreshUserData, setRefreshUserData] = useState<boolean>(false);
   const [showIncompleteModal, setShowIncompleteModal] =
     useState<boolean>(false);
@@ -93,11 +95,13 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
 
   const fetchTenant = async () => {
     try {
+      setLoadingTenant(true);
       const tenantInfo = await callApi<any>({
         query: getQueryUserTenant(),
         auth: { setAuthedUser },
       });
       tenantInfo.success === true && setTenant(tenantInfo.data);
+      setLoadingTenant(false);
     } catch (err) {
       console.log("Tenant fetch error", err);
     }
@@ -183,6 +187,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         setAuthedUser,
         setUserSignedIn,
         authedUserLoading: loading,
+        tenantLoading: loadingTenant,
         showIncompleteModal,
         snoozeModal,
         preferences,

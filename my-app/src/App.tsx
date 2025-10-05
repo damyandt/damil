@@ -7,9 +7,10 @@ import LoadingScreen from "./components/pageComponents/LoadingPage";
 import GlobalBarcodeScanner from "./context/BarcodeProvider";
 
 const App: React.FC = () => {
-  const { authedUser, authedUserLoading, tenant } = useAuthedContext();
+  const { authedUser, authedUserLoading, tenant, tenantLoading } =
+    useAuthedContext();
 
-  if (authedUserLoading) {
+  if (authedUserLoading || tenantLoading) {
     return <LoadingScreen />;
   }
   const role:

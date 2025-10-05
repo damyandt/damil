@@ -72,7 +72,6 @@ const allRoutes = (role: string, abonnement: string | null) => {
     {
       path: "/",
       element:
-        //  abonnement ? (
         role === "Facility Member" ? (
           <MembersHome />
         ) : abonnement ? (
@@ -80,9 +79,6 @@ const allRoutes = (role: string, abonnement: string | null) => {
         ) : (
           <PlansPage />
         ),
-      // ) : (
-      //   <PlansPage />
-      // ),
     },
     {
       path: "/DAMIL-Analytics/Overview",
