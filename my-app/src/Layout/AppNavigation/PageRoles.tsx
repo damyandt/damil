@@ -33,15 +33,15 @@ export const pageRoles: any = {
   // DAMIL Access Control
   "/DAMIL-Access-Control/All-Clients": {
     roles: ["Facility Admin", "System Admin", "Facility Staff"],
-    abonnement: ["BASIC", "GROWTH", "PRO"],
+    abonnement: ["STARTER", "GROWTH", "PRO"],
   },
   "/DAMIL-Access-Control/All-Clients/:filter": {
     roles: ["Facility Admin", "System Admin", "Facility Staff"],
-    abonnement: ["BASIC", "GROWTH", "PRO"],
+    abonnement: ["STARTER", "GROWTH", "PRO"],
   },
   "/DAMIL-Access-Control/Daily-Visitors": {
     roles: ["Facility Admin", "System Admin", "Facility Staff"],
-    abonnement: ["BASIC", "GROWTH", "PRO"],
+    abonnement: ["STARTER", "GROWTH", "PRO"],
   },
 
   // DAMIL Staff Members

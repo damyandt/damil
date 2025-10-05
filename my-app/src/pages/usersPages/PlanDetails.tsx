@@ -45,11 +45,11 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({ type, period, price }) => {
   const redirect = async () => {
     try {
       const input = {
+        tenantId: tenant.id,
+        plan: type,
         amount: price * 100,
         currency: "usd",
-        plan: type,
         abonnementDuration: period,
-        tenantId: tenant.id,
       };
       console.log(input);
       const res = await callApi<any>({

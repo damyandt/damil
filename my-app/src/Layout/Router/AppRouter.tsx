@@ -30,7 +30,7 @@ export const createAppRouter = (
     | "Facility Admin"
     | "System Admin"
     | "Facility Staff",
-  abonnement: "PRO" | "BASIC" | "GROWTH" | null
+  abonnement: "PRO" | "STARTER" | "GROWTH" | null
 ) => {
   let roleRoutes = getRoutesForRole(userType, abonnement);
   const finalRoutes = getRoutesForAbonnement(userType, abonnement, roleRoutes);
