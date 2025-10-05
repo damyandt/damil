@@ -8,6 +8,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import dayjs from "dayjs";
 import { Box, ButtonGroup, Typography, useTheme } from "@mui/material";
+import CustomCalendar from "../../../pages/Staff/NewCalender";
 
 interface ClientHistoryProps {
   rowData: Row;
@@ -52,12 +53,34 @@ const ClientHistory: React.FC<ClientHistoryProps> = ({ rowData }) => {
     }
   }, [visits]);
 
+  const transformToEvents = (data: any[]) => {
+    const result: any = {};
+
+    data.forEach((item) => {
+      const dateKey = dayjs(item.checkInAt).format("YYYY-MM-DD");
+
+      const newEvent = {
+        title: "Gym Visit",
+        person: item.userId,
+        message: `Checked in - Membership Id: ${item.membershipId}`,
+      };
+
+      if (!result[dateKey]) {
+        result[dateKey] = [];
+      }
+
+      result[dateKey].push(newEvent);
+    });
+
+    return result;
+  };
+
   if (!visits.length) {
     return <Typography>No visits found</Typography>;
   }
   return (
     <>
-      <Box
+      {/* <Box
         sx={{
           // Today highlight
           "& .fc-daygrid-day.fc-day-today": {
@@ -76,8 +99,12 @@ const ClientHistory: React.FC<ClientHistoryProps> = ({ rowData }) => {
           }}
           height="65vh"
         />
-      </Box>
-      <Typography variant="h6">Total Visits: {visits.length}</Typography>
+      </Box> */}
+      <CustomCalendar
+        eventsData={transformToEvents(visits)}
+        noAddEvent={true}
+      />
+      {/* <Typography variant="h6">Total Visits: {visits.length}</Typography> */}
     </>
   );
 };

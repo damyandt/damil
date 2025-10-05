@@ -60,10 +60,10 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
     currency: "BGN",
     language: "en",
     homeFilters: [
-      "Gender - MALE",
-      "SubscriptionStatus - ACTIVE",
-      "Employment - REGULAR",
-      "SubscriptionPlan - MONTHLY",
+      "gender - MALE",
+      "employment - REGULAR",
+      "employment - STUDENT",
+      "gender - MALE",
     ],
   });
 

@@ -24,6 +24,7 @@ import {
 import MembersHome from "../../pages/Home/MembersHome";
 import AccountCredentials from "../../components/pageComponents/UserComponents/AccountCredentials";
 import SuccessPayment from "../../pages/usersPages/SuccessPayment";
+import CustomCalendar from "../../pages/Staff/NewCalender";
 export const createAppRouter = (
   userType:
     | "Facility Member"
@@ -33,9 +34,7 @@ export const createAppRouter = (
   abonnement: "PRO" | "BASIC" | "GROWTH" | null
 ) => {
   let roleRoutes = getRoutesForRole(userType, abonnement);
-  console.log(roleRoutes);
   const finalRoutes = getRoutesForAbonnement(userType, abonnement, roleRoutes);
-  console.log(finalRoutes);
   return createBrowserRouter([
     {
       path: "/",
@@ -133,7 +132,7 @@ const allRoutes = (role: string, abonnement: string | null) => {
     },
     {
       path: "/DAMIL-Staff/Events",
-      element: <EmployeeCalendar />,
+      element: <CustomCalendar />,
     },
 
     // Configurations

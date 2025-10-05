@@ -119,14 +119,15 @@ const HomePage: React.FC = () => {
             py: 3,
             mb: 3,
             borderRadius: "16px",
+
             background: `linear-gradient(90deg, ${colorStart}, ${colorEnd})`,
             boxShadow: isDark
-              ? `0 3px 12px ${alpha(primary, 0.3)}`
+              ? `0 3px 12px ${alpha(primary, 0.4)}`
               : `0 3px 12px ${alpha("#000", 0.06)}`,
           }}
         >
           <Typography variant="h2" fontWeight={700} color="#fff">
-            {t("Dashboard")} – {tenant?.name}
+            {tenant?.name}
           </Typography>
 
           <Typography variant="subtitle1" color="#fff" mt={1}>
@@ -134,7 +135,6 @@ const HomePage: React.FC = () => {
             {tenant?.address && ` · ${tenant.address}`}
           </Typography>
 
-          {/* Active Subscription Info */}
           {tenant?.abonnement ? (
             <Grid container spacing={2} justifyContent="center" mt={2}>
               <Grid size={{ xs: 10, sm: 5, md: 4 }}>
@@ -225,7 +225,8 @@ const HomePage: React.FC = () => {
               fullWidth
               variant="outlined"
               sx={{
-                backgroundColor: "#fff",
+                // backgroundColor: "#fff",
+                backgroundColor: "rgba(255, 255, 255, 0.15)",
                 boxShadow: theme.palette.customColors?.shodow,
                 border: "none",
                 transition: "transform 0.3s ease",
@@ -233,7 +234,7 @@ const HomePage: React.FC = () => {
                   transform: "scale(0.97)",
                 },
               }}
-              color="primary"
+              color={isDark ? "info" : "primary"}
               startIcon={<LoginIcon />}
               onClick={() => setOpenCheckIn(true)}
             >
@@ -247,7 +248,6 @@ const HomePage: React.FC = () => {
               variant="outlined"
               sx={{
                 background: `linear-gradient(90deg, ${colorStart}, ${colorEnd})`,
-
                 boxShadow: theme.palette.customColors?.shodow,
                 border: "none",
                 color: "#fff",
@@ -269,7 +269,7 @@ const HomePage: React.FC = () => {
               variant="outlined"
               startIcon={<SearchIcon />}
               sx={{
-                backgroundColor: "#fff",
+                backgroundColor: "rgba(255, 255, 255, 0.15)",
                 boxShadow: theme.palette.customColors?.shodow,
                 border: "none",
                 transition: "transform 0.3s ease",
@@ -277,6 +277,7 @@ const HomePage: React.FC = () => {
                   transform: "scale(0.97)",
                 },
               }}
+              color={isDark ? "info" : "primary"}
               onClick={handleSearchMember}
             >
               {t("Search Member")}

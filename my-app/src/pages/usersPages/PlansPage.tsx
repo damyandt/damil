@@ -81,6 +81,7 @@ const PricingPage = () => {
         alignItems: "center",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "center",
         height: "100%",
         p: 2,
       }}
@@ -120,7 +121,7 @@ const PricingPage = () => {
         </Box>
       </Box>
 
-      <Box width={"100%"} height={"100%"}>
+      <Box width={"100%"}>
         <Grid
           container
           spacing={4}
@@ -133,7 +134,7 @@ const PricingPage = () => {
         >
           {plans.map((plan, index) => (
             <Grid
-              size={4}
+              size={{ xs: 12, sm: 6, lg: 4 }}
               key={index}
               sx={{
                 transition: "transform ease 0.4s",
