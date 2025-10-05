@@ -15,7 +15,7 @@ import { useLanguageContext } from "../../context/LanguageContext";
 
 interface PlanCardProps {
   plan: any;
-  period: "monthly" | "annual";
+  period: "MONTHLY" | "ANNUALLY";
 }
 
 const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
@@ -94,9 +94,9 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
           </Box>
 
           <Typography variant="h2" fontWeight={600}>
-            ${period === "monthly" ? plan.price : plan.priceYear}
+            ${period === "MONTHLY" ? plan.price : plan.priceYear}
             <Typography component="span" variant="body1">
-              {period === "monthly" ? "/month" : "/year"}
+              {period === "MONTHLY" ? "/month" : "/year"}
             </Typography>
           </Typography>
           <Typography variant="body2" mt={1} mb={2}>
@@ -185,7 +185,7 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
         <PlanDetails
           type={plan.name}
           period={period}
-          price={period === "monthly" ? plan.price : plan.priceYear}
+          price={period === "MONTHLY" ? plan.price : plan.priceYear}
         />
       </CustomModal>
     </>

@@ -8,7 +8,6 @@ import OverviewPage from "../../pages/Analystics/Overview";
 import ClientsPage from "../../pages/Access Control/Clients";
 import DailyVisitors from "../../pages/Access Control/DailyVisitors";
 import ErrorPage from "./ErrorPage";
-import EmployeeCalendar from "../../pages/Staff/Calender";
 import StaffPage from "../../pages/Staff/StaffMembersPage";
 import StaffRolesPage from "../../pages/Staff/StaffRolesPage";
 import StaffShifts from "../../pages/Staff/Shifts/StaffShifts";
@@ -24,7 +23,7 @@ import {
 import MembersHome from "../../pages/Home/MembersHome";
 import AccountCredentials from "../../components/pageComponents/UserComponents/AccountCredentials";
 import SuccessPayment from "../../pages/usersPages/SuccessPayment";
-import CustomCalendar from "../../pages/Staff/NewCalender";
+import Calendar from "../../pages/Staff/Calender";
 export const createAppRouter = (
   userType:
     | "Facility Member"
@@ -132,7 +131,7 @@ const allRoutes = (role: string, abonnement: string | null) => {
     },
     {
       path: "/DAMIL-Staff/Events",
-      element: <CustomCalendar />,
+      element: <Calendar />,
     },
 
     // Configurations

@@ -9,7 +9,7 @@ import { stripePaymentIntent } from "./api/postQuery";
 
 interface PlanDetailsProps {
   type: "STARTER" | "GROWTH" | "PRO";
-  period: "monthly" | "annual";
+  period: "MONTHLY" | "ANNUALLY";
   price: number;
 }
 
@@ -51,6 +51,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({ type, period, price }) => {
         abonnementDuration: period,
         tenantId: tenant.id,
       };
+      console.log(input);
       const res = await callApi<any>({
         query: stripePaymentIntent(input),
         auth: { setAuthedUser },

@@ -1,27 +1,37 @@
 import { useEffect, useRef, useState } from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import { Box, Grid, MenuItem, Typography, useTheme } from "@mui/material";
-import CustomModal from "../../components/MaterialUI/Modal";
-import TextField from "../../components/MaterialUI/FormFields/TextField";
-import Button from "../../components/MaterialUI/Button";
-import { useOutletContext } from "react-router-dom";
-import { AppRouterProps } from "../../Layout/layoutVariables";
+import {
+  Box,
+  Grid,
+  Typography,
+  IconButton,
+  useTheme,
+  MenuItem,
+} from "@mui/material";
+import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
+import { alpha } from "@mui/material/styles";
 import DatePickerComponent from "../../components/MaterialUI/FormFields/DatePicker";
+import CustomModal from "../../components/MaterialUI/Modal";
 import dayjs, { Dayjs } from "dayjs";
+import Button from "../../components/MaterialUI/Button";
+import TextField from "../../components/MaterialUI/FormFields/TextField";
+import { useLanguageContext } from "../../context/LanguageContext";
 
-const EmployeeCalendar = () => {
-  const [events, setEvents] = useState<any[]>([]);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
-  const { openLeftNav } = useOutletContext<AppRouterProps>();
-  const calendarRef = useRef<FullCalendar | null>(null);
-  const [diffDays, setDiffDays] = useState<number>(0);
+const Calendar = ({
+  eventsData,
+  noAddEvent = false,
+}: {
+  eventsData?: any;
+  noAddEvent?: boolean;
+}) => {
   const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
+  const today = new Date();
+  const { t } = useLanguageContext();
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [currentYear, setCurrentYear] = useState(today.getFullYear());
+  const [events, setEvents] = useState<any>(eventsData || {});
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [diffDays, setDiffDays] = useState<number>(0);
   const [formData, setFormData] = useState<any>({
     title: "",
     person: "",
@@ -30,18 +40,60 @@ const EmployeeCalendar = () => {
     start: dayjs(),
     end: dayjs(),
   });
+  useEffect(() => {
+    console.log(events);
+  }, [events]);
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
-  const handleDateClick = (arg: any) => {
-    const clickedDate = arg.dateStr;
-    setSelectedDate(clickedDate);
-    setFormData({
-      title: "",
-      person: "",
-      message: "",
-      start: dayjs(clickedDate),
-      end: dayjs(clickedDate),
-    });
-    setOpen(true);
+  const firstDay = new Date(currentYear, currentMonth, 1);
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const startDay = firstDay.getDay(); // 0 = Sunday
+
+  const handlePrevMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear(currentYear - 1);
+    } else {
+      setCurrentMonth(currentMonth - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear(currentYear + 1);
+    } else {
+      setCurrentMonth(currentMonth + 1);
+    }
+  };
+
+  const handleOpenDialog = (day: any) => {
+    const dateKey: any = day
+      ? dayjs(new Date(currentYear, currentMonth, day))
+      : "";
+
+    const selectedDay = dayjs(dateKey);
+
+    setFormData((prev: any) => ({
+      ...prev,
+      start: selectedDay,
+      end: selectedDay,
+    }));
+
+    setOpenDialog(true);
   };
 
   useEffect(() => {
@@ -94,34 +146,10 @@ const EmployeeCalendar = () => {
     }
   }, [formData.end, formData.start]);
 
-  useEffect(() => {
-    if (selectedEvent) {
-      setFormData({
-        title: selectedEvent.title || "",
-        person: selectedEvent.extendedProps.person || "",
-        period: "Day",
-        message: selectedEvent.extendedProps.message || "",
-        start: dayjs(selectedEvent.dateStr) || null,
-        end: dayjs(selectedEvent.dateStr) || null,
-      });
-    }
-  }, [selectedEvent, selectedDate, open]);
-
-  const handleEventClick = (clickInfo: any) => {
-    setSelectedEvent(clickInfo.event);
-    setOpen(true);
-  };
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (calendarRef.current) {
-        calendarRef.current.getApi().updateSize();
-      }
-    }, 400);
-
-    return () => clearTimeout(timeout);
-  }, [openLeftNav]);
-
+  // Generate calendar grid
+  const calendarDays: (number | null)[] = [];
+  for (let i = 0; i < startDay; i++) calendarDays.push(null);
+  for (let d = 1; d <= daysInMonth; d++) calendarDays.push(d);
   const handleChange = (field: string, value: string | Dayjs | null): void => {
     setFormData((prev: any) => ({
       ...prev,
@@ -136,28 +164,30 @@ const EmployeeCalendar = () => {
     const endDate = dayjs(formData.end);
     const diffDays = endDate.diff(startDate, "day");
     setDiffDays(diffDays);
+
     if (diffDays > 5) return setOpenConfirm(true);
-    const dates = [];
+
+    const updatedEvents = { ...events };
+
     for (
       let date = startDate;
       date.isBefore(endDate) || date.isSame(endDate, "day");
       date = date.add(1, "day")
     ) {
-      dates.push(date.format("YYYY-MM-DD"));
+      const key = date.format("YYYY-MM-DD");
+      const newEvent = {
+        title: formData.title,
+        person: formData.person,
+        message: formData.message,
+      };
+
+      if (!updatedEvents[key]) updatedEvents[key] = [];
+      updatedEvents[key].push(newEvent);
     }
 
-    const newEvents = dates.map((date) => ({
-      title: formData.title,
-      person: formData.person,
-      message: formData.message,
-      date: date,
-      backgroundColor: "#d32f2f",
-      borderColor: "#d32f2f",
-    }));
-
-    setEvents([...events, ...newEvents]);
-
-    setOpen(false);
+    setEvents(updatedEvents);
+    console.log(updatedEvents);
+    setOpenDialog(false);
     setFormData({
       title: "",
       person: "",
@@ -167,30 +197,31 @@ const EmployeeCalendar = () => {
       end: dayjs(),
     });
   };
+
   const handleConfirm = () => {
     const startDate = dayjs(formData.start);
     const endDate = dayjs(formData.end);
-    const dates = [];
+    const updatedEvents = { ...events };
+
     for (
       let date = startDate;
       date.isBefore(endDate) || date.isSame(endDate, "day");
       date = date.add(1, "day")
     ) {
-      dates.push(date.format("YYYY-MM-DD"));
+      const key = date.format("YYYY-MM-DD");
+      const newEvent = {
+        title: formData.title,
+        person: formData.person,
+        message: formData.message,
+      };
+
+      if (!updatedEvents[key]) updatedEvents[key] = [];
+      updatedEvents[key].push(newEvent);
     }
 
-    const newEvents = dates.map((date) => ({
-      title: formData.title,
-      person: formData.person,
-      message: formData.message,
-      date: date,
-      backgroundColor: "#d32f2f",
-      borderColor: "#d32f2f",
-    }));
+    setEvents(updatedEvents);
 
-    setEvents([...events, ...newEvents]);
-
-    setOpen(false);
+    setOpenDialog(false);
     setOpenConfirm(false);
     setFormData({
       title: "",
@@ -207,107 +238,115 @@ const EmployeeCalendar = () => {
   };
 
   return (
-    <Box sx={{ p: 0, height: "100%" }}>
-      {/* <Box
-        sx={{
-          // Base calendar container
-          "& .fc": {
-            backgroundColor: "transparent",
-            color: isDark ? "#000000ff" : "#212121",
-            // fontFamily: "Inter, sans-serif",
-          },
-
-          // Toolbar (month name, prev/next buttons)
-          "& .fc-toolbar-title": {
-            color: isDark ? "#ffffff" : "#111111",
-            fontWeight: 600,
-            fontSize: "1.25rem",
-          },
-
-          "& .fc-button": {
-            backgroundColor: isDark ? "#333" : "#e0e0e0",
-            color: isDark ? "#fff" : "#000",
-            border: "none",
-            "&:hover": {
-              backgroundColor: isDark ? "#444" : "#d5d5d5",
-            },
-          },
-
-          // Day grid cells
-          "& .fc-daygrid-day": {
-            backgroundColor: isDark ? "#1a1a1a" : "#ffffff",
-            borderColor: isDark ? "#333" : "#e0e0e0",
-          },
-
-          // Day numbers
-          "& .fc-daygrid-day-number": {
-            color: isDark ? "#bbb" : "#333",
-            fontWeight: 500,
-          },
-
-          // Event styling
-          "& .fc-event": {
-            backgroundColor: isDark ? "#2196f3" : "#1976d2",
-            color: "#fff",
-            border: "none",
-            borderRadius: "6px",
-            padding: "2px 6px",
-            fontSize: "0.85rem",
-            transition: "background-color 0.2s",
-            "&:hover": {
-              backgroundColor: isDark ? "#42a5f5" : "#1565c0",
-            },
-          },
-
-          // Today highlight
-          "& .fc-daygrid-day.fc-day-today": {
-            backgroundColor: `${theme.palette.primary.main} !important`,
-          },
-          "& .fc-daygrid-day.fc-day-today .fc-daygrid-day-number": {
-            color: "#fff !important",
-            fontWeight: 700,
-          },
-        }}
-      >
-        <FullCalendar
-          ref={calendarRef}
-          plugins={[dayGridPlugin, interactionPlugin]}
-          initialView="dayGridMonth"
-          events={events}
-          dateClick={handleDateClick}
-          eventClick={handleEventClick}
-          height="92vh"
-        />
-      </Box> */}
+    <Box
+      sx={{
+        // p: 4,
+        borderRadius: 3,
+        backdropFilter: "blur(6px)",
+        mx: "auto",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
+      {/* Header */}
       <Box
-        sx={{
-          // Today highlight
-          "& .fc-daygrid-day.fc-day-today": {
-            backgroundColor: `${theme.palette.primary.main} !important`,
-          },
-        }}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        alignContent={"center"}
+        mb={3}
       >
-        <FullCalendar
-          ref={calendarRef}
-          plugins={[dayGridPlugin, interactionPlugin]}
-          initialView="dayGridMonth"
-          events={events}
-          dateClick={handleDateClick}
-          eventClick={handleEventClick}
-          headerToolbar={{
-            left: "prev next today",
-            center: "title",
-            right: "dayGridYear dayGridMonth dayGridWeek",
-          }}
-          height="92vh"
-        />
+        <IconButton onClick={handlePrevMonth}>
+          <ArrowBackIos fontSize="small" />
+        </IconButton>
+
+        <Typography variant="h4" fontWeight={600}>
+          {monthNames[currentMonth]} {currentYear}
+        </Typography>
+
+        <IconButton onClick={handleNextMonth}>
+          <ArrowForwardIos fontSize="small" />
+        </IconButton>
       </Box>
+
+      {/* Weekday labels */}
+      <Grid container>
+        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+          <Grid size={12 / 7} key={day}>
+            <Typography align="center" fontWeight={600} mb={1}>
+              {day}
+            </Typography>
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* Days grid */}
+      <Grid container spacing={1}>
+        {calendarDays.map((day, index) => {
+          const dateKey = day
+            ? dayjs(new Date(currentYear, currentMonth, day)).format(
+                "YYYY-MM-DD"
+              )
+            : "";
+
+          const dayEvents = events[dateKey] || [];
+          const isToday =
+            day &&
+            day === today.getDate() &&
+            currentMonth === today.getMonth() &&
+            currentYear === today.getFullYear();
+
+          return (
+            <Grid size={12 / 7} key={index}>
+              <Box
+                sx={{
+                  minHeight: 100,
+                  borderRadius: 2,
+                  border: `1px solid ${alpha(theme.palette.text.primary, 0.1)}`,
+                  p: 1,
+                  backgroundColor: isToday
+                    ? alpha(theme.palette.primary.main, 0.1)
+                    : "transparent",
+                  cursor: day ? "pointer" : "default",
+                  "&:hover": {
+                    backgroundColor: day
+                      ? alpha(theme.palette.primary.main, 0.05)
+                      : "transparent",
+                  },
+                  transition: "0.2s",
+                }}
+                onClick={() => !noAddEvent && day && handleOpenDialog(day)}
+              >
+                <Typography fontWeight={600}>{day}</Typography>
+
+                {dayEvents.map((ev: any, i: any) => (
+                  <Typography
+                    key={i}
+                    variant="caption"
+                    sx={{
+                      display: "block",
+                      mt: 0.5,
+                      px: 1,
+                      borderRadius: 1,
+                      backgroundColor: alpha(theme.palette.primary.main, 0.15),
+                    }}
+                  >
+                    {ev.title}
+                  </Typography>
+                ))}
+              </Box>
+            </Grid>
+          );
+        })}
+      </Grid>
+
       <CustomModal
         title="Add Event"
-        open={open}
+        open={openDialog}
         onClose={() => {
-          setOpen(false);
-          setSelectedEvent(null);
+          setOpenDialog(false);
         }}
         width={"lg"}
       >
@@ -391,12 +430,12 @@ const EmployeeCalendar = () => {
         </Grid>
         <Grid container spacing={2} display={"flex"} justifyContent={"end"}>
           <Grid>
-            <Button onClick={() => setOpen(false)} color="error">
-              Cancel
+            <Button onClick={() => setOpenDialog(false)} color="error">
+              {t("Cancel")}
             </Button>
           </Grid>
           <Grid>
-            <Button onClick={handleSave}>Confirm</Button>
+            <Button onClick={handleSave}>{t("Confirm")}</Button>
           </Grid>
         </Grid>
       </CustomModal>
@@ -428,4 +467,4 @@ const EmployeeCalendar = () => {
   );
 };
 
-export default EmployeeCalendar;
+export default Calendar;

@@ -3,12 +3,9 @@ import callApi from "../../../API/callApi";
 import { Response, Row } from "../../../Global/Types/commonTypes";
 import { getClientVisits } from "../../../pages/Access Control/API/getQueries";
 import { useAuthedContext } from "../../../context/AuthContext";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
 import dayjs from "dayjs";
-import { Box, ButtonGroup, Typography, useTheme } from "@mui/material";
-import CustomCalendar from "../../../pages/Staff/NewCalender";
+import { Typography, useTheme } from "@mui/material";
+import Calendar from "../../../pages/Staff/Calender";
 
 interface ClientHistoryProps {
   rowData: Row;
@@ -100,10 +97,7 @@ const ClientHistory: React.FC<ClientHistoryProps> = ({ rowData }) => {
           height="65vh"
         />
       </Box> */}
-      <CustomCalendar
-        eventsData={transformToEvents(visits)}
-        noAddEvent={true}
-      />
+      <Calendar eventsData={transformToEvents(visits)} noAddEvent={true} />
       {/* <Typography variant="h6">Total Visits: {visits.length}</Typography> */}
     </>
   );

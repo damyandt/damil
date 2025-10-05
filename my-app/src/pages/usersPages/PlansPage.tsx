@@ -21,7 +21,7 @@ const float = keyframes`
 const PricingPage = () => {
   const theme = useTheme();
   const { t } = useLanguageContext();
-  const [period, setPeriod] = useState<"monthly" | "annual">("monthly");
+  const [period, setPeriod] = useState<"MONTHLY" | "ANNUALLY">("MONTHLY");
   const plans = [
     {
       name: "STARTER",
@@ -100,10 +100,10 @@ const PricingPage = () => {
           <FormControlLabel
             control={
               <Switch
-                checked={period === "annual"}
+                checked={period === "ANNUALLY"}
                 onChange={() =>
                   setPeriod((prev) =>
-                    prev === "monthly" ? "annual" : "monthly"
+                    prev === "MONTHLY" ? "ANNUALLY" : "MONTHLY"
                   )
                 }
                 color="primary"
@@ -111,7 +111,7 @@ const PricingPage = () => {
             }
             label={
               <Typography variant="body2" color="textSecondary">
-                {period === "annual"
+                {period === "ANNUALLY"
                   ? "Yearly billing (Save 1 Month)"
                   : "Monthly billing"}
               </Typography>
