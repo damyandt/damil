@@ -187,7 +187,9 @@ const ProfilePage = () => {
                       <Typography color="text.secondary">
                         {t("Billing Period")}
                       </Typography>
-                      <Typography fontWeight={500}>{"-"}</Typography>
+                      <Typography fontWeight={500}>
+                        {tenant?.abonnementDuration || "-"}
+                      </Typography>
                     </Box>
 
                     <Box
@@ -199,7 +201,7 @@ const ProfilePage = () => {
                         {t("Next Payment")}
                       </Typography>
                       <Typography fontWeight={500}>
-                        {tenant?.subscription_valid_until || "-"}
+                        {tenant?.subscriptionValidUntil || "-"}
                       </Typography>
                     </Box>
 

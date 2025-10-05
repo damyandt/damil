@@ -18,7 +18,6 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
-//https://png.pngtree.com/png-vector/20250320/ourlarge/pngtree-no-data-concept-illustration-featuring-an-empty-folder-error-message-and-png-image_15773302.png
 import CustomTooltip from "../CustomTooltip";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CellRenderer from "./CellRenderer";
@@ -88,7 +87,7 @@ const TableComponent = ({
     const { field, desc } = configurations.sortable;
 
     const columnDef = columns.find((col: Column) => col.field === field);
-    const colType = columnDef?.type || "string"; // default to string
+    const colType = columnDef?.type || "string";
 
     sortedRows.sort((a: Row, b: Row) => {
       const valA = a[field];
@@ -149,7 +148,6 @@ const TableComponent = ({
             {title}
           </Typography>
         </Grid>
-        {/* <Grid size={{ xs: 12, sm: 6, md: 1 }}></Grid> */}
         <Grid size={{ xs: 6, sm: 6, md: 1 }}>
           <TextField
             select
