@@ -9,31 +9,24 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "update-translations": "npx i18next-parser --config i18next-parser.config.cjs && node update-translations.cjs",
-    "validate": "npx eslint \"src/**/*.{ts,tsx,js,jsx}\" --max-warnings=0"
+    "validate": "npx eslint \"src/**/*.{ts,tsx,js,jsx}\" --max-warnings=0",
+    "check_libraries": "npx depcheck"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@fullcalendar/daygrid": "^6.1.19",
-    "@fullcalendar/interaction": "^6.1.19",
-    "@fullcalendar/react": "^6.1.18",
     "@mui/icons-material": "^7.1.0",
-    "@mui/lab": "^7.0.0-beta.14",
     "@mui/material": "^7.1.1",
+    "@mui/system": "^7.3.3",
     "@mui/x-date-pickers": "^8.8.0",
     "@react-spring/web": "^10.0.1",
-    "@stripe/react-stripe-js": "^4.0.2",
-    "@stripe/stripe-js": "^7.9.0",
-    "@toolpad/core": "^0.15.0",
     "dayjs": "^1.11.13",
     "echarts": "^5.6.0",
     "echarts-for-react": "^3.0.2",
-    "fs": "^0.0.1-security",
+    "framer-motion": "^12.23.22",
     "gsap": "^3.13.0",
     "i18next": "^25.2.0",
-    "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
-    "motion": "^12.23.12",
     "ogl": "^1.0.11",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -43,7 +36,6 @@
     "tinycolor2": "^1.6.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.25.0",
     "@types/echarts": "^4.9.22",
     "@types/node": "^22.15.18",
     "@types/react": "^19.1.2",
@@ -55,9 +47,7 @@
     "eslint": "^9.37.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.23",
     "eslint-plugin-unused-imports": "^4.2.0",
-    "globals": "^16.0.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"
   }
