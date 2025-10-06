@@ -51,7 +51,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
   const [paymentMethod, setPaymentMethod] = useState<"CARD" | "CASH">("CASH");
   const steps = ["New Plan", "Payment", "Confirm Info"];
   const handlePaymentMethodChange = (
-    event: React.MouseEvent<HTMLElement>,
+    _: React.MouseEvent<HTMLElement>,
     newMethod: "CARD" | "CASH" | null
   ) => {
     if (newMethod !== null) {
@@ -407,14 +407,14 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
           <Button
             variant="outlined"
             color="warning"
-            onClick={() => console.log("Renew Plan")}
+            onClick={() => console.error("Renew Plan")}
           >
             {t("Renew")}
           </Button>
           <Button
             variant="outlined"
             color="error"
-            onClick={() => console.log("Cancel Plan")}
+            onClick={() => console.error("Cancel Plan")}
           >
             {t("Cancel")}
           </Button>

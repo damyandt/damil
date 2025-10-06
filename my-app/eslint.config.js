@@ -1,33 +1,49 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
+import tsParser from "@typescript-eslint/parser";
+import reactHooks from "eslint-plugin-react-hooks";
+import react from "eslint-plugin-react";
+import unusedImports from "eslint-plugin-unused-imports";
+import tsPlugin from "@typescript-eslint/eslint-plugin";
 
 export default [
-  { ignores: ['dist'] },
+  { ignores: ["dist", "node_modules"] },
   {
-    files: ['**/*.{js,jsx}'],
+    files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      sourceType: "module",
+      ecmaVersion: 2026,
+      parser: tsParser,
       parserOptions: {
-        ecmaVersion: 'latest',
+        project: "./tsconfig.json",
+        ecmaVersion: "latest",
+        sourceType: "module",
         ecmaFeatures: { jsx: true },
-        sourceType: 'module',
       },
     },
+
     plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      react,
+      "react-hooks": reactHooks,
+      "unused-imports": unusedImports,
+      "@typescript-eslint": tsPlugin,
     },
     rules: {
-      ...js.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
+      "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-vars": [
+        "error",
+        {
+          vars: "all",
+          varsIgnorePattern: "^_",
+          args: "after-used",
+          argsIgnorePattern: "^_",
+        },
       ],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
+      ],
+      "react-hooks/rules-of-hooks": "error",
+      // "react-hooks/exhaustive-deps": "warn",
+      "no-console": ["warn", { allow: ["warn", "error", "info"] }],
     },
   },
-]
+];

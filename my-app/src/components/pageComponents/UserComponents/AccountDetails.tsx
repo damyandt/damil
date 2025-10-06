@@ -1,7 +1,6 @@
 import { Box, Grid, IconButton, MenuItem, Typography } from "@mui/material";
 import CustomTooltip from "../../MaterialUI/CustomTooltip";
 import TextField from "../../MaterialUI/FormFields/TextField";
-import CellRenderer from "../../MaterialUI/Table/CellRenderer";
 import { User } from "../../../pages/usersPages/userTypes";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import { useState } from "react";
@@ -42,7 +41,6 @@ const AccountDetails = () => {
     }
 
     if (Object.keys(changes).length === 0) {
-      console.log("No changes to update.");
       setEditMode(false);
       return;
     }

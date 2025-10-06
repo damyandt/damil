@@ -1,12 +1,9 @@
 import {
   Box,
   Typography,
-  Card,
-  CardContent,
   Grid,
   Tabs,
   Tab,
-  Button,
   Divider,
   Stack,
   useTheme,
@@ -213,7 +210,7 @@ const MembersHome = () => {
         >
           <Tabs
             value={tab}
-            onChange={(e, newValue) => setTab(newValue)}
+            onChange={(_, newValue) => setTab(newValue)}
             sx={{
               mb: 2,
             }}

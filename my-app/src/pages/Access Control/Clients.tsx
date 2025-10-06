@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Grid, Typography } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import TableComponent from "../../components/MaterialUI/Table/Table";
 import { useOutletContext, useParams } from "react-router-dom";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -10,7 +10,6 @@ import { AppRouterProps } from "../../Layout/layoutVariables";
 import { useLanguageContext } from "../../context/LanguageContext";
 import ClientsRightMenu from "../../components/pageComponents/Clients/ClientsRightNav";
 import NextPlanIcon from "@mui/icons-material/NextPlan";
-import HistoryIcon from "@mui/icons-material/History";
 import RestorePageIcon from "@mui/icons-material/RestorePage";
 import NewSubscriptionPlan from "../../components/pageComponents/Clients/NewSubscriptionPlan";
 import ClientHistory from "../../components/pageComponents/Clients/ClientHistory";
@@ -62,7 +61,7 @@ const ClientsPage = () => {
       });
       setTableData(data.data);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
 
     setPageStatus(null);

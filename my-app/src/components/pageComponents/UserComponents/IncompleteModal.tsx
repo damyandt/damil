@@ -90,9 +90,9 @@ const IncompleteProfileModal = () => {
           (val) => !val || val === ""
         );
         Object.values(formData).map(
-          (val) => (!val || val === "") && console.log(val)
+          (val) => (!val || val === "") && console.error(val)
         );
-        console.log(isFormDataIncomplete);
+        console.error(isFormDataIncomplete);
 
         if (!isFormDataIncomplete) {
           setStep(2);
@@ -110,7 +110,6 @@ const IncompleteProfileModal = () => {
         }
 
         if (Object.keys(changes).length === 0) {
-          console.log("No changes to update.");
           return;
         }
 
@@ -136,7 +135,7 @@ const IncompleteProfileModal = () => {
         navigate("DAMIL-Configurations/Member-Plans");
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

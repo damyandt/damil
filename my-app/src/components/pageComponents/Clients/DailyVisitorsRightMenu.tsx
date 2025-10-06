@@ -7,7 +7,6 @@ import { useLanguageContext } from "../../../context/LanguageContext";
 import DatePickerComponent from "../../MaterialUI/FormFields/DatePicker";
 import CustomTooltip from "../../MaterialUI/CustomTooltip";
 import Button from "../../MaterialUI/Button";
-import CustomModal from "../../MaterialUI/Modal";
 
 interface VisitorsRightMenuProps {
   startDate: Dayjs;

@@ -5,9 +5,8 @@ import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useLanguageContext } from "../../context/LanguageContext";
 import { useState } from "react";
-import { SetCookieParams } from "../../Auth/authTypes";
-import callApi, { COOKIE_REFRESH_TOKEN } from "../../API/callApi";
-import { codeVerification, postLogin } from "./api/postQuery";
+import callApi from "../../API/callApi";
+import { codeVerification } from "./api/postQuery";
 import { Response } from "../../Global/Types/commonTypes";
 
 interface VerifyEmailProps {
@@ -27,10 +26,6 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
   const [resendCooldown, setResendCooldown] = useState<number>(0);
 
   const handleSubmitVerificationCode = async () => {
-    // if (!validator(true)) {
-    //   console.warn("Form validation failed!");
-    //   return;
-    // }
     try {
       const responce = await callApi<Response<any>>({
         query: codeVerification({
@@ -39,38 +34,14 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
         }),
         auth: null,
       });
-      //   if (responce.success === true) {
-      //     const responce = await callApi<any>({
-      //       query: postLogin({
-      //         email: formData.email,
-      //         password: formData.password,
-      //       }),
-      //       auth: null,
-      //     });
-
-      //     const refresh_token = responce.refreshToken;
-      //     const refreshCookie: SetCookieParams = {
-      //       name: COOKIE_REFRESH_TOKEN,
-      //       value: refresh_token,
-      //       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
-      //       sameSite: "strict",
-      //       secure: true,
-      //     };
-
-      //     setCookie(refreshCookie);
-      //     setUserSignedIn(false);
-      //     setUserSignedIn(true);
-      //   } else {
-      //     setErrors(responce.validationErrors);
-      //   }
+      responce.success === false && setErrors(responce.validationErrors || {});
     } catch (error) {
-      console.log("Verification failed:", error);
+      console.error("Verification failed:", error);
     }
   };
 
   const handleResend = () => {
     if (resendCooldown === 0) {
-      console.log("Code resent!");
       localStorage.setItem("lastResendTimestamp", Date.now().toString());
       setResendCooldown(60);
     }
@@ -137,7 +108,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
                 },
               }}
             >
-              Resend Code
+              {t("Resend Code")}
             </Typography>
           </CustomTooltip>
           <IconButton

@@ -165,7 +165,7 @@ const LoginForm = () => {
       responce.success === true && navigate("/");
       responce.success === false && setErrors(responce.validationErrors);
     } catch (error) {
-      console.log("Verification failed:", error);
+      console.error("Verification failed:", error);
     }
   };
 

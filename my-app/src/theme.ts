@@ -5,7 +5,7 @@ import {
   Theme,
   ThemeOptions,
 } from "@mui/material/styles";
-import { lighten, darken, alpha } from "@mui/system";
+import { lighten, darken } from "@mui/system";
 
 declare module "@mui/material/styles" {
   interface PaletteColor {

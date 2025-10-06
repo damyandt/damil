@@ -3,7 +3,6 @@ import {
   Box,
   Menu as MUIAccountMenu,
   IconButton,
-  Avatar,
   Theme,
   useTheme,
 } from "@mui/material";

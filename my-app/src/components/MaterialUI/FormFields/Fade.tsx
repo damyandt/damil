@@ -12,15 +12,7 @@ export interface FadeProps {
 
 export const Fade = React.forwardRef<HTMLDivElement, FadeProps>(
   function Fade(props, ref) {
-    const {
-      children,
-      in: open,
-      onClick,
-      onEnter,
-      onExited,
-      ownerState,
-      ...other
-    } = props;
+    const { children, in: open, onClick, onEnter, onExited, ...other } = props;
     const style = useSpring({
       from: { opacity: 0 },
       to: { opacity: open ? 1 : 0 },

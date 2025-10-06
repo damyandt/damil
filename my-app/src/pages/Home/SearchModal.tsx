@@ -56,7 +56,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
           search: t(`Can't find user with ${searchType} - ${searchInput}`),
         });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setErrors({ search: t("Can't find user with this information!") });
     }
   };
@@ -66,10 +66,6 @@ const SearchModal: React.FC<SearchModalProps> = ({
     setSearchInput("");
     setUserDetails(null);
     setOpenSearch(false);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prev) => prev - 1);
   };
 
   return (

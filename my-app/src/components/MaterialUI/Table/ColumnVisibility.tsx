@@ -1,13 +1,4 @@
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Switch,
-  FormControlLabel,
-  Box,
-  Grid,
-} from "@mui/material";
+import { Switch, FormControlLabel, Grid } from "@mui/material";
 import { useState } from "react";
 import Button from "../Button";
 import CustomModal from "../Modal";

@@ -1,18 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Stepper,
-  Step,
-  StepLabel,
-  Grid,
-  Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormLabel,
-  FormGroup,
-} from "@mui/material";
+import { Box, Stepper, Step, StepLabel, Grid, Typography } from "@mui/material";
 import CustomModal from "../../components/MaterialUI/Modal"; // Use your own modal component
 import TextField from "../../components/MaterialUI/FormFields/TextField";
 import Button from "../../components/MaterialUI/Button";
@@ -79,7 +66,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
           search: t(`Can't find user with ${searchType} - ${searchInput}`),
         });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setErrors({ search: t("Can't find user with this information!") });
     }
   };

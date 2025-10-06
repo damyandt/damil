@@ -81,7 +81,6 @@ const ShiftCell = ({ staff, day, shift, onDelete }: ShiftCellProps) => {
           size="small"
           onClick={(e) => {
             e.stopPropagation();
-            console.log("edit");
           }}
           sx={{
             transition: "opacity 0.3s ease",

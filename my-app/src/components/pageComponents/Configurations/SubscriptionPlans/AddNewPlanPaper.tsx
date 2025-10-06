@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import Button from "../../../MaterialUI/Button";
 import { useLanguageContext } from "../../../../context/LanguageContext";
-import { Enum, Response } from "../../../../Global/Types/commonTypes";
+import { Enum } from "../../../../Global/Types/commonTypes";
 
 export interface SubscriptionPlan {
   subscriptionPlan: string;

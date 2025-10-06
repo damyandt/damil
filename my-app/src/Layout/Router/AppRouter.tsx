@@ -33,7 +33,7 @@ export const createAppRouter = (
   abonnement: "PRO" | "STARTER" | "GROWTH" | null
 ) => {
   let roleRoutes = getRoutesForRole(userType, abonnement);
-  const finalRoutes = getRoutesForAbonnement(userType, abonnement, roleRoutes);
+  const finalRoutes = getRoutesForAbonnement(abonnement, roleRoutes);
   return createBrowserRouter([
     {
       path: "/",
@@ -53,11 +53,7 @@ const getRoutesForRole = (role: string, abonnement: string | null) => {
       getRolesForPage(route.path!).includes("ALL")
   );
 };
-const getRoutesForAbonnement = (
-  role: string,
-  abonnement: string | null,
-  roleRoutes: any
-) => {
+const getRoutesForAbonnement = (abonnement: string | null, roleRoutes: any) => {
   if (abonnement === "PRO") return roleRoutes;
   // const routes = allRoutes(role, abonnement);
   return roleRoutes.filter(

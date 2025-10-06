@@ -106,7 +106,7 @@ const LetterGlitch = ({
 
   const hexToRgb = (hex: string) => {
     const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, (m, r, g, b) => {
+    hex = hex.replace(shorthandRegex, (_, r, g, b) => {
       return r + r + g + g + b + b;
     });
 
@@ -276,7 +276,6 @@ const LetterGlitch = ({
       cancelAnimationFrame(animationRef.current!);
       window.removeEventListener("resize", handleResize);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [glitchSpeed, smooth]);
   const containerStyle = {
     position: "relative",

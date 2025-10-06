@@ -66,11 +66,11 @@ export const pageRoles: any = {
   "/DAMIL-Configurations/Profile": { roles: ["ALL"], abonnement: ["ALL"] },
   "/DAMIL-Configurations/Member-Plans": {
     roles: ["Facility Admin", "System Admin"],
-    abonnement: ["PRO"],
+    abonnement: ["PRO", "GROWTH", "STARTER"],
   },
   "/DAMIL-Configurations/Subscription-Plans": {
     roles: ["Facility Admin", "System Admin"],
-    abonnement: ["PRO"],
+    abonnement: ["PRO", "GROWTH", "STARTER"],
   },
   "/account/change-credentials": { roles: ["ALL"], abonnement: ["ALL"] },
 };

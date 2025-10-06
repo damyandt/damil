@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Grid,
@@ -40,9 +40,7 @@ const Calendar = ({
     start: dayjs(),
     end: dayjs(),
   });
-  useEffect(() => {
-    console.log(events);
-  }, [events]);
+
   const monthNames = [
     "January",
     "February",
@@ -186,7 +184,6 @@ const Calendar = ({
     }
 
     setEvents(updatedEvents);
-    console.log(updatedEvents);
     setOpenDialog(false);
     setFormData({
       title: "",

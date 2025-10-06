@@ -2,7 +2,6 @@ import { Typography, Box, IconButton, useTheme } from "@mui/material";
 import MuiLink from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 import LanguageOutlined from "@mui/icons-material/LanguageOutlined";
-import { useAuthedContext } from "../../context/AuthContext";
 import { useLanguageContext } from "../../context/LanguageContext";
 import Orb from "../../components/ogl/background";
 import { hexToVec3 } from "./Login";

@@ -1,11 +1,4 @@
-import {
-  createContext,
-  JSX,
-  use,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, JSX, useContext, useEffect, useState } from "react";
 import { getCookie } from "../Global/Utils/commonFunctions";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../API/callApi";
 import { User } from "../pages/usersPages/userTypes";
@@ -103,7 +96,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
       tenantInfo.success === true && setTenant(tenantInfo.data);
       setLoadingTenant(false);
     } catch (err) {
-      console.log("Tenant fetch error", err);
+      console.error("Tenant fetch error", err);
     }
   };
 
@@ -132,7 +125,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
           await checkIfUserIsSignedIn();
         }
       } catch (err) {
-        console.log("Authed user error");
+        console.error("Authed user error", err);
       }
       setLoading(false);
     })();

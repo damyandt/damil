@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  Divider,
   Grid,
   MenuItem,
   Paper,
@@ -14,7 +13,7 @@ import {
 } from "@mui/material";
 import TextField from "../../MaterialUI/FormFields/TextField";
 import { useLanguageContext } from "../../../context/LanguageContext";
-import callApi, { Query } from "../../../API/callApi";
+import callApi from "../../../API/callApi";
 import { useAuthedContext } from "../../../context/AuthContext";
 import Button from "../../MaterialUI/Button";
 import {
@@ -63,7 +62,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
   const [price, setPrice] = useState<number>(0);
 
   const handlePaymentMethodChange = (
-    event: React.MouseEvent<HTMLElement>,
+    _: React.MouseEvent<HTMLElement>,
     newMethod: "CARD" | "CASH"
   ) => {
     setPaymentMethod(newMethod);

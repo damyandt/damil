@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -54,8 +54,8 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
           textAlign: "center",
         }}
       >
-        {t("Page")} {currentPage < 10 ? `0${currentPage}` : currentPage} {t("of")}{" "}
-        {totalPages < 10 ? `0${totalPages}` : totalPages}
+        {t("Page")} {currentPage < 10 ? `0${currentPage}` : currentPage}{" "}
+        {t("of")} {totalPages < 10 ? `0${totalPages}` : totalPages}
       </Typography>
 
       <CustomTooltip title={t("Next")} placement="left">

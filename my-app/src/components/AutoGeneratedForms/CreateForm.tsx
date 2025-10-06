@@ -43,7 +43,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
   setActiveStep,
 }) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const { id, ...rest } = (selectedRow ?? {}) as {
+  const { _, ...rest } = (selectedRow ?? {}) as {
     id?: string | number;
     [key: string]: any;
   };

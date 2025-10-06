@@ -14,7 +14,6 @@ interface BaseChartProps {
   onEvents?: Record<string, (params?: any) => void>;
   isStatic?: boolean;
   isLoading?: boolean;
-  style?: any;
   addToSeries?: (series: object) => object;
 }
 
@@ -23,7 +22,6 @@ const BaseChart = forwardRef<ReactECharts, BaseChartProps>(
     {
       className,
       option,
-      style,
       echarts,
       height,
       onEvents,

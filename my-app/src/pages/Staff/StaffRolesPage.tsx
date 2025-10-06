@@ -4,7 +4,7 @@ import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import callApi from "../../API/callApi";
 import { useAuthedContext } from "../../context/AuthContext";
-import { FormStatuses, Table } from "../../Global/Types/commonTypes";
+import { FormStatuses } from "../../Global/Types/commonTypes";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { getStaffRoles } from "./API/getQueries";
 import { useLanguageContext } from "../../context/LanguageContext";
@@ -58,10 +58,9 @@ const StaffRolesPage = () => {
         query: getStaffRoles(),
         auth: { setAuthedUser },
       });
-      console.log(data.data);
       setTableData(data.data);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
 
     setPageStatus(null);

@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import ReactEChartsCore from "echarts-for-react/lib/core";
 import * as echarts from "echarts/core";
 import { BarChart } from "echarts/charts";
 import {
@@ -31,7 +30,7 @@ interface VisitsProps {
 
 const GymVisitsChart: React.FC<VisitsProps> = ({ height }) => {
   const chartRef = useRef<any>(null);
-    const { t } = useLanguageContext()
+  const { t } = useLanguageContext();
   const drilldownData = [
     {
       dataGroupId: "Jan",

@@ -37,7 +37,6 @@ const GlobalBarcodeScanner: React.FC = () => {
       });
       userDetails.success === true && setOpen(true);
       userDetails.success === true && setInfo(userDetails.data);
-      console.log("Fetched user details:", userDetails.data);
     } catch (error) {
       console.error("Error fetching user info:", error);
       return null;

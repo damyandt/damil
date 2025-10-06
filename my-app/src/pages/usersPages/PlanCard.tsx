@@ -15,6 +15,7 @@ import { useLanguageContext } from "../../context/LanguageContext";
 
 interface PlanCardProps {
   plan: any;
+
   period: "MONTHLY" | "ANNUALLY";
 }
 

@@ -1,5 +1,4 @@
 import React from "react";
-import ReactEChartsCore from "echarts-for-react/lib/core";
 import * as echarts from "echarts/core";
 import { GaugeChart } from "echarts/charts";
 import {
@@ -28,7 +27,7 @@ const GoalMembersGaugeChart: React.FC<GoalMembersGaugeChartProps> = ({
   value,
   height,
 }) => {
-    const { t } = useLanguageContext()
+  const { t } = useLanguageContext();
   const option: echarts.EChartsCoreOption = {
     title: {
       textStyle: {

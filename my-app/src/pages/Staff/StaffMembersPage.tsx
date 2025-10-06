@@ -54,10 +54,9 @@ const StaffPage = () => {
         query: getStaffMembers(),
         auth: { setAuthedUser },
       });
-      console.log(data.data);
       setTableData(data.data);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
 
     setPageStatus(null);

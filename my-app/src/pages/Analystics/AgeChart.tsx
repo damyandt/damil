@@ -1,5 +1,4 @@
 import React from "react";
-import ReactEChartsCore from "echarts-for-react/lib/core";
 import * as echarts from "echarts/core";
 import { PieChart } from "echarts/charts";
 import {
@@ -25,7 +24,7 @@ interface GAgeChartProps {
 }
 
 const AgeDistributionChart: React.FC<GAgeChartProps> = ({ height }) => {
-  const { t } = useLanguageContext()
+  const { t } = useLanguageContext();
   const option: echarts.EChartsCoreOption = {
     grid: {
       left: "3%",

@@ -13,7 +13,6 @@ import SaveIcon from "@mui/icons-material/Save";
 import DoneIcon from "@mui/icons-material/Done";
 import EditIcon from "@mui/icons-material/Edit";
 import TextField from "../../MaterialUI/FormFields/TextField";
-import CellRenderer from "../../MaterialUI/Table/CellRenderer";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import { useState } from "react";
 import { Fade } from "../../MaterialUI/FormFields/Fade";
@@ -31,11 +30,6 @@ const PreferencesDetails = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [saved, setSaved] = useState<boolean>(false);
   const [formData, setFormData] = useState<any>(preferences);
-
-  const preferencesInfo: { label: string; field: string | number }[] = [
-    { label: t("Currency"), field: "currency" },
-    { label: t("Language"), field: "language" },
-  ];
 
   const colorOptions: { name: string; color: string }[] = [
     { name: "purple", color: "#a250fa" },

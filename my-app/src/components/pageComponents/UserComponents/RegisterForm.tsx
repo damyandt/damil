@@ -101,7 +101,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
 
   const handleResend = () => {
     if (resendCooldown === 0) {
-      console.log("Code resent!");
       localStorage.setItem("lastResendTimestamp", Date.now().toString());
       setResendCooldown(60);
     }
@@ -170,7 +169,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
         setErrors(responce.validationErrors);
       }
     } catch (error) {
-      console.log("Verification failed:", error);
+      console.error("Verification failed:", error);
     }
   };
   return (

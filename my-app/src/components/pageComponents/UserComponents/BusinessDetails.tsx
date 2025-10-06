@@ -1,7 +1,6 @@
-import { Box, Grid, IconButton, MenuItem, Typography } from "@mui/material";
+import { Box, Grid, IconButton, Typography } from "@mui/material";
 import CustomTooltip from "../../MaterialUI/CustomTooltip";
 import TextField from "../../MaterialUI/FormFields/TextField";
-import CellRenderer from "../../MaterialUI/Table/CellRenderer";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import { useState } from "react";
 import SaveIcon from "@mui/icons-material/Save";
@@ -54,7 +53,6 @@ const BusinessDetails = () => {
     }
 
     if (Object.keys(changes).length === 0) {
-      console.log("No changes to update.");
       setEditMode(false);
       return;
     }

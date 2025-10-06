@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Button,
-  Box,
-  Typography,
-  CircularProgress,
-  IconButton,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Button, Box, Typography, CircularProgress } from "@mui/material";
 import callApi from "../../API/callApi";
 import { useAuthedContext } from "../../context/AuthContext";
 import CustomModal from "../../components/MaterialUI/Modal";

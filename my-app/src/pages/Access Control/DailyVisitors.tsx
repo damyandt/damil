@@ -1,14 +1,13 @@
-import { Box, CircularProgress, Grid } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import TableComponent from "../../components/MaterialUI/Table/Table";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import callApi from "../../API/callApi";
-import { getClientsTable, getPeriodVisitors } from "./API/getQueries";
+import { getPeriodVisitors } from "./API/getQueries";
 import { useAuthedContext } from "../../context/AuthContext";
 import { Column, FormStatuses, Row } from "../../Global/Types/commonTypes";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { useLanguageContext } from "../../context/LanguageContext";
-import ClientsRightMenu from "../../components/pageComponents/Clients/ClientsRightNav";
 import NextPlanIcon from "@mui/icons-material/NextPlan";
 import NewSubscriptionPlan from "../../components/pageComponents/Clients/NewSubscriptionPlan";
 import dayjs, { Dayjs } from "dayjs";
@@ -70,7 +69,7 @@ const DailyVisitors = () => {
       });
       setTableData(data.data);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
 
     setPageStatus(null);

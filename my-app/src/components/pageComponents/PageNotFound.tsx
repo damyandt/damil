@@ -24,7 +24,8 @@ const cssStyles = (
 ) => ({
   pageNotFoundContent: css({
     flexGrow: 1,
-    padding: AUTH_LAYOUT_PADDING,
+    padding:
+      typeof AUTH_LAYOUT_PADDING === "string" ? AUTH_LAYOUT_PADDING : "14px",
     backgroundColor: theme.palette.customColors?.sectionBackgroundColor,
     minHeight: `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 50px)`,
   }),

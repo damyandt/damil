@@ -4,7 +4,7 @@ import { Response, Row } from "../../../Global/Types/commonTypes";
 import { getClientVisits } from "../../../pages/Access Control/API/getQueries";
 import { useAuthedContext } from "../../../context/AuthContext";
 import dayjs from "dayjs";
-import { Typography, useTheme } from "@mui/material";
+import { Typography } from "@mui/material";
 import Calendar from "../../../pages/Staff/Calender";
 
 interface ClientHistoryProps {
@@ -14,7 +14,6 @@ interface ClientHistoryProps {
 const ClientHistory: React.FC<ClientHistoryProps> = ({ rowData }) => {
   const { setAuthedUser } = useAuthedContext();
   const [visits, setVisits] = useState<any[]>([]);
-  const theme = useTheme();
   useEffect(() => {
     const fetchAllOptions = async () => {
       try {
@@ -22,7 +21,6 @@ const ClientHistory: React.FC<ClientHistoryProps> = ({ rowData }) => {
           query: getClientVisits(rowData.id ?? ""),
           auth: { setAuthedUser },
         });
-        console.log(visitsRes);
         setVisits(visitsRes?.data ?? []);
       } catch (error) {
         console.error("Error fetching visits for", rowData.firstName, error);
@@ -32,16 +30,6 @@ const ClientHistory: React.FC<ClientHistoryProps> = ({ rowData }) => {
     fetchAllOptions();
   }, [rowData.id, rowData.firstName, setAuthedUser]);
 
-  // Map visits to FullCalendar events
-  const events = visits.map((visit) => {
-    const start = dayjs(visit.checkInAt);
-    const end = start.add(1, "hour"); // Add 1 hour
-    return {
-      title: `Check-in`,
-      start: start.toISOString(),
-      end: end.toISOString(), // Set end time
-    };
-  });
   useEffect(() => {
     if (visits.length) {
       setTimeout(() => {

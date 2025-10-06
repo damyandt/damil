@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-import { useAuthedContext } from "../context/AuthContext";
 import {
   handleFetchUserAccessToken,
   handleUserSignOut,
@@ -208,7 +206,6 @@ const callApi = async <T>(
 
   // if status code is not within 200, there is an error
   if (!response.status.toString().startsWith("2") && !receiveErrorMessage) {
-    console.log("API err ", response);
     throw new Error(`API error - ${response.url}`);
   }
 

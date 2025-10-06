@@ -1,13 +1,12 @@
 import {
   NAV_DAMIL_HOME,
   NAV_DAMIL_ANALYTICS,
-
 } from "../AppNavigation/leftNavData";
 import { LeftNavList } from "../layoutVariables";
 
 export const allLeftNavRoutes: LeftNavList = [
   ...NAV_DAMIL_HOME.list,
-  ...NAV_DAMIL_ANALYTICS.list
+  ...NAV_DAMIL_ANALYTICS.list,
 ];
 
 type RoutesMap = { [key: string]: string };
@@ -17,7 +16,11 @@ type RoutesMap = { [key: string]: string };
  * and returns key-value pairs based of the nested structure.
  * Key is the text and value is the URL.
  */
-const handleRoutesMapping = (navList: LeftNavList, parent?: string): RoutesMap => {
+
+const handleRoutesMapping = (
+  navList: LeftNavList,
+  parent?: string
+): RoutesMap => {
   return navList.reduce((acc: RoutesMap, curr) => {
     const currentText = parent ? `${parent}-${curr.text}` : curr.text;
     const key = parent
@@ -43,7 +46,8 @@ const handleRoutesMapping = (navList: LeftNavList, parent?: string): RoutesMap =
   }, {});
 };
 
-const LEFT_NAV_ROUTES_MAPPING: RoutesMap = handleRoutesMapping(allLeftNavRoutes);
+const LEFT_NAV_ROUTES_MAPPING: RoutesMap =
+  handleRoutesMapping(allLeftNavRoutes);
 
 const ROUTES_MAPPING: RoutesMap = {
   ...LEFT_NAV_ROUTES_MAPPING,

@@ -51,7 +51,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({ type, period, price }) => {
         currency: "usd",
         abonnementDuration: period,
       };
-      console.log(input);
+
       const res = await callApi<any>({
         query: stripePaymentIntent(input),
         auth: { setAuthedUser },

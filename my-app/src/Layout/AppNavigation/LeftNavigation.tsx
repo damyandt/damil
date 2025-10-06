@@ -11,7 +11,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { LEFT_NAV_WIDTH, LeftNavSingleItem } from "../layoutVariables";
+import { LEFT_NAV_WIDTH } from "../layoutVariables";
 import LeftNavListMenu from "./LeftNavListMenu";
 import { useTranslatedNav } from "../../Global/Hooks/useTranslatedNav";
 import MenuIcon from "@mui/icons-material/Menu";

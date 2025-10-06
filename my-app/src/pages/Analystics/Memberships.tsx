@@ -1,4 +1,3 @@
-import ReactECharts from "echarts-for-react";
 import BaseChart from "../../components/pageComponents/BaseChart";
 import { useLanguageContext } from "../../context/LanguageContext";
 
@@ -135,7 +134,7 @@ const femaleData = [
 ];
 
 export default function Memberships() {
-    const { t } = useLanguageContext()
+  const { t } = useLanguageContext();
   const option = {
     grid: {
       top: 140,

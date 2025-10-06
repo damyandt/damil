@@ -53,7 +53,7 @@ export const shiftHue = (color: string, amount: number) =>
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [analyticsData, setAnalyticsData] = useState<any>(null);
-  const { authedUser, preferences, setAuthedUser, tenant } = useAuthedContext();
+  const { preferences, setAuthedUser, tenant } = useAuthedContext();
   const [openCheckIn, setOpenCheckIn] = useState<boolean>(false);
   const [selectedFilters, setSelectedFilters] = useState<any>(
     preferences.homeFilters ?? [
