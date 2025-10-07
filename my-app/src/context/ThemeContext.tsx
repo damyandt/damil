@@ -27,20 +27,28 @@ type ThemeProviderProps = {
 
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const { preferences } = useAuthedContext();
+  const initialStoredMode: PaletteMode =
+    preferences.mode === "light" || preferences.mode === "dark"
+      ? preferences.mode
+      : localStorage.getItem("themeMode") === "light" ||
+        localStorage.getItem("themeMode") === "dark"
+      ? (localStorage.getItem("themeMode") as PaletteMode)
+      : "light";
 
-  const [themeMode, setThemeMode] = useState<PaletteMode>(
-    preferences.mode || localStorage.getItem("themeMode") || "light"
-  );
-
-  const [primaryColor, setPrimaryColor] = useState<string>(
-    preferences.themeColor || localStorage.getItem("themeColor") || "#a250fa"
-  );
+  const [themeMode, setThemeMode] = useState<PaletteMode>(initialStoredMode);
+  const initialStoredColor: string = preferences.themeColor
+    ? preferences.themeColor
+    : localStorage.getItem("themeColor")
+    ? (localStorage.getItem("themeColor") as string)
+    : "#a250fa";
+  const [primaryColor, setPrimaryColor] = useState<string>(initialStoredColor);
 
   useEffect(() => {
-    setThemeMode(preferences.mode);
-    setPrimaryColor(preferences.themeColor);
-    localStorage.setItem("themeMode", preferences.mode);
-    localStorage.setItem("themeColor", preferences.themeColor);
+    preferences.mode && setThemeMode(preferences.mode);
+    preferences.mode && setPrimaryColor(preferences.themeColor);
+    preferences.mode && localStorage.setItem("themeMode", preferences.mode);
+    preferences.themeColor &&
+      localStorage.setItem("themeColor", preferences.themeColor);
   }, [preferences]);
 
   const value: ThemeContextType = {

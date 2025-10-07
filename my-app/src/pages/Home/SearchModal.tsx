@@ -146,7 +146,13 @@ const SearchModal: React.FC<SearchModalProps> = ({
               label={t("Search")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleNext()}
+              onKeyDown={(e: any) => {
+                if (e.key === "Enter") {
+                  e.preventDefault(); // ✅ Prevent form submission or unwanted action
+                  e.stopPropagation(); // ✅ Optional: block global handlers
+                  handleNext();
+                }
+              }}
             />
           </Grid>
 

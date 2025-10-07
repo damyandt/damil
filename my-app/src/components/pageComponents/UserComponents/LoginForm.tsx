@@ -214,7 +214,13 @@ const LoginForm = () => {
             disabled={disableEmail}
             label={errors["email"] || t("Email")}
             error={!!errors["email"]}
-            onKeyDown={(e) => e.key === "Enter" && handleNextClick()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                e.stopPropagation();
+                handleNextClick();
+              }
+            }}
             onChange={(e) => handleChange("email", e.target.value)}
             InputProps={{
               endAdornment: !showPasswordField ? (
@@ -250,7 +256,11 @@ const LoginForm = () => {
               onChange={(e) => handleChange("password", e.target.value)}
               inputRef={passwordInputRef}
               onKeyDown={(e) => {
-                if (e.key === "Enter") handleLogin();
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleLogin();
+                }
               }}
               InputProps={{
                 endAdornment: (
@@ -311,7 +321,9 @@ const LoginForm = () => {
             title={
               resendCooldown === 0
                 ? t("Click to Resend Code")
-                : `${t("Wait")} ${resendCooldown}${t("s before you try again!")}`
+                : `${t("Wait")} ${resendCooldown}${t(
+                    "s before you try again!"
+                  )}`
             }
             sx={{ ml: 2 }}
           >

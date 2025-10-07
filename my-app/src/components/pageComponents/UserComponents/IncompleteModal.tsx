@@ -122,13 +122,15 @@ const IncompleteProfileModal = () => {
         info.success === true && setRefreshUserData(true);
         info.success === false && setErrors(info.validationErrors || {});
       } else if (step === 2) {
-        const preferencesInfo = await callApi<Response<any>>({
+        const preferencesInfo = await callApi<any>({
           query: savePreferences(preferancesData),
           auth: { setAuthedUser },
         });
 
-        localStorage.setItem("themeMode", preferancesData.mode);
-        localStorage.setItem("themeColor", preferancesData.themeColor);
+        preferencesInfo.mode &&
+          localStorage.setItem("themeMode", preferancesData.mode);
+        preferencesInfo.themeColor &&
+          localStorage.setItem("themeColor", preferancesData.themeColor);
         preferencesInfo.success === true && setStep(3);
         preferencesInfo.success === true && setRefreshUserData(true);
       } else {
@@ -265,6 +267,7 @@ const IncompleteProfileModal = () => {
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, sm: 6, md: 6 }}>
               <TextField
+                select
                 label={t("Currency")}
                 type="currency"
                 value={preferancesData.currency}
@@ -272,10 +275,20 @@ const IncompleteProfileModal = () => {
                   handleChangePreferences("currency", e.target.value)
                 }
                 fullWidth
-              />
+              >
+                {[
+                  { title: "BGN", value: "BGN" },
+                  { title: "EUR", value: "EUR" },
+                ].map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.title}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
             <Grid size={{ xs: 12, sm: 6, md: 6 }}>
               <TextField
+                select
                 label={t("Language")}
                 type="language"
                 value={preferancesData.language}
@@ -283,7 +296,16 @@ const IncompleteProfileModal = () => {
                   handleChangePreferences("language", e.target.value)
                 }
                 fullWidth
-              />
+              >
+                {[
+                  { title: "BG", value: "bg" },
+                  { title: "EN", value: "en" },
+                ].map((lang) => (
+                  <MenuItem key={lang.value} value={lang.value}>
+                    {lang.title}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
             <Grid size={{ xs: 12, sm: 6, md: 6 }}>
               <FormControl component="fieldset">
@@ -419,8 +441,8 @@ const IncompleteProfileModal = () => {
             {step === 0
               ? t("Next")
               : step === 1 || step === 2
-                ? t("Save & Next")
-                : t("Set Plans")}
+              ? t("Save & Next")
+              : t("Set Plans")}
           </Button>
         </Box>
       </Box>

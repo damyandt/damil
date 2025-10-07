@@ -177,7 +177,13 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
               label={t("Search")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleNext()}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleNext();
+                }
+              }}
             />
           </Grid>
 
@@ -243,7 +249,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                 <Typography>
                   <CellRenderer
                     key={t("Name")}
-                    value={`${userDetails?.[0].firstName} ${userDetails?.[0].lastName}`}
+                    value={`${userDetails?.[0]?.firstName} ${userDetails?.[0]?.lastName}`}
                     dataType={"string"}
                     table={false}
                   />
@@ -254,7 +260,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
 
                 <CellRenderer
                   key={t("Email")}
-                  value={userDetails?.[0].email}
+                  value={userDetails?.[0]?.email}
                   dataType={"string"}
                   table={false}
                 />
@@ -263,7 +269,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                 <Typography variant="subtitle2">{t("Phone")}</Typography>
                 <CellRenderer
                   key={t("Phone")}
-                  value={userDetails?.[0].phone || "-"}
+                  value={userDetails?.[0]?.phone || "-"}
                   dataType={"string"}
                   table={false}
                 />
@@ -272,7 +278,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                 <Typography variant="subtitle2">{t("Gender")}</Typography>
                 <CellRenderer
                   key={t("Gender")}
-                  value={userDetails?.[0].gender}
+                  value={userDetails?.[0]?.gender}
                   dataType={"enum"}
                   table={false}
                 />
@@ -284,7 +290,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
 
                 <CellRenderer
                   key={t("Subscription Plan")}
-                  value={userDetails?.[0].subscriptionPlan}
+                  value={userDetails?.[0]?.subscriptionPlan}
                   dataType={"enum"}
                   table={false}
                 />
@@ -295,7 +301,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                 </Typography>
                 <CellRenderer
                   key={t("Subscription Status")}
-                  value={userDetails?.[0].subscriptionStatus}
+                  value={userDetails?.[0]?.subscriptionStatus}
                   dataType={"enum"}
                   table={false}
                 />
@@ -304,7 +310,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                 <Typography variant="subtitle2">{t("Start Date")}</Typography>
                 <CellRenderer
                   key={t("Start Date")}
-                  value={userDetails?.[0].subscriptionStartDate}
+                  value={userDetails?.[0]?.subscriptionStartDate}
                   dataType={"date"}
                   table={false}
                 />
@@ -313,7 +319,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                 <Typography variant="subtitle2">{t("End Date")}</Typography>
                 <CellRenderer
                   key={t("Start Date")}
-                  value={userDetails?.[0].subscriptionEndDate}
+                  value={userDetails?.[0]?.subscriptionEndDate}
                   dataType={"date"}
                   table={false}
                 />

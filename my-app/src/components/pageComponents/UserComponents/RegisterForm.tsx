@@ -248,9 +248,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
               label={errors["address"] || t("Address")}
               error={!!errors["address"]}
               onKeyDown={(e) => {
-                e.key === "Enter" &&
+                if (e.key === "Enter") {
+                  e.preventDefault(); // ✅ Prevent form submission or unwanted action
+                  e.stopPropagation(); // ✅ Optional: block global handlers
+
                   registerValidator(step, business, admin, setErrors) &&
-                  setStep((prev: number) => (prev += 1));
+                    setStep((prev: number) => (prev += 1));
+                }
               }}
               onChange={(e) =>
                 setBusiness((prev: BusinessDataRegister) => ({
@@ -328,8 +332,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
               onChange={(e) =>
                 handleChangeAdmin("confirmPassword", e.target.value)
               }
-              onKeyDown={(e) => {
-                e.key === "Enter" && handleRegister();
+              onKeyDown={(e: any) => {
+                if (e.key === "Enter") {
+                  e.preventDefault(); // ✅ Prevent form submission or unwanted action
+                  e.stopPropagation(); // ✅ Optional: block global handlers
+                  handleRegister();
+                }
               }}
               InputProps={{
                 endAdornment: (
@@ -364,8 +372,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
             error={!!errors["verificationCode"]}
             helperText={errors["verificationCode"] || " "}
             onChange={(e) => setCode(e.target.value)}
-            onKeyDown={(e) => {
-              e.key === "Enter" && handleSubmitVerificationCode();
+            onKeyDown={(e: any) => {
+              if (e.key === "Enter") {
+                e.preventDefault(); // ✅ Prevent form submission or unwanted action
+                e.stopPropagation(); // ✅ Optional: block global handlers
+                handleSubmitVerificationCode();
+              }
             }}
             InputProps={{
               endAdornment: (
@@ -397,7 +409,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
               title={
                 resendCooldown === 0
                   ? t("Click to Resend Code")
-                  : `${t("Wait")} ${resendCooldown}${t("s before you try again!")}`
+                  : `${t("Wait")} ${resendCooldown}${t(
+                      "s before you try again!"
+                    )}`
               }
             >
               <Typography

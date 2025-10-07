@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box, Typography, Grid } from "@mui/material";
 import Button from "../../components/MaterialUI/Button";
 import TextField from "../../components/MaterialUI/FormFields/TextField";
 import { SubscriptionPlan } from "../../components/pageComponents/Configurations/SubscriptionPlans/AddNewPlanPaper";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 type PlanPrices = {
   price: string;
@@ -14,7 +15,7 @@ type PlanPrices = {
 type PricesState = Record<string, PlanPrices>;
 
 interface DefinePricesFormProps {
-  plans: string[]; // 👈 array of strings
+  plans: string[];
   onBack: () => void;
   onSubmit: (prices: SubscriptionPlan[]) => void | Promise<void>;
   inModal?: boolean;
@@ -26,6 +27,7 @@ const DefinePricesForm: React.FC<DefinePricesFormProps> = ({
   onSubmit,
   inModal = false,
 }) => {
+  const { t } = useLanguageContext();
   const [prices, setPrices] = useState<PricesState>(
     plans.reduce((acc, plan) => {
       acc[plan] = {
@@ -38,6 +40,14 @@ const DefinePricesForm: React.FC<DefinePricesFormProps> = ({
     }, {} as PricesState)
   );
 
+  // Refs to all inputs
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  useEffect(() => {
+    // Clear and reassign refs based on plan count
+    inputRefs.current = inputRefs.current.slice(0, plans.length * 4);
+  }, [plans]);
+
   const handleChange = (
     plan: string,
     field: keyof PlanPrices,
@@ -47,6 +57,24 @@ const DefinePricesForm: React.FC<DefinePricesFormProps> = ({
       ...prev,
       [plan]: { ...prev[plan], [field]: value },
     }));
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+
+      const nextIndex = index + 1;
+      const totalFields = inputRefs.current.length;
+
+      if (nextIndex < totalFields) {
+        inputRefs.current[nextIndex]?.focus();
+      } else {
+        handleSubmit();
+      }
+    }
   };
 
   const handleSubmit = () => {
@@ -63,13 +91,20 @@ const DefinePricesForm: React.FC<DefinePricesFormProps> = ({
     onSubmit(payload);
   };
 
+  const priceFields = [
+    "price",
+    "studentPrice",
+    "handicapPrice",
+    "seniorPrice",
+  ] as const;
+
   return (
     <>
       <Grid container spacing={2} justifyContent="center" width={"100%"}>
-        {plans.map((plan) => (
+        {plans.map((plan, planIndex) => (
           <Grid
-            size={inModal ? { xs: 12, md: 6, lg: 6 } : { xs: 12, md: 6, lg: 3 }}
             key={plan}
+            size={{ xs: 12, md: 6, lg: inModal ? 6 : 3 }}
             sx={{
               mb: 3,
               display: "flex",
@@ -78,40 +113,31 @@ const DefinePricesForm: React.FC<DefinePricesFormProps> = ({
             }}
           >
             <Typography variant="h6">{plan}</Typography>
-            <TextField
-              label="Price"
-              type="number"
-              value={prices[plan].price}
-              onChange={(e) => handleChange(plan, "price", e.target.value)}
-              fullWidth
-            />
-            <TextField
-              label="Student Price"
-              type="number"
-              value={prices[plan].studentPrice}
-              onChange={(e) =>
-                handleChange(plan, "studentPrice", e.target.value)
-              }
-              fullWidth
-            />
-            <TextField
-              label="Handicap Price"
-              type="number"
-              value={prices[plan].handicapPrice}
-              onChange={(e) =>
-                handleChange(plan, "handicapPrice", e.target.value)
-              }
-              fullWidth
-            />
-            <TextField
-              label="Senior Price"
-              type="number"
-              value={prices[plan].seniorPrice}
-              onChange={(e) =>
-                handleChange(plan, "seniorPrice", e.target.value)
-              }
-              fullWidth
-            />
+            {priceFields.map((field, fieldIndex) => {
+              const refIndex = planIndex * priceFields.length + fieldIndex;
+              return (
+                <TextField
+                  key={`${plan}-${fieldIndex}-${field}`}
+                  label={field
+                    .replace("Price", " Price")
+                    .replace(/^./, (c) => c.toUpperCase())}
+                  type="number"
+                  value={prices[plan][field]}
+                  inputRef={(el) => {
+                    inputRefs.current[refIndex] = el;
+                  }}
+                  onChange={(e) => handleChange(plan, field, e.target.value)}
+                  onKeyDown={(e: any) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault(); // ✅ Prevent form submission or unwanted action
+                      e.stopPropagation(); // ✅ Optional: block global handlers
+                      handleKeyDown(e, refIndex);
+                    }
+                  }}
+                  fullWidth
+                />
+              );
+            })}
           </Grid>
         ))}
       </Grid>
@@ -125,9 +151,9 @@ const DefinePricesForm: React.FC<DefinePricesFormProps> = ({
         }}
       >
         <Button onClick={onBack} color="error">
-          Back
+          {t("Back")}
         </Button>
-        <Button onClick={handleSubmit}>Submit</Button>
+        <Button onClick={handleSubmit}>{t("Submit")}</Button>
       </Box>
     </>
   );

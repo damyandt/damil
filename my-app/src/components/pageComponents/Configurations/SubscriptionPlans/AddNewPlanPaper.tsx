@@ -74,7 +74,7 @@ const AddNewPlansPaper = ({
       <FormGroup sx={{ pl: 1 }}>
         <Grid container spacing={1}>
           {finalOptions.map((plan: Enum) => (
-            <Grid size={4}>
+            <Grid size={4} key={plan.value}>
               <FormControlLabel
                 key={plan.value}
                 control={

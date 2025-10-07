@@ -123,16 +123,13 @@ const CreateForm: React.FC<CreateFormProps> = ({
         const originalValues = { ...rest };
         type OriginalKeys = keyof typeof originalValues;
 
-        payload = Object.entries(formValues).reduce(
-          (acc, [key, value]) => {
-            const typedKey = key as OriginalKeys;
-            if (value !== originalValues[typedKey]) {
-              acc[typedKey] = value;
-            }
-            return acc;
-          },
-          {} as Partial<typeof originalValues>
-        );
+        payload = Object.entries(formValues).reduce((acc, [key, value]) => {
+          const typedKey = key as OriginalKeys;
+          if (value !== originalValues[typedKey]) {
+            acc[typedKey] = value;
+          }
+          return acc;
+        }, {} as Partial<typeof originalValues>);
       }
 
       const query: Query = {
@@ -206,7 +203,13 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             inputRef={(el: HTMLInputElement) => {
                               inputRefs.current[index] = el;
                             }}
-                            onKeyDown={handleKeyDown}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault(); // ✅ Prevent form submission or unwanted action
+                                e.stopPropagation(); // ✅ Optional: block global handlers
+                                handleKeyDown(e);
+                              }
+                            }}
                           />
                         );
 
@@ -227,7 +230,13 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             inputRef={(el: HTMLInputElement) => {
                               inputRefs.current[index] = el;
                             }}
-                            onKeyDown={handleKeyDown}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault(); // ✅ Prevent form submission or unwanted action
+                                e.stopPropagation(); // ✅ Optional: block global handlers
+                                handleKeyDown(e);
+                              }
+                            }}
                           />
                         );
 
@@ -277,7 +286,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             sx={{ width: "100%" }}
                             label={col.header}
                             value={
-                              isLoading && hasValue ? "loading" : (value ?? "")
+                              isLoading && hasValue ? "loading" : value ?? ""
                             }
                             onChange={(e: any) =>
                               handleChange(col.field, e.target.value)
@@ -288,7 +297,13 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             inputRef={(el: HTMLInputElement) => {
                               inputRefs.current[index] = el;
                             }}
-                            onKeyDown={handleKeyDown}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault(); // ✅ Prevent form submission or unwanted action
+                                e.stopPropagation(); // ✅ Optional: block global handlers
+                                handleKeyDown(e);
+                              }
+                            }}
                           >
                             {menuItems}
                           </TextField>
@@ -323,7 +338,13 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             inputRef={(el: HTMLInputElement) => {
                               inputRefs.current[index] = el;
                             }}
-                            onKeyDown={handleKeyDown}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault(); // ✅ Prevent form submission or unwanted action
+                                e.stopPropagation(); // ✅ Optional: block global handlers
+                                handleKeyDown(e);
+                              }
+                            }}
                           />
                         );
                     }

@@ -71,8 +71,9 @@ const PreferencesDetails = () => {
       query: savePreferences(themeData),
       auth: { setAuthedUser },
     });
-    localStorage.setItem("themeMode", formData.mode);
-    localStorage.setItem("themeColor", formData.themeColor);
+    formData.mode && localStorage.setItem("themeMode", formData.mode);
+    formData.themeColor &&
+      localStorage.setItem("themeColor", formData.themeColor);
     setRefreshUserData((prev: boolean) => !prev);
     setSaved(true);
 
