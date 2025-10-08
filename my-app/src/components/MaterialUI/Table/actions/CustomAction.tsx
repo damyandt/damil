@@ -16,7 +16,6 @@ type CustomActionProps = {
   renderContent?: (
     rowData?: Row,
     setOpen?: Dispatch<SetStateAction<boolean>>,
-    columns?: Column[],
     setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>
   ) => React.ReactNode;
   setAnchorEl?: (value: any) => void;
@@ -25,7 +24,6 @@ type CustomActionProps = {
 
 export const CustomAction = ({
   rowData,
-  columns,
   icon,
   tooltip,
   modalTitle,
@@ -62,7 +60,7 @@ export const CustomAction = ({
         style={modalStyle}
         titleIcon={modalTitleIcon}
       >
-        {renderContent?.(rowData, setOpen, columns, setRefreshTable)}
+        {renderContent?.(rowData, setOpen, setRefreshTable)}
       </CustomModal>
     </>
   );

@@ -5,7 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import callApi from "../../API/callApi";
 import { getPeriodVisitors } from "./API/getQueries";
 import { useAuthedContext } from "../../context/AuthContext";
-import { Column, FormStatuses, Row } from "../../Global/Types/commonTypes";
+import { FormStatuses, Row } from "../../Global/Types/commonTypes";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { useLanguageContext } from "../../context/LanguageContext";
 import NextPlanIcon from "@mui/icons-material/NextPlan";
@@ -96,7 +96,9 @@ const DailyVisitors = () => {
             rows={tableData?.rows || []}
             configurations={tableData?.config || {}}
             setRefreshTable={setRefreshTable}
-            title={`${t("Visits")} (${startDate.format("YYYY-MM-DD")} - ${endDate.format("YYYY-MM-DD")})`}
+            title={`${t("Visits")} (${startDate.format(
+              "YYYY-MM-DD"
+            )} - ${endDate.format("YYYY-MM-DD")})`}
             customActions={clientCustomActions}
           />
         </Box>
@@ -119,14 +121,13 @@ const clientCustomActions = [
     renderContent: (
       rowData: Row,
       setOpen: Dispatch<SetStateAction<boolean>>,
-      columns: Column[],
       setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>
     ) => (
       <NewSubscriptionPlan
         rowData={rowData}
         setOpen={setOpen}
-        columns={columns}
-        setRefreshTable={setRefreshTable}
+        enumEndpoints={["users/membership/plans/options", "Employment/values"]}
+        refreshFunc={() => setRefreshTable((prev: boolean) => !prev)}
       />
     ),
   },

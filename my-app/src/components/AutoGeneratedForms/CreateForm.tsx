@@ -174,14 +174,11 @@ const CreateForm: React.FC<CreateFormProps> = ({
               return (
                 <Grid key={col.field} size={{ xs: 12, md: 6 }}>
                   {(() => {
-                    const handleKeyDown = (e: React.KeyboardEvent) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        if (index < createFieldsColumns.length - 1) {
-                          inputRefs.current[index + 1]?.focus();
-                        } else {
-                          handleSave();
-                        }
+                    const handleKeyDown = () => {
+                      if (index < createFieldsColumns.length - 1) {
+                        inputRefs.current[index + 1]?.focus();
+                      } else {
+                        handleSave();
                       }
                     };
                     switch (col.type) {
@@ -203,13 +200,16 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             inputRef={(el: HTMLInputElement) => {
                               inputRefs.current[index] = el;
                             }}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                e.preventDefault(); // ✅ Prevent form submission or unwanted action
-                                e.stopPropagation(); // ✅ Optional: block global handlers
-                                handleKeyDown(e);
-                              }
+                            onEnterFunc={() => {
+                              handleKeyDown();
                             }}
+                            // onKeyDown={(e) => {
+                            //   if (e.key === "Enter") {
+                            //     e.preventDefault(); // ✅ Prevent form submission or unwanted action
+                            //     e.stopPropagation(); // ✅ Optional: block global handlers
+                            //     handleKeyDown();
+                            //   }
+                            // }}
                           />
                         );
 
@@ -230,12 +230,15 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             inputRef={(el: HTMLInputElement) => {
                               inputRefs.current[index] = el;
                             }}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                e.preventDefault(); // ✅ Prevent form submission or unwanted action
-                                e.stopPropagation(); // ✅ Optional: block global handlers
-                                handleKeyDown(e);
-                              }
+                            // onKeyDown={(e) => {
+                            //   if (e.key === "Enter") {
+                            //     e.preventDefault(); // ✅ Prevent form submission or unwanted action
+                            //     e.stopPropagation(); // ✅ Optional: block global handlers
+                            //     handleKeyDown(e);
+                            //   }
+                            // }}
+                            onEnterFunc={() => {
+                              handleKeyDown();
                             }}
                           />
                         );
@@ -297,12 +300,15 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             inputRef={(el: HTMLInputElement) => {
                               inputRefs.current[index] = el;
                             }}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                e.preventDefault(); // ✅ Prevent form submission or unwanted action
-                                e.stopPropagation(); // ✅ Optional: block global handlers
-                                handleKeyDown(e);
-                              }
+                            // onKeyDown={(e) => {
+                            //   if (e.key === "Enter") {
+                            //     e.preventDefault(); // ✅ Prevent form submission or unwanted action
+                            //     e.stopPropagation(); // ✅ Optional: block global handlers
+                            //     handleKeyDown(e);
+                            //   }
+                            // }}
+                            onEnterFunc={() => {
+                              handleKeyDown();
                             }}
                           >
                             {menuItems}
@@ -338,12 +344,15 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             inputRef={(el: HTMLInputElement) => {
                               inputRefs.current[index] = el;
                             }}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                e.preventDefault(); // ✅ Prevent form submission or unwanted action
-                                e.stopPropagation(); // ✅ Optional: block global handlers
-                                handleKeyDown(e);
-                              }
+                            // onKeyDown={(e) => {
+                            //   if (e.key === "Enter") {
+                            //     e.preventDefault(); // ✅ Prevent form submission or unwanted action
+                            //     e.stopPropagation(); // ✅ Optional: block global handlers
+                            //     handleKeyDown(e);
+                            //   }
+                            // }}
+                            onEnterFunc={() => {
+                              handleKeyDown();
                             }}
                           />
                         );

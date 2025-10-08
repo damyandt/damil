@@ -1,5 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Box, Stepper, Step, StepLabel, Grid, Typography } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Box,
+  Stepper,
+  Step,
+  StepLabel,
+  Grid,
+  Typography,
+  Popper,
+  Paper,
+  ListItemButton,
+  ListItemText,
+  List,
+  ClickAwayListener,
+} from "@mui/material";
 import CustomModal from "../../components/MaterialUI/Modal"; // Use your own modal component
 import TextField from "../../components/MaterialUI/FormFields/TextField";
 import Button from "../../components/MaterialUI/Button";
@@ -14,6 +27,8 @@ import { Partial } from "@react-spring/web";
 import { User } from "../usersPages/userTypes";
 import { Response } from "../../Global/Types/commonTypes";
 import Checkbox from "../../components/MaterialUI/FormFields/Checkbox";
+import NewSubscriptionPlan from "../../components/pageComponents/Clients/NewSubscriptionPlan";
+// import { List } from "echarts"; // Remove this line
 interface CheckInModalProps {
   open: boolean;
   onClose: () => void;
@@ -28,12 +43,15 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
   const { t } = useLanguageContext();
   const [searchType, setSearchType] = useState<
     "ID" | "Name" | "Email" | "Phone"
-  >("ID");
+  >("Name");
   const [activeStep, setActiveStep] = useState<number>(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [searchInput, setSearchInput] = useState<string>("");
   const [usersFound, setUsersFound] = useState<any>(null);
   const [userDetails, setUserDetails] = useState<any>(userInfo || null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const [openBuyPlan, setOpenBuyPlan] = useState<boolean>(false);
   const { setAuthedUser } = useAuthedContext();
   const steps = [
     t("Search Member"),
@@ -45,28 +63,52 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
     userInfo && setActiveStep(1);
   }, [userInfo]);
 
+  useEffect(() => {
+    if (!searchInput.trim()) {
+      setUsersFound(null);
+      return;
+    }
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const response: Response<Array<Partial<User>>> = await callApi<any>({
+          query: getMember(searchInput, searchType.toLowerCase()),
+          auth: { setAuthedUser },
+        });
+
+        if (response.success && response.data.length > 0) {
+          setUsersFound(response.data);
+        } else {
+          setUsersFound([]);
+        }
+      } catch (err: any) {
+        console.error(err);
+        setUsersFound([]);
+      }
+    }, 500);
+  }, [searchInput, searchType]);
+
   const handleNext = async () => {
     try {
-      const userDetails: Response<Array<Partial<User>>> = await callApi<any>({
+      const response: Response<Array<Partial<User>>> = await callApi<any>({
         query: getMember(searchInput, searchType.toLowerCase()),
         auth: { setAuthedUser },
       });
-      setUsersFound(userDetails.data);
-      userDetails.data && setUserDetails(userDetails?.data);
-      userDetails.success === true && setErrors({});
-      userDetails.success === true &&
-        userDetails.data.length !== 0 &&
-        setActiveStep((prev) => prev + 1);
-      userDetails.success === false &&
+
+      if (response.success && response.data.length > 0) {
+        setUsersFound(response.data); // ✅ show results in Popper
+        setErrors({});
+      } else {
+        setUsersFound([]); // empty dropdown
         setErrors({
           search: t(`Can't find user with ${searchType} - ${searchInput}`),
         });
-      userDetails.data.length === 0 &&
-        setErrors({
-          search: t(`Can't find user with ${searchType} - ${searchInput}`),
-        });
+      }
     } catch (error) {
       console.error(error);
+      setUsersFound([]);
       setErrors({ search: t("Can't find user with this information!") });
     }
   };
@@ -100,145 +142,151 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
   };
 
   return (
-    <CustomModal
-      title={t("Member Check-In")}
-      titleIcon="login"
-      open={open}
-      onClose={() => handleReset(true)}
-      width="lg"
-    >
-      <Box sx={{ width: "100%", mb: 3 }}>
-        <Stepper activeStep={activeStep} alternativeLabel>
-          {steps.map((label, idx) => (
-            <Step key={idx}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-      </Box>
+    <>
+      <CustomModal
+        title={t("Member Check-In")}
+        titleIcon="login"
+        open={open}
+        onClose={() => handleReset(true)}
+        width="lg"
+      >
+        <Box sx={{ width: "100%", mb: 3 }}>
+          <Stepper activeStep={activeStep} alternativeLabel>
+            {steps.map((label, idx) => (
+              <Step key={idx}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        </Box>
 
-      {/* Step 1 */}
-      {activeStep === 0 && (
-        <Grid container spacing={2}>
-          <Grid size={12}>
-            <Typography>{t("Search By")}</Typography>
+        {activeStep === 0 && (
+          <Grid container spacing={2}>
+            <Grid size={12}>
+              <Typography>{t("Search By")}</Typography>
 
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              flexWrap="wrap"
-              width={"70%"}
-              margin={"0 auto"}
-            >
-              {[
-                {
-                  name: t("ID"),
-                  value: "ID",
-                },
-                {
-                  name: t("Name"),
-                  value: "Name",
-                },
-                {
-                  name: t("Email"),
-                  value: "Email",
-                },
-                {
-                  name: t("Phone"),
-                  value: "Phone",
-                },
-              ].map((option) => (
-                <Box
-                  key={option.value}
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="center"
-                  mt={2}
-                >
-                  <Checkbox
-                    checked={searchType === option.value}
-                    onChange={() => setSearchType(option.value as any)}
-                    sx={{ mt: 1 }}
-                  />
-                  <Typography variant="caption">{option.name}</Typography>
-                </Box>
-              ))}
-              {/* </FormGroup> */}
-              {/* </FormControl> */}
-            </Box>
-          </Grid>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                flexWrap="wrap"
+                width={"70%"}
+                margin={"0 auto"}
+              >
+                {[
+                  {
+                    name: t("Name"),
+                    value: "Name",
+                  },
+                  {
+                    name: t("ID"),
+                    value: "ID",
+                  },
+                  {
+                    name: t("Email"),
+                    value: "Email",
+                  },
+                  {
+                    name: t("Phone"),
+                    value: "Phone",
+                  },
+                ].map((option) => (
+                  <Box
+                    key={option.value}
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    mt={2}
+                  >
+                    <Checkbox
+                      checked={searchType === option.value}
+                      onChange={() => setSearchType(option.value as any)}
+                      sx={{ mt: 1 }}
+                    />
+                    <Typography variant="caption">{option.name}</Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Grid>
 
-          <Grid size={12}>
-            <Typography mb={2}>{t(`Enter Member ${searchType}`)}</Typography>
-          </Grid>
-          <Grid size={12}>
+            <Grid size={12}>
+              <Typography mb={2}>{t(`Enter Member ${searchType}`)}</Typography>
+            </Grid>
+            {/* <Grid size={12}>
             <TextField
               fullWidth
               label={t("Search")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleNext();
-                }
+              onEnterFunc={() => {
+                handleNext();
               }}
-            />
-          </Grid>
-
-          <Grid size={12}>
-            <Alert
-              message={errors["search"]}
-              showAlert={!!errors["search"]}
-              severity="error"
-            />
-          </Grid>
-          <Grid size={12} textAlign="right" mt={2}>
-            <Button disabled={!searchInput.trim()} onClick={handleNext}>
-              Next
-            </Button>
-          </Grid>
-        </Grid>
-      )}
-
-      {/* Step 2 */}
-      {activeStep === 1 &&
-        (userDetails?.length > 1 ? (
-          <Grid container spacing={2}>
-            <Grid size={12}>
-              <Typography mb={2}>{t("Select a member")}</Typography>
-            </Grid>
-            <Grid container spacing={2}>
-              {usersFound?.map((user: any, idx: number) => (
-                <Grid size={12} key={idx}>
-                  <Button
-                    variant="outlined"
-                    fullWidth
-                    sx={{ mb: 1, textAlign: "left" }}
-                    onClick={() => {
-                      setUserDetails([user]);
-                    }}
-                  >
-                    {user.firstName} {user.lastName} — {user.email} -{" "}
-                    {user.phone}
-                  </Button>
-                </Grid>
-              ))}
-            </Grid>
-            <Grid size={12} justifyContent={"flex-end"} display={"flex"}>
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={() => {
-                  setActiveStep((prev: number) => (prev -= 1));
+            /> */}
+            {/* </Grid> */}
+            <Grid size={12} position="relative">
+              <TextField
+                fullWidth
+                label={t("Search")}
+                value={searchInput}
+                onChange={(e) => {
+                  setSearchInput(e.target.value);
+                  setAnchorEl(e.currentTarget);
                 }}
+                onEnterFunc={handleNext}
+              />
+
+              <Popper
+                open={!!usersFound && usersFound.length > 0}
+                anchorEl={anchorEl}
+                style={{ zIndex: 1300, width: anchorEl?.clientWidth }}
+                placement="bottom-start"
               >
-                {t("Back")}
+                <ClickAwayListener
+                  onClickAway={() => {
+                    setUsersFound(null);
+                  }}
+                >
+                  <Paper>
+                    <List dense>
+                      {usersFound?.map((user: any, idx: number) => (
+                        <ListItemButton
+                          key={idx}
+                          onClick={() => {
+                            setUserDetails([user]);
+                            setActiveStep(1);
+                            setUsersFound(null);
+                          }}
+                        >
+                          <ListItemText
+                            primary={`${user.firstName} ${user.lastName}`}
+                            secondary={`${user.email || ""} ${
+                              user.phone || ""
+                            }`}
+                          />
+                        </ListItemButton>
+                      ))}
+                    </List>
+                  </Paper>
+                </ClickAwayListener>
+              </Popper>
+            </Grid>
+
+            <Grid size={12}>
+              <Alert
+                autoClose
+                message={errors["search"]}
+                showAlert={!!errors["search"]}
+                severity="error"
+              />
+            </Grid>
+            <Grid size={12} textAlign="right" mt={2}>
+              <Button disabled={!searchInput.trim()} onClick={handleNext}>
+                {t("Search")}
               </Button>
             </Grid>
           </Grid>
-        ) : (
+        )}
+
+        {activeStep === 1 && (
           <Box>
             <Typography variant="h6" mb={2}>
               {t("Member Details")}
@@ -283,18 +331,22 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                   table={false}
                 />
               </Grid>
-              <Grid size={4}>
-                <Typography variant="subtitle2">
-                  {t("Subscription Plan")}
-                </Typography>
+              {userDetails?.[0]?.subscriptionStatus.toLowerCase() !==
+                "inactive" && (
+                <Grid size={4}>
+                  <Typography variant="subtitle2">
+                    {t("Subscription Plan")}
+                  </Typography>
 
-                <CellRenderer
-                  key={t("Subscription Plan")}
-                  value={userDetails?.[0]?.subscriptionPlan}
-                  dataType={"enum"}
-                  table={false}
-                />
-              </Grid>
+                  <CellRenderer
+                    key={t("Subscription Plan")}
+                    value={userDetails?.[0]?.subscriptionPlan}
+                    dataType={"enum"}
+                    table={false}
+                  />
+                </Grid>
+              )}
+
               <Grid size={4}>
                 <Typography variant="subtitle2">
                   {t("Subscription Status")}
@@ -306,24 +358,31 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                   table={false}
                 />
               </Grid>
-              <Grid size={4}>
-                <Typography variant="subtitle2">{t("Start Date")}</Typography>
-                <CellRenderer
-                  key={t("Start Date")}
-                  value={userDetails?.[0]?.subscriptionStartDate}
-                  dataType={"date"}
-                  table={false}
-                />
-              </Grid>
-              <Grid size={4}>
-                <Typography variant="subtitle2">{t("End Date")}</Typography>
-                <CellRenderer
-                  key={t("Start Date")}
-                  value={userDetails?.[0]?.subscriptionEndDate}
-                  dataType={"date"}
-                  table={false}
-                />
-              </Grid>
+              {userDetails?.[0]?.subscriptionStatus.toLowerCase() !==
+                "inactive" && (
+                <>
+                  <Grid size={4}>
+                    <Typography variant="subtitle2">
+                      {t("Start Date")}
+                    </Typography>
+                    <CellRenderer
+                      key={t("Start Date")}
+                      value={userDetails?.[0]?.subscriptionStartDate}
+                      dataType={"date"}
+                      table={false}
+                    />
+                  </Grid>
+                  <Grid size={4}>
+                    <Typography variant="subtitle2">{t("End Date")}</Typography>
+                    <CellRenderer
+                      key={t("Start Date")}
+                      value={userDetails?.[0]?.subscriptionEndDate}
+                      dataType={"date"}
+                      table={false}
+                    />
+                  </Grid>
+                </>
+              )}
             </Grid>
 
             <Grid container spacing={2} mt={3} justifyContent="flex-end">
@@ -331,78 +390,130 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                 <Button
                   variant="outlined"
                   onClick={() => {
-                    usersFound.length > 1
-                      ? setUserDetails(usersFound)
-                      : setActiveStep((prev: any) => (prev -= 1));
+                    setActiveStep((prev: any) => (prev -= 1));
+                    setSearchInput("");
+                    setUserDetails(null);
+                    setErrors({});
                   }}
                   color="error"
                 >
                   {t("Back")}
                 </Button>
               </Grid>
+              {userDetails?.[0]?.subscriptionStatus.toLowerCase() ===
+              "inactive" ? (
+                <Grid>
+                  <Button
+                    variant="outlined"
+                    onClick={() => setOpenBuyPlan(true)}
+                  >
+                    {t("Buy plan")}
+                  </Button>
+                </Grid>
+              ) : (
+                <Grid>
+                  <Button variant="outlined" onClick={handleFinish}>
+                    {t("Check In")}
+                  </Button>
+                </Grid>
+              )}
+            </Grid>
+          </Box>
+        )}
+        {activeStep === 2 && (
+          <>
+            <Box
+              display="flex"
+              flexDirection={"column"}
+              justifyContent="center"
+              width={"100%"}
+            >
+              <CheckCircleOutlineIcon
+                sx={{
+                  fontSize: 60,
+                  color: "success.main",
+                  mb: 2,
+                  width: "100%",
+                }}
+              />
+              <Typography
+                variant="h5"
+                fontWeight={600}
+                gutterBottom
+                color="success.main"
+                width="100%"
+                textAlign={"center"}
+              >
+                {t("Check-In Successful!")}
+              </Typography>
+              <Typography
+                variant="h6"
+                color="text.secondary"
+                width="100%"
+                textAlign={"center"}
+              >
+                {userDetails?.firstName} {userDetails?.lastName}{" "}
+                {t("has been checked in.")}
+              </Typography>
+            </Box>
+
+            <Grid
+              container
+              spacing={2}
+              mt={4}
+              display="flex"
+              justifyContent="flex-end"
+            >
               <Grid>
-                <Button variant="outlined" onClick={handleFinish}>
-                  {t("Check In")}
+                <Button onClick={() => handleReset(true)} color="error">
+                  {t("Close")}
+                </Button>
+              </Grid>
+              <Grid>
+                <Button onClick={() => handleReset(false)}>
+                  {t("Next Check-In")}
                 </Button>
               </Grid>
             </Grid>
-          </Box>
-        ))}
+          </>
+        )}
+      </CustomModal>
+      <CustomModal
+        title={t("Buy Subscription Plan")}
+        open={openBuyPlan}
+        onClose={() => setOpenBuyPlan(false)}
+        width="lg"
+      >
+        <NewSubscriptionPlan
+          rowData={userDetails ? userDetails[0] : null}
+          setOpen={setOpenBuyPlan}
+          enumEndpoints={[
+            "users/membership/plans/options",
+            "Employment/values",
+          ]}
+          refreshFunc={async () => {
+            const response: Response<Array<Partial<User>>> = await callApi<any>(
+              {
+                query: getMember(userDetails[0].id, "id"),
+                auth: { setAuthedUser },
+              }
+            );
 
-      {/* Step 3 */}
-      {activeStep === 2 && (
-        <>
-          <Box
-            display="flex"
-            flexDirection={"column"}
-            justifyContent="center"
-            width={"100%"}
-          >
-            <CheckCircleOutlineIcon
-              sx={{ fontSize: 60, color: "success.main", mb: 2, width: "100%" }}
-            />
-            <Typography
-              variant="h5"
-              fontWeight={600}
-              gutterBottom
-              color="success.main"
-              width="100%"
-              textAlign={"center"}
-            >
-              {t("Check-In Successful!")}
-            </Typography>
-            <Typography
-              variant="h6"
-              color="text.secondary"
-              width="100%"
-              textAlign={"center"}
-            >
-              {userDetails?.firstName} {userDetails?.lastName}{" "}
-              {t("has been checked in.")}
-            </Typography>
-          </Box>
-
-          <Grid
-            container
-            spacing={2}
-            mt={4}
-            display="flex"
-            justifyContent="flex-end"
-          >
-            <Grid>
-              <Button onClick={() => handleReset(true)} color="error">
-                {t("Close")}
-              </Button>
-            </Grid>
-            <Grid>
-              <Button onClick={() => handleReset(false)}>
-                {t("Next Check-In")}
-              </Button>
-            </Grid>
-          </Grid>
-        </>
-      )}
-    </CustomModal>
+            if (response.success && response.data.length > 0) {
+              setUserDetails(response.data); // ✅ show results in Popper
+              setErrors({});
+            } else {
+              setUserDetails([]); // empty dropdown
+              setErrors({
+                search: t(
+                  `Can't find user with ${searchType} - ${searchInput}`
+                ),
+              });
+            }
+          }}
+        />
+      </CustomModal>
+    </>
   );
 };
 

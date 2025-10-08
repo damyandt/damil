@@ -214,12 +214,15 @@ const LoginForm = () => {
             disabled={disableEmail}
             label={errors["email"] || t("Email")}
             error={!!errors["email"]}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                e.stopPropagation();
-                handleNextClick();
-              }
+            // onKeyDown={(e) => {
+            //   if (e.key === "Enter") {
+            //     e.preventDefault();
+            //     e.stopPropagation();
+            //     handleNextClick();
+            //   }
+            // }}
+            onEnterFunc={() => {
+              handleNextClick();
             }}
             onChange={(e) => handleChange("email", e.target.value)}
             InputProps={{
@@ -255,12 +258,15 @@ const LoginForm = () => {
               error={!!errors["password"]}
               onChange={(e) => handleChange("password", e.target.value)}
               inputRef={passwordInputRef}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleLogin();
-                }
+              // onKeyDown={(e) => {
+              //   if (e.key === "Enter") {
+              //     e.preventDefault();
+              //     e.stopPropagation();
+              //     handleLogin();
+              //   }
+              // }}
+              onEnterFunc={() => {
+                handleLogin();
               }}
               InputProps={{
                 endAdornment: (

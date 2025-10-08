@@ -1,9 +1,22 @@
-import { Box, Grid, Step, StepLabel, Stepper, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  ListItemButton,
+  ListItemText,
+  Paper,
+  Popper,
+  Step,
+  StepLabel,
+  Stepper,
+  Typography,
+  List,
+  ClickAwayListener,
+} from "@mui/material";
 import CustomModal from "../../components/MaterialUI/Modal";
 import TextField from "../../components/MaterialUI/FormFields/TextField";
 import { useLanguageContext } from "../../context/LanguageContext";
 import Button from "../../components/MaterialUI/Button";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getMember } from "../Access Control/API/getQueries";
 import callApi from "../../API/callApi";
 import { useAuthedContext } from "../../context/AuthContext";
@@ -22,18 +35,46 @@ const SearchModal: React.FC<SearchModalProps> = ({
   openSearch,
   setOpenSearch,
 }) => {
+  const { t } = useLanguageContext();
   const { setAuthedUser } = useAuthedContext();
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const { t } = useLanguageContext();
   const [searchInput, setSearchInput] = useState("");
   const [usersFound, setUsersFound] = useState<any>(null);
   const [userDetails, setUserDetails] = useState<any>(null);
   const [activeStep, setActiveStep] = useState(0);
+  const steps = [t("Search Member"), t("View Details")];
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const [searchType, setSearchType] = useState<
     "ID" | "Name" | "Email" | "Phone"
   >("ID");
-  const steps = [t("Search Member"), t("View Details")];
+
+  useEffect(() => {
+    if (!searchInput.trim()) {
+      setUsersFound(null);
+      return;
+    }
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const response: Response<Array<Partial<User>>> = await callApi<any>({
+          query: getMember(searchInput, searchType.toLowerCase()),
+          auth: { setAuthedUser },
+        });
+
+        if (response.success && response.data.length > 0) {
+          setUsersFound(response.data);
+        } else {
+          setUsersFound([]);
+        }
+      } catch (err: any) {
+        console.error(err);
+        setUsersFound([]);
+      }
+    }, 500);
+  }, [searchInput, searchType]);
 
   const handleNext = async () => {
     try {
@@ -41,20 +82,16 @@ const SearchModal: React.FC<SearchModalProps> = ({
         query: getMember(searchInput, searchType.toLowerCase()),
         auth: { setAuthedUser },
       });
-      setUsersFound(userDetails.data);
-      userDetails.data && setUserDetails(userDetails?.data);
-      userDetails.success === true && setErrors({});
-      userDetails.success === true &&
-        userDetails.data.length !== 0 &&
-        setActiveStep((prev) => prev + 1);
-      userDetails.success === false &&
+
+      if (userDetails.success && userDetails.data.length > 0) {
+        setUsersFound(userDetails.data);
+        setErrors({});
+      } else {
+        setUsersFound([]);
         setErrors({
           search: t(`Can't find user with ${searchType} - ${searchInput}`),
         });
-      userDetails.data.length === 0 &&
-        setErrors({
-          search: t(`Can't find user with ${searchType} - ${searchInput}`),
-        });
+      }
     } catch (error) {
       console.error(error);
       setErrors({ search: t("Can't find user with this information!") });
@@ -86,7 +123,6 @@ const SearchModal: React.FC<SearchModalProps> = ({
         </Stepper>
       </Box>
 
-      {/* Step 1 */}
       {activeStep === 0 && (
         <Grid container spacing={2}>
           <Grid size={12}>
@@ -132,28 +168,57 @@ const SearchModal: React.FC<SearchModalProps> = ({
                   <Typography variant="caption">{option.name}</Typography>
                 </Box>
               ))}
-              {/* </FormGroup> */}
-              {/* </FormControl> */}
             </Box>
           </Grid>
 
           <Grid size={12}>
             <Typography mb={2}>{t(`Enter Member ${searchType}`)}</Typography>
           </Grid>
-          <Grid size={12}>
+
+          <Grid size={12} position="relative">
             <TextField
               fullWidth
               label={t("Search")}
               value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={(e: any) => {
-                if (e.key === "Enter") {
-                  e.preventDefault(); // ✅ Prevent form submission or unwanted action
-                  e.stopPropagation(); // ✅ Optional: block global handlers
-                  handleNext();
-                }
+              onChange={(e) => {
+                setSearchInput(e.target.value);
+                setAnchorEl(e.currentTarget);
               }}
+              onEnterFunc={handleNext}
             />
+
+            <Popper
+              open={!!usersFound && usersFound.length > 0}
+              anchorEl={anchorEl}
+              style={{ zIndex: 1300, width: anchorEl?.clientWidth }}
+              placement="bottom-start"
+            >
+              <ClickAwayListener
+                onClickAway={() => {
+                  setUsersFound(null);
+                }}
+              >
+                <Paper>
+                  <List dense>
+                    {usersFound?.map((user: any, idx: number) => (
+                      <ListItemButton
+                        key={idx}
+                        onClick={() => {
+                          setUserDetails([user]);
+                          setActiveStep(1);
+                          setUsersFound(null);
+                        }}
+                      >
+                        <ListItemText
+                          primary={`${user.firstName} ${user.lastName}`}
+                          secondary={`${user.email || ""} ${user.phone || ""}`}
+                        />
+                      </ListItemButton>
+                    ))}
+                  </List>
+                </Paper>
+              </ClickAwayListener>
+            </Popper>
           </Grid>
 
           <Grid size={12}>
@@ -165,158 +230,122 @@ const SearchModal: React.FC<SearchModalProps> = ({
           </Grid>
           <Grid size={12} textAlign="right" mt={2}>
             <Button disabled={!searchInput.trim()} onClick={handleNext}>
-              Next
+              {t("Search")}
             </Button>
           </Grid>
         </Grid>
       )}
 
-      {/* Step 2 */}
-      {activeStep === 1 &&
-        (userDetails.length > 1 ? (
+      {activeStep === 1 && (
+        <Box>
+          <Typography variant="h6" mb={2}>
+            {t("Member Details")}
+          </Typography>
           <Grid container spacing={2}>
-            <Grid size={12}>
-              <Typography mb={2}>{t("Select a member")}</Typography>
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("Name")}</Typography>
+              <Typography>
+                <CellRenderer
+                  key={t("Name")}
+                  value={`${userDetails?.[0].firstName} ${userDetails?.[0].lastName}`}
+                  dataType={"string"}
+                  table={false}
+                />
+              </Typography>
             </Grid>
-            <Grid container spacing={2}>
-              {usersFound?.map((user: any, idx: number) => (
-                <Grid size={12} key={idx}>
-                  <Button
-                    variant="outlined"
-                    fullWidth
-                    sx={{ mb: 1, textAlign: "left" }}
-                    onClick={() => {
-                      setUserDetails([user]);
-                    }}
-                  >
-                    {user.firstName} {user.lastName} — {user.email} -{" "}
-                    {user.phone}
-                  </Button>
-                </Grid>
-              ))}
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("Email")}</Typography>
+
+              <CellRenderer
+                key={t("Email")}
+                value={userDetails?.[0].email}
+                dataType={"string"}
+                table={false}
+              />
             </Grid>
-            <Grid size={12} justifyContent={"flex-end"} display={"flex"}>
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("Phone")}</Typography>
+              <CellRenderer
+                key={t("Phone")}
+                value={userDetails?.[0].phone || "-"}
+                dataType={"string"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("Gender")}</Typography>
+              <CellRenderer
+                key={t("Gender")}
+                value={userDetails?.[0].gender}
+                dataType={"enum"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Typography variant="subtitle2">
+                {t("Subscription Plan")}
+              </Typography>
+
+              <CellRenderer
+                key={t("Subscription Plan")}
+                value={userDetails?.[0].subscriptionPlan}
+                dataType={"enum"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Typography variant="subtitle2">
+                {t("Subscription Status")}
+              </Typography>
+              <CellRenderer
+                key={t("Subscription Status")}
+                value={userDetails?.[0].subscriptionStatus}
+                dataType={"enum"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("Start Date")}</Typography>
+              <CellRenderer
+                key={t("Start Date")}
+                value={userDetails?.[0].subscriptionStartDate}
+                dataType={"date"}
+                table={false}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Typography variant="subtitle2">{t("End Date")}</Typography>
+              <CellRenderer
+                key={t("Start Date")}
+                value={userDetails?.[0].subscriptionEndDate}
+                dataType={"date"}
+                table={false}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={2} mt={3} justifyContent="flex-end">
+            <Grid>
               <Button
                 variant="outlined"
-                color="error"
-                onClick={() => {
-                  setActiveStep((prev: number) => (prev -= 1));
+                onClick={async () => {
+                  setSearchInput("");
+                  setUserDetails(null);
+                  setActiveStep((prev: any) => (prev -= 1));
                 }}
+                color="error"
               >
                 {t("Back")}
               </Button>
             </Grid>
+            <Grid>
+              <Button variant="outlined" onClick={() => setOpenSearch(false)}>
+                {t("Check In")}
+              </Button>
+            </Grid>
           </Grid>
-        ) : (
-          <Box>
-            <Typography variant="h6" mb={2}>
-              {t("Member Details")}
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid size={4}>
-                <Typography variant="subtitle2">{t("Name")}</Typography>
-                <Typography>
-                  <CellRenderer
-                    key={t("Name")}
-                    value={`${userDetails?.[0].firstName} ${userDetails?.[0].lastName}`}
-                    dataType={"string"}
-                    table={false}
-                  />
-                </Typography>
-              </Grid>
-              <Grid size={4}>
-                <Typography variant="subtitle2">{t("Email")}</Typography>
-
-                <CellRenderer
-                  key={t("Email")}
-                  value={userDetails?.[0].email}
-                  dataType={"string"}
-                  table={false}
-                />
-              </Grid>
-              <Grid size={4}>
-                <Typography variant="subtitle2">{t("Phone")}</Typography>
-                <CellRenderer
-                  key={t("Phone")}
-                  value={userDetails?.[0].phone || "-"}
-                  dataType={"string"}
-                  table={false}
-                />
-              </Grid>
-              <Grid size={4}>
-                <Typography variant="subtitle2">{t("Gender")}</Typography>
-                <CellRenderer
-                  key={t("Gender")}
-                  value={userDetails?.[0].gender}
-                  dataType={"enum"}
-                  table={false}
-                />
-              </Grid>
-              <Grid size={4}>
-                <Typography variant="subtitle2">
-                  {t("Subscription Plan")}
-                </Typography>
-
-                <CellRenderer
-                  key={t("Subscription Plan")}
-                  value={userDetails?.[0].subscriptionPlan}
-                  dataType={"enum"}
-                  table={false}
-                />
-              </Grid>
-              <Grid size={4}>
-                <Typography variant="subtitle2">
-                  {t("Subscription Status")}
-                </Typography>
-                <CellRenderer
-                  key={t("Subscription Status")}
-                  value={userDetails?.[0].subscriptionStatus}
-                  dataType={"enum"}
-                  table={false}
-                />
-              </Grid>
-              <Grid size={4}>
-                <Typography variant="subtitle2">{t("Start Date")}</Typography>
-                <CellRenderer
-                  key={t("Start Date")}
-                  value={userDetails?.[0].subscriptionStartDate}
-                  dataType={"date"}
-                  table={false}
-                />
-              </Grid>
-              <Grid size={4}>
-                <Typography variant="subtitle2">{t("End Date")}</Typography>
-                <CellRenderer
-                  key={t("Start Date")}
-                  value={userDetails?.[0].subscriptionEndDate}
-                  dataType={"date"}
-                  table={false}
-                />
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={2} mt={3} justifyContent="flex-end">
-              <Grid>
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    usersFound.length > 1
-                      ? setUserDetails(usersFound)
-                      : setActiveStep((prev: any) => (prev -= 1));
-                  }}
-                  color="error"
-                >
-                  {t("Back")}
-                </Button>
-              </Grid>
-              <Grid>
-                <Button variant="outlined" onClick={() => setOpenSearch(false)}>
-                  {t("Check In")}
-                </Button>
-              </Grid>
-            </Grid>
-          </Box>
-        ))}
+        </Box>
+      )}
     </CustomModal>
   );
 };

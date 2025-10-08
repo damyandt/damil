@@ -59,21 +59,14 @@ const DefinePricesForm: React.FC<DefinePricesFormProps> = ({
     }));
   };
 
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
+  const handleKeyDown = (index: number) => {
+    const nextIndex = index + 1;
+    const totalFields = inputRefs.current.length;
 
-      const nextIndex = index + 1;
-      const totalFields = inputRefs.current.length;
-
-      if (nextIndex < totalFields) {
-        inputRefs.current[nextIndex]?.focus();
-      } else {
-        handleSubmit();
-      }
+    if (nextIndex < totalFields) {
+      inputRefs.current[nextIndex]?.focus();
+    } else {
+      handleSubmit();
     }
   };
 
@@ -127,12 +120,15 @@ const DefinePricesForm: React.FC<DefinePricesFormProps> = ({
                     inputRefs.current[refIndex] = el;
                   }}
                   onChange={(e) => handleChange(plan, field, e.target.value)}
-                  onKeyDown={(e: any) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault(); // ✅ Prevent form submission or unwanted action
-                      e.stopPropagation(); // ✅ Optional: block global handlers
-                      handleKeyDown(e, refIndex);
-                    }
+                  // onKeyDown={(e: any) => {
+                  //   if (e.key === "Enter") {
+                  //     e.preventDefault(); // ✅ Prevent form submission or unwanted action
+                  //     e.stopPropagation(); // ✅ Optional: block global handlers
+                  //     handleKeyDown(e, refIndex);
+                  //   }
+                  // }}
+                  onEnterFunc={() => {
+                    handleKeyDown(refIndex);
                   }}
                   fullWidth
                 />

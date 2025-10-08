@@ -82,6 +82,21 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
           Math.min(prevActiveStep + 1, steps.length - 1)
         );
     } else if (activeStep === 1) {
+      const newErrors: any = {}; // keep previous errors
+
+      if (!subscriptionData.subscriptionPlan) {
+        newErrors.subscriptionPlan = t("Please select a subscription plan");
+      }
+
+      if (!subscriptionData.employment) {
+        newErrors.employment = t("Please select employment status");
+      }
+
+      if (Object.keys(newErrors).length !== 0) {
+        setErrors(newErrors);
+        setLoading(false);
+        return; // stop execution here
+      }
       const response = await callApi<Response<any>>({
         query: getPrice(
           subscriptionData.subscriptionPlan,
@@ -89,7 +104,12 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
         ),
         auth: { setAuthedUser },
       });
+
       response.success && setPrice(response.data.price);
+      !response.success &&
+        response.validationErrors &&
+        setErrors(response.validationErrors);
+
       setActiveStep((prevActiveStep) =>
         Math.min(prevActiveStep + 1, steps.length - 1)
       );
@@ -105,7 +125,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
       setModalTitle(null);
       setRefreshTable && setRefreshTable((prev: boolean) => !prev);
     }
-
+    setErrors({});
     setLoading(false);
   };
 
@@ -261,10 +281,12 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 onChange={(e) =>
                   handleChangSubscription("subscriptionPlan", e.target.value)
                 }
+                error={!!errors["subscriptionPlan"]}
+                helperText={errors["subscriptionPlan"]}
                 fullWidth
               >
                 {!options["subscriptionPlan"] ? (
-                  <MenuItem value="loading">{t("Loading...")}</MenuItem>
+                  <MenuItem value="loading">{t("LOading...")}</MenuItem>
                 ) : (
                   options["subscriptionPlan"].map(
                     (option: { title: string; value: string | number }) => (
@@ -284,6 +306,8 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 onChange={(e) =>
                   handleChangSubscription("employment", e.target.value)
                 }
+                error={!!errors["employment"]}
+                helperText={errors["employment"]}
                 fullWidth
               >
                 {!options["employment"] ? (

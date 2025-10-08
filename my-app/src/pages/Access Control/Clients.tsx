@@ -5,7 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import callApi from "../../API/callApi";
 import { getClientsTable } from "./API/getQueries";
 import { useAuthedContext } from "../../context/AuthContext";
-import { Column, FormStatuses, Row } from "../../Global/Types/commonTypes";
+import { FormStatuses, Row } from "../../Global/Types/commonTypes";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { useLanguageContext } from "../../context/LanguageContext";
 import ClientsRightMenu from "../../components/pageComponents/Clients/ClientsRightNav";
@@ -121,14 +121,15 @@ const clientCustomActions = [
     renderContent: (
       rowData: Row,
       setOpen: Dispatch<SetStateAction<boolean>>,
-      columns: Column[],
       setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>
     ) => (
       <NewSubscriptionPlan
         rowData={rowData}
         setOpen={setOpen}
-        columns={columns}
-        setRefreshTable={setRefreshTable}
+        enumEndpoints={["users/membership/plans/options", "Employment/values"]}
+        refreshFunc={() => {
+          setRefreshTable((prev: boolean) => !prev);
+        }}
       />
     ),
   },

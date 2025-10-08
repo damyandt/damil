@@ -13,7 +13,7 @@ import {
 import TextField from "../../MaterialUI/FormFields/TextField";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import {
-  Column,
+  // Column,
   Enum,
   EnumMap,
   Response,
@@ -23,31 +23,38 @@ import { useEffect, useState } from "react";
 import Button from "../../MaterialUI/Button";
 import callApi from "../../../API/callApi";
 import {
+  getMember,
   getPrice,
   getQueryOptions,
   postSubscription,
 } from "../../../pages/Access Control/API/getQueries";
 import { useAuthedContext } from "../../../context/AuthContext";
+import Alert from "../../MaterialUI/Alert";
+import { User } from "../../../pages/usersPages/userTypes";
+import CellRenderer from "../../MaterialUI/Table/CellRenderer";
 
 interface NewSubscriptionPlanProps {
   rowData: Row;
-  columns: Column[];
+  enumEndpoints: string[];
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
+  refreshFunc?: () => void;
 }
 
 const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
   rowData,
   setOpen,
-  columns,
-  setRefreshTable,
+  refreshFunc,
+  enumEndpoints,
 }) => {
   const { t } = useLanguageContext();
   const { setAuthedUser, preferences } = useAuthedContext();
   const [price, setPrice] = useState<number>(0);
   const [subscriptionData, setSubscriptionData] = useState<any>({});
   const [options, setOptions] = useState<EnumMap>({});
+  const [renew, setRenew] = useState<boolean>(false);
   const [step, setStep] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [paymentMethod, setPaymentMethod] = useState<"CARD" | "CASH">("CASH");
   const steps = ["New Plan", "Payment", "Confirm Info"];
   const handlePaymentMethodChange = (
@@ -59,6 +66,19 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
     }
   };
 
+  const fetchUser = async () => {
+    const responseUser: Response<Array<Partial<User>>> = await callApi<any>({
+      query: getMember(rowData.id, "id"),
+      auth: { setAuthedUser },
+    });
+
+    responseUser.success && setDetails(responseUser.data[0]);
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
   const handleChangSubscription = (field: string, value: string): void => {
     setSubscriptionData((prev: any) => ({
       ...prev,
@@ -66,31 +86,71 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
     }));
   };
 
+  const handleSubmit = async () => {
+    setLoading(true);
+
+    if (step === 0) {
+      const newErrors: any = {}; // keep previous errors
+
+      if (!subscriptionData.subscriptionPlan) {
+        newErrors.subscriptionPlan = t("Please select a subscription plan!");
+      }
+
+      if (!subscriptionData.employment) {
+        newErrors.employment = t("Please select employment status!");
+      }
+      if (
+        !subscriptionData.allowedVisits &&
+        subscriptionData.subscriptionPlan === "VISIT_PASS"
+      ) {
+        newErrors.employment = t("Please select allowed visits!");
+      }
+
+      if (Object.keys(newErrors).length !== 0) {
+        setErrors(newErrors);
+        setLoading(false);
+        return;
+      }
+      const response = await callApi<Response<any>>({
+        query: getPrice(
+          subscriptionData.subscriptionPlan,
+          subscriptionData.employment
+        ),
+        auth: { setAuthedUser },
+      });
+      response.success && setPrice(response.data.price);
+      setStep((prev: number) => (prev += 1));
+    } else if (step === 1) {
+      setStep((prev: number) => (prev += 1));
+    } else if (step === 2) {
+      await callApi<Response<any>>({
+        query: postSubscription(subscriptionData, rowData.id),
+        auth: { setAuthedUser },
+      });
+      setOpen(false);
+      refreshFunc?.();
+    }
+
+    setLoading(false);
+  };
+
   useEffect(() => {
     const fetchAllOptions = async () => {
-      if (!columns) return;
+      if (!enumEndpoints) return;
 
       const optionsMap: EnumMap = {};
-
-      for (const col of columns) {
-        const isDropdown = col.dropDownConfig?.url;
-        const isEnum = col.enumConfig?.url;
-
-        if (isDropdown || isEnum) {
-          const rawUrl = col.dropDownConfig?.url || col.enumConfig?.url;
-          const url = rawUrl?.startsWith("/v1/") ? rawUrl.slice(4) : rawUrl;
-
-          try {
-            const options = await callApi<Response<Enum[]>>({
-              query: getQueryOptions(url ?? ""),
-              auth: { setAuthedUser },
-            });
-            options.success && (optionsMap[col.field] = options.data);
-            !options.success &&
-              console.error("Error fetching options for: ", col.field);
-          } catch (error) {
-            console.error("Error fetching options for", col.field, error);
-          }
+      // const enumEndpoints: string[] = ["subscriptionPlan", "employment"];
+      for (const url of enumEndpoints) {
+        try {
+          const options = await callApi<Response<Enum[]>>({
+            query: getQueryOptions(url ?? ""),
+            auth: { setAuthedUser },
+          });
+          options.success && (optionsMap[url] = options.data);
+          !options.success &&
+            console.error("Error fetching options for: ", url);
+        } catch (error) {
+          console.error("Error fetching options for", url, error);
         }
       }
 
@@ -98,7 +158,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
     };
 
     fetchAllOptions();
-  }, [columns]);
+  }, []);
 
   const InactiveForm = () => {
     return (
@@ -124,15 +184,17 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
                 select
                 label={t("Subcription Plan")}
                 value={subscriptionData.subscriptionPlan}
+                error={!!errors["subscriptionPlan"]}
+                helperText={errors["subscriptionPlan"]}
                 onChange={(e) =>
                   handleChangSubscription("subscriptionPlan", e.target.value)
                 }
                 fullWidth
               >
-                {!options["subscriptionPlan"] ? (
+                {!options["users/membership/plans/options"] ? (
                   <MenuItem value="loading">{t("Loading...")}</MenuItem>
                 ) : (
-                  options["subscriptionPlan"].map(
+                  options["users/membership/plans/options"].map(
                     (option: { title: string; value: string | number }) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.title}
@@ -147,15 +209,17 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
                 select
                 label={t("Employment")}
                 value={subscriptionData.employment}
+                error={!!errors["employment"]}
+                helperText={errors["employment"]}
                 onChange={(e) =>
                   handleChangSubscription("employment", e.target.value)
                 }
                 fullWidth
               >
-                {!options["employment"] ? (
+                {!options["Employment/values"] ? (
                   <MenuItem value="loading">{t("Loading...")}</MenuItem>
                 ) : (
-                  options["employment"].map(
+                  options["Employment/values"].map(
                     (option: { title: string; value: string | number }) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.title}
@@ -171,6 +235,8 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
                   select
                   label={t("Allowed Visits")}
                   value={subscriptionData.allowedVisits}
+                  error={!!errors["allowedVisits"]}
+                  helperText={errors["allowedVisits"]}
                   type="number"
                   onChange={(e) =>
                     handleChangSubscription("allowedVisits", e.target.value)
@@ -325,8 +391,17 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
             </Grid>
           </>
         )}
+
+        <Grid size={12}>
+          <Alert
+            message={t("Loading...")}
+            showAlert={loading}
+            severity="loading"
+          />
+        </Grid>
         <Box display="flex" justifyContent="flex-end" gap={2}>
           <Button
+            disabled={loading}
             onClick={() => {
               step === 0 && setOpen(false);
               step !== 0 && setStep((prev: number) => (prev -= 1));
@@ -337,29 +412,10 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
             {step === 0 ? t("Cancel") : t("Back")}
           </Button>
           <Button
-            onClick={async () => {
-              if (step === 0) {
-                const response = await callApi<Response<any>>({
-                  query: getPrice(
-                    subscriptionData.subscriptionPlan,
-                    subscriptionData.employment
-                  ),
-                  auth: { setAuthedUser },
-                });
-                response.success && setPrice(response.data.price);
-              }
-              step !== 2 && setStep((prev: number) => (prev += 1));
-
-              step == 2 &&
-                (await callApi<Response<any>>({
-                  query: postSubscription(subscriptionData, rowData.id),
-                  auth: { setAuthedUser },
-                }));
-              step == 2 && setOpen(false);
-              step == 2 && setRefreshTable?.((prev: boolean) => !prev);
-            }}
+            onClick={handleSubmit}
             color="primary"
             variant="outlined"
+            disabled={loading}
           >
             {step == 2 ? t("Finish") : t("Next")}
           </Button>
@@ -367,54 +423,103 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
       </>
     );
   };
+  const [details, setDetails] = useState<any>();
 
   const ActiveForm = () => {
     return (
       <Box sx={{ p: 2 }}>
-        <Typography variant="h5" gutterBottom>
-          {t("Current Subscription")}
-        </Typography>
+        <Grid container spacing={2} py={4}>
+          <Grid size={12}>
+            <Typography variant="h5" gutterBottom>
+              {t("Current Subscription")}
+            </Typography>
+          </Grid>
 
-        <Typography variant="subtitle1" sx={{ mb: 1 }}>
-          <strong>{t("Plan")}:</strong> {rowData.subscriptionPlan}
-        </Typography>
-        <Typography variant="subtitle1" sx={{ mb: 1 }}>
-          <strong>{t("Status")}:</strong>{" "}
-          {rowData.subscriptionStatus || t("Active")}
-        </Typography>
-        {rowData.subscriptionPlan === "Flexible Visit Plan" ? (
-          <Typography variant="subtitle1" sx={{ mb: 1 }}>
-            <strong>{t("Remaining Visits")}:</strong>{" "}
-            {`${rowData.remainingVisits} from ${rowData.allowedVisits}`}
-          </Typography>
-        ) : (
-          <Typography variant="subtitle1" sx={{ mb: 1 }}>
-            <strong>{t("Expires On")}:</strong>{" "}
-            {rowData.expiryDate
-              ? new Date(rowData.expiryDate).toLocaleDateString()
-              : t("No Expiry")}
-          </Typography>
-        )}
+          <Grid size={3}>
+            <Typography variant="subtitle1" sx={{ mb: 1 }}>
+              {t("Plan")}:
+            </Typography>
+            <CellRenderer
+              key={t("Status")}
+              value={details?.subscriptionPlan || t("Inactive")}
+              dataType={"enum"}
+              table={false}
+            />
+          </Grid>
+
+          <Grid size={3}>
+            <Typography variant="subtitle1" sx={{ mb: 1 }}>
+              {t("Status")}:{/* {details?.subscriptionStatus || t("Active")} */}
+            </Typography>{" "}
+            <CellRenderer
+              key={t("Status")}
+              value={details?.subscriptionStatus || t("Inactive")}
+              dataType={"enum"}
+              table={false}
+            />
+          </Grid>
+
+          <Grid size={3}>
+            <Typography variant="subtitle1" sx={{ mb: 1 }}>
+              {t("Buy Date")}:
+            </Typography>{" "}
+            <CellRenderer
+              key={t("Buy Date")}
+              value={details?.subscriptionStartDate}
+              dataType={"date"}
+              table={false}
+            />
+          </Grid>
+
+          <Grid size={3}>
+            {details?.subscriptionPlan === "Flexible Visit Plan" ? (
+              <>
+                <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                  {t("Remaining Visits")}:
+                  {`${details?.remainingVisits} from ${details?.allowedVisits}`}
+                </Typography>
+                <CellRenderer
+                  key={t("Remaining Visits")}
+                  value={`${details?.remainingVisits} from ${details?.allowedVisits}`}
+                  dataType={"string"}
+                  table={false}
+                />
+              </>
+            ) : (
+              <>
+                <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                  {t("Expires On")}:
+                </Typography>
+                <CellRenderer
+                  key={t("Expires On")}
+                  value={details?.subscriptionEndDate}
+                  dataType={"date"}
+                  table={false}
+                />
+              </>
+            )}
+          </Grid>
+        </Grid>
 
         <Box display="flex" justifyContent="flex-end" gap={2}>
-          <Button
+          {/* <Button
             variant="outlined"
             color="primary"
             onClick={() => setStep(0)} // Allow upgrade flow
           >
             {t("Upgrade Plan")}
-          </Button>
+          </Button> */}
           <Button
             variant="outlined"
             color="warning"
-            onClick={() => console.error("Renew Plan")}
+            onClick={() => setRenew(true)}
           >
             {t("Renew")}
           </Button>
           <Button
             variant="outlined"
             color="error"
-            onClick={() => console.error("Cancel Plan")}
+            onClick={() => setOpen(false)}
           >
             {t("Cancel")}
           </Button>
@@ -423,7 +528,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
     );
   };
 
-  return rowData.subscriptionStatus.toLowerCase() === "inactive" ? (
+  return rowData.subscriptionStatus.toLowerCase() === "inactive" || renew ? (
     <InactiveForm />
   ) : (
     <ActiveForm />
