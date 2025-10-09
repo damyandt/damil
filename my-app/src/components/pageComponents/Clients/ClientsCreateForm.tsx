@@ -286,7 +286,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 fullWidth
               >
                 {!options["subscriptionPlan"] ? (
-                  <MenuItem value="loading">{t("LOading...")}</MenuItem>
+                  <MenuItem value="loading">{t("Loading...")}</MenuItem>
                 ) : (
                   options["subscriptionPlan"].map(
                     (option: { title: string; value: string | number }) => (

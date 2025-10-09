@@ -1,0 +1,430 @@
+<html lang="bg">
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap&subset=cyrillic"
+      rel="stylesheet"
+    />
+
+    <meta charset="utf-8" />
+    <title>Фактура № {{ invoice_number }}</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 15mm;
+      }
+
+      body {
+        font-family: "Montserrat", sans-serif;
+        font-size: 13px;
+        color: #2c2c2c;
+        background: #f3f3f3;
+        margin: 0;
+      }
+      strong {
+        font-weight: 600;
+      }
+
+      .invoice-container {
+        position: relative;
+        background: white;
+        padding: 20mm;
+        width: 210mm;
+        height: 297mm;
+        margin: 10mm auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      }
+
+      .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 25px;
+      }
+
+      .header-left h1 {
+        font-size: 43px;
+        font-weight: 700;
+        color: #333;
+        margin: 0;
+      }
+      .header-right p {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .invoice-number {
+        font-size: 14px;
+        margin-top: 6px;
+        color: #555;
+      }
+
+      .payment-amount {
+        text-align: right;
+        font-size: 15px;
+        margin-top: 5px;
+      }
+
+      .payment-amount span {
+        font-size: 22px;
+        color: #000;
+        font-weight: bold;
+      }
+
+      .parties-section {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 25px;
+      }
+
+      .details-box {
+        flex: 1;
+        background: #f0f0f0;
+        padding: 12px 15px;
+        border-radius: 6px;
+      }
+
+      .details-box h3 {
+        color: #333;
+        font-size: 16px;
+        margin: 0 0 10px 0;
+      }
+
+      .details-box p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 15px;
+        font-size: 12.5px;
+        overflow: hidden;
+        border-radius: 12px;
+      }
+
+      table thead {
+        background: #333;
+        color: #fff;
+      }
+
+      table th,
+      table td {
+        border: 1px solid #ccc;
+        padding: 4px 6px;
+        text-align: center;
+      }
+
+      table td:nth-child(2) {
+        text-align: left;
+      }
+
+      table tbody tr:nth-child(odd) {
+        background: #f9f9f9;
+      }
+
+      /* Rounded corners on header */
+      table thead tr th:first-child {
+        border-top-left-radius: 6px;
+      }
+      table thead tr th:last-child {
+        border-top-right-radius: 6px;
+      }
+
+      /* Rounded corners on last row */
+      table tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 6px;
+      }
+      table tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 6px;
+      }
+
+      .totals {
+        text-align: right;
+        margin-top: 20px;
+        font-size: 14px;
+      }
+
+      .totals p {
+        margin: 4px 0;
+      }
+
+      .totals p strong {
+        color: #111;
+      }
+
+      .footer-section {
+        display: flex;
+        font-size: 13px;
+        margin-top: 10px;
+      }
+
+      .footer-column {
+        width: 50%;
+        flex: 1;
+        padding: 0;
+        border-radius: 6px;
+      }
+
+      .footer-column p {
+        margin: 0;
+        line-height: 1.4;
+      }
+
+      .footer-column p:last-child {
+        border-bottom: none;
+      }
+
+      .signature-section {
+        display: flex;
+        margin-top: 40px;
+      }
+
+      .signature-box {
+        width: 50%;
+      }
+      .signature-box:first-child {
+        padding: 0 15px 0 0;
+      }
+      .signature-box p {
+        font-weight: 500;
+        padding: 0 0 30px 0;
+      }
+
+      .signature-line {
+        border-bottom: 1px dashed #333;
+        height: 1px;
+      }
+
+      .qr-code {
+        margin-top: 40px;
+      }
+
+      .qr-code p {
+        margin-bottom: 8px;
+        font-size: 13px;
+      }
+
+      .qr-code img {
+        width: 140px;
+        height: 140px;
+        border: 1px solid #ccc;
+        padding: 5px;
+        background: white;
+        border-radius: 4px;
+      }
+
+      .watermark-footer {
+        text-align: center;
+        font-size: 13px;
+        color: #666;
+        opacity: 0.75;
+        margin-top: 30px;
+      }
+
+      .watermark-footer img {
+        vertical-align: middle;
+        max-height: 28px;
+        margin-left: 6px;
+      }
+
+      .bottom-fixed {
+        position: absolute;
+        bottom: 20mm;
+        left: 20mm;
+        right: 20mm;
+      }
+
+      .top-logo {
+        width: 80px;
+      }
+
+      .top-logo img {
+        width: 100%;
+        height: auto;
+      }
+
+      .bottom-logo {
+        margin-top: 1em;
+        width: 100%;
+        text-align: center;
+      }
+
+      .bottom-logo img {
+        width: 50%;
+        height: auto;
+      }
+
+      @media print {
+        body {
+          background: none;
+        }
+
+        .invoice-container {
+          box-shadow: none;
+          margin: 0;
+          border: none;
+        }
+
+        .watermark-footer {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="invoice-container">
+      <div class="header-section">
+        <div class="header-left">
+          <h1>ФАКТУРА</h1>
+          <div class="invoice-number">№ 2025-INV-001</div>
+        </div>
+        <div class="header-right">
+          <p class="payment-amount">Сума за плащане: <span>480.00 BGN</span></p>
+        </div>
+      </div>
+
+      <div class="parties-section">
+        <div class="details-box">
+          <h3>Получател</h3>
+          <p><strong>Фирма:</strong> Фитнес Деспов</p>
+          <p><strong>ЕИК:</strong> 123456789</p>
+          <p><strong>ДДС №:</strong> 329849382</p>
+          <p><strong>Град:</strong> София</p>
+          <p><strong>Адрес:</strong> бул. България 100</p>
+          <p><strong>МОЛ:</strong> Иво Деспов</p>
+        </div>
+
+        <div class="details-box">
+          <h3>Доставчик</h3>
+          <p><strong>Фирма:</strong> Дамил ЕООД</p>
+          <p><strong>ЕИК:</strong> 987654321</p>
+          <p><strong>ДДС №:</strong> 329849382</p>
+          <p><strong>Град:</strong> Добрич</p>
+          <p><strong>Адрес:</strong> ул. Екзарх Йосиф I</p>
+          <p><strong>МОЛ:</strong> Дамян Тодоров, Илиян Тодоров</p>
+        </div>
+      </div>
+
+      <table style="border-radius: 6px">
+        <thead>
+          <tr>
+            <th>№</th>
+            <th>Име на стоката/услугата</th>
+            <th>К-во</th>
+            <th>Ед. цена</th>
+            <th>Отстъпка</th>
+            <th>Цена с отстъпка</th>
+            <th>ДДС</th>
+            <th>Общо</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Софтуер: Pro План (лиценз за 1 година)</td>
+            <td>1</td>
+            <td style="text-align: right">
+              82.50 €
+              <span style="font-size: 10px; color: #555; display: block"
+                >160.00 лв</span
+              >
+            </td>
+            <td style="text-align: right">
+              0.00 €
+              <span style="font-size: 10px; color: #555; display: block"
+                >0.00 лв</span
+              >
+            </td>
+            <td style="text-align: right">
+              82.50 €
+              <span style="font-size: 10px; color: #555; display: block"
+                >160.00 лв</span
+              >
+            </td>
+            <td>20%</td>
+            <td style="text-align: right">
+              99.00 €
+              <span style="font-size: 10px; color: #555; display: block"
+                >192.00 лв</span
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="totals">
+        <p>
+          <strong>Данъчна основа:</strong> 82.50 €
+          <span style="font-size: 10px; color: #555">160.00 BGN</span>
+        </p>
+        <p>
+          <strong>ДДС:</strong> 16.50 €
+          <span style="font-size: 10px; color: #555">32.00 BGN</span>
+        </p>
+        <p>
+          <strong>Общо:</strong> 99.00 €
+          <span style="font-size: 10px; color: #555">192.00 BGN</span>
+        </p>
+      </div>
+
+      <div class="footer-section">
+        <div class="footer-column">
+          <p><strong>Словом:</strong> четиристотин тридесет и два лева</p>
+          <p><strong>Начин на плащане:</strong> Банков превод</p>
+          <p><strong>Банкови реквизити:</strong></p>
+          <p>Банка: <strong>Уникредит Булбанк</strong></p>
+          <p>IBAN: <strong>BG80UNCR70001512345678</strong></p>
+        </div>
+
+        <div class="footer-column">
+          <p><strong>Дата на издаване:</strong> 2025-06-16</p>
+          <p><strong>Дата на дан. събитие:</strong> 2025-06-15</p>
+          <p><strong>Дата на падеж:</strong> 2025-06-15</p>
+          <p><strong>Основание по ЗДДС:</strong> чл. 113 от ЗДДС</p>
+          <p><strong>Други условия:</strong> Плащане до 7 дни</p>
+        </div>
+      </div>
+
+      <div class="bottom-fixed">
+        <div class="signature-section">
+          <div class="signature-box">
+            <p>
+              Получател: <strong style="font-weight: 800">Иво Депов</strong>
+            </p>
+            <div class="signature-line"></div>
+          </div>
+          <div class="signature-box">
+            <p>
+              Съставил: <strong style="font-weight: 800">Дамян Тодоров</strong>
+            </p>
+            <div class="signature-line"></div>
+          </div>
+        </div>
+
+        <p style="margin-top: 40px">
+          Съгласно чл.6, ал 1 от Закона за счетоводството, чл.114 от ЗДДС и
+          чл.78 от ППЗДДС печатът и подписът не са задължителни реквизити на
+          фактурата.
+        </p>
+        <hr style="border-top-width: 0px" />
+
+        <div class="qr-code" style="display: flex">
+          <img
+            src="https://test.evniko-giant.com/QRcode.png"
+            alt="ODX QR"
+            style="width: 100px; height: 100px"
+          />
+          <p style="text-align: left; margin: 0 10px; align-content: center">
+            Сканирайте за бързо плащане и автоматично осчетоводяване.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
