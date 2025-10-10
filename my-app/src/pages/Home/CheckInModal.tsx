@@ -169,7 +169,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                 display="flex"
                 justifyContent="space-between"
                 flexWrap="wrap"
-                width={"70%"}
+                width={{ xs: "100%", sm: "70%" }}
                 margin={"0 auto"}
               >
                 {[

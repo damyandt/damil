@@ -54,7 +54,7 @@ export const DetailsAction = ({
           {columns
             ?.filter((col: Column) => !["actions"].includes(col.field))
             .map((col: Column) => (
-              <Grid size={4} key={col.field}>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={col.field}>
                 <Typography variant="subtitle2" color="text.secondary">
                   {col.header}
                 </Typography>

@@ -37,16 +37,16 @@ const ClientsPage = () => {
   }, [refreshTable]);
 
   useEffect(() => {
-    if (smMediaQuery) {
-      setExtraRightNavMenu(null);
-    } else {
-      setExtraRightNavMenu(
-        <ClientsRightMenu
-          setRefreshTable={setRefreshTable}
-          columns={tableData?.columns ?? []}
-        />
-      );
-    }
+    // if (smMediaQuery) {
+    // setExtraRightNavMenu(null);
+    // } else {
+    setExtraRightNavMenu(
+      <ClientsRightMenu
+        setRefreshTable={setRefreshTable}
+        columns={tableData?.columns ?? []}
+      />
+    );
+    // }
 
     return () => {
       setExtraRightNavMenu(null);

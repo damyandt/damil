@@ -22,6 +22,8 @@ const AccountDetails = () => {
   const [formData, setFormData] = useState<Partial<User>>(authedUser);
   const navigate = useNavigate();
   const info: { label: string; field: string }[] = [
+    { label: t("First Name"), field: "firstName" },
+    { label: t("Last Name"), field: "lastName" },
     { label: t("Email and Password"), field: "email" },
     { label: t("Username"), field: "username" },
     { label: t("City"), field: "city" },
@@ -121,7 +123,7 @@ const AccountDetails = () => {
                     </IconButton>
                   </CustomTooltip>
                 </Box>
-              ) : col.label === "Gender" ? (
+              ) : col.label === t("Gender") ? (
                 <TextField
                   select
                   fullWidth
@@ -151,30 +153,6 @@ const AccountDetails = () => {
             </Grid>
           ))}
         </Grid>
-        {/* // ) : (
-        //   <Grid container spacing={3}>
-        //     {info.map((col: { label: string; field: string }) => (
-        //       <Grid size={6} key={col.field}>
-        //         <Typography variant="subtitle2" color="text.secondary">
-        //           {col.label}
-        //         </Typography>
-        //         <CellRenderer
-        //           fontWeight={400}
-        //           key={col.field}
-        //           value={
-        //             formData
-        //               ? col.field === "email"
-        //                 ? `${formData[col.field as keyof User]} - ********`
-        //                 : formData[col.field as keyof User]
-        //               : ""
-        //           }
-        //           dataType={col.label === "Gender" ? "dropdown" : "string"}
-        //           table={false}
-        //         />
-        //       </Grid>
-        //     ))}
-        //   </Grid>
-        // )} */}
       </Box>
     </Box>
   );

@@ -13,6 +13,8 @@ import { Outlet } from "react-router-dom";
 import NavigateBeforeOutlinedIcon from "@mui/icons-material/NavigateBeforeOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import RightNavigation from "./AppNavigation/RightNavigation";
+import FloatingRightMenu from "./AppNavigation/FloatingRightNav";
+// import ClientsRightMenu from "../components/pageComponents/Clients/ClientsRightNav";
 
 interface AuthLayoutProps {
   css?: SerializedStyles[] | SerializedStyles;
@@ -74,8 +76,8 @@ const cssStyles = (
         ? TOP_RIGHT_NAV_HEIGHT
         : 0
       : isRightNavVisible && extraRightNavMenu
-        ? `calc(${TOP_RIGHT_NAV_HEIGHT} + 1em)`
-        : 0,
+      ? `calc(${TOP_RIGHT_NAV_HEIGHT} + 1em)`
+      : 0,
 
     height: `100vh`,
     flexGrow: 1,
@@ -107,10 +109,14 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
   const theme = useTheme();
   const lgMediaQuery = useMediaQuery("(max-width:1199px)");
   const smMediaQuery = useMediaQuery("(max-width:599px)");
-  const [isRightNavVisible, setIsRightNavVisible] = useState<boolean>(true);
+  const [isRightNavVisible, setIsRightNavVisible] = useState<boolean>(
+    smMediaQuery ? false : true
+  );
   const [extraRightNavMenu, setExtraRightNavMenu] =
     useState<React.ReactNode | null>(null);
-  const [openLeftNav, setOpenLeftNav] = useState<boolean>(lgMediaQuery);
+  const [openLeftNav, setOpenLeftNav] = useState<boolean>(
+    smMediaQuery ? false : true
+  );
   const styles = {
     ...cssStyles(
       theme,
@@ -126,6 +132,12 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
       setIsRightNavVisible(true);
     }
   }, [location]);
+  useEffect(() => {
+    if (smMediaQuery) {
+      setIsRightNavVisible(false);
+    }
+  }, [smMediaQuery]);
+
   return (
     <Box
       component="div"
@@ -146,12 +158,18 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
           <MenuIcon />
         </IconButton>
       )}
+      {/* <ClickAwayListener
+        onClickAway={() => {
+          setUsersFound(null);
+        }}
+      > */}
       <LeftNavigation
         openLeftNav={openLeftNav}
         setOpenLeftNav={setOpenLeftNav}
         mobileLeftNav={lgMediaQuery}
       />
-      {extraRightNavMenu ? (
+      {/* </ClickAwayListener> */}
+      {!smMediaQuery && extraRightNavMenu ? (
         <IconButton
           onClick={() => setIsRightNavVisible((state) => !state)}
           sx={styles.floatingArrowButton}
@@ -160,11 +178,20 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
         </IconButton>
       ) : null}
 
-      <RightNavigation
+      {/* <RightNavigation
         extraMenu={extraRightNavMenu}
         isRightNavVisible={isRightNavVisible}
         openLeftNav={openLeftNav}
-      />
+      /> */}
+      {smMediaQuery && extraRightNavMenu ? (
+        <FloatingRightMenu extraMenu={extraRightNavMenu} />
+      ) : (
+        <RightNavigation
+          extraMenu={extraRightNavMenu}
+          isRightNavVisible={isRightNavVisible}
+          openLeftNav={openLeftNav}
+        />
+      )}
 
       <Box sx={styles.outletContainer} component="main">
         <Box

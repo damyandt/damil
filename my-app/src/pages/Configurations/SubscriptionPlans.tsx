@@ -51,19 +51,19 @@ const SubscriptionPlans = () => {
   }, [refreshTable]);
 
   useEffect(() => {
-    if (smMediaQuery) {
-      setExtraRightNavMenu(null);
-    } else {
-      plansOptions.length !== currentPlans.length
-        ? setExtraRightNavMenu(
-            <PlansRightMenu
-              plansOptions={plansOptions}
-              setRefreshTable={setRefreshTable}
-              withoutThis={currentPlans || []}
-            />
-          )
-        : setExtraRightNavMenu(null);
-    }
+    // if (smMediaQuery) {
+    //   setExtraRightNavMenu(null);
+    // } else {
+    plansOptions.length !== currentPlans.length
+      ? setExtraRightNavMenu(
+          <PlansRightMenu
+            plansOptions={plansOptions}
+            setRefreshTable={setRefreshTable}
+            withoutThis={currentPlans || []}
+          />
+        )
+      : setExtraRightNavMenu(null);
+    // }
 
     return () => {
       setExtraRightNavMenu(null);

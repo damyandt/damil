@@ -220,7 +220,7 @@ const HomePage: React.FC = () => {
             </Typography>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid size={{ xs: 12, md: tenant.abonnement !== "PRO" ? 12 : 4 }}>
             <Button
               fullWidth
               variant="outlined"
@@ -242,7 +242,7 @@ const HomePage: React.FC = () => {
             </Button>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid size={{ xs: 12, md: tenant.abonnement !== "PRO" ? 12 : 4 }}>
             <Button
               fullWidth
               variant="outlined"
@@ -263,7 +263,7 @@ const HomePage: React.FC = () => {
             </Button>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid size={{ xs: 12, md: tenant.abonnement !== "PRO" ? 12 : 4 }}>
             <Button
               fullWidth
               variant="outlined"
@@ -284,84 +284,84 @@ const HomePage: React.FC = () => {
             </Button>
           </Grid>
         </Grid>
+        {tenant.abonnement === "PRO" && (
+          <Grid container spacing={3} pt={3}>
+            <Grid size={12}>
+              <Button
+                fullWidth
+                variant="outlined"
+                color="primary"
+                sx={{
+                  border: "none",
+                  background: `linear-gradient(90deg, ${colorStart}, ${colorEnd})`,
+                  color: "#fff",
+                  boxShadow: `${theme.palette.customColors?.shodow}`,
+                  transition: "transform 0.3s ease",
+                  "&:hover": {
+                    transform: "scale(0.97)",
+                    cursor: "pointer",
+                  },
+                }}
+                startIcon={<SettingsIcon />}
+                onClick={() => setOpenFilterConfig(true)}
+              >
+                {t("Customize Analytics")}
+              </Button>
+            </Grid>
+            <Grid size={12}>
+              <Grid container spacing={2}>
+                {selectedFilters.map((filter: string, index: number) => {
+                  const [field, value] = filter.split(" - ");
 
-        <Grid container spacing={3} pt={3}>
-          <Grid size={12}>
-            <Button
-              fullWidth
-              variant="outlined"
-              color="primary"
-              sx={{
-                border: "none",
-                background: `linear-gradient(90deg, ${colorStart}, ${colorEnd})`,
-                color: "#fff",
-                boxShadow: `${theme.palette.customColors?.shodow}`,
-                transition: "transform 0.3s ease",
-                "&:hover": {
-                  transform: "scale(0.97)",
-                  cursor: "pointer",
-                },
-              }}
-              startIcon={<SettingsIcon />}
-              onClick={() => setOpenFilterConfig(true)}
-            >
-              {t("Customize Analytics")}
-            </Button>
-          </Grid>
-          <Grid size={12}>
-            <Grid container spacing={2}>
-              {selectedFilters.map((filter: string, index: number) => {
-                const [field, value] = filter.split(" - ");
-
-                return analyticsData ? (
-                  <Grid
-                    size={{ xs: 12, sm: 6, md: 3 }}
-                    key={index}
-                    sx={{ cursor: "pointer", aspectRatio: 1 / 1 }}
-                  >
-                    <Box
-                      sx={{
-                        px: 0,
-                        borderRadius: "50%",
-                        textAlign: "center",
-                        transition: "transform 0.3s ease",
-                        alignContent: "center",
-                        cursor: "pointer",
-                        height: "100%",
-                        "&:hover": {
-                          transform: "scale(0.97)",
-                        },
-                      }}
-                      onClick={() =>
-                        navigate(
-                          `/DAMIL-Access-Control/All-Clients/${field}=${value}`
-                        )
-                      }
+                  return analyticsData ? (
+                    <Grid
+                      size={{ xs: 12, sm: 6, md: 3 }}
+                      key={index}
+                      sx={{ cursor: "pointer", aspectRatio: 1 / 1 }}
                     >
-                      <GaugeChartHome
-                        data={[
-                          {
-                            value: analyticsData[field]?.[value] ?? 0,
-                            name: descriptionMap(field, value, t).replaceAll(
-                              "_",
-                              " "
-                            ),
+                      <Box
+                        sx={{
+                          px: 0,
+                          borderRadius: "50%",
+                          textAlign: "center",
+                          transition: "transform 0.3s ease",
+                          alignContent: "center",
+                          cursor: "pointer",
+                          height: "100%",
+                          "&:hover": {
+                            transform: "scale(0.97)",
                           },
-                        ]}
-                      />
-                    </Box>
-                  </Grid>
-                ) : (
-                  <Grid
-                    size={{ xs: 12, sm: 6, md: 3 }}
-                    key={index}
-                    sx={{ cursor: "pointer", aspectRatio: 1 / 1 }}
-                  >
-                    <CircularProgress size={40} />
-                  </Grid>
-                );
-              })}
-              {/* <Grid size={12}>
+                        }}
+                        onClick={() =>
+                          navigate(
+                            `/DAMIL-Access-Control/All-Clients/${field}=${value}`
+                          )
+                        }
+                      >
+                        <GaugeChartHome
+                          data={[
+                            {
+                              value: analyticsData[field]?.[value] ?? 0,
+                              name: descriptionMap(field, value, t).replaceAll(
+                                "_",
+                                " "
+                              ),
+                            },
+                          ]}
+                        />
+                      </Box>
+                    </Grid>
+                  ) : (
+                    <Grid
+                      size={{ xs: 12, sm: 6, md: 3 }}
+                      key={index}
+                      sx={{ cursor: "pointer", aspectRatio: 1 / 1 }}
+                    >
+                      <CircularProgress size={40} />
+                    </Grid>
+                  );
+                })}
+                {/* <Grid size={12}>
                 <Box
                   sx={{
                     p: 2,
@@ -373,9 +373,10 @@ const HomePage: React.FC = () => {
                   <ChartDisplay />
                 </Box>
               </Grid> */}
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        )}
       </Box>
 
       <SearchModal openSearch={openSearch} setOpenSearch={setOpenSearch} />

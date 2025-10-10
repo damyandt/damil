@@ -75,8 +75,31 @@ const RegisterPage = () => {
           <LanguageOutlined />
         </IconButton>
       </CustomTooltip>
+
       <Box
         sx={{
+          position: "absolute",
+          top: 0,
+          width: "100%",
+          alignContent: "center",
+          textAlign: "center",
+        }}
+      >
+        <img
+          src="/damil-logo.png"
+          alt="Damil Logo"
+          style={{
+            width: 100,
+            height: "auto",
+            margin: 16,
+            marginTop: "20vh",
+          }}
+        />
+      </Box>
+      <Box
+        sx={{
+          mt: { xs: "10vh", sm: 0 },
+          p: 4,
           height: "100vh",
           display: "flex",
           flexDirection: "column",
@@ -90,8 +113,16 @@ const RegisterPage = () => {
             position: "fixed",
             top: 0,
             left: 0,
+            display: { xs: "none", sm: "block" },
+            transform: {
+              xs: "scale(1.8)", // mobile
+              sm: "scale(1.2)", // tablets
+              md: "scale(1)", // desktop and up
+            },
+            transformOrigin: "center",
+            zIndex: 2,
             width: "100vw",
-            height: "100vh",
+            height: "100dvh",
             backgroundColor: theme.palette.customColors?.darkBackgroundColor,
           }}
         >
@@ -109,18 +140,14 @@ const RegisterPage = () => {
               step === 0
                 ? [t("Business"), t("Business"), t("Business")]
                 : step === 1
-                  ? [
-                      t("Bisiness Location"),
-                      t("Bisiness Location"),
-                      t("Bisiness Location"),
-                    ]
-                  : step === 2
-                    ? [
-                        t("Admin Details"),
-                        t("Admin Details"),
-                        t("Admin Details"),
-                      ]
-                    : [t("Verify Email"), t("Verify Email"), t("Verify Email")]
+                ? [
+                    t("Bisiness Location"),
+                    t("Bisiness Location"),
+                    t("Bisiness Location"),
+                  ]
+                : step === 2
+                ? [t("Admin Details"), t("Admin Details"), t("Admin Details")]
+                : [t("Verify Email"), t("Verify Email"), t("Verify Email")]
             }
             typingSpeed={75}
             pauseDuration={3000}

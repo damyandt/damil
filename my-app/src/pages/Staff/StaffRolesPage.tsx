@@ -34,18 +34,18 @@ const StaffRolesPage = () => {
   }, [refreshTable]);
 
   useEffect(() => {
-    if (smMediaQuery) {
-      setExtraRightNavMenu(null);
-    } else {
-      setExtraRightNavMenu(
-        <RightMenu
-          setRefreshTable={setRefreshTable}
-          columns={tableData?.columns ?? []}
-          // configurations={tableData.config ?? {}}
-          addNew={true}
-        />
-      );
-    }
+    // if (smMediaQuery) {
+    //   setExtraRightNavMenu(null);
+    // } else {
+    setExtraRightNavMenu(
+      <RightMenu
+        setRefreshTable={setRefreshTable}
+        columns={tableData?.columns ?? []}
+        // configurations={tableData.config ?? {}}
+        addNew={true}
+      />
+    );
+    // }
 
     return () => {
       setExtraRightNavMenu(null);

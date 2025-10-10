@@ -38,19 +38,19 @@ const DailyVisitors = () => {
   }, [refreshTable]);
 
   useEffect(() => {
-    if (smMediaQuery) {
-      setExtraRightNavMenu(null);
-    } else {
-      setExtraRightNavMenu(
-        <VisitorsRightMenu
-          setRefreshTable={setRefreshTable}
-          startDate={startDate}
-          setStartDate={setStartDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
-        />
-      );
-    }
+    // if (smMediaQuery) {
+    //   setExtraRightNavMenu(null);
+    // } else {
+    setExtraRightNavMenu(
+      <VisitorsRightMenu
+        setRefreshTable={setRefreshTable}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+      />
+    );
+    // }
 
     return () => {
       setExtraRightNavMenu(null);

@@ -47,6 +47,27 @@ const LoginPage = () => {
       </CustomTooltip>
       <Box
         sx={{
+          position: "absolute",
+          top: 0,
+          width: "100%",
+          alignContent: "center",
+          textAlign: "center",
+        }}
+      >
+        <img
+          src="/damil-logo.png"
+          alt="Damil Logo"
+          style={{
+            width: 100,
+            height: "auto",
+            margin: 16,
+            marginTop: "20vh",
+          }}
+        />
+      </Box>
+      <Box
+        sx={{
+          mt: { xs: "10vh", sm: 0 },
           p: 4,
           overflow: "hidden",
           height: "100dvh",
@@ -62,6 +83,7 @@ const LoginPage = () => {
             position: "fixed",
             top: 0,
             left: 0,
+            display: { xs: "none", sm: "block" },
             transform: {
               xs: "scale(1.8)", // mobile
               sm: "scale(1.2)", // tablets

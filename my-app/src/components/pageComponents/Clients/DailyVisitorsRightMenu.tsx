@@ -46,18 +46,18 @@ const VisitorsRightMenu: React.FC<VisitorsRightMenuProps> = ({
   const open = Boolean(anchorEl);
 
   return (
-    <Stack alignItems="center" spacing={2} mt={10}>
+    <Stack alignItems="center" spacing={2}>
       <CustomTooltip
         title={`${t("Start Date")}: ${startDate.format("DD/MM/YYYY")}`}
       >
-        <IconButton onClick={(e) => handleOpen(e, "start")}>
+        <IconButton onClick={(e) => handleOpen(e, "start")} sx={{ pt: 2 }}>
           <CalendarMonthIcon />
         </IconButton>
       </CustomTooltip>
       <CustomTooltip
         title={`${t("End Date")}: ${endDate.format("DD/MM/YYYY")}`}
       >
-        <IconButton onClick={(e) => handleOpen(e, "end")}>
+        <IconButton onClick={(e) => handleOpen(e, "end")} sx={{ pb: 2 }}>
           <EventBusyIcon />
         </IconButton>
       </CustomTooltip>
