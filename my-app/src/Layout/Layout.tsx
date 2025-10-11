@@ -107,7 +107,7 @@ const cssStyles = (
 
 const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
   const theme = useTheme();
-  const lgMediaQuery = useMediaQuery("(max-width:1199px)");
+  const lgMediaQuery = useMediaQuery("(max-width:1024px)");
   const smMediaQuery = useMediaQuery("(max-width:599px)");
   const [isRightNavVisible, setIsRightNavVisible] = useState<boolean>(
     smMediaQuery ? false : true
@@ -133,10 +133,10 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
     }
   }, [location]);
   useEffect(() => {
-    if (smMediaQuery) {
+    if (lgMediaQuery) {
       setIsRightNavVisible(false);
     }
-  }, [smMediaQuery]);
+  }, [lgMediaQuery]);
 
   return (
     <Box
@@ -166,7 +166,7 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
       <LeftNavigation
         openLeftNav={openLeftNav}
         setOpenLeftNav={setOpenLeftNav}
-        mobileLeftNav={smMediaQuery}
+        mobileLeftNav={lgMediaQuery}
       />
       {/* </ClickAwayListener> */}
       {!smMediaQuery && extraRightNavMenu ? (

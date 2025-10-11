@@ -220,6 +220,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
             sx={{ width: 40, height: 40, ml: "0.4em", cursor: "pointer" }}
             onClick={(event: any) => {
               if (openLeftNav) {
+                setOpenLeftNav(false);
                 navigate("DAMIL-Configurations/Profile");
               } else {
                 setAnchorElSettings(event.currentTarget);
@@ -272,6 +273,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
                 <MenuItem
                   onClick={() => {
                     navigate("DAMIL-Configurations/Profile");
+                    setOpenLeftNav(false);
                     setAnchorElSettings(null);
                   }}
                 >

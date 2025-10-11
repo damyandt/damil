@@ -95,21 +95,24 @@ const ProfilePage = () => {
         </Typography>
       </Grid>
       <Grid
-        size={{ xs: 12, sm: 12, lg: 12 }}
+        size={{ xs: 12 }}
         gap={3}
         sx={{
           display: "flex",
-          width: "100%",
           flexDirection: "column",
-          p: 2,
           alignItems: "center",
-          overflow: "scroll",
-          scrollbarWidth: "none", // Firefox
+          width: "100%",
+          height: "100%", // allow full height within parent
+          p: { xs: 1, sm: 2 }, // smaller padding on mobile
+          overflowY: "auto",
+          overflowX: "hidden",
+          scrollbarWidth: "none",
           "&::-webkit-scrollbar": {
-            display: "none", // Chrome, Safari
+            display: "none",
           },
         }}
       >
+        {/* ✅ Make Tabs scrollable horizontally on small screens */}
         <Tabs
           value={selectedTab}
           onChange={handleTabChange}
@@ -117,10 +120,16 @@ const ProfilePage = () => {
           scrollButtons="auto"
           allowScrollButtonsMobile
           sx={{
-            mb: 3,
-            justifySelf: "center",
+            mb: { xs: 1, sm: 3 },
+            width: "100%",
+            maxWidth: "100vw",
             "& .MuiTabs-flexContainer": {
               justifyContent: { xs: "flex-start", sm: "center" },
+            },
+            "& .MuiTab-root": {
+              minWidth: { xs: "auto", sm: 120 }, // shrink tabs on small devices
+              fontSize: { xs: "0.8rem", sm: "1rem" },
+              paddingX: { xs: 1.2, sm: 2 },
             },
           }}
         >
@@ -133,10 +142,16 @@ const ProfilePage = () => {
             <Tab label={t("Business Details")} />
           )}
         </Tabs>
+
+        {/* ✅ Responsive content area */}
         <Grid
           size={{ xs: 12, sm: 10, lg: 8 }}
-          alignSelf={"center"}
-          width={"100%"}
+          alignSelf="center"
+          width="100%"
+          sx={{
+            flexGrow: 1,
+            overflow: "visible",
+          }}
         >
           <Slide
             direction={"right"}
