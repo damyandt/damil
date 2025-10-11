@@ -45,29 +45,9 @@ const LoginPage = () => {
           <LanguageOutlined />
         </IconButton>
       </CustomTooltip>
+
       <Box
         sx={{
-          position: "absolute",
-          top: 0,
-          width: "100%",
-          alignContent: "center",
-          textAlign: "center",
-        }}
-      >
-        <img
-          src="/damil-logo.png"
-          alt="Damil Logo"
-          style={{
-            width: 100,
-            height: "auto",
-            margin: 16,
-            marginTop: "20dvh",
-          }}
-        />
-      </Box>
-      <Box
-        sx={{
-          pt: { xs: "10dvh", sm: 0 },
           p: 4,
           overflow: "hidden",
           height: "100dvh",
@@ -79,6 +59,23 @@ const LoginPage = () => {
           backgroundColor: theme.palette.customColors?.darkBackgroundColor,
         }}
       >
+        <Box
+          sx={{
+            width: "100%",
+            alignContent: "center",
+            textAlign: "center",
+          }}
+        >
+          <img
+            src="/damil-logo.png"
+            alt="Damil Logo"
+            style={{
+              width: 100,
+              height: "auto",
+              margin: 16,
+            }}
+          />
+        </Box>
         <Box
           sx={{
             position: "fixed",
