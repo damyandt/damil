@@ -121,8 +121,7 @@ const ProfilePage = () => {
           allowScrollButtonsMobile
           sx={{
             mb: { xs: 1, sm: 3 },
-            width: "100%",
-            maxWidth: "100vw",
+            maxWidth: "80dvw",
             "& .MuiTabs-flexContainer": {
               justifyContent: { xs: "flex-start", sm: "center" },
             },
