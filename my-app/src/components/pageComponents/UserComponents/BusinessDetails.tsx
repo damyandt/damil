@@ -112,6 +112,7 @@ const BusinessDetails = () => {
               <TextField
                 disabled={col.field === "businessEmail" || !editMode}
                 fullWidth
+                type={col.field === "businessEmail" ? "email" : "text"}
                 label={col.label}
                 onChange={(e: any) => handleChange(col.field, e.target.value)}
                 value={formData ? formData[col.field] || "" : ""}

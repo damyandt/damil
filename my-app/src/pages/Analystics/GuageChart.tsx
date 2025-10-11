@@ -6,6 +6,7 @@ import { CanvasRenderer } from "echarts/renderers";
 import BaseChart from "../../components/pageComponents/BaseChart";
 import { darken, lighten, useTheme } from "@mui/material";
 import { shiftHue } from "../Home/Home";
+import { useMediaQuery } from "@mui/system";
 
 echarts.use([GaugeChart, TitleComponent, TooltipComponent, CanvasRenderer]);
 type Data = {
@@ -17,6 +18,7 @@ interface GaugeChartHomeProps {
 }
 const GaugeChartHome: React.FC<GaugeChartHomeProps> = ({ data }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery("(max-width:600px)");
   const isDark = theme.palette.mode === "dark";
   const primary = theme.palette.primary.main;
   const colorStart = isDark
@@ -67,6 +69,11 @@ const GaugeChartHome: React.FC<GaugeChartHomeProps> = ({ data }) => {
         axisLabel: {
           show: false,
           distance: 50,
+        },
+        title: {
+          show: true,
+          fontSize: isMobile ? 8 : 14,
+          color: theme.palette.text.secondary,
         },
         detail: {
           fontSize: 20,

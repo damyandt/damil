@@ -315,7 +315,7 @@ const HomePage: React.FC = () => {
 
                   return analyticsData ? (
                     <Grid
-                      size={{ xs: 12, sm: 6, md: 3 }}
+                      size={{ xs: 6, sm: 6, md: 3 }}
                       key={index}
                       sx={{ cursor: "pointer", aspectRatio: 1 / 1 }}
                     >

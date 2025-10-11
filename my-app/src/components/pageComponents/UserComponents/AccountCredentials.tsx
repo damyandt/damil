@@ -108,6 +108,7 @@ const AccountCredentials = () => {
             <TextField
               fullWidth
               label="Current Email"
+              type="email"
               value={authedUser?.email || ""}
               disabled
             />
@@ -117,6 +118,7 @@ const AccountCredentials = () => {
             <TextField
               fullWidth
               label="New Email"
+              type="email"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
             />

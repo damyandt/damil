@@ -216,6 +216,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 label={t("Email")}
+                type="email"
                 value={formData.email}
                 onChange={(e) => handleChange("email", e.target.value)}
                 error={!!errors["email"]}

@@ -193,6 +193,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
             <TextField
               fullWidth
               label={errors["email"] || t("Business Email")}
+              type="email"
               error={!!errors["email"]}
               onChange={(e) =>
                 setBusiness((prev: BusinessDataRegister) => ({
@@ -298,6 +299,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
             <TextField
               fullWidth
               label={errors["email"] || t("Email")}
+              type="email"
               error={!!errors["email"]}
               onChange={(e) => handleChangeAdmin("email", e.target.value)}
             />
