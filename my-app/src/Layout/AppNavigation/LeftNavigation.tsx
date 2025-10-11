@@ -41,7 +41,7 @@ const cssStyles = (openLeftNav: boolean, theme: any) => ({
       overflowX: "hidden",
       backgroundColor: theme.palette.customColors.sectionBackgroundColor,
       margin: !openLeftNav ? "1em" : "1em 1em 0.9em 0",
-      height: "-webkit-fill-available",
+      height: "calc(100dvh - 2em)",
       transition: "margin 0.4s ease, width 0.4s ease, border-radius 0.4s ease",
       boxShadow: theme.palette.customColors.shodow,
       borderRadius: !openLeftNav ? "20px" : "0 20px 20px 0",
