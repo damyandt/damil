@@ -203,5 +203,5 @@ export default function Memberships() {
     ],
   };
 
-  return <BaseChart option={option} height={`${87}vh`} />;
+  return <BaseChart option={option} height={`${87}dvh`} />;
 }

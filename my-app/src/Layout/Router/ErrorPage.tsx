@@ -47,7 +47,7 @@ export default function ErrorPage() {
     >
       <Paper
         sx={{
-          minHeight: "90vh",
+          minHeight: "90dvh",
           maxWidth: "90vw",
           width: "100%",
           p: 4,

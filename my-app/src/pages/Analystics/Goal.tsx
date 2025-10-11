@@ -93,7 +93,9 @@ const GoalMembersGaugeChart: React.FC<GoalMembersGaugeChartProps> = ({
     ],
   };
 
-  return <BaseChart echarts={echarts} option={option} height={`${height}vh`} />;
+  return (
+    <BaseChart echarts={echarts} option={option} height={`${height}dvh`} />
+  );
 };
 
 export default GoalMembersGaugeChart;

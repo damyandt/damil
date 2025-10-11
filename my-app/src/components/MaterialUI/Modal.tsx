@@ -77,7 +77,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           gap: 3,
           justifyContent: "space-between",
           height: height ?? "auto",
-          maxHeight: "80vh",
+          maxHeight: "80dvh",
           overflow: "scroll",
           scrollbarWidth: "none",
           "&::-webkit-scrollbar": {

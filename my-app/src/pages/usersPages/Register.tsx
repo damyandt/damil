@@ -92,13 +92,13 @@ const RegisterPage = () => {
             width: 100,
             height: "auto",
             margin: 16,
-            marginTop: "20vh",
+            marginTop: "20dvh",
           }}
         />
       </Box>
       <Box
         sx={{
-          mt: { xs: "10vh", sm: 0 },
+          pt: { xs: "10dvh", sm: 0 },
           p: 4,
           height: "100dvh",
           display: "flex",
@@ -106,6 +106,7 @@ const RegisterPage = () => {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
+          backgroundColor: theme.palette.customColors?.darkBackgroundColor,
         }}
       >
         <Box

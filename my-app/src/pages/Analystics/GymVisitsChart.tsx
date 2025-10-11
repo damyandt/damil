@@ -285,7 +285,7 @@ const GymVisitsChart: React.FC<VisitsProps> = ({ height }) => {
       echarts={echarts}
       onEvents={onEvents}
       option={option}
-      height={`${height}vh`}
+      height={`${height}dvh`}
     />
   );
 };

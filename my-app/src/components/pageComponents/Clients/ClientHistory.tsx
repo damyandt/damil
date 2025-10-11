@@ -82,7 +82,7 @@ const ClientHistory: React.FC<ClientHistoryProps> = ({ rowData }) => {
             center: "title",
             right: "dayGridYear dayGridMonth dayGridWeek",
           }}
-          height="65vh"
+          height="65dvh"
         />
       </Box> */}
       <Calendar eventsData={transformToEvents(visits)} noAddEvent={true} />

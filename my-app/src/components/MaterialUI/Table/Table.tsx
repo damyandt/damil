@@ -194,7 +194,7 @@ const TableComponent = ({
           sx={{
             backgroundColor: theme.palette.customColors?.tableBackground,
             paddingX: "5px",
-            marginBottom: "10vh",
+            marginBottom: "10dvh",
           }}
         >
           <MuiTable
