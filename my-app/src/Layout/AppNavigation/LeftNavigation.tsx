@@ -166,7 +166,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
         sx={{
           paddingTop: "5em",
           paddingBottom: "2em",
-          height: "-webkit-fill-available",
+          height: "calc(100dvh - 2em)",
           backgroundColor: theme!.palette!.customColors!.sectionBackgroundColor,
         }}
       >
