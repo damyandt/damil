@@ -27,7 +27,7 @@ const cssStyles = (
     padding:
       typeof AUTH_LAYOUT_PADDING === "string" ? AUTH_LAYOUT_PADDING : "14px",
     backgroundColor: theme.palette.customColors?.sectionBackgroundColor,
-    minHeight: `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 50px)`,
+    minHeight: `calc(100dvh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 50px)`,
   }),
   ...(!mobileLeftNav && {
     transition: theme.transitions.create("margin", {
@@ -76,7 +76,7 @@ const PageNotFound: React.FC = () => {
           top: 0,
           left: 0,
           width: "100vw",
-          height: "100vh",
+          height: "100dvh",
           backgroundColor: theme.palette.customColors?.darkBackgroundColor,
         }}
       >

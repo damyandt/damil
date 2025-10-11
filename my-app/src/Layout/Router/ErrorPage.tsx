@@ -37,7 +37,7 @@ export default function ErrorPage() {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        minHeight: "100dvh",
         backgroundColor: "#f8d7da",
         display: "flex",
         alignItems: "center",

@@ -13,7 +13,7 @@ const LoadingScreen: React.FC = () => {
       sx={[styles.card, styles.flexCenter]}
       component="div"
       flexDirection="column"
-      minHeight="100vh"
+      minHeight="100dvh"
       minWidth="100vw"
     >
       <CircularProgress />

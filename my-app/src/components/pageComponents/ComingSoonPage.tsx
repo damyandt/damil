@@ -30,7 +30,7 @@ const cssStyles = (
       theme.palette.mode === "light"
         ? AUTH_LAYOUT_BACKGROUND_COLOR
         : AUTH_LAYOUT_DARK_BACKGROUND_COLOR,
-    minHeight: `calc(100vh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 50px)`,
+    minHeight: `calc(100dvh - ${TOP_NAV_SPACING_WITH_SITE_CONTENT} - 50px)`,
   }),
   ...(!mobileLeftNav && {
     transition: theme.transitions.create("margin", {

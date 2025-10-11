@@ -100,7 +100,7 @@ const RegisterPage = () => {
         sx={{
           mt: { xs: "10vh", sm: 0 },
           p: 4,
-          height: "100vh",
+          height: "100dvh",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",

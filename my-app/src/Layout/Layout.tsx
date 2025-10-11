@@ -79,7 +79,7 @@ const cssStyles = (
       ? `calc(${TOP_RIGHT_NAV_HEIGHT} + 1em)`
       : 0,
 
-    height: `100vh`,
+    height: `100dvh`,
     flexGrow: 1,
     position: "relative",
     // padding: AUTH_LAYOUT_PADDING,
