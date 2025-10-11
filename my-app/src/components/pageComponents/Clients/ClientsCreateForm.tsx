@@ -193,7 +193,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
       case 0:
         return (
           <Grid container spacing={2} p={2}>
-            <Grid size={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 label={t("First Name")}
                 value={formData.firstName}
@@ -203,7 +203,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 fullWidth
               />
             </Grid>
-            <Grid size={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 label={t("Last Name")}
                 value={formData.lastName}
@@ -213,7 +213,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 fullWidth
               />
             </Grid>
-            <Grid size={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 label={t("Email")}
                 value={formData.email}
@@ -223,7 +223,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 fullWidth
               />
             </Grid>
-            <Grid size={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 label={t("Phone")}
                 value={formData.phone}
@@ -233,7 +233,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 fullWidth
               />
             </Grid>
-            <Grid size={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <DatePickerComponent
                 sx={{ width: "100%", margin: 0 }}
                 label={t("Birth Date")}
@@ -245,7 +245,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 helperText={errors["birthDate"]}
               />
             </Grid>
-            <Grid size={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 select
                 label={t("Gender")}
@@ -273,7 +273,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
       case 1:
         return (
           <Grid container spacing={2} p={2}>
-            <Grid size={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 select
                 label={t("Subcription Plan")}
@@ -298,7 +298,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 )}
               </TextField>
             </Grid>
-            <Grid size={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 select
                 label={t("Employment")}
@@ -324,7 +324,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
               </TextField>
             </Grid>
             {subscriptionData.subscriptionPlan === "VISIT_PASS" && (
-              <Grid size={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   select
                   label={t("Allowed Visits")}

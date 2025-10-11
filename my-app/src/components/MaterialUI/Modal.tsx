@@ -77,7 +77,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           gap: 3,
           justifyContent: "space-between",
           height: height ?? "auto",
-          maxHeight: "95vh",
+          maxHeight: "80vh",
           overflow: "scroll",
           scrollbarWidth: "none",
           "&::-webkit-scrollbar": {
@@ -88,27 +88,28 @@ const CustomModal: React.FC<CustomModalProps> = ({
         <Grow in={!!open} timeout={500}>
           <Box>
             <Box
-              sx={
-                style
+              sx={{
+                xs: { display: "none" },
+                sm: style
                   ? {
                       backgroundImage:
                         style === "info"
                           ? `url("/details.jpg")`
                           : style === "edit"
-                            ? `url("/edit.jpg")`
-                            : `url("/create.jpg")`,
+                          ? `url("/edit.jpg")`
+                          : `url("/create.jpg")`,
                       backgroundSize: "cover",
                       backgroundRepeat: "repeat",
                       backgroundPosition: "center 27%",
                       borderRadius: 1,
                     }
-                  : {}
-              }
+                  : {},
+              }}
             >
               <Box
                 component="div"
                 textAlign="center"
-                py={style ? 10 : 3}
+                py={{ xs: 3, sm: style ? 10 : 3 }}
                 sx={{
                   display: "flex",
                   justifyContent: "flex-start",
@@ -118,8 +119,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
                 }}
               >
                 <Box
-                  sx={
-                    style
+                  sx={{
+                    sm: style
                       ? {
                           alignItems: "center",
                           border: "2px solid #fff",
@@ -141,15 +142,15 @@ const CustomModal: React.FC<CustomModalProps> = ({
                           display: "flex",
                           // color: theme.palette.primary.main,
                           gap: 2,
-                        }
-                  }
+                        },
+                  }}
                 >
                   {iconMap[titleIcon ?? ""]}
 
                   <Typography
                     variant="h4"
-                    sx={
-                      style
+                    sx={{
+                      sm: style
                         ? {
                             color: "rgba(0, 0, 0, 0.75)",
                             fontWeight: 600,
@@ -157,8 +158,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
                             textTransform: "capitalize",
                             textShadow: "0 1px 2px rgba(255, 255, 255, 0.3)", // optional glow for contrast
                           }
-                        : {}
-                    }
+                        : {},
+                    }}
                   >
                     {title}
                   </Typography>

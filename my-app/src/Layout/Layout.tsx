@@ -166,7 +166,7 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
       <LeftNavigation
         openLeftNav={openLeftNav}
         setOpenLeftNav={setOpenLeftNav}
-        mobileLeftNav={lgMediaQuery}
+        mobileLeftNav={smMediaQuery}
       />
       {/* </ClickAwayListener> */}
       {!smMediaQuery && extraRightNavMenu ? (

@@ -124,9 +124,6 @@ const NavItem: React.FC<NavItemProps> = ({
     <Box component="div">
       <ListItemButton
         {...itemIconButtonProps}
-        // onClick={() => {
-        //   mobileLeftNav && !nested && setOpenLeftNav(false);
-        // }}
         disabled={disabled}
         selected={isSelected}
         sx={{
@@ -190,6 +187,8 @@ const NavItem: React.FC<NavItemProps> = ({
               isAlreadyOpen={false}
               currentPath={currentPath}
               openLeftNav={openLeftNav}
+              setOpenLeftNav={setOpenLeftNav}
+              mobileLeftNav={mobileLeftNav}
             />
           ))}
         </Collapse>
