@@ -211,16 +211,10 @@ const LoginForm = () => {
         <Grid size={12}>
           <TextField
             fullWidth
+            type="email"
             disabled={disableEmail}
             label={errors["email"] || t("Email")}
             error={!!errors["email"]}
-            // onKeyDown={(e) => {
-            //   if (e.key === "Enter") {
-            //     e.preventDefault();
-            //     e.stopPropagation();
-            //     handleNextClick();
-            //   }
-            // }}
             onEnterFunc={() => {
               handleNextClick();
             }}
