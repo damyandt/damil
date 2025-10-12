@@ -47,8 +47,6 @@ export const DetailsAction = ({
         }}
         title={t("Details")}
         width={"lg"}
-        style="info"
-        titleIcon="info"
       >
         <Grid container spacing={2} sx={{ p: 2 }}>
           {columns

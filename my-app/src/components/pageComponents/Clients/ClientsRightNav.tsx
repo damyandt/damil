@@ -41,8 +41,6 @@ const ClientsRightMenu: React.FC<ClientsRightMenuProps> = ({
         }}
         title="Add New Client"
         width={"lg"}
-        style="create"
-        titleIcon="create"
       >
         <ClientsCreateForm
           setRefreshTable={setRefreshTable}

@@ -43,8 +43,6 @@ export const EditAction = ({
         onClose={() => setOpen(null)}
         title={t("Edit")}
         width={"lg"}
-        style="edit"
-        titleIcon="edit"
       >
         {columns.length !== 0 && (
           <CreateForm

@@ -64,6 +64,7 @@ const LoginPage = () => {
             width: "100%",
             alignContent: "center",
             textAlign: "center",
+            display: { xs: "block", sm: "none" },
           }}
         >
           <img
@@ -157,12 +158,25 @@ const LoginPage = () => {
             alignSelf={"center"}
           >
             {t("You don't have an Account?")}{" "}
-            <MuiLink component={RouterLink} to="/register" underline="hover">
-              {t("Register Here")}
+            <MuiLink component={RouterLink} to="/?step=1" underline="hover">
+              {t("Back to Welcome")}
             </MuiLink>
           </Typography>
         </Box>
       </Box>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        mt={8}
+        zIndex={1000}
+        width={"100%"}
+        textAlign={"center"}
+        position={"absolute"}
+        bottom={16}
+      >
+        © {new Date().getFullYear()}{" "}
+        {t("DamilSoft — Empowering Fitness Businesses")}
+      </Typography>
     </>
   );
 };

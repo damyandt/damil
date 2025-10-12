@@ -14,17 +14,15 @@ interface TextFieldProps extends StandardTextFieldProps {
   css?: SerializedStyles[] | SerializedStyles;
   className?: string;
   onEnterFunc?: () => void;
-  // numberField?: boolean;
   noThousandSeparator?: boolean;
   allowNegatives?: boolean;
   noDecimalLimit?: boolean;
-  addOption?: boolean; // ✅ new prop
-  onAddOptionClick?: () => void; // ✅ new prop
+  addOption?: boolean;
+  onAddOptionClick?: () => void;
 }
 
 const TextField: React.FC<TextFieldProps> = ({
   className,
-  // numberField,
   onEnterFunc,
   inputProps = {},
   InputProps = {},
@@ -45,7 +43,7 @@ const TextField: React.FC<TextFieldProps> = ({
         ...inputProps,
         nothousandseparator: noThousandSeparator ? "true" : "false",
         allownegatives: allowNegatives ? "true" : "false",
-        noDecimalLimit: noDecimalLimit ? "true" : "false",
+        nodecimallimit: noDecimalLimit ? "true" : "false",
       }}
       InputProps={{
         ...InputProps,

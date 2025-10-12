@@ -27,7 +27,8 @@ import GaugeChartHome from "../Analystics/GuageChart";
 import callApi from "../../API/callApi";
 import { Response } from "../../Global/Types/commonTypes";
 import { getAnalyticsForHomePage } from "./API/getQueries";
-
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import CustomSnackbar from "../../components/MaterialUI/FormFields/Snackbar";
 export const descriptionMap = (type: string, word: string, t: any) => {
   let final = "";
   switch (type) {
@@ -54,6 +55,7 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [analyticsData, setAnalyticsData] = useState<any>(null);
   const { preferences, setAuthedUser, tenant } = useAuthedContext();
+  const [copied, setCopied] = useState<boolean>(false);
   const [openCheckIn, setOpenCheckIn] = useState<boolean>(false);
   const [selectedFilters, setSelectedFilters] = useState<any>(
     preferences.homeFilters ?? [
@@ -220,7 +222,7 @@ const HomePage: React.FC = () => {
             </Typography>
           </Grid>
 
-          <Grid size={{ xs: 12, md: tenant.abonnement !== "PRO" ? 12 : 4 }}>
+          <Grid size={{ xs: 12, md: tenant.abonnement !== "PRO" ? 12 : 3 }}>
             <Button
               fullWidth
               variant="outlined"
@@ -241,8 +243,38 @@ const HomePage: React.FC = () => {
               {t("Check In")}
             </Button>
           </Grid>
+          <Grid size={{ xs: 12, md: tenant.abonnement !== "PRO" ? 12 : 3 }}>
+            <Button
+              fullWidth
+              variant="outlined"
+              sx={{
+                background: `linear-gradient(90deg, ${colorEnd}, ${colorStart})`,
+                boxShadow: theme.palette.customColors?.shodow,
+                border: "none",
+                color: "#fff",
+                transition: "transform 0.3s ease",
+                "&:hover": {
+                  transform: "scale(0.97)",
+                },
+              }}
+              color={isDark ? "info" : "primary"}
+              startIcon={<ContentCopyIcon />}
+              onClick={() => {
+                const textToCopy = `https://damilsoft.com/add-yourself/${tenant.id}`; // replace with your text
+                navigator.clipboard
+                  .writeText(textToCopy)
+                  .then(() => {
+                    console.warn("Copied!");
+                    setCopied(true);
+                  })
+                  .catch((err) => console.error("Failed to copy: ", err));
+              }}
+            >
+              {t("Get Link")}
+            </Button>
+          </Grid>
 
-          <Grid size={{ xs: 12, md: tenant.abonnement !== "PRO" ? 12 : 4 }}>
+          <Grid size={{ xs: 12, md: tenant.abonnement !== "PRO" ? 12 : 3 }}>
             <Button
               fullWidth
               variant="outlined"
@@ -263,7 +295,7 @@ const HomePage: React.FC = () => {
             </Button>
           </Grid>
 
-          <Grid size={{ xs: 12, md: tenant.abonnement !== "PRO" ? 12 : 4 }}>
+          <Grid size={{ xs: 12, md: tenant.abonnement !== "PRO" ? 12 : 3 }}>
             <Button
               fullWidth
               variant="outlined"
@@ -389,6 +421,20 @@ const HomePage: React.FC = () => {
         selectedFilters={selectedFilters}
         setSelectedFilters={setSelectedFilters}
         flatData={analyticsData}
+      />
+
+      {/* <Snackbar
+       
+        open={copied}
+        autoHideDuration={6000}
+        onClose={() => setCopied(false)}
+        message="Copied"
+      /> */}
+      <CustomSnackbar
+        open={copied}
+        onClose={() => setCopied(false)}
+        message="Copied"
+        key={"bottom + right"}
       />
     </>
   );

@@ -17,10 +17,12 @@ import Visibility from "@mui/icons-material/Visibility";
 import Alert from "../../MaterialUI/Alert";
 import TextField from "../../MaterialUI/FormFields/TextField";
 import Button from "../../MaterialUI/Button";
+import { useLanguageContext } from "../../../context/LanguageContext";
 
 const AccountCredentials = () => {
   const { authedUser, setAuthedUser, setRefreshUserData } = useAuthedContext();
   const navigate = useNavigate();
+  const { t } = useLanguageContext();
   const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
@@ -94,20 +96,20 @@ const AccountCredentials = () => {
       spacing={2}
       minHeight="100%"
       p={4}
-      width={"80%"}
+      width={{ xs: "100%", sm: "80%" }}
       margin={"0 auto"}
       alignContent={"center"}
     >
-      <Grid size={6}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <Typography variant="h4" margin={"0 auto"} mb={3}>
-          Change Email
+          {t("Change Email")}
         </Typography>
 
         <Grid container spacing={2} mt={1} width={"100%"}>
           <Grid size={12}>
             <TextField
               fullWidth
-              label="Current Email"
+              label={t("Current Email")}
               type="email"
               value={authedUser?.email || ""}
               disabled
@@ -117,7 +119,7 @@ const AccountCredentials = () => {
           <Grid size={12}>
             <TextField
               fullWidth
-              label="New Email"
+              label={t("New Email")}
               type="email"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
@@ -136,7 +138,7 @@ const AccountCredentials = () => {
               onClick={() => navigate(-1)}
               color="error"
             >
-              Back
+              {t("Back")}
             </Button>
             <Button onClick={handleSaveEmail} disabled={loading || !newEmail}>
               {loading ? "Saving..." : "Save"}
@@ -145,16 +147,16 @@ const AccountCredentials = () => {
         </Grid>
       </Grid>
 
-      <Grid size={6}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <Typography variant="h4" margin={"0 auto"} mb={3}>
-          Change Password
+          {t("Change Password")}
         </Typography>
         <Grid container spacing={2} mt={1}>
           <Grid size={12}>
             <TextField
               type={showOldPassword ? "text" : "password"}
               fullWidth
-              label="Current Password"
+              label={t("Current Password")}
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
               InputProps={{
@@ -180,11 +182,11 @@ const AccountCredentials = () => {
             />
           </Grid>
 
-          <Grid size={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               type={showNewPassword ? "text" : "password"}
               fullWidth
-              label="New Password"
+              label={t("New Password")}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               InputProps={{
@@ -210,11 +212,11 @@ const AccountCredentials = () => {
             />
           </Grid>
 
-          <Grid size={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               type={showConfirmPassword ? "text" : "password"}
               fullWidth
-              label="Confirm Password"
+              label={t("Confirm Password")}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               InputProps={{
@@ -259,7 +261,7 @@ const AccountCredentials = () => {
 
       <Grid size={12}>
         <Alert
-          message={errorEmail}
+          message={errorEmail && t(errorEmail)}
           showAlert={!!errorEmail}
           severity="error"
           autoClose
@@ -268,7 +270,7 @@ const AccountCredentials = () => {
 
       <Grid size={12}>
         <Alert
-          message={successEmail}
+          message={successEmail && t(successEmail)}
           showAlert={!!successEmail}
           severity="success"
           autoClose
@@ -277,7 +279,7 @@ const AccountCredentials = () => {
 
       <Grid size={12}>
         <Alert
-          message={errorPassword}
+          message={errorPassword && t(errorPassword)}
           showAlert={!!errorPassword}
           severity="error"
           autoClose
@@ -286,7 +288,7 @@ const AccountCredentials = () => {
 
       <Grid size={12}>
         <Alert
-          message={successPassword}
+          message={successPassword && t(successPassword)}
           showAlert={!!successPassword}
           severity="success"
           autoClose

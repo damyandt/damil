@@ -145,7 +145,6 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
     <>
       <CustomModal
         title={t("Member Check-In")}
-        titleIcon="login"
         open={open}
         onClose={() => handleReset(true)}
         width="lg"

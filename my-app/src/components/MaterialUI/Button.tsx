@@ -15,6 +15,7 @@ export interface ButtonProps extends MUIButtonProps {
   borderWidth?: number;
   borderColor?: string;
   borderRadius?: string;
+  size?: "small" | "medium" | "large";
 }
 
 const Button: React.FC<ButtonProps> = ({

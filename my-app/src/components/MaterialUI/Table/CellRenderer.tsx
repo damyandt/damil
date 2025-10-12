@@ -48,6 +48,29 @@ const CellRenderer = ({
       displayValue = value ? "True" : "False";
       break;
 
+    case "phone":
+      displayValue = (
+        <a
+          href={`tel:${value}`}
+          style={{
+            textDecoration: "none",
+            color: "inherit",
+            transition: "color 0.2s, text-decoration 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = "#1976d2"; // change color on hover
+            e.currentTarget.style.textDecoration = "underline";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = "inherit"; // reset color
+            e.currentTarget.style.textDecoration = "none";
+          }}
+        >
+          {value}
+        </a>
+      );
+      break;
+
     case "number":
       style.color = "#1976d2";
       break;
@@ -61,8 +84,8 @@ const CellRenderer = ({
       const formatted = isISODate
         ? dayjs(value).format("DD/MM/YYYY")
         : dayjs(value).isValid()
-          ? dayjs(value).format("DD/MM/YYYY")
-          : "Invalid Date";
+        ? dayjs(value).format("DD/MM/YYYY")
+        : "Invalid Date";
 
       displayValue = (
         <Box
@@ -106,24 +129,24 @@ const CellRenderer = ({
               ? "#f48fb1" // lighter pink for dark mode
               : "#d81b60" // original pink
             : isDark
-              ? "#90caf9" // lighter blue for dark mode
-              : "#1976d2", // original blue
+            ? "#90caf9" // lighter blue for dark mode
+            : "#1976d2", // original blue
 
           backgroundColor: isFemale
             ? isDark
               ? "#3f2d3d" // muted dark pink background
               : "#fce4ec"
             : isDark
-              ? "#1e3a5f" // muted dark blue background
-              : "#e3f2fd",
+            ? "#1e3a5f" // muted dark blue background
+            : "#e3f2fd",
 
           borderColor: isFemale
             ? isDark
               ? "#f48fb1"
               : "#d81b60"
             : isDark
-              ? "#90caf9"
-              : "#1976d2",
+            ? "#90caf9"
+            : "#1976d2",
         };
         displayValue = (
           <Box

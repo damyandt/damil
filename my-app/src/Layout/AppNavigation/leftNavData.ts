@@ -18,6 +18,7 @@ import TuneIcon from "@mui/icons-material/Tune";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOnOutlined";
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
 
 export enum LEFT_NAV_SECTION {
   "Home" = "Home",
@@ -104,6 +105,12 @@ export const NAV_DAMIL_ACCESS_CONTROL: LeftNavMenu = {
           text: "Clients",
           url: "/DAMIL-Access-Control/All-Clients",
           Icon: PersonAddAlt1Icon,
+          disabled: false,
+        },
+        {
+          text: "Accept New Client",
+          url: "/DAMIL-Access-Control/Accept-New-Client",
+          Icon: HowToRegIcon,
           disabled: false,
         },
         {

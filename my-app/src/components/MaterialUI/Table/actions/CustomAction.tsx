@@ -28,8 +28,6 @@ export const CustomAction = ({
   tooltip,
   modalTitle,
   modalWidth = "lg",
-  modalStyle = "info",
-  modalTitleIcon = "info",
   renderContent,
   setAnchorEl,
   setRefreshTable,
@@ -57,8 +55,6 @@ export const CustomAction = ({
         }}
         title={modalTitle}
         width={modalWidth}
-        style={modalStyle}
-        titleIcon={modalTitleIcon}
       >
         {renderContent?.(rowData, setOpen, setRefreshTable)}
       </CustomModal>

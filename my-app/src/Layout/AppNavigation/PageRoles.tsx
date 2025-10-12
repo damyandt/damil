@@ -43,6 +43,10 @@ export const pageRoles: any = {
     roles: ["Facility Admin", "System Admin", "Facility Staff"],
     abonnement: ["STARTER", "GROWTH", "PRO"],
   },
+  "/DAMIL-Access-Control/Accept-New-Client": {
+    roles: ["Facility Admin", "System Admin", "Facility Staff"],
+    abonnement: ["STARTER", "GROWTH", "PRO"],
+  },
 
   // DAMIL Staff Members
   "/DAMIL-Staff/All": {

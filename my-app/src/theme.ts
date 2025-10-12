@@ -44,6 +44,7 @@ declare module "@mui/material/styles" {
       shodowColor?: string;
       tableRow?: string;
       tableBackground?: string;
+      scrollbarThumb?: string;
     };
   }
 
@@ -59,6 +60,7 @@ declare module "@mui/material/styles" {
       shodowColor?: string;
       tableRow?: string;
       tableBackground?: string;
+      scrollbarThumb?: string;
     };
   }
 
@@ -182,6 +184,7 @@ const theme = (mode: PaletteMode, mainColor: string) => {
         tableBackground:
           mode === "dark" ? darken(mainColor, 0.9) : lighten(mainColor, 0.95),
         tableRow: mode === "dark" ? "#222222ff" : "#fff",
+        scrollbarThumb: mode === "dark" ? "#555555" : "#c1c1c1",
       },
       error: {
         main: mode === "light" ? "#D94646" : "#ff0000ff",

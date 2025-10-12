@@ -7,21 +7,13 @@ import {
   IconButton,
   useTheme,
 } from "@mui/material";
-import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import EditIcon from "@mui/icons-material/Edit";
-import LoginIcon from "@mui/icons-material/Login";
 import CloseIcon from "@mui/icons-material/Close";
-import { JSX } from "react";
-import SearchIcon from "@mui/icons-material/Search";
 
 interface CustomModalProps extends Pick<MuiModalProps, "open" | "onClose"> {
   title: string;
   width?: number | string;
   height?: number | string;
   children: React.ReactNode;
-  style?: "info" | "edit" | "create";
-  titleIcon?: "info" | "edit" | "create" | "search" | "login";
 }
 
 const sizeMap: { [key: string]: any } = {
@@ -43,17 +35,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
   height,
   width = "md",
   children,
-  style,
-  titleIcon,
 }) => {
   const theme = useTheme();
-  const iconMap: Record<string, JSX.Element> = {
-    info: <InfoOutlineIcon fontSize="large" color="action" />,
-    create: <AddCircleOutlineOutlinedIcon fontSize="large" color="info" />,
-    edit: <EditIcon fontSize="large" color="primary" />,
-    search: <SearchIcon fontSize="large" color="action" />,
-    login: <LoginIcon fontSize="large" color="action" />,
-  };
   return (
     <Modal
       open={open}
@@ -88,83 +71,18 @@ const CustomModal: React.FC<CustomModalProps> = ({
         <Grow in={!!open} timeout={500}>
           <Box>
             <Box
+              component="div"
+              textAlign="center"
+              py={3}
               sx={{
-                xs: { display: "none" },
-                sm: style
-                  ? {
-                      backgroundImage:
-                        style === "info"
-                          ? `url("/details.jpg")`
-                          : style === "edit"
-                          ? `url("/edit.jpg")`
-                          : `url("/create.jpg")`,
-                      backgroundSize: "cover",
-                      backgroundRepeat: "repeat",
-                      backgroundPosition: "center 27%",
-                      borderRadius: 1,
-                    }
-                  : {},
+                display: "flex",
+                justifyContent: "flex-start",
+                paddingLeft: 3,
+                alignItems: "center",
+                gap: 1,
               }}
             >
-              <Box
-                component="div"
-                textAlign="center"
-                py={{ xs: 3, sm: style ? 10 : 3 }}
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  paddingLeft: 3,
-                  alignItems: "center",
-                  gap: 1,
-                }}
-              >
-                <Box
-                  sx={{
-                    sm: style
-                      ? {
-                          alignItems: "center",
-                          border: "2px solid #fff",
-                          paddingY: 1,
-                          paddingX: 4,
-                          height: "auto",
-                          display: "flex",
-                          borderRadius: 1,
-                          gap: 2,
-                          backgroundColor: "rgba(255, 255, 255, 0.4)",
-                          backdropFilter: "blur(5px)",
-                          WebkitBackdropFilter: "blur(5px)",
-                        }
-                      : {
-                          alignItems: "center",
-                          paddingY: 1,
-                          paddingX: 4,
-                          height: "auto",
-                          display: "flex",
-                          // color: theme.palette.primary.main,
-                          gap: 2,
-                        },
-                  }}
-                >
-                  {iconMap[titleIcon ?? ""]}
-
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      sm: style
-                        ? {
-                            color: "rgba(0, 0, 0, 0.75)",
-                            fontWeight: 600,
-                            letterSpacing: 0.5,
-                            textTransform: "capitalize",
-                            textShadow: "0 1px 2px rgba(255, 255, 255, 0.3)", // optional glow for contrast
-                          }
-                        : {},
-                    }}
-                  >
-                    {title}
-                  </Typography>
-                </Box>
-              </Box>
+              <Typography variant="h4">{title}</Typography>
             </Box>
             <IconButton
               onClick={() => {

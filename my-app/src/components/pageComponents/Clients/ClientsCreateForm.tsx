@@ -36,8 +36,6 @@ interface ClientsCreateFormProps {
   setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>;
   columns: Column[];
   setModalTitle: React.Dispatch<React.SetStateAction<string | null>>;
-  // loading: boolean;
-  // setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const steps = ["Person Info", "Plan", "Payment", "Confirm Info"];
@@ -46,8 +44,6 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
   setRefreshTable,
   setModalTitle,
   columns,
-  // loading,
-  // setLoading,
 }) => {
   const { setAuthedUser, preferences } = useAuthedContext();
   const { t } = useLanguageContext();
@@ -75,7 +71,10 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
         query: postMember(formData),
         auth: { setAuthedUser },
       });
-      response.success === false && setErrors(response.validationErrors);
+      if (response.success === false) {
+        setErrors(response.validationErrors);
+        return setLoading(false);
+      }
       response.success === true && setId(response.data.id);
       response.success === true &&
         setActiveStep((prevActiveStep) =>
@@ -125,7 +124,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
       setModalTitle(null);
       setRefreshTable && setRefreshTable((prev: boolean) => !prev);
     }
-    setErrors({});
+    // setErrors({});
     setLoading(false);
   };
 
@@ -151,6 +150,10 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
     setSubscriptionData((prev: any) => ({
       ...prev,
       [field]: value,
+    }));
+    setErrors((prev: any) => ({
+      ...prev,
+      [field]: "",
     }));
   };
 

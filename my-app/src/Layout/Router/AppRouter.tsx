@@ -24,6 +24,7 @@ import MembersHome from "../../pages/Home/MembersHome";
 import AccountCredentials from "../../components/pageComponents/UserComponents/AccountCredentials";
 import SuccessPayment from "../../pages/usersPages/SuccessPayment";
 import Calendar from "../../pages/Staff/Calender";
+import AcceptClients from "../../pages/Access Control/AcceptClients";
 export const createAppRouter = (
   userType:
     | "Facility Member"
@@ -106,6 +107,10 @@ const allRoutes = (role: string, abonnement: string | null) => {
     {
       path: "/DAMIL-Access-Control/All-Clients/:filter",
       element: <ClientsPage />,
+    },
+    {
+      path: "/DAMIL-Access-Control/Accept-New-Client",
+      element: <AcceptClients />,
     },
     {
       path: "/DAMIL-Access-Control/Daily-Visitors",

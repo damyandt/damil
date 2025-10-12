@@ -49,7 +49,8 @@ export type ColumnType =
   | "date"
   | "custom"
   | "enum"
-  | "dropdown";
+  | "dropdown"
+  | "phone";
 
 export type Configuration = {
   sortable?: {

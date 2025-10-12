@@ -43,8 +43,6 @@ const RightMenu: React.FC<RightMenuProps> = ({
         onClose={() => setModalTitle(null)}
         title="Add New Client"
         width={"lg"}
-        style="create"
-        titleIcon="create"
       >
         {addNew && columns.length !== 0 && (
           <CreateForm

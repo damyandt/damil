@@ -111,7 +111,6 @@ const SearchModal: React.FC<SearchModalProps> = ({
       open={openSearch}
       onClose={handleClose}
       width={"lg"}
-      titleIcon="search"
     >
       <Box sx={{ width: "100%", mb: 3 }}>
         <Stepper activeStep={activeStep} alternativeLabel>

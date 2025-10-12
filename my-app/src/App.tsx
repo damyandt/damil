@@ -5,8 +5,10 @@ import GuestLayout from "./Layout/GuestLayout";
 import { useAuthedContext } from "./context/AuthContext";
 import LoadingScreen from "./components/pageComponents/LoadingPage";
 import GlobalBarcodeScanner from "./context/BarcodeProvider";
-
+import { GlobalStyles } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 const App: React.FC = () => {
+  const theme = useTheme();
   const { authedUser, authedUserLoading, tenant, tenantLoading } =
     useAuthedContext();
 
@@ -23,6 +25,31 @@ const App: React.FC = () => {
   if (authedUser.email !== "error") {
     return (
       <Box component="main">
+        <GlobalStyles
+          styles={{
+            "*::-webkit-scrollbar": {
+              width: "8px",
+              height: "8px",
+            },
+            "*::-webkit-scrollbar-track": {
+              background: theme.palette.customColors?.tableBackground,
+              borderRadius: "4px",
+            },
+            "*::-webkit-scrollbar-thumb": {
+              backgroundColor:
+                theme.palette.customColors?.scrollbarThumb || "#555",
+              borderRadius: "4px",
+              border:
+                "2px solid " + theme.palette.customColors?.tableBackground,
+            },
+            "*": {
+              scrollbarWidth: "thin", // Firefox
+              scrollbarColor: `${
+                theme.palette.customColors?.scrollbarThumb || "#555"
+              } ${theme.palette.customColors?.tableBackground}`, // Firefox
+            },
+          }}
+        />
         <GlobalBarcodeScanner />
         <RouterProvider router={appRouter} />
       </Box>

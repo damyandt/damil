@@ -47,8 +47,6 @@ const PlansRightMenu: React.FC<PlansRightMenuProps> = ({
         onClose={() => setModalTitle(null)}
         title="Add New Subscription Plan"
         width={step === 2 ? "lg" : "md"}
-        style="create"
-        titleIcon="create"
       >
         <Box
           sx={{
