@@ -24,7 +24,7 @@ const sizeMap: { [key: string]: any } = {
     width: { xs: "90%", sm: "500px", md: "600px" },
   },
   lg: {
-    width: { xs: "90%", sm: "600px", md: "800px" },
+    width: { xs: "90%", sm: "600px", md: "800px", lg: "1200px" },
   },
 };
 

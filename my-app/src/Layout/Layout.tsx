@@ -14,6 +14,8 @@ import NavigateBeforeOutlinedIcon from "@mui/icons-material/NavigateBeforeOutlin
 import MenuIcon from "@mui/icons-material/Menu";
 import RightNavigation from "./AppNavigation/RightNavigation";
 import FloatingRightMenu from "./AppNavigation/FloatingRightNav";
+import { useAuthedContext } from "../context/AuthContext";
+import QrCodeButton from "../components/pageComponents/UserComponents/QRCodeButton";
 // import ClientsRightMenu from "../components/pageComponents/Clients/ClientsRightNav";
 
 interface AuthLayoutProps {
@@ -109,6 +111,7 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
   const theme = useTheme();
   const lgMediaQuery = useMediaQuery("(max-width:1024px)");
   const smMediaQuery = useMediaQuery("(max-width:599px)");
+  const { authedUser } = useAuthedContext();
   const [isRightNavVisible, setIsRightNavVisible] = useState<boolean>(
     smMediaQuery ? false : true
   );
@@ -132,6 +135,7 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
       setIsRightNavVisible(true);
     }
   }, [location]);
+
   useEffect(() => {
     if (lgMediaQuery) {
       setIsRightNavVisible(false);
@@ -144,10 +148,6 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
       className={className}
       sx={[styles.flexColumn, styles.contentContainer]}
     >
-      {/* <TopNavigation
-        setOpenLeftNav={setOpenLeftNav}
-        openLeftNav={openLeftNav}
-      /> */}
       {lgMediaQuery && !openLeftNav && (
         <IconButton
           size="large"
@@ -158,17 +158,12 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
           <MenuIcon />
         </IconButton>
       )}
-      {/* <ClickAwayListener
-        onClickAway={() => {
-          setUsersFound(null);
-        }}
-      > */}
+
       <LeftNavigation
         openLeftNav={openLeftNav}
         setOpenLeftNav={setOpenLeftNav}
         mobileLeftNav={lgMediaQuery}
       />
-      {/* </ClickAwayListener> */}
       {!smMediaQuery && extraRightNavMenu ? (
         <IconButton
           onClick={() => setIsRightNavVisible((state) => !state)}
@@ -178,11 +173,8 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
         </IconButton>
       ) : null}
 
-      {/* <RightNavigation
-        extraMenu={extraRightNavMenu}
-        isRightNavVisible={isRightNavVisible}
-        openLeftNav={openLeftNav}
-      /> */}
+      {authedUser?.roles?.[0] === "Facility Member" && <QrCodeButton />}
+
       {smMediaQuery && extraRightNavMenu ? (
         <FloatingRightMenu extraMenu={extraRightNavMenu} />
       ) : (

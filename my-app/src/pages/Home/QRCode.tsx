@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { Button, Box, Typography, CircularProgress } from "@mui/material";
+import { Box, Typography, CircularProgress, IconButton } from "@mui/material";
 import callApi from "../../API/callApi";
 import { useAuthedContext } from "../../context/AuthContext";
 import CustomModal from "../../components/MaterialUI/Modal";
 import { useLanguageContext } from "../../context/LanguageContext";
 import { getQRCode } from "../Access Control/API/getQueries";
-
+import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 const QRCode = () => {
   const [open, setOpen] = useState(false);
   const { authedUser, setAuthedUser } = useAuthedContext();
@@ -54,9 +54,9 @@ const QRCode = () => {
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={handleOpen}>
-        Show QR Code
-      </Button>
+      <IconButton color="primary" onClick={handleOpen}>
+        <QrCodeScannerIcon />
+      </IconButton>
 
       <CustomModal open={open} onClose={handleClose} title={t("QR Code")}>
         <Box

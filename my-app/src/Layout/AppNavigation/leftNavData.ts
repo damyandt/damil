@@ -19,6 +19,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOnOutlined";
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
+import { ClassOutlined } from "@mui/icons-material";
 
 export enum LEFT_NAV_SECTION {
   "Home" = "Home",
@@ -26,6 +27,7 @@ export enum LEFT_NAV_SECTION {
   "DAMIL Access Control" = "DAMIL Access Control",
   "DAMIL Staff Members" = "DAMIL Staff Members",
   "DAMIL Configurations" = "DAMIL Configurations",
+  "Member Schedule" = "Member Schedule",
 }
 
 type LeftNavMenu = {
@@ -45,7 +47,17 @@ export const NAV_DAMIL_HOME: LeftNavMenu = {
     },
   ],
 };
-
+export const NAV_DAMIL_CLASSES: LeftNavMenu = {
+  title: LEFT_NAV_SECTION["Member Schedule"],
+  list: [
+    {
+      text: "Classes",
+      url: "Member-Schedule/Classes",
+      Icon: ClassOutlined,
+      disabled: false,
+    },
+  ],
+};
 // Analytics
 export const NAV_DAMIL_ANALYTICS: LeftNavMenu = {
   title: LEFT_NAV_SECTION["DAMIL Analytics"],

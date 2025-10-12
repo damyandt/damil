@@ -7,6 +7,10 @@ export const pageRoles: any = {
     roles: ["Facility Admin", "System Admin", "Facility Member"],
     abonnement: ["ALL"],
   },
+  "/Classes": {
+    roles: ["Facility Member"],
+    abonnement: ["ALL"],
+  },
 
   // DAMIL Analytics
   "/DAMIL-Analytics/Overview": {

@@ -109,6 +109,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
   const styles = { ...cssStyles(openLeftNav, theme) };
   const {
     NAV_DAMIL_HOME,
+    NAV_DAMIL_CLASSES,
     NAV_DAMIL_ANALYTICS,
     NAV_DAMIL_STAFF,
     NAV_DAMIL_ACCESS_CONTROL,
@@ -122,6 +123,10 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
       {
         title: "Home",
         list: NAV_DAMIL_HOME.list,
+      },
+      {
+        title: NAV_DAMIL_CLASSES.title,
+        list: NAV_DAMIL_CLASSES.list,
       },
       {
         title: NAV_DAMIL_ACCESS_CONTROL.title,

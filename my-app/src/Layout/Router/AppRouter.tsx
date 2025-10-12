@@ -20,11 +20,12 @@ import {
   getAbonnementsForPage,
   getRolesForPage,
 } from "../AppNavigation/PageRoles";
-import MembersHome from "../../pages/Home/MembersHome";
+import MembersHome from "../../pages/Home/MemberView/MembersHome";
 import AccountCredentials from "../../components/pageComponents/UserComponents/AccountCredentials";
 import SuccessPayment from "../../pages/usersPages/SuccessPayment";
 import Calendar from "../../pages/Staff/Calender";
 import AcceptClients from "../../pages/Access Control/AcceptClients";
+import Classes from "../../pages/Home/MemberView/Classes";
 export const createAppRouter = (
   userType:
     | "Facility Member"
@@ -77,6 +78,10 @@ const allRoutes = (role: string, abonnement: string | null) => {
         ) : (
           <PlansPage />
         ),
+    },
+    {
+      path: "/Member-Schedule/Classes",
+      element: <Classes />,
     },
     {
       path: "/DAMIL-Analytics/Overview",
