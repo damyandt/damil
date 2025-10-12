@@ -12,6 +12,7 @@ import { useState } from "react";
 import CustomModal from "../../components/MaterialUI/Modal";
 import PlanDetails from "./PlanDetails";
 import { useLanguageContext } from "../../context/LanguageContext";
+import { useAuthedContext } from "../../context/AuthContext";
 
 interface PlanCardProps {
   plan: any;
@@ -21,6 +22,7 @@ interface PlanCardProps {
 
 const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
   const [openDetails, setOpenDetails] = useState<boolean>(false);
+  const { tenant } = useAuthedContext();
   const { t } = useLanguageContext();
   const theme = useTheme();
   const colorStart =
@@ -35,15 +37,20 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
     <>
       <Box
         sx={{
-          border: plan.active
-            ? `2px solid ${theme.palette.mode === "dark" ? theme.palette.common.black : theme.palette.common.white}`
-            : "none",
+          border:
+            plan.name === tenant.abonnement
+              ? `2px solid ${
+                  theme.palette.mode === "dark"
+                    ? theme.palette.common.black
+                    : theme.palette.common.white
+                }`
+              : "none",
           background:
             plan.name === "PRO"
               ? `linear-gradient(90deg, ${colorStart}, ${colorEnd})`
               : theme.palette.mode === "dark"
-                ? "linear-gradient(160deg, #0e0b1d 0%, #1b1433 100%)"
-                : "linear-gradient(160deg, #ffffff 0%, #f3f4f6 100%)",
+              ? "linear-gradient(160deg, #0e0b1d 0%, #1b1433 100%)"
+              : "linear-gradient(160deg, #ffffff 0%, #f3f4f6 100%)",
           borderRadius: "20px",
           height: "100%",
           width: "100%",
@@ -72,7 +79,7 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
             <Typography variant="h5" fontWeight={700} gutterBottom>
               {plan.name}
             </Typography>
-            {plan.active && (
+            {tenant.abonnement === plan.name && (
               <Typography
                 variant="subtitle2"
                 fontWeight={600}

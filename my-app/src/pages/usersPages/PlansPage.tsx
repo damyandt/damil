@@ -37,7 +37,6 @@ const PricingPage = () => {
         "Access from any device (web & mobile)",
       ],
       buttonText: "Get Started",
-      active: false,
     },
     {
       name: "GROWTH",
@@ -54,7 +53,6 @@ const PricingPage = () => {
         "Email notifications and automation",
       ],
       buttonText: "Choose Growth",
-      active: true,
     },
     {
       name: "PRO",
@@ -72,7 +70,6 @@ const PricingPage = () => {
         "Advanced analytics and custom reporting",
       ],
       buttonText: "Upgrade to Pro",
-      active: false,
     },
   ];
   return (
@@ -82,7 +79,7 @@ const PricingPage = () => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        height: "100%",
+        minHeight: "100%",
         p: 2,
       }}
     >
@@ -125,7 +122,7 @@ const PricingPage = () => {
         <Grid
           container
           spacing={4}
-          sx={{ height: "100%" }}
+          sx={{ minHeight: "100%" }}
           justifyContent={"center"}
           display={"flex"}
           alignContent={"center"}
