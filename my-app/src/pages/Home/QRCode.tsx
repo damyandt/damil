@@ -29,8 +29,8 @@ const QRCode = () => {
     setError(null);
   };
 
-  const isIOS =
-    /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+  // const isIOS =
+  //   /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
 
   useEffect(() => {
     if (open) {
@@ -61,10 +61,10 @@ const QRCode = () => {
     }
   }, [open]);
 
-  const handleAddToWallet = () => {
-    // Opens the .pkpass download URL for the current user
-    window.location.href = `/api/pass/${authedUser.id}`;
-  };
+  // const handleAddToWallet = () => {
+  //   // Opens the .pkpass download URL for the current user
+  //   window.location.href = `/api/pass/${authedUser.id}`;
+  // };
 
   return (
     <>
@@ -88,11 +88,7 @@ const QRCode = () => {
                 width: "100%",
               }}
             >
-              <img
-                src={qrCodeUrl}
-                alt="QR Code"
-                style={{ width: "100%", marginTop: 16 }}
-              />
+              <img src={qrCodeUrl} alt="QR Code" style={{ width: "100%" }} />
               <Box
                 component="img"
                 src="/damil-logo.png"
@@ -111,8 +107,22 @@ const QRCode = () => {
               />
             </Box>
           )}
-
-          {isIOS && !loading && !error && (
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{ mt: 2, mr: 1 }}
+            onClick={() => {
+              const link = document.createElement("a");
+              link.href = qrCodeUrl || "";
+              link.download = "qr-code.png"; // file name
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }}
+          >
+            {t("Download QR Code")}
+          </Button>
+          {/* {isIOS && !loading && !error && (
             <Button
               variant="contained"
               color="primary"
@@ -121,7 +131,7 @@ const QRCode = () => {
             >
               {t("Add to Apple Wallet")}
             </Button>
-          )}
+          )} */}
         </Box>
       </CustomModal>
     </>
