@@ -8,7 +8,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import DoneIcon from "@mui/icons-material/Done";
 import EditIcon from "@mui/icons-material/Edit";
 import callApi from "../../../API/callApi";
-import { updateProfile } from "../../../pages/usersPages/api/postQuery";
+import { updateProfile } from "../../../pages/usersPages/api/postQueries";
 import { Response } from "../../../Global/Types/commonTypes";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { Fade } from "../../MaterialUI/FormFields/Fade";

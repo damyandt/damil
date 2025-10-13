@@ -20,12 +20,13 @@ import {
   getAbonnementsForPage,
   getRolesForPage,
 } from "../AppNavigation/PageRoles";
-import MembersHome from "../../pages/Home/MemberView/MembersHome";
+import MembersHome from "../../pages/MemberView/MembersHome";
 import AccountCredentials from "../../components/pageComponents/UserComponents/AccountCredentials";
 import SuccessPayment from "../../pages/usersPages/SuccessPayment";
 import Calendar from "../../pages/Staff/Calender";
 import AcceptClients from "../../pages/Access Control/AcceptClients";
-import Classes from "../../pages/Home/MemberView/Classes";
+import Classes from "../../pages/MemberView/Classes";
+import MemberSubscription from "../../pages/MemberView/MemberSubscription";
 export const createAppRouter = (
   userType:
     | "Facility Member"
@@ -80,8 +81,12 @@ const allRoutes = (role: string, abonnement: string | null) => {
         ),
     },
     {
-      path: "/Member-Schedule/Classes",
+      path: "/Classes",
       element: <Classes />,
+    },
+    {
+      path: "/Subscription",
+      element: <MemberSubscription />,
     },
     {
       path: "/DAMIL-Analytics/Overview",

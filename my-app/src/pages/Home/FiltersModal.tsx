@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { Response } from "../../Global/Types/commonTypes";
 import callApi from "../../API/callApi";
 import { useAuthedContext } from "../../context/AuthContext";
-import { savePreferences } from "../usersPages/api/postQuery";
+import { savePreferences } from "../usersPages/api/postQueries";
 import { useLanguageContext } from "../../context/LanguageContext";
 
 interface SearchModalProps {
@@ -118,7 +118,10 @@ const FiltersModal: React.FC<SearchModalProps> = ({
                             checked={tempSelected.includes(filterKey)}
                             size="small"
                           />
-                          <Typography variant="body2">{`${key.replaceAll("_", " ")}`}</Typography>
+                          <Typography variant="body2">{`${key.replaceAll(
+                            "_",
+                            " "
+                          )}`}</Typography>
                         </Box>
                       );
                     }

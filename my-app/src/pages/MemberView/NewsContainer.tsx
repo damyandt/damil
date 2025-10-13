@@ -3,7 +3,7 @@ import { useTheme } from "@mui/system";
 import { motion, AnimatePresence } from "framer-motion";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
-import { useLanguageContext } from "../../../context/LanguageContext";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 const NewsSection = () => {
   const { t } = useLanguageContext();

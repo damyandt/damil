@@ -423,13 +423,6 @@ const HomePage: React.FC = () => {
         flatData={analyticsData}
       />
 
-      {/* <Snackbar
-       
-        open={copied}
-        autoHideDuration={6000}
-        onClose={() => setCopied(false)}
-        message="Copied"
-      /> */}
       <CustomSnackbar
         open={copied}
         onClose={() => setCopied(false)}

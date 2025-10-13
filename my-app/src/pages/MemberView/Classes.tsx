@@ -1,7 +1,7 @@
 import { Tab, Tabs, Typography } from "@mui/material";
 import { Box, Grid } from "@mui/system";
 
-import { useLanguageContext } from "../../../context/LanguageContext";
+import { useLanguageContext } from "../../context/LanguageContext";
 import { useState } from "react";
 import ClassCard from "./ClassCard";
 

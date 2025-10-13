@@ -19,14 +19,13 @@ import {
   codeVerificationResend,
   postLogin,
   validateEmail,
-} from "../../../pages/usersPages/api/postQuery";
+} from "../../../pages/usersPages/api/postQueries";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../../../API/callApi";
 import { setCookie } from "../../../Global/Utils/commonFunctions";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { SetCookieParams } from "../../../Auth/authTypes";
 import CustomModal from "../../MaterialUI/Modal";
-import { errorMessagesEN } from "../../../pages/usersPages/api/userTypes";
 
 const LoginForm = () => {
   const { setUserSignedIn } = useAuthedContext();
@@ -116,7 +115,9 @@ const LoginForm = () => {
         auth: null,
       });
 
-      if (responce.message === errorMessagesEN.unverified) {
+      if (
+        responce.message === "Account not verified. Please verify your account"
+      ) {
         return setOpenModal(true);
       } else if (responce.success === false) {
         return setErrors({

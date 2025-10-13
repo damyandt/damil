@@ -1,11 +1,11 @@
 import {
   AdminDataRegister,
-  BusinessDataRegister,
+  Business,
 } from "../../../pages/usersPages/api/userTypes";
 
 export const registerValidator = (
   step: number,
-  business: BusinessDataRegister,
+  business: Business,
   admin: AdminDataRegister,
   setErrors: any
 ): boolean => {

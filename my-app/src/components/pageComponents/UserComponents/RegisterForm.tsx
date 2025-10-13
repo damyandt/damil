@@ -15,7 +15,7 @@ import {
   codeVerification,
   postLogin,
   postRegister,
-} from "../../../pages/usersPages/api/postQuery";
+} from "../../../pages/usersPages/api/postQueries";
 import { Response } from "../../../Global/Types/commonTypes";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../../../API/callApi";
 import { SetCookieParams } from "../../../Auth/authTypes";
@@ -25,7 +25,7 @@ import CustomTooltip from "../../MaterialUI/CustomTooltip";
 import { registerValidator } from "./registerValidator";
 import {
   AdminDataRegister,
-  BusinessDataRegister,
+  Business,
 } from "../../../pages/usersPages/api/userTypes";
 import { useNavigate } from "react-router-dom";
 
@@ -42,7 +42,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [verificationCode, setCode] = useState<string>("");
   const [resendCooldown, setResendCooldown] = useState<number>(0);
-  const [business, setBusiness] = useState<BusinessDataRegister>({
+  const [business, setBusiness] = useState<Business>({
     name: "",
     businessEmail: "",
     city: "",
@@ -182,7 +182,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
               label={errors["name"] || t("Business Name")}
               error={!!errors["name"]}
               onChange={(e) =>
-                setBusiness((prev: BusinessDataRegister) => ({
+                setBusiness((prev: Business) => ({
                   ...prev,
                   name: e.target.value,
                 }))
@@ -196,7 +196,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
               type="email"
               error={!!errors["email"]}
               onChange={(e) =>
-                setBusiness((prev: BusinessDataRegister) => ({
+                setBusiness((prev: Business) => ({
                   ...prev,
                   businessEmail: e.target.value,
                 }))
@@ -240,7 +240,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
               label={errors["city"] || t("City")}
               error={!!errors["city"]}
               onChange={(e) =>
-                setBusiness((prev: BusinessDataRegister) => ({
+                setBusiness((prev: Business) => ({
                   ...prev,
                   city: e.target.value,
                 }))
@@ -266,7 +266,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
                   setStep((prev: number) => (prev += 1));
               }}
               onChange={(e) =>
-                setBusiness((prev: BusinessDataRegister) => ({
+                setBusiness((prev: Business) => ({
                   ...prev,
                   address: e.target.value,
                 }))

@@ -18,6 +18,11 @@ import { LanguageOutlined } from "@mui/icons-material";
 import { motion, AnimatePresence } from "framer-motion";
 import TextField from "../../components/MaterialUI/FormFields/TextField";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import callApi from "../../API/callApi";
+import { Response } from "../../Global/Types/commonTypes";
+import { useAuthedContext } from "../../context/AuthContext";
+import { Business } from "./api/userTypes";
+import { getGyms } from "./api/getQueries";
 const WelcomePage = () => {
   const theme = useTheme();
   const { t, language, setLanguage } = useLanguageContext();
@@ -84,10 +89,24 @@ const WelcomePage = () => {
 export default WelcomePage;
 
 const Form = () => {
+  const { setAuthedUser } = useAuthedContext();
   const theme = useTheme();
   const navigate = useNavigate();
   const { t } = useLanguageContext();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [gyms, setGyms] = useState<Partial<Business>[]>([]);
+  const fetchGyms = async () => {
+    const gymsRes = await callApi<Response<Business[]>>({
+      query: getGyms(),
+      auth: { setAuthedUser },
+    });
+    setGyms(gymsRes.data);
+  };
+
+  useEffect(() => {
+    fetchGyms();
+  }, []);
+
   const [step, setStep] = useState<number>(
     parseInt(searchParams.get("step") || "1")
   );
@@ -96,12 +115,6 @@ const Form = () => {
     const stepParam = parseInt(searchParams.get("step") || "1");
     setStep(stepParam);
   }, [searchParams]);
-
-  const gyms = [
-    { id: 1, name: "MamaFit", city: "Dobrich" },
-    { id: 2, name: "DqdoFit", city: "Varna" },
-    { id: 3, name: "BabaFit", city: "Varna" },
-  ];
 
   const handleSetStep = (newStep: number) => {
     setStep(newStep);
@@ -363,7 +376,7 @@ const Form = () => {
                     fullWidth
                     sx={{ width: "100%", zIndex: 1000 }}
                     freeSolo
-                    options={gyms.map((gym) => gym.name)}
+                    options={gyms.map((gym: Partial<Business>) => gym.name)}
                     onInputChange={(_, value) => setSearch(value)}
                     renderInput={(params) => (
                       <TextField
@@ -386,15 +399,7 @@ const Form = () => {
                                 <IconButton
                                   edge="end"
                                   onClick={() =>
-                                    navigate(
-                                      `/add-yourself/${
-                                        gyms.find(
-                                          (gym: any) =>
-                                            gym.name.toLowerCase() ===
-                                            search.toLowerCase()
-                                        )?.id || ""
-                                      }`
-                                    )
+                                    navigate(`/add-yourself/${search}`)
                                   }
                                   size="small"
                                 >

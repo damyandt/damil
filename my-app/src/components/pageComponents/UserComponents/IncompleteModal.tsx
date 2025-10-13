@@ -15,7 +15,7 @@ import { useState } from "react";
 import {
   savePreferences,
   updateProfile,
-} from "../../../pages/usersPages/api/postQuery";
+} from "../../../pages/usersPages/api/postQueries";
 import callApi from "../../../API/callApi";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import { useNavigate } from "react-router-dom";

@@ -11,7 +11,7 @@ import callApi from "../../../API/callApi";
 import { Response } from "../../../Global/Types/commonTypes";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { updateCredentials } from "../../../Auth/API/apiAuthGetQueries";
-import { updateProfile } from "../../../pages/usersPages/api/postQuery";
+import { updateProfile } from "../../../pages/usersPages/api/postQueries";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import Alert from "../../MaterialUI/Alert";

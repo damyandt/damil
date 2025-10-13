@@ -6,7 +6,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useLanguageContext } from "../../context/LanguageContext";
 import { useState } from "react";
 import callApi from "../../API/callApi";
-import { codeVerification } from "./api/postQuery";
+import { codeVerification } from "./api/postQueries";
 import { Response } from "../../Global/Types/commonTypes";
 
 interface VerifyEmailProps {
@@ -93,7 +93,9 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
             title={
               resendCooldown === 0
                 ? t("Click to Resend Code")
-                : `${t("Wait")} ${resendCooldown}${t("s before you try again!")}`
+                : `${t("Wait")} ${resendCooldown}${t(
+                    "s before you try again!"
+                  )}`
             }
             sx={{ ml: 2 }}
           >

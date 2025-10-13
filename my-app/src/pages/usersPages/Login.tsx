@@ -182,7 +182,8 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-// import React, { useEffect, useState } from "react";
+
+// import { useState } from "react";
 // import {
 //   Container,
 //   Typography,
@@ -298,11 +299,6 @@ export default LoginPage;
 //     const extractedUsernames = [...new Set(matches.map((match) => match[1]))]; // Remove duplicates
 //     setter(extractedUsernames);
 //   };
-
-//   useEffect(() => {
-//     console.log(followersList);
-//     console.log(followingList);
-//   }, [followersList, followingList]);
 
 //   const forDamyandt = (dontFollowMe: any) => {
 //     let dontFollowMeEdited = [];

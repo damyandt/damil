@@ -18,6 +18,7 @@ import TuneIcon from "@mui/icons-material/Tune";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOnOutlined";
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
+import PaidIcon from "@mui/icons-material/Paid";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import { ClassOutlined } from "@mui/icons-material";
 
@@ -52,8 +53,14 @@ export const NAV_DAMIL_CLASSES: LeftNavMenu = {
   list: [
     {
       text: "Classes",
-      url: "Member-Schedule/Classes",
+      url: "Classes",
       Icon: ClassOutlined,
+      disabled: false,
+    },
+    {
+      text: "Subscription",
+      url: "Subscription",
+      Icon: PaidIcon,
       disabled: false,
     },
   ],

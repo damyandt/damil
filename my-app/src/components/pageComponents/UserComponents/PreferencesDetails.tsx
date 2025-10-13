@@ -18,7 +18,7 @@ import { useState } from "react";
 import { Fade } from "../../MaterialUI/FormFields/Fade";
 import Checkbox from "../../MaterialUI/FormFields/Checkbox";
 import callApi from "../../../API/callApi";
-import { savePreferences } from "../../../pages/usersPages/api/postQuery";
+import { savePreferences } from "../../../pages/usersPages/api/postQueries";
 import { PreferencesType, Response } from "../../../Global/Types/commonTypes";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { useCustomThemeProviderContext } from "../../../context/ThemeContext";

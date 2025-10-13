@@ -5,7 +5,7 @@ import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { useAuthedContext } from "../../context/AuthContext";
 import callApi from "../../API/callApi";
-import { stripePaymentIntent } from "./api/postQuery";
+import { stripePaymentIntent } from "./api/postQueries";
 
 interface PlanDetailsProps {
   type: "STARTER" | "GROWTH" | "PRO";
@@ -75,8 +75,8 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({ type, period, price }) => {
             type === "GROWTH"
               ? "primary"
               : type === "PRO"
-                ? "secondary"
-                : "text.primary"
+              ? "secondary"
+              : "text.primary"
           }
         >
           {type}

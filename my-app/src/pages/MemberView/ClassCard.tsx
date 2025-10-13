@@ -10,14 +10,14 @@ import {
   LinearProgress,
   Chip,
 } from "@mui/material";
-import CustomTooltip from "../../../components/MaterialUI/CustomTooltip";
+import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import { useLanguageContext } from "../../../context/LanguageContext";
-import CustomModal from "../../../components/MaterialUI/Modal";
-import Button from "../../../components/MaterialUI/Button";
-import CellRenderer from "../../../components/MaterialUI/Table/CellRenderer";
+import { useLanguageContext } from "../../context/LanguageContext";
+import CustomModal from "../../components/MaterialUI/Modal";
+import Button from "../../components/MaterialUI/Button";
+import CellRenderer from "../../components/MaterialUI/Table/CellRenderer";
 
 const ClassCard = ({
   isJoined,

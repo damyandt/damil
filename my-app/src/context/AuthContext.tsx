@@ -8,7 +8,7 @@ import {
 } from "../Auth/API/apiAuthGetQueries";
 import { handleFetchUserAccessToken } from "./authContextUtils";
 import { PreferencesType, Response } from "../Global/Types/commonTypes";
-import { getPreferences } from "../pages/usersPages/api/postQuery";
+import { getPreferences } from "../pages/usersPages/api/getQueries";
 import { PaletteMode } from "@mui/material";
 
 export type GetQueryUsersGetCurrentUserSnippet = { user: User };

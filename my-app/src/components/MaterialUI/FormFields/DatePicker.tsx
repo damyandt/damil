@@ -22,7 +22,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   value,
   onChange,
   fullWidth = true,
-  margin = "normal",
+  margin = "none",
   format = "DD/MM/YYYY",
   sx = {},
   error,
@@ -39,7 +39,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
       slotProps={{
         textField: {
           fullWidth,
-          margin,
+          margin: margin ?? "none",
           variant: "outlined",
           error,
           helperText,
