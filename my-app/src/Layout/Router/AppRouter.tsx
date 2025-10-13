@@ -81,11 +81,11 @@ const allRoutes = (role: string, abonnement: string | null) => {
         ),
     },
     {
-      path: "/Classes",
+      path: "Member/Classes",
       element: <Classes />,
     },
     {
-      path: "/Subscription",
+      path: "Member/Subscription",
       element: <MemberSubscription />,
     },
     {

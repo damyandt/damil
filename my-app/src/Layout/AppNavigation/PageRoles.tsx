@@ -7,7 +7,11 @@ export const pageRoles: any = {
     roles: ["Facility Admin", "System Admin", "Facility Member"],
     abonnement: ["ALL"],
   },
-  "/Classes": {
+  "Member/Classes": {
+    roles: ["Facility Member"],
+    abonnement: ["ALL"],
+  },
+  "Member/Subscription": {
     roles: ["Facility Member"],
     abonnement: ["ALL"],
   },

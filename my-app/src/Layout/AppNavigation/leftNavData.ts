@@ -53,13 +53,13 @@ export const NAV_DAMIL_CLASSES: LeftNavMenu = {
   list: [
     {
       text: "Classes",
-      url: "Classes",
+      url: "Member/Classes",
       Icon: ClassOutlined,
       disabled: false,
     },
     {
       text: "Subscription",
-      url: "Subscription",
+      url: "Member/Subscription",
       Icon: PaidIcon,
       disabled: false,
     },
