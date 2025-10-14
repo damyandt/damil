@@ -13,6 +13,8 @@ type CellRendererProps = {
   dataType: ColumnType;
   table: boolean;
   fontWeight?: number;
+  ellipsis?: boolean;
+  sx?: any;
 };
 
 const CellRenderer = ({
@@ -20,6 +22,8 @@ const CellRenderer = ({
   dataType,
   table,
   fontWeight = 350,
+  ellipsis = true,
+  sx = {}, // default empty object
 }: CellRendererProps) => {
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
@@ -28,12 +32,18 @@ const CellRenderer = ({
   const [isOverflowed, setIsOverflowed] = useState(false);
 
   useEffect(() => {
+    if (!ellipsis) {
+      setIsOverflowed(false); // force no tooltip
+      return;
+    }
+
     if (textRef.current) {
       setIsOverflowed(
         textRef.current.scrollWidth > textRef.current.clientWidth
       );
     }
-  }, [value]);
+  }, [value, ellipsis]);
+
   let style: React.CSSProperties = {
     margin: 0,
     border: "none",
@@ -208,6 +218,24 @@ const CellRenderer = ({
           borderColor: isDark ? "#bdbdbd" : "#9e9e9e",
           label: "Canceled",
         },
+        low: {
+          color: isDark ? "#81c784" : "#388e3c",
+          backgroundColor: isDark ? "#1b5e20" : "#e8f5e9",
+          borderColor: isDark ? "#81c784" : "#388e3c",
+          label: "Low",
+        },
+        medium: {
+          color: isDark ? "#ffb74d" : "#f57c00",
+          backgroundColor: isDark ? "#4e342e" : "#fff3e0",
+          borderColor: isDark ? "#ffb74d" : "#f57c00",
+          label: "Medium",
+        },
+        high: {
+          color: isDark ? "#ef9a9a" : "#c62828",
+          backgroundColor: isDark ? "#3b1818" : "#ffebee",
+          borderColor: isDark ? "#ef9a9a" : "#c62828",
+          label: "High",
+        },
       };
 
       const statusStyle = enumStyles[enumValue];
@@ -279,14 +307,15 @@ const CellRenderer = ({
     <Typography
       ref={textRef}
       fontWeight={fontWeight}
-      border={"none"}
-      display={"block"}
+      border="none"
+      display="block"
       sx={{
-        display: "block",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
+        ...sx,
         width: "100%",
+        whiteSpace: ellipsis ? "nowrap" : "normal",
+        overflow: ellipsis ? "hidden" : "visible",
+        textOverflow: ellipsis ? "ellipsis" : "unset",
+        wordBreak: ellipsis ? "keep-all" : "break-word",
       }}
     >
       {displayValue}
@@ -294,24 +323,8 @@ const CellRenderer = ({
   );
 
   return (
-    // <Box component="div" sx={style}>
-    //   <Typography
-    //     fontWeight={fontWeight}
-    //     border={"none"}
-    //     display={"block"}
-    //     sx={{
-    //       display: "block",
-    //       overflow: "hidden",
-    //       textOverflow: "ellipsis",
-    //       whiteSpace: "nowrap",
-    //       width: "100%",
-    //     }}
-    //   >
-    //     {displayValue}
-    //   </Typography>
-    // </Box>
-    <Box component="div" sx={{ ...style, width: "100%" }}>
-      {isOverflowed ? (
+    <Box component="div" sx={{ ...style, width: "100%", height: "auto" }}>
+      {ellipsis && isOverflowed ? (
         <CustomTooltip title={String(value)} arrow placement="top">
           {textElement}
         </CustomTooltip>

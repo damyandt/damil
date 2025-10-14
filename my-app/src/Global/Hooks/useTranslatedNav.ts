@@ -3,6 +3,7 @@ import {
   NAV_DAMIL_ACCESS_CONTROL,
   NAV_DAMIL_ANALYTICS,
   NAV_DAMIL_CLASSES,
+  NAV_DAMIL_CLIENTS,
   NAV_DAMIL_CONFIGURATIONS,
   NAV_DAMIL_HOME,
   NAV_DAMIL_STAFF,
@@ -41,6 +42,10 @@ export const useTranslatedNav = () => {
     NAV_DAMIL_ANALYTICS: {
       ...NAV_DAMIL_ANALYTICS,
       list: NAV_DAMIL_ANALYTICS.list.map((item) => translateNavItem(item, t)),
+    },
+    NAV_DAMIL_CLIENTS: {
+      ...NAV_DAMIL_CLIENTS,
+      list: NAV_DAMIL_CLIENTS.list.map((item) => translateNavItem(item, t)),
     },
     NAV_DAMIL_CONFIGURATIONS: {
       ...NAV_DAMIL_CONFIGURATIONS,

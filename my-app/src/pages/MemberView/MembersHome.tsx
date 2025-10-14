@@ -14,6 +14,7 @@ import { useLanguageContext } from "../../context/LanguageContext";
 import NewsSection from "./NewsContainer";
 import ClassCard from "./ClassCard";
 import { useState } from "react";
+import dayjs from "dayjs";
 
 const MembersHome = () => {
   const { authedUser } = useAuthedContext();
@@ -186,7 +187,27 @@ const MembersHome = () => {
         </Stack>
       </Box>
 
-      <NewsSection />
+      <NewsSection
+        news={[
+          {
+            id: "1",
+            title: t("Donika is Back!"),
+            content:
+              "Taekwondo with Donika returns next week — new time slots available!next week — new time slots available!",
+            importance: "Medium",
+            expiresOn: dayjs().add(7, "day").toISOString(),
+          },
+          {
+            id: "2",
+            title: t("Earlier Close!"),
+            content: t(
+              "This Friday the gym will close earlier — at 7:00 PM due to maintenance."
+            ),
+            importance: "High",
+            expiresOn: dayjs().add(2, "day").toISOString(),
+          },
+        ]}
+      />
 
       <Box
         sx={{

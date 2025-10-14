@@ -72,7 +72,12 @@ const QRCode = () => {
         <QrCodeScannerIcon />
       </IconButton>
 
-      <CustomModal open={open} onClose={handleClose} title={t("QR Code")}>
+      <CustomModal
+        paddingTop={0}
+        open={open}
+        onClose={handleClose}
+        title={t("QR Code")}
+      >
         <Box
           sx={{ alignContent: "center", width: "100%", textAlign: "center" }}
         >

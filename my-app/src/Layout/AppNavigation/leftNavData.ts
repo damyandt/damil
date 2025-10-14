@@ -20,13 +20,17 @@ import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import PaidIcon from "@mui/icons-material/Paid";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
-import { ClassOutlined } from "@mui/icons-material";
+import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
+import FitnessCenterOutlinedIcon from "@mui/icons-material/FitnessCenterOutlined";
+import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
+import ClassOutlined from "@mui/icons-material/ClassOutlined";
 
 export enum LEFT_NAV_SECTION {
   "Home" = "Home",
   "DAMIL Analytics" = "DAMIL Analytics",
   "DAMIL Access Control" = "DAMIL Access Control",
   "DAMIL Staff Members" = "DAMIL Staff Members",
+  "DAMIL Clients" = "DAMIL Clients",
   "DAMIL Configurations" = "DAMIL Configurations",
   "Member Schedule" = "Member Schedule",
 }
@@ -65,6 +69,33 @@ export const NAV_DAMIL_CLASSES: LeftNavMenu = {
     },
   ],
 };
+//Clients
+export const NAV_DAMIL_CLIENTS: LeftNavMenu = {
+  title: LEFT_NAV_SECTION["DAMIL Clients"],
+  list: [
+    {
+      text: "Clients",
+      url: null,
+      Icon: GroupOutlinedIcon,
+      disabled: false,
+      nested: [
+        {
+          text: "Classes",
+          url: "/DAMIL-Clients/Classes",
+          Icon: FitnessCenterOutlinedIcon,
+          disabled: false,
+        },
+        {
+          text: "News",
+          url: "/DAMIL-Clients/News",
+          Icon: ArticleOutlinedIcon,
+          disabled: false,
+        },
+      ],
+    },
+  ],
+};
+
 // Analytics
 export const NAV_DAMIL_ANALYTICS: LeftNavMenu = {
   title: LEFT_NAV_SECTION["DAMIL Analytics"],

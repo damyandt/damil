@@ -110,6 +110,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
   const {
     NAV_DAMIL_HOME,
     NAV_DAMIL_CLASSES,
+    NAV_DAMIL_CLIENTS,
     NAV_DAMIL_ANALYTICS,
     NAV_DAMIL_STAFF,
     NAV_DAMIL_ACCESS_CONTROL,
@@ -135,6 +136,10 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
       {
         title: NAV_DAMIL_STAFF.title,
         list: NAV_DAMIL_STAFF.list,
+      },
+      {
+        title: NAV_DAMIL_CLIENTS.title,
+        list: NAV_DAMIL_CLIENTS.list,
       },
       {
         title: NAV_DAMIL_ANALYTICS.title,

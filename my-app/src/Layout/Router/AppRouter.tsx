@@ -27,6 +27,7 @@ import Calendar from "../../pages/Staff/Calender";
 import AcceptClients from "../../pages/Access Control/AcceptClients";
 import Classes from "../../pages/MemberView/Classes";
 import MemberSubscription from "../../pages/MemberView/MemberSubscription";
+import NewsManagementPage from "../../pages/Clients/News";
 export const createAppRouter = (
   userType:
     | "Facility Member"
@@ -143,6 +144,16 @@ const allRoutes = (role: string, abonnement: string | null) => {
     {
       path: "/DAMIL-Staff/Events",
       element: <Calendar />,
+    },
+
+    // For Clients
+    {
+      path: "/DAMIL-Clients/News",
+      element: <NewsManagementPage />,
+    },
+    {
+      path: "/DAMIL-Clients/Classes",
+      element: <StaffRolesPage />,
     },
 
     // Configurations

@@ -56,6 +56,16 @@ export const pageRoles: any = {
     abonnement: ["STARTER", "GROWTH", "PRO"],
   },
 
+  // DAMIL Clients
+  "/DAMIL-Clients/News": {
+    roles: ["Facility Admin", "System Admin", "Facility Staff"],
+    abonnement: ["STARTER", "GROWTH", "PRO"],
+  },
+  "/DAMIL-Clients/Classes": {
+    roles: ["Facility Admin", "System Admin", "Facility Staff"],
+    abonnement: ["STARTER", "GROWTH", "PRO"],
+  },
+
   // DAMIL Staff Members
   "/DAMIL-Staff/All": {
     roles: ["Facility Admin", "System Admin"],

@@ -14,6 +14,10 @@ interface CustomModalProps extends Pick<MuiModalProps, "open" | "onClose"> {
   width?: number | string;
   height?: number | string;
   children: React.ReactNode;
+  paddingTop?: number;
+  paddingBottom?: number;
+  paddingLeft?: number;
+  paddingRight?: number;
 }
 
 const sizeMap: { [key: string]: any } = {
@@ -34,6 +38,10 @@ const CustomModal: React.FC<CustomModalProps> = ({
   title,
   height,
   width = "md",
+  paddingTop = 4,
+  paddingBottom = 4,
+  paddingLeft = 4,
+  paddingRight = 4,
   children,
 }) => {
   const theme = useTheme();
@@ -104,7 +112,10 @@ const CustomModal: React.FC<CustomModalProps> = ({
             </IconButton>
             <Box
               sx={{
-                p: 4,
+                pt: paddingTop,
+                pb: paddingBottom,
+                pl: paddingLeft,
+                pr: paddingRight,
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",

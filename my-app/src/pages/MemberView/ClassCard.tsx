@@ -69,7 +69,6 @@ const ClassCard = ({
           {/* 🧭 Top-right action icons */}
           <Stack
             direction="row"
-            spacing={1}
             sx={{
               position: "absolute",
               top: 8,
@@ -77,6 +76,11 @@ const ClassCard = ({
               zIndex: 2,
             }}
           >
+            <CustomTooltip title={t("View Details")} placement="left">
+              <IconButton size="small" color="info" onClick={handleDetailsOpen}>
+                <InfoOutlinedIcon fontSize="small" />
+              </IconButton>
+            </CustomTooltip>
             <CustomTooltip
               title={isJoined ? t("Leave Class") : t("Join Class")}
             >
@@ -86,12 +90,6 @@ const ClassCard = ({
                 onClick={() => handleJoin(originalIndex)}
               >
                 <EventAvailableIcon fontSize="small" />
-              </IconButton>
-            </CustomTooltip>
-
-            <CustomTooltip title={t("View Details")}>
-              <IconButton size="small" color="info" onClick={handleDetailsOpen}>
-                <InfoOutlinedIcon fontSize="small" />
               </IconButton>
             </CustomTooltip>
           </Stack>
