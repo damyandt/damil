@@ -1,19 +1,17 @@
 import { Box, CircularProgress } from "@mui/material";
 import TableComponent from "../../components/MaterialUI/Table/Table";
-// import { useParams } from "react-router-dom";
-// import { useEffect, useState } from "react";
-// import callApi from "../../API/callApi";
-// import { getClientsTable } from "./API/getQueries";
-// import { useAuthedContext } from "../../context/AuthContext";
-// import { FormStatuses } from "../../Global/Types/commonTypes";
+import { FormStatuses } from "../../Global/Types/commonTypes";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
-
 import { useLanguageContext } from "../../context/LanguageContext";
 import { Row } from "../../Global/Types/commonTypes";
 import AcceptClient from "../../components/pageComponents/Clients/Accept";
 import RejectClient from "../../components/pageComponents/Clients/Reject";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useAuthedContext } from "../../context/AuthContext";
+import { getClientsTable } from "./API/getQueries";
+import callApi from "../../API/callApi";
+import { useParams } from "react-router-dom";
 export type Client = {
   firstName: string;
   lastName: string;
@@ -24,161 +22,34 @@ export type Client = {
 
 const AcceptClients = () => {
   const { t } = useLanguageContext();
-  //   const { filter } = useParams();
-  //   const [refreshTable, setRefreshTable] = useState<boolean>(false);
-  //   const [tableData, setTableData] = useState<any>();
-  //   const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
-  //   const { setAuthedUser } = useAuthedContext();
+  const { filter } = useParams();
+  const [refreshTable, setRefreshTable] = useState<boolean>(false);
+  const [tableData, setTableData] = useState<any>({});
+  const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
+  const { setAuthedUser } = useAuthedContext();
 
-  //   useEffect(() => {
-  //     setPageStatus("loading");
-  //     fetchData();
-  //   }, [refreshTable]);
+  useEffect(() => {
+    setPageStatus("loading");
+    fetchData();
+  }, [setAuthedUser, refreshTable]);
 
-  //   const fetchData = async () => {
-  //     try {
-  //       const data = await callApi<any>({
-  //         query: getClientsTable(filter),
-  //         auth: { setAuthedUser },
-  //       });
-  //       setTableData(data.data);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
+  const fetchData = async () => {
+    try {
+      const data = await callApi<any>({
+        query: getClientsTable(filter),
+        auth: { setAuthedUser },
+      });
+      setTableData(data.data);
+    } catch (err) {
+      console.error(err);
+    }
 
-  //     setPageStatus(null);
-  //   };
-  const tableDate: any = {
-    config: {
-      sortable: {
-        field: "updatedAt",
-        desc: true,
-      },
-      actions: [
-        {
-          id: "details",
-          name: "Details",
-          url: "/users/members/{id}",
-        },
-        //     {
-        //       id: "edit",
-        //       name: "Edit",
-        //       url: "/users/members/{id}",
-        //     },
-        //     {
-        //       id: "delete",
-        //       name: "Delete",
-        //       url: "/users/members/{id}",
-        //     },
-      ],
-      columnsLayoutConfig: {
-        columnVisibility: {
-          firstName: true,
-          lastName: true,
-          email: true,
-          gender: true,
-          employment: false,
-          birthDate: false,
-          phone: false,
-          createdAt: false,
-          updatedAt: false,
-        },
-      },
-      createFields: {
-        firstName: true,
-        lastName: true,
-        email: true,
-        gender: true,
-        employment: false,
-        birthDate: true,
-        phone: true,
-        createdAt: false,
-        updatedAt: false,
-      },
-      pagination: {
-        pageSize: 10,
-      },
-    },
-    columns: [
-      {
-        field: "firstName",
-        header: "First Name",
-        type: "string",
-        dropDownConfig: null,
-      },
-      {
-        field: "lastName",
-        header: "Last Name",
-        type: "string",
-        dropDownConfig: null,
-      },
-      {
-        field: "email",
-        header: "Email",
-        type: "string",
-        dropDownConfig: null,
-      },
-      {
-        field: "gender",
-        header: "Gender",
-        type: "enum",
-        dropDownConfig: {
-          url: "/v1/Gender/values",
-          fromAnnotation: false,
-        },
-      },
-      {
-        field: "employment",
-        header: "Employment",
-        type: "enum",
-        dropDownConfig: {
-          url: "/v1/Employment/values",
-          fromAnnotation: false,
-        },
-      },
-      {
-        field: "birthDate",
-        header: "Birth Date",
-        type: "date",
-        dropDownConfig: null,
-      },
-      {
-        field: "phone",
-        header: "Phone",
-        type: "phone",
-        dropDownConfig: null,
-      },
-      {
-        field: "createdAt",
-        header: "Created At",
-        type: "date",
-        dropDownConfig: null,
-      },
-      {
-        field: "updatedAt",
-        header: "Updated At",
-        type: "date",
-        dropDownConfig: null,
-      },
-    ],
-    rows: [
-      {
-        firstName: "Ivan",
-        lastName: "Petrov",
-        email: "iv.petrov@icloud.com",
-        gender: "MALE",
-        employment: "STUDENT",
-        birthDate: "2004-10-12T21:00:00Z",
-        phone: "0893762839",
-        createdAt: "2025-09-29T07:02:35.71453",
-        updatedAt: "2025-09-29T07:02:35.707605",
-      },
-    ],
+    setPageStatus(null);
   };
+
   return (
     <>
-      {/* {pageStatus === "loading" ? ( */}
-      {false ? (
+      {pageStatus === "loading" ? (
         <Box
           component="div"
           sx={{
@@ -193,10 +64,10 @@ const AcceptClients = () => {
       ) : (
         <Box>
           <TableComponent
-            columns={tableDate?.columns || []}
-            rows={tableDate?.rows || []}
-            configurations={tableDate?.config || {}}
-            // setRefreshTable={setRefreshTable}
+            columns={tableData?.columns || []}
+            rows={tableData?.rows || []}
+            configurations={tableData?.config || {}}
+            setRefreshTable={setRefreshTable}
             title={t("Accept New Clients")}
             customActions={clientCustomActions}
           />
@@ -219,8 +90,15 @@ const clientCustomActions = [
     modalTitleIcon: "" as const,
     renderContent: (
       rowData: Row,
-      setOpen: Dispatch<SetStateAction<boolean>>
-    ) => <AcceptClient rowData={rowData} setOpen={setOpen} />,
+      setOpen: Dispatch<SetStateAction<boolean>>,
+      setRefreshTable: Dispatch<SetStateAction<boolean>>
+    ) => (
+      <AcceptClient
+        rowData={rowData}
+        setOpen={setOpen}
+        setRefreshTable={setRefreshTable}
+      />
+    ),
   },
   {
     id: "reject",
@@ -232,7 +110,14 @@ const clientCustomActions = [
     modalTitleIcon: "" as const,
     renderContent: (
       rowData: Row,
-      setOpen: Dispatch<SetStateAction<boolean>>
-    ) => <RejectClient rowData={rowData} setOpen={setOpen} />,
+      setOpen: Dispatch<SetStateAction<boolean>>,
+      setRefreshTable: Dispatch<SetStateAction<boolean>>
+    ) => (
+      <RejectClient
+        rowData={rowData}
+        setOpen={setOpen}
+        setRefreshTable={setRefreshTable}
+      />
+    ),
   },
 ];

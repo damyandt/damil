@@ -22,10 +22,12 @@ import { LanguageOutlined } from "@mui/icons-material";
 import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
 import { useLanguageContext } from "../../context/LanguageContext";
 import { handleUserSignOut } from "../../context/authContextUtils";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuthedContext } from "../../context/AuthContext";
 import { filterNavByAbonnement, filterNavByRole } from "./PageRoles";
+// import { useNavigationGuard } from "../../context/UnsavedChangesProvider";
+// import { useNavigate } from "react-router-dom";
+import { useNavigationGuard } from "../../context/UnsavedChangesProvider";
 
 const cssStyles = (openLeftNav: boolean, theme: any) => ({
   drawer: css({
@@ -101,7 +103,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
   setOpenLeftNav,
   mobileLeftNav,
 }) => {
-  const navigate = useNavigate();
+  const { requestNavigation } = useNavigationGuard();
   const { t, setLanguage, language } = useLanguageContext();
   const theme = useTheme();
   const [anchorElSettings, setAnchorElSettings] = useState<any>(null);
@@ -226,12 +228,12 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
         <Box component="div" sx={styles.profile}>
           <Avatar
             alt={authedUser?.username}
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbdebOgP53gHBxhUq8q1aorTto0oZGDQUt-QePP2ZCpobec1kW-hS0u-TEIne27gTxhrI&usqp=CAU"
+            src=""
             sx={{ width: 40, height: 40, ml: "0.4em", cursor: "pointer" }}
             onClick={(event: any) => {
               if (openLeftNav) {
                 setOpenLeftNav(false);
-                navigate("DAMIL-Configurations/Profile");
+                requestNavigation("DAMIL-Configurations/Profile");
               } else {
                 setAnchorElSettings(event.currentTarget);
               }
@@ -282,7 +284,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
               >
                 <MenuItem
                   onClick={() => {
-                    navigate("DAMIL-Configurations/Profile");
+                    requestNavigation("DAMIL-Configurations/Profile");
                     setOpenLeftNav(false);
                     setAnchorElSettings(null);
                   }}
@@ -292,7 +294,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
                   </ListItemIcon>
                   <Typography variant="inherit">{t("Profile")}</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => handleUserSignOut(navigate)}>
+                <MenuItem onClick={() => handleUserSignOut(requestNavigation)}>
                   <ListItemIcon>
                     <LogoutIcon fontSize="small" />
                   </ListItemIcon>

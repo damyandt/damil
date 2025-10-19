@@ -51,7 +51,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
     themeColor: localStorage.getItem("themeColor") || "#a250fa",
     mode: defaultMode,
     currency: "BGN",
-    language: "en",
+    language: "bg",
     homeFilters: [
       "gender - MALE",
       "employment - REGULAR",

@@ -13,6 +13,7 @@ import { Response } from "../../../Global/Types/commonTypes";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { Fade } from "../../MaterialUI/FormFields/Fade";
 import { useNavigate } from "react-router-dom";
+import { useNavigationGuard } from "../../../context/UnsavedChangesProvider";
 
 const AccountDetails = () => {
   const { t } = useLanguageContext();
@@ -21,6 +22,7 @@ const AccountDetails = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [formData, setFormData] = useState<Partial<User>>(authedUser);
   const navigate = useNavigate();
+  const { setHasUnsavedChanges } = useNavigationGuard();
   const info: { label: string; field: string }[] = [
     { label: t("First Name"), field: "firstName" },
     { label: t("Last Name"), field: "lastName" },
@@ -34,7 +36,6 @@ const AccountDetails = () => {
   const handleSaveChanges = async () => {
     const changes: Record<string, any> = {};
 
-    // Compare formData and authedUser to get only changed fields
     for (const key in formData) {
       if (key === "roles") continue;
       if (formData[key as keyof User] !== authedUser[key as keyof User]) {
@@ -53,6 +54,7 @@ const AccountDetails = () => {
     });
 
     setEditMode(false);
+    setHasUnsavedChanges(false);
     setSaved(true);
     setRefreshUserData((prev: boolean) => !prev);
     setTimeout(() => setSaved(false), 2000);
@@ -63,6 +65,7 @@ const AccountDetails = () => {
       ...prev,
       [field]: value,
     }));
+    setHasUnsavedChanges(true);
   };
 
   return (

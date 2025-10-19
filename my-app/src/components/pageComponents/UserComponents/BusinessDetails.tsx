@@ -10,6 +10,7 @@ import EditIcon from "@mui/icons-material/Edit";
 // import { Response } from "../../../Global/Types/commonTypes";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { Fade } from "../../MaterialUI/FormFields/Fade";
+import { useNavigationGuard } from "../../../context/UnsavedChangesProvider";
 
 type Business = {
   id?: string;
@@ -23,6 +24,7 @@ const BusinessDetails = () => {
   const { t } = useLanguageContext();
   const { setRefreshUserData, tenant } = useAuthedContext();
   const [saved, setSaved] = useState<boolean>(false);
+  const { setHasUnsavedChanges } = useNavigationGuard();
   const [editMode, setEditMode] = useState<boolean>(false);
   const [formData, setFormData] = useState<Partial<Business>>(
     tenant || {
@@ -64,6 +66,7 @@ const BusinessDetails = () => {
     setEditMode(false);
     setSaved(true);
     setRefreshUserData((prev: boolean) => !prev);
+    setHasUnsavedChanges(false);
     setTimeout(() => setSaved(false), 2000);
   };
 
@@ -72,6 +75,7 @@ const BusinessDetails = () => {
       ...prev,
       [field]: value,
     }));
+    setHasUnsavedChanges(true);
   };
 
   return (

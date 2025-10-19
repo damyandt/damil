@@ -16,6 +16,7 @@ import RightNavigation from "./AppNavigation/RightNavigation";
 import FloatingRightMenu from "./AppNavigation/FloatingRightNav";
 import { useAuthedContext } from "../context/AuthContext";
 import QrCodeButton from "../components/pageComponents/UserComponents/QRCodeButton";
+import { NavigationGuardProvider } from "../context/UnsavedChangesProvider";
 // import ClientsRightMenu from "../components/pageComponents/Clients/ClientsRightNav";
 
 interface AuthLayoutProps {
@@ -148,76 +149,82 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
       className={className}
       sx={[styles.flexColumn, styles.contentContainer]}
     >
-      {lgMediaQuery && !openLeftNav && (
-        <IconButton
-          size="large"
-          aria-label="site menu"
-          onClick={() => setOpenLeftNav((prev) => !prev)}
-          sx={styles.floatingLeftNavigationButton}
-        >
-          <MenuIcon />
-        </IconButton>
-      )}
+      <NavigationGuardProvider>
+        {lgMediaQuery && !openLeftNav && (
+          <IconButton
+            size="large"
+            aria-label="site menu"
+            onClick={() => setOpenLeftNav((prev) => !prev)}
+            sx={styles.floatingLeftNavigationButton}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
 
-      <LeftNavigation
-        openLeftNav={openLeftNav}
-        setOpenLeftNav={setOpenLeftNav}
-        mobileLeftNav={lgMediaQuery}
-      />
-      {!smMediaQuery && extraRightNavMenu ? (
-        <IconButton
-          onClick={() => setIsRightNavVisible((state) => !state)}
-          sx={styles.floatingArrowButton}
-        >
-          <NavigateBeforeOutlinedIcon sx={styles.arrowToggleRightMenu} />
-        </IconButton>
-      ) : null}
-
-      {authedUser?.roles?.[0] === "Facility Member" && <QrCodeButton />}
-
-      {smMediaQuery && extraRightNavMenu ? (
-        <FloatingRightMenu extraMenu={extraRightNavMenu} />
-      ) : (
-        <RightNavigation
-          extraMenu={extraRightNavMenu}
-          isRightNavVisible={isRightNavVisible}
+        <LeftNavigation
           openLeftNav={openLeftNav}
+          setOpenLeftNav={setOpenLeftNav}
+          mobileLeftNav={lgMediaQuery}
         />
-      )}
+        {!smMediaQuery && extraRightNavMenu ? (
+          <IconButton
+            onClick={() => setIsRightNavVisible((state) => !state)}
+            sx={styles.floatingArrowButton}
+          >
+            <NavigateBeforeOutlinedIcon sx={styles.arrowToggleRightMenu} />
+          </IconButton>
+        ) : null}
 
-      <Box sx={styles.outletContainer} component="main">
-        <Box
-          sx={{
-            position: "relative",
-            zIndex: 2,
-            height: "100%",
-            borderRadius: "20px",
-            boxShadow: theme!.palette!.customColors!.shodow,
-            backgroundColor:
-              theme!.palette!.customColors!.sectionBackgroundColor,
-            boxSizing: "border-box",
-            padding: "1em",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+        {authedUser?.roles?.[0] === "Facility Member" && <QrCodeButton />}
+
+        {smMediaQuery && extraRightNavMenu ? (
+          <FloatingRightMenu extraMenu={extraRightNavMenu} />
+        ) : (
+          <RightNavigation
+            extraMenu={extraRightNavMenu}
+            isRightNavVisible={isRightNavVisible}
+            openLeftNav={openLeftNav}
+          />
+        )}
+
+        <Box sx={styles.outletContainer} component="main">
           <Box
             sx={{
-              overflow: "auto",
-              scrollbarWidth: "none",
-              "&::-webkit-scrollbar": {
-                display: "none",
-              },
-              flexGrow: 1,
-              minHeight: 0,
+              position: "relative",
+              zIndex: 2,
+              height: "100%",
+              borderRadius: "20px",
+              boxShadow: theme!.palette!.customColors!.shodow,
+              backgroundColor:
+                theme!.palette!.customColors!.sectionBackgroundColor,
+              boxSizing: "border-box",
+              padding: "1em",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <Outlet
-              context={{ openLeftNav, setExtraRightNavMenu, smMediaQuery }}
-            />
+            <Box
+              sx={{
+                overflow: "auto",
+                scrollbarWidth: "none",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+                flexGrow: 1,
+                minHeight: 0,
+              }}
+            >
+              <Outlet
+                context={{
+                  openLeftNav,
+                  setExtraRightNavMenu,
+                  smMediaQuery,
+                }}
+              />
+            </Box>
           </Box>
         </Box>
-      </Box>
+      </NavigationGuardProvider>
     </Box>
   );
 };

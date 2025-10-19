@@ -22,22 +22,31 @@ import { savePreferences } from "../../../pages/usersPages/api/postQueries";
 import { PreferencesType, Response } from "../../../Global/Types/commonTypes";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { useCustomThemeProviderContext } from "../../../context/ThemeContext";
+import { useNavigationGuard } from "../../../context/UnsavedChangesProvider";
+const colorOptions: { name: string; color: string }[] = [
+  { name: "purple", color: "#a250fa" },
+  { name: "sky", color: "#0EA5E9" },
+  { name: "emerald", color: "#10B981" },
+  { name: "amber", color: "#F59E0B" },
+  { name: "rose", color: "#F43F5E" },
+];
 const PreferencesDetails = () => {
-  const { setAuthedUser, preferences, setRefreshUserData } = useAuthedContext();
-  const { t, setLanguage } = useLanguageContext();
-  const { themeMode, setThemeMode, setPrimaryColor, primaryColor } =
-    useCustomThemeProviderContext();
-  const [editMode, setEditMode] = useState<boolean>(false);
-  const [saved, setSaved] = useState<boolean>(false);
-  const [formData, setFormData] = useState<any>(preferences);
+  return (
+    <Grid container spacing={2} width={"100%"}>
+      <AccountPref />
+      <ColorPref />
+    </Grid>
+  );
+};
 
-  const colorOptions: { name: string; color: string }[] = [
-    { name: "purple", color: "#a250fa" },
-    { name: "sky", color: "#0EA5E9" },
-    { name: "emerald", color: "#10B981" },
-    { name: "amber", color: "#F59E0B" },
-    { name: "rose", color: "#F43F5E" },
-  ];
+export default PreferencesDetails;
+
+const AccountPref = () => {
+  const { setHasUnsavedChanges } = useNavigationGuard();
+  const { t, setLanguage } = useLanguageContext();
+  const { setAuthedUser, preferences, setRefreshUserData } = useAuthedContext();
+  const [formData, setFormData] = useState<any>(preferences);
+  const [editMode, setEditMode] = useState<boolean>(false);
 
   const handleSaveChangesAccount = async () => {
     const accountData = {
@@ -51,6 +60,7 @@ const PreferencesDetails = () => {
     });
     setRefreshUserData((prev: boolean) => !prev);
     setEditMode(false);
+    setHasUnsavedChanges(false);
   };
 
   const handleChange = (field: string | number, value: string): void => {
@@ -59,28 +69,11 @@ const PreferencesDetails = () => {
       ...prev,
       [field]: value,
     }));
+    setHasUnsavedChanges(true);
   };
 
-  const handleSaveChangesTheme = async () => {
-    const themeData = {
-      themeColor: formData.themeColor,
-      mode: formData.mode,
-    };
-
-    await callApi<Response<any>>({
-      query: savePreferences(themeData),
-      auth: { setAuthedUser },
-    });
-    formData.mode && localStorage.setItem("themeMode", formData.mode);
-    formData.themeColor &&
-      localStorage.setItem("themeColor", formData.themeColor);
-    setRefreshUserData((prev: boolean) => !prev);
-    setSaved(true);
-
-    setTimeout(() => setSaved(false), 2000);
-  };
   return (
-    <Grid container spacing={2} width={"100%"}>
+    <>
       <Grid size={12} display={"flex"} gap={2}>
         <Typography variant="h4" gutterBottom alignSelf={"center"}>
           {t("Account Preferences")}
@@ -100,7 +93,6 @@ const PreferencesDetails = () => {
           )}
         </CustomTooltip>
       </Grid>
-
       <Grid size={{ xs: 12, sm: 6 }}>
         <TextField
           select
@@ -139,7 +131,47 @@ const PreferencesDetails = () => {
           ))}
         </TextField>
       </Grid>
+    </>
+  );
+};
 
+const ColorPref = () => {
+  const { setHasUnsavedChanges } = useNavigationGuard();
+  const { t } = useLanguageContext();
+  const { themeMode, setThemeMode, setPrimaryColor, primaryColor } =
+    useCustomThemeProviderContext();
+  const { setAuthedUser, preferences, setRefreshUserData } = useAuthedContext();
+  const [saved, setSaved] = useState<boolean>(false);
+  const [formData, setFormData] = useState<any>(preferences);
+
+  const handleSaveChangesTheme = async () => {
+    const themeData = {
+      themeColor: formData.themeColor,
+      mode: formData.mode,
+    };
+
+    await callApi<Response<any>>({
+      query: savePreferences(themeData),
+      auth: { setAuthedUser },
+    });
+    formData.mode && localStorage.setItem("themeMode", formData.mode);
+    formData.themeColor &&
+      localStorage.setItem("themeColor", formData.themeColor);
+    setRefreshUserData((prev: boolean) => !prev);
+    setSaved(true);
+    setHasUnsavedChanges(false);
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  const handleChange = (field: string | number, value: string): void => {
+    setFormData((prev: PreferencesType) => ({
+      ...prev,
+      [field]: value,
+    }));
+    setHasUnsavedChanges(true);
+  };
+  return (
+    <>
       <Grid size={12} display={"flex"} gap={2}>
         <Typography variant="h4">{t("Color Preferences")}</Typography>
 
@@ -242,8 +274,6 @@ const PreferencesDetails = () => {
           </FormGroup>
         </FormControl>
       </Grid>
-    </Grid>
+    </>
   );
 };
-
-export default PreferencesDetails;

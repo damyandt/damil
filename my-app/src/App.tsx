@@ -7,6 +7,7 @@ import LoadingScreen from "./components/pageComponents/LoadingPage";
 import GlobalBarcodeScanner from "./context/BarcodeProvider";
 import { GlobalStyles } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+// import { NavigationGuardProvider } from "./context/UnsavedChangesProvider";
 const App: React.FC = () => {
   const theme = useTheme();
   const { authedUser, authedUserLoading, tenant, tenantLoading } =
@@ -51,7 +52,9 @@ const App: React.FC = () => {
           }}
         />
         <GlobalBarcodeScanner />
-        <RouterProvider router={appRouter} />
+        <RouterProvider router={appRouter}>
+          {/* <NavigationGuardProvider /> */}
+        </RouterProvider>
       </Box>
     );
   }

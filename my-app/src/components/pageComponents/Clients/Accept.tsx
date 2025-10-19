@@ -5,9 +5,22 @@ import { useLanguageContext } from "../../../context/LanguageContext";
 import { Grid } from "@mui/system";
 import Button from "../../MaterialUI/Button";
 import CellRenderer from "../../MaterialUI/Table/CellRenderer";
+import callApi from "../../../API/callApi";
+import { useAuthedContext } from "../../../context/AuthContext";
+import { acceptClient } from "../../../pages/Access Control/API/getQueries";
 
-const AcceptClient = ({ rowData, setOpen }: any) => {
+const AcceptClient = ({ rowData, setOpen, setRefreshTable }: any) => {
   const { t } = useLanguageContext();
+  const { setAuthedUser } = useAuthedContext();
+
+  const handleSubmit = async () => {
+    const response = await callApi<any>({
+      query: acceptClient(rowData.id),
+      auth: { setAuthedUser },
+    });
+    response.success && setRefreshTable((prev: boolean) => !prev);
+    response.success && setOpen(false);
+  };
   return (
     <>
       <Grid
@@ -74,7 +87,7 @@ const AcceptClient = ({ rowData, setOpen }: any) => {
         <Button
           color="primary"
           startIcon={<CheckIcon />}
-          onClick={() => setOpen(false)}
+          onClick={handleSubmit}
         >
           {t("Yes")}
         </Button>

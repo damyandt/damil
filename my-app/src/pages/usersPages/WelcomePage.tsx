@@ -110,7 +110,7 @@ const Form = () => {
   const [step, setStep] = useState<number>(
     parseInt(searchParams.get("step") || "1")
   );
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<any>(null);
   useEffect(() => {
     const stepParam = parseInt(searchParams.get("step") || "1");
     setStep(stepParam);
@@ -280,7 +280,7 @@ const Form = () => {
                       transition: "all 0.2s ease",
                     }}
                   >
-                    {t("Join a Gym")}
+                    {t("Client to Gym")}
                   </Button>
                   <Typography
                     variant="body2"
@@ -375,9 +375,12 @@ const Form = () => {
                   <Autocomplete
                     fullWidth
                     sx={{ width: "100%", zIndex: 1000 }}
-                    freeSolo
-                    options={gyms.map((gym: Partial<Business>) => gym.name)}
-                    onInputChange={(_, value) => setSearch(value)}
+                    freeSolo={false} // disable free typing if you only want existing gyms
+                    options={gyms} // pass the full gym objects instead of just names
+                    getOptionLabel={(option) => option.name || ""} // what appears in the input
+                    onChange={(_, selectedGym) => {
+                      setSearch(selectedGym);
+                    }}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -399,9 +402,14 @@ const Form = () => {
                                 <IconButton
                                   edge="end"
                                   onClick={() =>
-                                    navigate(`/add-yourself/${search}`)
+                                    navigate(`/add-yourself/${search?.name}`, {
+                                      state: {
+                                        tenantId: search?.tenantId, // ✅ pass the ID here
+                                      },
+                                    })
                                   }
                                   size="small"
+                                  disabled={!search} // prevent navigation if none selected
                                 >
                                   <ArrowForwardIcon />
                                 </IconButton>
@@ -424,6 +432,63 @@ const Form = () => {
                 }}
               >
                 ← {t("Back to Get Started")}
+              </Button>
+            </Box>
+          </motion.div>
+        )}
+
+        {step === 4 && (
+          <motion.div
+            style={{
+              zIndex: 1000,
+              alignItems: "center",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+            key="step4"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Box
+              sx={{
+                zIndex: 1000,
+                display: "flex",
+                flexDirection: "column",
+                gap: 3,
+                textAlign: "center",
+                alignItems: "center",
+                maxWidth: 500,
+                px: 3,
+              }}
+            >
+              <Typography variant="h4" fontWeight={700}>
+                {t("Request Sent Successfully!")}
+              </Typography>
+
+              <Typography variant="body1" color="text.secondary">
+                {t(
+                  "Your request to join the gym has been submitted. Once the gym owner approves your request,"
+                )}
+                <br />
+                {t(
+                  "you will receive an email with your login credentials or a password link."
+                )}
+              </Typography>
+
+              <Typography variant="body2" color="text.secondary">
+                {t(
+                  "Please check your email regularly. You will then be able to login, purchase a membership and fully access the gym features."
+                )}
+              </Typography>
+
+              <Button
+                onClick={() => navigate("/")}
+                sx={{ px: 4, py: 1.5, mt: 2 }}
+              >
+                {t("Return to Home")}
               </Button>
             </Box>
           </motion.div>

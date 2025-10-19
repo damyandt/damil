@@ -8,6 +8,7 @@ import AuthContext from "./context/AuthContext";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/en-gb";
+// import { NavigationGuardProvider } from "./context/UnsavedChangesProvider";
 
 const rootElement = document.getElementById("root");
 
@@ -18,8 +19,10 @@ if (rootElement) {
       <AuthContext>
         <ThemeProvider>
           <LanguageProvider>
+            {/* <NavigationGuardProvider> */}
             <CssBaseline />
             <App />
+            {/* </NavigationGuardProvider> */}
           </LanguageProvider>
         </ThemeProvider>
       </AuthContext>

@@ -28,11 +28,11 @@ const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
   const [language, setLanguage] = useState<string>(() => {
     const storedLanguage =
       preferences.language || localStorage.getItem("language");
-    return storedLanguage ? storedLanguage : "en";
+    return storedLanguage ? storedLanguage : "bg";
   });
   useEffect(() => {
     const storedLanguage =
-      preferences?.language || localStorage.getItem("language") || "en";
+      preferences?.language || localStorage.getItem("language") || "bg";
     setLanguage(storedLanguage);
   }, [preferences?.language]);
 

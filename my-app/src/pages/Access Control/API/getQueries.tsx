@@ -57,6 +57,16 @@ export const postMember = (formData: any): Query => ({
   variables: formData,
 });
 
+export const acceptClient = (id: any): Query => ({
+  endpoint: `admin/access-requests/${id}/approve`,
+  method: "PATCH",
+});
+
+export const rejectClient = (id: any): Query => ({
+  endpoint: `admin/access-requests/${id}/reject`,
+  method: "PATCH",
+});
+
 export const postSubscription = (formData: any, id: any): Query => ({
   endpoint: `users/membership/${id}`,
   method: "PUT",

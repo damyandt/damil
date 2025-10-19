@@ -246,43 +246,47 @@ const TableComponent = ({
             </TableHead>
             <TableBody>
               {paginatedRows.length === 0 ? (
-                <TableCell
-                  colSpan={columns.length}
-                  align="center"
-                  // sx={{ py: 6 }}
-                  sx={{
-                    position: "relative",
-                    borderBottom: "none",
-                    backgroundColor: theme.palette.customColors?.tableRow,
-                    transition: "background-color 0.3s ease",
-                    boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
-                    "&:hover": {
-                      backgroundColor:
-                        theme.palette.mode === "dark"
-                          ? "rgba(96, 96, 96, 0.78)"
-                          : "#fff",
-                      cursor: "pointer",
-                      // transform: "scale(0.99)",
-                      zIndex: 10,
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    align="center"
+                    // sx={{ py: 6 }}
+                    sx={{
                       position: "relative",
-                    },
-                  }}
-                >
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="center"
-                    gap={2}
+                      borderBottom: "none",
+                      backgroundColor: theme.palette.customColors?.tableRow,
+                      transition: "background-color 0.3s ease",
+                      boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+                      "&:hover": {
+                        backgroundColor:
+                          theme.palette.mode === "dark"
+                            ? "rgba(96, 96, 96, 0.78)"
+                            : "#fff",
+                        cursor: "pointer",
+                        // transform: "scale(0.99)",
+                        zIndex: 10,
+                        position: "relative",
+                      },
+                    }}
                   >
-                    <InboxIcon sx={{ fontSize: 60, color: "text.disabled" }} />
-                    <Typography variant="h6" color="text.secondary">
-                      {t("No Data Available")}
-                    </Typography>
-                    <Typography variant="body2" color="text.disabled">
-                      {t("There are no records to display yet.")}
-                    </Typography>
-                  </Box>
-                </TableCell>
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                      gap={2}
+                    >
+                      <InboxIcon
+                        sx={{ fontSize: 60, color: "text.disabled" }}
+                      />
+                      <Typography variant="h6" color="text.secondary">
+                        {t("No Data Available")}
+                      </Typography>
+                      <Typography variant="body2" color="text.disabled">
+                        {t("There are no records to display yet.")}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                </TableRow>
               ) : (
                 paginatedRows?.map((row: Row) => {
                   const isDeleting = isRowDeleting(row.id);

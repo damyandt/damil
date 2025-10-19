@@ -159,7 +159,7 @@ export const NAV_DAMIL_ACCESS_CONTROL: LeftNavMenu = {
         },
         {
           text: "Accept New Client",
-          url: "/DAMIL-Access-Control/Accept-New-Client",
+          url: "/DAMIL-Access-Control/Accept-New-Client/subscriptionStatus=PENDING",
           Icon: HowToRegIcon,
           disabled: false,
         },

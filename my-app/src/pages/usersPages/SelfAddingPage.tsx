@@ -1,5 +1,5 @@
 import { Box, useTheme, Typography, IconButton, MenuItem } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLanguageContext } from "../../context/LanguageContext";
 import { useState } from "react";
 import { Dayjs } from "dayjs";
@@ -9,14 +9,22 @@ import Button from "../../components/MaterialUI/Button";
 import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
 import { LanguageOutlined } from "@mui/icons-material";
 import { Grid } from "@mui/system";
+import callApi from "../../API/callApi";
+import { Response } from "../../Global/Types/commonTypes";
+import { useAuthedContext } from "../../context/AuthContext";
+import { selfAdding } from "./api/postQueries";
 
 const SelfAddingPage = () => {
   const { id } = useParams();
+  const { setAuthedUser } = useAuthedContext();
   const theme = useTheme();
   const { t, language, setLanguage } = useLanguageContext();
   const [formData, setFormData] = useState<any>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { tenantId } = location.state || {};
 
   const handleChange = (
     field: string,
@@ -31,7 +39,16 @@ const SelfAddingPage = () => {
       [field]: "",
     }));
   };
-
+  const handleSubmit = async () => {
+    setLoading(true);
+    const response = await callApi<Response<any>>({
+      query: selfAdding(formData, tenantId),
+      auth: { setAuthedUser },
+    });
+    response.success === true && navigate("/?step=4");
+    response.success === false && setErrors(response.validationErrors);
+    setLoading(false);
+  };
   return (
     <>
       {/* 🌐 Language Switch */}
@@ -98,6 +115,7 @@ const SelfAddingPage = () => {
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
+                disabled={loading}
                 label={t("First Name")}
                 value={formData.firstName}
                 onChange={(e) => handleChange("firstName", e.target.value)}
@@ -108,6 +126,7 @@ const SelfAddingPage = () => {
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
+                disabled={loading}
                 label={t("Last Name")}
                 value={formData.lastName}
                 onChange={(e) => handleChange("lastName", e.target.value)}
@@ -118,6 +137,18 @@ const SelfAddingPage = () => {
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
+                disabled={loading}
+                label={t("Username")}
+                value={formData.username}
+                onChange={(e) => handleChange("username", e.target.value)}
+                error={!!errors["username"]}
+                helperText={errors["username"]}
+                fullWidth
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <TextField
+                disabled={loading}
                 label={t("Email")}
                 type="email"
                 value={formData.email}
@@ -129,6 +160,7 @@ const SelfAddingPage = () => {
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
+                disabled={loading}
                 label={t("Phone")}
                 value={formData.phone}
                 onChange={(e) => handleChange("phone", e.target.value)}
@@ -139,6 +171,7 @@ const SelfAddingPage = () => {
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <DatePickerComponent
+                disabled={loading}
                 sx={{ width: "100%" }}
                 label={t("Birth Date")}
                 value={formData.birthDate}
@@ -151,6 +184,7 @@ const SelfAddingPage = () => {
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
+                disabled={loading}
                 select
                 label={t("Gender")}
                 value={formData.gender || ""}
@@ -181,16 +215,14 @@ const SelfAddingPage = () => {
             }}
           >
             <Button
+              disabled={loading}
               variant="outlined"
               color="error"
               onClick={() => navigate("/?step=3")}
             >
               {t("Back")}
             </Button>
-            <Button
-              color="primary"
-              onClick={() => console.warn("soon", formData)}
-            >
+            <Button color="primary" onClick={handleSubmit} disabled={loading}>
               {t("Send")}
             </Button>
           </Box>

@@ -9,12 +9,16 @@ import {
 import { useState } from "react";
 import { SerializedStyles } from "@emotion/react";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import { Link, useLocation } from "react-router-dom";
+import {
+  //  Link,
+  useLocation,
+} from "react-router-dom";
 import { LeftNavList, LeftNavSingleItem } from "../layoutVariables";
 import Collapse from "../../components/MaterialUI/Collapse";
 import { FormStatuses } from "../../Global/Types/commonTypes";
 import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
 import { useCustomThemeProviderContext } from "../../context/ThemeContext";
+import { useNavigationGuard } from "../../context/UnsavedChangesProvider";
 
 interface LeftNavListMenuProps {
   css?: SerializedStyles[] | SerializedStyles;
@@ -87,6 +91,7 @@ const NavItem: React.FC<NavItemProps> = ({
 }) => {
   const location = useLocation();
   const theme = useTheme();
+  const { requestNavigation } = useNavigationGuard();
   const { primaryColor } = useCustomThemeProviderContext();
   const hasCurrentPath = (
     nestedItems: LeftNavSingleItem[] = [],
@@ -100,20 +105,24 @@ const NavItem: React.FC<NavItemProps> = ({
   const [open, setOpen] = useState<boolean>(
     isAlreadyOpen || hasCurrentPath(nested, currentPath ?? "")
   );
-
   const isSelected = url === location.pathname;
   const itemIconButtonProps = {
     ...(url
       ? {
-          component: Link,
-          to: url,
+          // ❌ REMOVE: component: Link,
+          // ❌ REMOVE: to: url,
           onClick: () => {
+            // 1. Handle mobile state first
             if (mobileLeftNav) {
               setOpenLeftNav && setOpenLeftNav((prev: boolean) => !prev);
             }
+
+            // 2. Perform the guarded navigation
+            requestNavigation(url);
           },
         }
       : {
+          // For items with nested children, just toggle open/close
           onClick: () => {
             setOpen(!open);
           },

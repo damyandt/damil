@@ -120,7 +120,7 @@ const allRoutes = (role: string, abonnement: string | null) => {
       element: <ClientsPage />,
     },
     {
-      path: "/DAMIL-Access-Control/Accept-New-Client",
+      path: "/DAMIL-Access-Control/Accept-New-Client/:filter",
       element: <AcceptClients />,
     },
     {
