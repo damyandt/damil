@@ -26,12 +26,12 @@ import {
   getMember,
   getPrice,
   getQueryOptions,
-  postSubscription,
 } from "../../../pages/Access Control/API/getQueries";
 import { useAuthedContext } from "../../../context/AuthContext";
 import Alert from "../../MaterialUI/Alert";
-import { User } from "../../../pages/usersPages/userTypes";
 import CellRenderer from "../../MaterialUI/Table/CellRenderer";
+import { postSubscription } from "../../../pages/Access Control/API/postQueries";
+import { User } from "../../../pages/usersPages/api/userTypes";
 
 interface NewSubscriptionPlanProps {
   rowData: Row;

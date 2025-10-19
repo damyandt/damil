@@ -13,9 +13,9 @@ import StaffRolesPage from "../../pages/Staff/StaffRolesPage";
 import StaffShifts from "../../pages/Staff/Shifts/StaffShifts";
 import HomePage from "../../pages/Home/Home";
 import ProfilePage from "../../pages/usersPages/Profile";
-import PlansPage from "../../pages/usersPages/PlansPage";
+
 import PageNotFound from "../../components/pageComponents/PageNotFound";
-import SubscriptionPlans from "../../pages/Configurations/SubscriptionPlans";
+import SubscriptionPlans from "../../pages/Configurations/MemberSubscriptions";
 import {
   getAbonnementsForPage,
   getRolesForPage,
@@ -28,6 +28,7 @@ import AcceptClients from "../../pages/Access Control/AcceptClients";
 import Classes from "../../pages/MemberView/Classes";
 import MemberSubscription from "../../pages/MemberView/MemberSubscription";
 import NewsManagementPage from "../../pages/Clients/News";
+import BusinessSubscriptions from "../../pages/Configurations/BusinessSubscriptions";
 export const createAppRouter = (
   userType:
     | "Facility Member"
@@ -78,7 +79,7 @@ const allRoutes = (role: string, abonnement: string | null) => {
         ) : abonnement ? (
           <HomePage />
         ) : (
-          <PlansPage />
+          <BusinessSubscriptions />
         ),
     },
     {
@@ -167,7 +168,7 @@ const allRoutes = (role: string, abonnement: string | null) => {
     },
     {
       path: "/DAMIL-Configurations/Subscription-Plans",
-      element: <PlansPage />,
+      element: <BusinessSubscriptions />,
     },
     {
       path: "/account/change-credentials",

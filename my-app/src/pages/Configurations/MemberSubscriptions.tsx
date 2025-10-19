@@ -26,8 +26,8 @@ import {
 } from "./API/getQueries";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { useOutletContext } from "react-router-dom";
-import PlansRightMenu from "../../components/pageComponents/Configurations/SubscriptionPlans/PlansRightMenu";
-import AddNewPlansPaper from "../../components/pageComponents/Configurations/SubscriptionPlans/AddNewPlanPaper";
+import PlansRightMenu from "../../components/pageComponents/Configurations/MemberSubscription/PlansRightMenu";
+import AddNewPlansPaper from "../../components/pageComponents/Configurations/MemberSubscription/AddNewPlanPaper";
 import AssignmentTurnedIn from "@mui/icons-material/AssignmentTurnedIn";
 import DefinePricesForm from "./DefinePricesSubPlans";
 

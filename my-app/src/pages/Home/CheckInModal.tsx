@@ -17,7 +17,7 @@ import CustomModal from "../../components/MaterialUI/Modal"; // Use your own mod
 import TextField from "../../components/MaterialUI/FormFields/TextField";
 import Button from "../../components/MaterialUI/Button";
 import callApi from "../../API/callApi";
-import { checkInMember, getMember } from "../Access Control/API/getQueries";
+import { getMember } from "../Access Control/API/getQueries";
 import { useAuthedContext } from "../../context/AuthContext";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import Alert from "../../components/MaterialUI/Alert";
@@ -28,6 +28,7 @@ import { User } from "../usersPages/userTypes";
 import { Response } from "../../Global/Types/commonTypes";
 import Checkbox from "../../components/MaterialUI/FormFields/Checkbox";
 import NewSubscriptionPlan from "../../components/pageComponents/Clients/NewSubscriptionPlan";
+import { checkInMember } from "../Access Control/API/postQueries";
 // import { List } from "echarts"; // Remove this line
 interface CheckInModalProps {
   open: boolean;

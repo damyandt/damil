@@ -1,11 +1,11 @@
 import { Typography, Box, Divider } from "@mui/material";
-import Button from "../../components/MaterialUI/Button";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import { useAuthedContext } from "../../context/AuthContext";
-import callApi from "../../API/callApi";
-import { stripePaymentIntent } from "./api/postQueries";
+import { useAuthedContext } from "../../../../context/AuthContext";
+import callApi from "../../../../API/callApi";
+import { stripePaymentIntent } from "../../../../pages/usersPages/api/postQueries";
+import Button from "../../../MaterialUI/Button";
 
 interface PlanDetailsProps {
   type: "STARTER" | "GROWTH" | "PRO";

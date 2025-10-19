@@ -9,16 +9,17 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { shiftHue } from "../Home/Home";
-import PlanCard from "./PlanCard";
+
 import { keyframes } from "@mui/system";
 import { useLanguageContext } from "../../context/LanguageContext";
+import PlanCard from "../../components/pageComponents/Configurations/BusinessSubscription/PlanCard";
 
 const float = keyframes`
   0%   { transform: translateY(0px); }
   50%  { transform: translateY(-20px); }
   100% { transform: translateY(0px); }
 `;
-const PricingPage = () => {
+const BusinessSubscriptions = () => {
   const theme = useTheme();
   const { t } = useLanguageContext();
   const [period, setPeriod] = useState<"MONTHLY" | "ANNUALLY">("MONTHLY");
@@ -153,4 +154,4 @@ const PricingPage = () => {
   );
 };
 
-export default PricingPage;
+export default BusinessSubscriptions;

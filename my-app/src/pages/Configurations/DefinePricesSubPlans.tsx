@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Box, Typography, Grid } from "@mui/material";
 import Button from "../../components/MaterialUI/Button";
 import TextField from "../../components/MaterialUI/FormFields/TextField";
-import { SubscriptionPlan } from "../../components/pageComponents/Configurations/SubscriptionPlans/AddNewPlanPaper";
+import { SubscriptionPlan } from "../../components/pageComponents/Configurations/MemberSubscription/AddNewPlanPaper";
 import { useLanguageContext } from "../../context/LanguageContext";
 
 type PlanPrices = {

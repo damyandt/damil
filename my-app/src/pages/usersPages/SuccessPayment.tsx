@@ -18,7 +18,7 @@ const SuccessPage = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "invoice.html"; // ✅ Use a string filename here
+    link.download = "invoice.html";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

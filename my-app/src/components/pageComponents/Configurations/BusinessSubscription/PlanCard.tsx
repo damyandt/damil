@@ -7,12 +7,12 @@ import {
   Button,
   darken,
 } from "@mui/material";
-import { shiftHue } from "../Home/Home";
 import { useState } from "react";
-import CustomModal from "../../components/MaterialUI/Modal";
 import PlanDetails from "./PlanDetails";
-import { useLanguageContext } from "../../context/LanguageContext";
-import { useAuthedContext } from "../../context/AuthContext";
+import { useAuthedContext } from "../../../../context/AuthContext";
+import { useLanguageContext } from "../../../../context/LanguageContext";
+import { shiftHue } from "../../../../pages/Home/Home";
+import CustomModal from "../../../MaterialUI/Modal";
 
 interface PlanCardProps {
   plan: any;
@@ -22,7 +22,7 @@ interface PlanCardProps {
 
 const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
   const [openDetails, setOpenDetails] = useState<boolean>(false);
-  const { tenant } = useAuthedContext();
+  const { tenant, preferences } = useAuthedContext();
   const { t } = useLanguageContext();
   const theme = useTheme();
   const colorStart =
@@ -102,8 +102,10 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, period }) => {
           </Box>
 
           <Typography variant="h2" fontWeight={600}>
-            ${period === "MONTHLY" ? plan.price : plan.priceYear}
+            {period === "MONTHLY" ? plan.price : plan.priceYear}
             <Typography component="span" variant="body1">
+              {preferences.currency}
+
               {period === "MONTHLY" ? "/month" : "/year"}
             </Typography>
           </Typography>

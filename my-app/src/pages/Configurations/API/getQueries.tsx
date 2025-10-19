@@ -1,5 +1,5 @@
 import { Query } from "../../../API/callApi";
-import { SubscriptionPlan } from "../../../components/pageComponents/Configurations/SubscriptionPlans/AddNewPlanPaper";
+import { SubscriptionPlan } from "../../../components/pageComponents/Configurations/MemberSubscription/AddNewPlanPaper";
 
 export const getSubscriptionPlansTable = (): Query => ({
   endpoint: `membership-plans`,

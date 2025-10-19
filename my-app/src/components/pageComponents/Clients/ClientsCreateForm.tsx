@@ -19,8 +19,6 @@ import Button from "../../MaterialUI/Button";
 import {
   getPrice,
   getQueryOptions,
-  postMember,
-  postSubscription,
 } from "../../../pages/Access Control/API/getQueries";
 import Alert from "../../MaterialUI/Alert";
 import DatePickerComponent from "../../MaterialUI/FormFields/DatePicker";
@@ -31,6 +29,10 @@ import {
   Response,
 } from "../../../Global/Types/commonTypes";
 import { Dayjs } from "dayjs";
+import {
+  postMember,
+  postSubscription,
+} from "../../../pages/Access Control/API/postQueries";
 
 interface ClientsCreateFormProps {
   setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>;

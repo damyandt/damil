@@ -7,7 +7,7 @@ import Button from "../../MaterialUI/Button";
 import CellRenderer from "../../MaterialUI/Table/CellRenderer";
 import callApi from "../../../API/callApi";
 import { useAuthedContext } from "../../../context/AuthContext";
-import { acceptClient } from "../../../pages/Access Control/API/getQueries";
+import { acceptClient } from "../../../pages/Access Control/API/postQueries";
 
 const AcceptClient = ({ rowData, setOpen, setRefreshTable }: any) => {
   const { t } = useLanguageContext();

@@ -139,7 +139,7 @@ const NewsSection = ({ editable, news }: any) => {
                     borderRadius: "20px",
                     p: 2.5,
                     boxShadow: theme.palette.customColors?.shodow ?? 3,
-                    height: 150,
+                    minHeight: 180,
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
@@ -209,8 +209,16 @@ const NewsSection = ({ editable, news }: any) => {
                     variant="subtitle2"
                     color="text.secondary"
                     mb={0.5}
+                    overflow={"hidden"}
                   >
-                    {t("News")} - {item.title}
+                    {t("News")}{" "}
+                    <CellRenderer
+                      key={t("Title")}
+                      value={item.title || t("No Title")}
+                      dataType={"string"}
+                      table={false}
+                    />
+                    {/* {item.title} */}
                   </Typography>
 
                   <Typography
@@ -241,7 +249,11 @@ const NewsSection = ({ editable, news }: any) => {
                         table={false}
                       />
                     </Box>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      textAlign={"end"}
+                    >
                       {t("Expires")}:{" "}
                       {dayjs(item.expiresOn).format("YYYY/MM/DD")}
                     </Typography>
@@ -327,10 +339,11 @@ const NewsSection = ({ editable, news }: any) => {
         <Grid container spacing={2}>
           <Grid size={12}>
             <CellRenderer
-              key={t("First Name")}
+              key={t("Title")}
               value={formData?.title || t("No Title")}
               dataType={"string"}
               table={false}
+              ellipsis={false}
               sx={{ fontSize: 25 }}
             />
           </Grid>
