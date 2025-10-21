@@ -64,7 +64,7 @@ const ProfilePage = () => {
           >
             <Avatar
               src=""
-              alt={authedUser?.firstName}
+              alt={authedUser?.firstName || authedUser?.email}
               sx={{
                 width: "100%",
                 height: "100%",
@@ -72,7 +72,8 @@ const ProfilePage = () => {
                 transition: "filter 0.3s ease",
               }}
             >
-              {authedUser?.firstName?.charAt(0)}
+              {authedUser?.firstName?.charAt(0) ||
+                authedUser?.email?.charAt(0).toLocaleUpperCase()}
             </Avatar>
             {hovered && (
               <Box

@@ -54,7 +54,7 @@ export const DetailsAction = ({
             .map((col: Column) => (
               <Grid size={{ xs: 12, sm: 6, md: 4 }} key={col.field}>
                 <Typography variant="subtitle2" color="text.secondary">
-                  {col.header}
+                  {t(col.header)}
                 </Typography>
                 <Typography>
                   <CellRenderer

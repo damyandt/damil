@@ -51,7 +51,7 @@ export const pageRoles: any = {
     roles: ["Facility Admin", "System Admin", "Facility Staff"],
     abonnement: ["STARTER", "GROWTH", "PRO"],
   },
-  "/DAMIL-Access-Control/Accept-New-Client/:filter": {
+  "/DAMIL-Access-Control/Accept-New-Client/subscriptionStatus=PENDING": {
     roles: ["Facility Admin", "System Admin", "Facility Staff"],
     abonnement: ["STARTER", "GROWTH", "PRO"],
   },

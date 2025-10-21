@@ -1,7 +1,6 @@
 import { createContext, JSX, useContext, useEffect, useState } from "react";
 import { getCookie } from "../Global/Utils/commonFunctions";
 import callApi, { COOKIE_REFRESH_TOKEN } from "../API/callApi";
-import { User } from "../pages/usersPages/userTypes";
 import {
   getQueryUsersGetCurrentUser,
   getQueryUserTenant,
@@ -10,6 +9,7 @@ import { handleFetchUserAccessToken } from "./authContextUtils";
 import { PreferencesType, Response } from "../Global/Types/commonTypes";
 import { getPreferences } from "../pages/usersPages/api/getQueries";
 import { PaletteMode } from "@mui/material";
+import { User } from "../pages/usersPages/api/userTypes";
 
 export type GetQueryUsersGetCurrentUserSnippet = { user: User };
 

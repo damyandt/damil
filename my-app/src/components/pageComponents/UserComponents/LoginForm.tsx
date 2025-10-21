@@ -64,6 +64,7 @@ const LoginForm = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
   const handleNextClick = async () => {
     try {
       if (!validator(true)) {
@@ -92,6 +93,7 @@ const LoginForm = () => {
       // });
     }
   };
+
   const handleChange = (field: string, value: any) => {
     setFormData((prev: any) => ({
       ...prev,
@@ -292,6 +294,7 @@ const LoginForm = () => {
           </Collapse>
         </Grid>
       </Grid>
+
       <CustomModal
         open={openModal}
         onClose={() => setOpenModal(false)}

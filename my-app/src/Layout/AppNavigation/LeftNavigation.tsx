@@ -238,7 +238,8 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
               }
             }}
           >
-            {authedUser?.firstName?.charAt(0)}
+            {authedUser?.firstName?.charAt(0) ||
+              authedUser?.email?.charAt(0).toLocaleUpperCase()}
           </Avatar>
 
           <Box
@@ -257,7 +258,9 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
               }}
             >
               <Typography variant="body1" fontWeight={500}>
-                {authedUser?.firstName || authedUser?.username}{" "}
+                {authedUser?.firstName ||
+                  authedUser?.username ||
+                  authedUser?.email}{" "}
                 {authedUser?.lastName}
               </Typography>
               <Typography variant="body2" color="text.secondary">

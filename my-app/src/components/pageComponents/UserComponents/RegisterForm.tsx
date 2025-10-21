@@ -379,19 +379,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
             {t("Please enter the 6-digit code sent to your email address.")}
           </Typography>
           <TextField
+            sx={{ zIndex: 100 }}
             placeholder="Enter code"
             fullWidth
             value={verificationCode || ""}
             error={!!errors["verificationCode"]}
             helperText={errors["verificationCode"] || " "}
             onChange={(e) => setCode(e.target.value)}
-            // onKeyDown={(e: any) => {
-            //   if (e.key === "Enter") {
-            //     e.preventDefault(); // ✅ Prevent form submission or unwanted action
-            //     e.stopPropagation(); // ✅ Optional: block global handlers
-            //     handleSubmitVerificationCode();
-            //   }
-            // }}
             onEnterFunc={() => {
               handleSubmitVerificationCode();
             }}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Grid,
+  ListItemIcon,
   MenuItem,
   Paper,
   Step,
@@ -16,6 +17,7 @@ import { useLanguageContext } from "../../../context/LanguageContext";
 import callApi from "../../../API/callApi";
 import { useAuthedContext } from "../../../context/AuthContext";
 import Button from "../../MaterialUI/Button";
+import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import {
   getPrice,
   getQueryOptions,
@@ -33,14 +35,13 @@ import {
   postMember,
   postSubscription,
 } from "../../../pages/Access Control/API/postQueries";
+import { useNavigate } from "react-router-dom";
 
 interface ClientsCreateFormProps {
   setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>;
   columns: Column[];
   setModalTitle: React.Dispatch<React.SetStateAction<string | null>>;
 }
-
-const steps = ["Person Info", "Plan", "Payment", "Confirm Info"];
 
 const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
   setRefreshTable,
@@ -49,6 +50,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
 }) => {
   const { setAuthedUser, preferences } = useAuthedContext();
   const { t } = useLanguageContext();
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState<number>(0);
   const [options, setOptions] = useState<EnumMap>({});
   const [loading, setLoading] = useState<boolean>(false);
@@ -58,6 +60,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
   const [id, setId] = useState<any>({});
   const [paymentMethod, setPaymentMethod] = useState<"CARD" | "CASH">("CASH");
   const [price, setPrice] = useState<number>(0);
+  const steps = [t("Person Info"), t("Plan"), t("Payment"), t("Confirm Info")];
 
   const handlePaymentMethodChange = (
     _: React.MouseEvent<HTMLElement>,
@@ -267,7 +270,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                   options["gender"].map(
                     (option: { title: string; value: string | number }) => (
                       <MenuItem key={option.value} value={option.value}>
-                        {option.title}
+                        {t(option.title)}
                       </MenuItem>
                     )
                   )
@@ -291,8 +294,18 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 helperText={errors["subscriptionPlan"]}
                 fullWidth
               >
-                {!options["subscriptionPlan"] ? (
-                  <MenuItem value="loading">{t("Loading...")}</MenuItem>
+                {!options?.["users/membership/plans/options"] ||
+                options?.["users/membership/plans/options"]?.length < 1 ? (
+                  <MenuItem
+                    onClick={() =>
+                      navigate("/DAMIL-Configurations/Member-Plans")
+                    }
+                  >
+                    <ListItemIcon>
+                      <SettingsSuggestIcon fontSize="small" />
+                    </ListItemIcon>
+                    {t("Set Up PLans")}
+                  </MenuItem>
                 ) : (
                   options["subscriptionPlan"].map(
                     (option: { title: string; value: string | number }) => (

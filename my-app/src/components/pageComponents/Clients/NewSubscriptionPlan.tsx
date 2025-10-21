@@ -1,6 +1,7 @@
 import {
   Box,
   Grid,
+  ListItemIcon,
   MenuItem,
   Paper,
   Step,
@@ -13,7 +14,6 @@ import {
 import TextField from "../../MaterialUI/FormFields/TextField";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import {
-  // Column,
   Enum,
   EnumMap,
   Response,
@@ -27,11 +27,13 @@ import {
   getPrice,
   getQueryOptions,
 } from "../../../pages/Access Control/API/getQueries";
+import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import { useAuthedContext } from "../../../context/AuthContext";
 import Alert from "../../MaterialUI/Alert";
 import CellRenderer from "../../MaterialUI/Table/CellRenderer";
 import { postSubscription } from "../../../pages/Access Control/API/postQueries";
 import { User } from "../../../pages/usersPages/api/userTypes";
+import { useNavigate } from "react-router-dom";
 
 interface NewSubscriptionPlanProps {
   rowData: Row;
@@ -57,6 +59,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [paymentMethod, setPaymentMethod] = useState<"CARD" | "CASH">("CASH");
   const steps = ["New Plan", "Payment", "Confirm Info"];
+  const navigate = useNavigate();
   const handlePaymentMethodChange = (
     _: React.MouseEvent<HTMLElement>,
     newMethod: "CARD" | "CASH" | null
@@ -191,8 +194,18 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
                 }
                 fullWidth
               >
-                {!options["users/membership/plans/options"] ? (
-                  <MenuItem value="loading">{t("Loading...")}</MenuItem>
+                {!options?.["users/membership/plans/options"] ||
+                options?.["users/membership/plans/options"]?.length < 1 ? (
+                  <MenuItem
+                    onClick={() =>
+                      navigate("/DAMIL-Configurations/Member-Plans")
+                    }
+                  >
+                    <ListItemIcon>
+                      <SettingsSuggestIcon fontSize="small" />
+                    </ListItemIcon>
+                    {t("Set Up PLans")}
+                  </MenuItem>
                 ) : (
                   options["users/membership/plans/options"].map(
                     (option: { title: string; value: string | number }) => (
@@ -423,6 +436,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
       </>
     );
   };
+
   const [details, setDetails] = useState<any>();
 
   const ActiveForm = () => {

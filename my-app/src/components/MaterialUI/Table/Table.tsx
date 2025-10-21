@@ -234,7 +234,7 @@ const TableComponent = ({
                       minWidth: col.header.toLowerCase() === "id" ? 50 : 180,
                     }}
                   >
-                    {col.header}
+                    {t(col.header)}
                   </TableCell>
                 ))}
                 {configurations?.actions && (
