@@ -1,7 +1,6 @@
 import { Box, Grid, IconButton, MenuItem, Typography } from "@mui/material";
 import CustomTooltip from "../../MaterialUI/CustomTooltip";
 import TextField from "../../MaterialUI/FormFields/TextField";
-import { User } from "../../../pages/usersPages/userTypes";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import { useState } from "react";
 import SaveIcon from "@mui/icons-material/Save";
@@ -14,6 +13,7 @@ import { useAuthedContext } from "../../../context/AuthContext";
 import { Fade } from "../../MaterialUI/FormFields/Fade";
 import { useNavigate } from "react-router-dom";
 import { useNavigationGuard } from "../../../context/UnsavedChangesProvider";
+import { User } from "../../../pages/usersPages/api/userTypes";
 
 const AccountDetails = () => {
   const { t } = useLanguageContext();

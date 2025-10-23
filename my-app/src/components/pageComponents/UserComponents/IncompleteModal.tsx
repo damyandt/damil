@@ -19,13 +19,13 @@ import {
 import callApi from "../../../API/callApi";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import { useNavigate } from "react-router-dom";
-import { User } from "../../../pages/usersPages/userTypes";
 import Checkbox from "../../MaterialUI/FormFields/Checkbox";
 import { useCustomThemeProviderContext } from "../../../context/ThemeContext";
 import { PreferencesType, Response } from "../../../Global/Types/commonTypes";
 import DatePickerComponent from "../../MaterialUI/FormFields/DatePicker";
 import dayjs from "dayjs";
 import Alert from "../../MaterialUI/Alert";
+import { User } from "../../../pages/usersPages/api/userTypes";
 
 const IncompleteProfileModal = () => {
   const {
@@ -42,18 +42,18 @@ const IncompleteProfileModal = () => {
   const [step, setStep] = useState<number>(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState<Partial<User>>(
-    // authedUser
-    {
-      username: authedUser?.username || "",
-      firstName: authedUser?.firstName || "",
-      lastName: authedUser?.lastName || "",
-      city: authedUser?.city || "",
-      phone: authedUser?.phone || "",
-      address: authedUser?.address || "",
-      email: authedUser?.email || "",
-      gender: authedUser?.gender || "",
-      birthDate: authedUser?.birthDate ? dayjs(authedUser.birthDate) : dayjs(),
-    }
+    authedUser
+    // {
+    //   username: authedUser?.username || "",
+    //   firstName: authedUser?.firstName || "",
+    //   lastName: authedUser?.lastName || "",
+    //   city: authedUser?.city || "",
+    //   phone: authedUser?.phone || "",
+    //   address: authedUser?.address || "",
+    //   email: authedUser?.email || "",
+    //   gender: authedUser?.gender,
+    //   birthDate: authedUser?.birthDate ? dayjs(authedUser.birthDate) : dayjs(),
+    // }
   );
   const [preferancesData, setPreferencesData] = useState<PreferencesType>(
     preferences

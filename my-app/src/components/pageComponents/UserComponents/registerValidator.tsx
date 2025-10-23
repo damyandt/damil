@@ -12,14 +12,16 @@ export const registerValidator = (
   const newErrors: { [key: string]: string } = {};
 
   if (step === 0) {
-    if (!business.name.trim()) newErrors["name"] = "Business name is required.";
-    if (!business.businessEmail.trim())
+    if (!business.name?.trim())
+      newErrors["name"] = "Business name is required.";
+    if (!business.businessEmail?.trim())
       newErrors["businessEmail"] = "Business email is required.";
   }
 
   if (step === 1) {
-    if (!business.city.trim()) newErrors["city"] = "City is required.";
-    if (!business.address.trim()) newErrors["address"] = "Address is required.";
+    if (!business.city?.trim()) newErrors["city"] = "City is required.";
+    if (!business.address?.trim())
+      newErrors["address"] = "Address is required.";
   }
 
   if (step === 2) {

@@ -3,7 +3,7 @@ import {
   handleUserSignOut,
 } from "../context/authContextUtils";
 import { getCookie } from "../Global/Utils/commonFunctions";
-import { User } from "../pages/usersPages/userTypes";
+import { User } from "../pages/usersPages/api/userTypes";
 export const COOKIE_ACCESS_TOKEN = "accessToken";
 export const COOKIE_REFRESH_TOKEN = "refreshToken";
 

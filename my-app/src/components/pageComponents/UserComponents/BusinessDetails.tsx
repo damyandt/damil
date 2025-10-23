@@ -11,14 +11,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { Fade } from "../../MaterialUI/FormFields/Fade";
 import { useNavigationGuard } from "../../../context/UnsavedChangesProvider";
-
-type Business = {
-  id?: string;
-  name?: string;
-  businessEmail?: string;
-  address?: string;
-  city?: string;
-};
+import { Business } from "../../../pages/usersPages/api/userTypes";
 
 const BusinessDetails = () => {
   const { t } = useLanguageContext();

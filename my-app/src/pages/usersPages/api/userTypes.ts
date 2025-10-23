@@ -1,10 +1,43 @@
 import { Dayjs } from "dayjs";
+export type Gender = ["MALE", "FEMALE", "NOT_SPECIFIED"];
+export type Abonnement = ["STARTER", "GROWTH", "PRO", null];
+export type AbonnementDuration = ["monthly", "annual", null];
+export type RolesTypes = [
+  "Facility Member",
+  "Facility Admin",
+  "System Admin",
+  "Facility Staff"
+];
+
+export type Roles = RolesTypes[number];
 
 export interface Business {
-  name: string;
+  id?: number;
+  stripeAccountId?: string;
+  name?: string;
   businessEmail: string;
-  city: string;
-  address: string;
+  address?: string;
+  city?: string;
+  abonnement?: Abonnement;
+  abonnementDuration?: AbonnementDuration;
+  subscriptionValidUntil?: Dayjs | null;
+  membersCount?: number;
+}
+
+export interface User {
+  id?: number;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  email: string;
+  gender?: Gender;
+  roles: Array<Roles>;
+  birthDate?: Dayjs | null;
+  createdAt?: Dayjs | null;
+  updatedAt?: Dayjs | null;
+  phone?: string;
+  address?: string;
+  city?: string;
 }
 
 export interface AdminDataRegister {
@@ -13,22 +46,8 @@ export interface AdminDataRegister {
   confirmPassword: string;
 }
 
-export type User = {
-  id?: string | number;
-  firstName?: string;
-  lastName?: string;
-  gender?: string;
-  username: string;
-  email: string;
-  phone?: string;
-  address?: string;
-  city?: string;
-  birthDate?: Dayjs | null;
-  createdAt?: string;
-  abonnement?: "STARTER" | "GROWTH" | "PRO" | null;
-  membersCount?: number;
-  subscriptionActive?: boolean;
-  roles: Array<
-    "Facility Member" | "Facility Admin" | "System Admin" | "Facility Staff"
-  >;
-};
+export interface DataForCardLinkStripe {
+  connectedAccountId: string;
+  returnUrl: string;
+  refreshUrl: string;
+}

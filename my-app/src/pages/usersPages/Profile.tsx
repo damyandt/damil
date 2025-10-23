@@ -18,6 +18,7 @@ import PreferencesDetails from "../../components/pageComponents/UserComponents/P
 import BusinessDetails from "../../components/pageComponents/UserComponents/BusinessDetails";
 import Button from "../../components/MaterialUI/Button";
 import { useNavigationGuard } from "../../context/UnsavedChangesProvider";
+import CardDetails from "../../components/pageComponents/UserComponents/CardDetailes";
 
 const ProfilePage = () => {
   const { t } = useLanguageContext();
@@ -149,6 +150,9 @@ const ProfilePage = () => {
             {!authedUser?.roles?.includes("Facility Member") && (
               <Tab label={t("Business Details")} />
             )}
+            {authedUser?.roles?.includes("Facility Admin") && (
+              <Tab label={t("Card Details")} />
+            )}
           </Tabs>
 
           {/* ✅ Responsive content area */}
@@ -247,6 +251,7 @@ const ProfilePage = () => {
                   </Grid>
                 )}
                 {selectedTab === 3 && <BusinessDetails />}
+                {selectedTab === 4 && <CardDetails />}
               </Box>
             </Slide>
           </Grid>

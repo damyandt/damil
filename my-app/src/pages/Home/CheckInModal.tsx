@@ -24,11 +24,11 @@ import Alert from "../../components/MaterialUI/Alert";
 import { useLanguageContext } from "../../context/LanguageContext";
 import CellRenderer from "../../components/MaterialUI/Table/CellRenderer";
 import { Partial } from "@react-spring/web";
-import { User } from "../usersPages/userTypes";
 import { Response } from "../../Global/Types/commonTypes";
 import Checkbox from "../../components/MaterialUI/FormFields/Checkbox";
 import NewSubscriptionPlan from "../../components/pageComponents/Clients/NewSubscriptionPlan";
 import { checkInMember } from "../Access Control/API/postQueries";
+import { User } from "../usersPages/api/userTypes";
 // import { List } from "echarts"; // Remove this line
 interface CheckInModalProps {
   open: boolean;

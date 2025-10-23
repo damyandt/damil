@@ -24,7 +24,7 @@ import Alert from "../../components/MaterialUI/Alert";
 import CellRenderer from "../../components/MaterialUI/Table/CellRenderer";
 import { Response } from "../../Global/Types/commonTypes";
 import Checkbox from "../../components/MaterialUI/FormFields/Checkbox";
-import { User } from "../usersPages/userTypes";
+import { User } from "../usersPages/api/userTypes";
 
 interface SearchModalProps {
   openSearch: boolean;

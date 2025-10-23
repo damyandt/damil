@@ -121,7 +121,7 @@ const LoginPage = () => {
         <Box
           sx={{
             width: "100%",
-            maxWidth: "40vw",
+            maxWidth: "28vw",
             display: "flex",
             flexDirection: "column",
             gap: 2,
