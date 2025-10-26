@@ -144,13 +144,13 @@ const ProfilePage = () => {
           >
             <Tab label={t("Account Details")} />
             <Tab label={t("Preferences")} />
-            {!authedUser?.roles?.includes("Facility Member") && (
+            {!authedUser?.roles?.includes("Member") && (
               <Tab label={t("Subscription")} />
             )}
-            {!authedUser?.roles?.includes("Facility Member") && (
+            {!authedUser?.roles?.includes("Member") && (
               <Tab label={t("Business Details")} />
             )}
-            {authedUser?.roles?.includes("Facility Admin") && (
+            {authedUser?.roles?.includes("Admin") && (
               <Tab label={t("Card Details")} />
             )}
           </Tabs>

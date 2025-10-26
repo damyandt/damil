@@ -32,6 +32,12 @@ export type Shift = {
   date: string; // use actual date instead of day string
   start: Dayjs | null;
   end: Dayjs | null;
+  repeatShift: boolean;
+  repeatType: "Daily" | "Weekly" | "Custom" | null;
+  repeatUntil: Dayjs | null;
+  repeatEvery: number | null;
+  intervals: "Daily" | "Weekly" | "Monthly" | null;
+  repeatOn: string[];
 };
 
 const StaffShifts = () => {
@@ -40,11 +46,7 @@ const StaffShifts = () => {
 
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [open, setOpen] = useState(false);
-  const [repeatShift, setRepeatShift] = useState(false);
-  const [repeatType, setRepeatType] = useState<"Daily" | "Weekly" | "Custom">(
-    "Daily"
-  );
-  const [repeatUntil, setRepeatUntil] = useState<Dayjs | null>(null);
+
   const staffList = [
     { id: "1", name: "Damyan Todorov", role: t("Front Desk") },
     { id: "2", name: "Iliyan Todorov", role: t("Front Desk") },
@@ -64,33 +66,39 @@ const StaffShifts = () => {
     setCurrentWeekStart((prev) => prev.subtract(1, "week"));
 
   // --- New Shift ---
-  const [newShift, setNewShift] = useState<Shift>({
+  const [formData, setFormData] = useState<Shift>({
     staffId: "",
     date: "",
     start: null,
     end: null,
+    repeatShift: false,
+    repeatType: null,
+    repeatUntil: null,
+    repeatEvery: null,
+    intervals: null,
+    repeatOn: [],
   });
 
   const handleChange = <K extends keyof Shift>(field: K, value: Shift[K]) => {
-    setNewShift((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev: Shift) => ({ ...prev, [field]: value }));
   };
 
   const handleAddShift = () => {
-    if (!newShift.staffId || !newShift.start || !newShift.end) return;
+    if (!formData.staffId || !formData.start || !formData.end) return;
 
     const newShifts: Shift[] = [];
 
     // Add the original shift
-    newShifts.push(newShift);
+    newShifts.push(formData);
 
-    if (repeatShift && repeatUntil) {
-      let current = dayjs(newShift.date);
-      const end = dayjs(repeatUntil);
+    if (formData.repeatShift && formData.repeatUntil) {
+      let current = dayjs(formData.date);
+      const end = dayjs(formData.repeatUntil);
 
       while (current.isBefore(end, "day")) {
-        if (repeatType === "Daily") {
+        if (formData.repeatType === "Daily") {
           current = current.add(1, "day");
-        } else if (repeatType === "Weekly") {
+        } else if (formData.repeatType === "Weekly") {
           current = current.add(1, "week");
         } else {
           // Custom logic could go here
@@ -98,7 +106,7 @@ const StaffShifts = () => {
         }
 
         newShifts.push({
-          ...newShift,
+          ...formData,
           date: current.format("YYYY-MM-DD"),
         });
       }
@@ -117,11 +125,17 @@ const StaffShifts = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    setNewShift({
+    setFormData({
       staffId: "",
-      date: dayjs().format("YYYY-MM-DD"),
+      date: "",
       start: null,
       end: null,
+      repeatShift: false,
+      repeatType: null,
+      repeatUntil: null,
+      repeatEvery: null,
+      intervals: null,
+      repeatOn: [],
     });
   };
 
@@ -191,10 +205,8 @@ const StaffShifts = () => {
           </Box>
         ))}
 
-        {/* Staff rows */}
         {staffList.map((staff) => (
           <Box key={staff.id} sx={{ display: "contents" }}>
-            {/* Staff name */}
             <Box
               sx={{
                 p: 1.5,
@@ -287,7 +299,6 @@ const StaffShifts = () => {
         ))}
       </Box>
 
-      {/* Add Shift Modal */}
       <CustomModal
         open={open}
         onClose={handleClose}
@@ -300,7 +311,7 @@ const StaffShifts = () => {
             <TextField
               select
               label={t("Select Staff")}
-              value={newShift.staffId}
+              value={formData.staffId}
               onChange={(e) => handleChange("staffId", e.target.value)}
               fullWidth
             >
@@ -316,7 +327,7 @@ const StaffShifts = () => {
             <TextField
               select
               label={t("Select Date")}
-              value={newShift.date}
+              value={formData.date}
               onChange={(e) => handleChange("date", e.target.value)}
               fullWidth
             >
@@ -334,36 +345,44 @@ const StaffShifts = () => {
           <Grid size={{ xs: 12, sm: 6 }}>
             <TimePicker
               label={t("Start Time")}
-              value={newShift.start}
+              value={formData.start}
               onChange={(value) => handleChange("start", value)}
             />
           </Grid>
+
           <Grid size={{ xs: 12, sm: 6 }}>
             <TimePicker
               label={t("End Time")}
-              value={newShift.end}
+              value={formData.end}
               onChange={(value) => handleChange("end", value)}
             />
           </Grid>
+
           <Grid size={12}>
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={repeatShift}
-                  onChange={(e) => setRepeatShift(e.target.checked)}
+                  checked={formData.repeatShift}
+                  onChange={(e) =>
+                    handleChange("repeatShift", e.target.checked)
+                  }
                 />
               }
               label={t("Repeat this shift")}
             />
           </Grid>
+
           <Grid size={{ xs: 12, sm: 6 }}>
-            <Collapse in={repeatShift}>
+            <Collapse in={formData.repeatShift}>
               <TextField
                 select
                 label={t("Repeat Type")}
-                value={repeatType}
+                value={formData.repeatType}
                 onChange={(e) =>
-                  setRepeatType(e.target.value as "Daily" | "Weekly" | "Custom")
+                  handleChange(
+                    "repeatType",
+                    e.target.value as "Daily" | "Weekly" | "Custom"
+                  )
                 }
                 fullWidth
               >
@@ -377,13 +396,95 @@ const StaffShifts = () => {
           </Grid>
 
           <Grid size={{ xs: 12, sm: 6 }}>
-            <Collapse in={repeatShift}>
+            <Collapse in={formData.repeatShift}>
               <DatePickerComponent
                 label={t("Repeat Until")}
-                value={repeatUntil}
-                onChange={(newValue) => setRepeatUntil(newValue)}
+                value={formData.repeatUntil}
+                onChange={(newValue) => handleChange("repeatUntil", newValue)}
                 slotProps={{ textField: { fullWidth: true } }}
               />
+            </Collapse>
+          </Grid>
+
+          <Grid size={12}>
+            <Collapse in={formData.repeatType === "Custom"}>
+              <Box
+                sx={{
+                  p: 2,
+                  mt: 1,
+                  borderRadius: 2,
+                  border: `1px solid ${alpha(theme.palette.text.primary, 0.1)}`,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.02),
+                }}
+              >
+                <Typography variant="subtitle2" fontWeight={600} mb={1}>
+                  {t("Custom Repeat Options")}
+                </Typography>
+
+                <Grid container spacing={2} alignItems="center">
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <TextField
+                      type="number"
+                      label={t("Repeat Every")}
+                      inputProps={{ min: 1 }}
+                      value={formData.repeatEvery}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <TextField
+                      select
+                      label={t("Interval")}
+                      value={formData.intervals}
+                      fullWidth
+                      onChange={(e) =>
+                        handleChange(
+                          "intervals",
+                          e.target.value as "Daily" | "Weekly" | "Monthly"
+                        )
+                      }
+                    >
+                      <MenuItem value="Daily">{t("Daily")}</MenuItem>
+                      <MenuItem value="Weekly">{t("Weekly")}</MenuItem>
+                      <MenuItem value="Monthly">{t("Monthly")}</MenuItem>
+                    </TextField>
+                  </Grid>
+                </Grid>
+
+                {/* Choose specific weekdays */}
+                {formData.intervals !== "Daily" && (
+                  <Box mt={2}>
+                    <Typography variant="body2" color="text.secondary" mb={1}>
+                      {t("Repeat on days")}
+                    </Typography>
+                    <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                      {(formData.intervals === "Weekly"
+                        ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+                        : [
+                            "Jan",
+                            "Feb",
+                            "Mar",
+                            "Apr",
+                            "May",
+                            "Jun",
+                            "Jul",
+                            "Aug",
+                            "Sep",
+                            "Oct",
+                            "Nov",
+                            "Dec",
+                          ]
+                      ).map((day) => (
+                        <FormControlLabel
+                          key={day}
+                          control={<Checkbox />}
+                          label={day}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+                )}
+              </Box>
             </Collapse>
           </Grid>
 

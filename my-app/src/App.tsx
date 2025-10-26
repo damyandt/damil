@@ -7,6 +7,7 @@ import LoadingScreen from "./components/pageComponents/LoadingPage";
 import GlobalBarcodeScanner from "./context/BarcodeProvider";
 import { GlobalStyles } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { Role } from "./pages/usersPages/api/userTypes";
 // import { NavigationGuardProvider } from "./context/UnsavedChangesProvider";
 const App: React.FC = () => {
   const theme = useTheme();
@@ -16,11 +17,7 @@ const App: React.FC = () => {
   if (authedUserLoading || tenantLoading) {
     return <LoadingScreen />;
   }
-  const role:
-    | "Facility Member"
-    | "Facility Admin"
-    | "System Admin"
-    | "Facility Staff" = authedUser?.roles?.[0] || "Facility Member";
+  const role: Role = authedUser?.roles?.[0] || "Member";
   const abonnement: "PRO" | "STARTER" | "GROWTH" | null = tenant?.abonnement;
   const appRouter = createAppRouter(role, abonnement);
   if (authedUser.email !== "error") {

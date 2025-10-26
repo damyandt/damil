@@ -26,16 +26,13 @@ import SuccessPayment from "../../pages/usersPages/SuccessPayment";
 import Calendar from "../../pages/Staff/Calender";
 import AcceptClients from "../../pages/Access Control/AcceptClients";
 import MemberSubscription from "../../pages/MemberView/MemberSubscription";
-import NewsManagementPage from "../../pages/Clients/News";
+import NewsManagementPage from "../../pages/Clients/News/News";
 import BusinessSubscriptions from "../../pages/Configurations/BusinessSubscriptions";
-import Trainings from "../../pages/Clients/Trainings";
+import Trainings from "../../pages/MemberView/Classes/Trainings";
 import Classes from "../../pages/MemberView/Classes/Classes";
+import { Role } from "../../pages/usersPages/api/userTypes";
 export const createAppRouter = (
-  userType:
-    | "Facility Member"
-    | "Facility Admin"
-    | "System Admin"
-    | "Facility Staff",
+  userType: Role,
   abonnement: "PRO" | "STARTER" | "GROWTH" | null
 ) => {
   let roleRoutes = getRoutesForRole(userType, abonnement);
@@ -51,7 +48,7 @@ export const createAppRouter = (
 };
 
 const getRoutesForRole = (role: string, abonnement: string | null) => {
-  if (role === "System Admin") return allRoutes(role, abonnement);
+  if (role === "Administrator") return allRoutes(role, abonnement);
   const routes = allRoutes(role, abonnement);
   return routes.filter(
     (route) =>
@@ -75,7 +72,7 @@ const allRoutes = (role: string, abonnement: string | null) => {
     {
       path: "/",
       element:
-        role === "Facility Member" ? (
+        role === "Member" ? (
           <MembersHome />
         ) : abonnement ? (
           <HomePage />

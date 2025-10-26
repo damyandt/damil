@@ -5,32 +5,39 @@ import dayjs from "dayjs";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import CustomModal from "../../../components/MaterialUI/Modal";
 import CellRenderer from "../../../components/MaterialUI/Table/CellRenderer";
-import { NewsItem } from "../../Clients/News";
 import NewsForm from "./NewsForm";
-import NewCard from "./NewCard";
+import NewCard from "./NewsCard";
+import { NewsItem } from "./API/news";
 
-const NewsSection = ({ editable, news }: any) => {
+interface NewsSectionProps {
+  editable: boolean;
+  news: NewsItem[]; // ideally replace `any` with your actual news type
+  triggerRefetch?: () => void;
+}
+
+const NewsSection: React.FC<NewsSectionProps> = ({
+  editable = false,
+  news,
+  triggerRefetch,
+}) => {
   const { t } = useLanguageContext();
   const [newsItems, setNewsItems] = useState<NewsItem[]>(news || []);
   const [openEdit, setOpenEdit] = useState<boolean>(false);
   const [openView, setOpenView] = useState<boolean>(false);
   const [formData, setFormData] = useState<NewsItem>({
     title: "",
-    importance: "Low",
+    importance: "LOW",
     content: "",
     expiresOn: dayjs().add(7, "day"),
-    sendToAll: true,
-    targetRole: "",
+    publicationType: "ALL",
+    targetRoles: [],
     targetSpecific: false,
-    targetPersons: [],
+    recipientsIds: [],
   });
 
   useEffect(() => {
     setNewsItems(news);
   }, [news]);
-
-  // const handleRemove = (id: string) =>
-  //   setNewsItems((prev) => prev.filter((n) => n.id !== id));
 
   const handleOpen = (mode: "edit" | "view", item?: NewsItem) => {
     mode === "edit" && setOpenEdit(true);
@@ -40,9 +47,13 @@ const NewsSection = ({ editable, news }: any) => {
     } else {
       setFormData({
         title: "",
-        importance: "Low",
+        importance: "LOW",
         content: "",
         expiresOn: dayjs().add(7, "day"),
+        publicationType: "ALL",
+        targetRoles: [],
+        targetSpecific: false,
+        recipientsIds: [],
       });
     }
   };
@@ -54,9 +65,11 @@ const NewsSection = ({ editable, news }: any) => {
           {newsItems.map((item: NewsItem) => {
             return (
               <NewCard
+                key={item.newsId}
                 item={item}
                 handleOpen={handleOpen}
                 editable={editable}
+                triggerRefetch={triggerRefetch}
               />
             );
           })}

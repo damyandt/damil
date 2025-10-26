@@ -75,7 +75,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
   }, [refreshUserData]);
 
   const fetchPreferences = async () => {
-    if (!authedUser.roles?.includes("Facility Member")) {
+    if (!authedUser.roles?.includes("Member")) {
       const preferencesInfo = await callApi<Response<any>>({
         query: getPreferences(),
         auth: { setAuthedUser },
@@ -103,7 +103,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
   useEffect(() => {
     if (userSignedIn) {
       fetchPreferences();
-      if (authedUser.roles?.includes("Facility Admin")) {
+      if (authedUser.roles?.includes("Admin")) {
         fetchTenant();
       }
     }

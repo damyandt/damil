@@ -78,7 +78,7 @@ const ClassCard = ({
             }}
           >
             <CustomTooltip title={t("View Details")} placement="left">
-              <IconButton size="small" color="info" onClick={handleDetailsOpen}>
+              <IconButton size="small" onClick={handleDetailsOpen}>
                 <InfoOutlinedIcon fontSize="small" />
               </IconButton>
             </CustomTooltip>
@@ -87,7 +87,7 @@ const ClassCard = ({
             >
               <IconButton
                 size="small"
-                color={isJoined ? "success" : "primary"}
+                color={isJoined ? "primary" : "default"}
                 onClick={() => handleJoin(originalIndex)}
               >
                 <EventAvailableIcon fontSize="small" />

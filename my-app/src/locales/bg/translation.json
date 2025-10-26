@@ -296,7 +296,7 @@
   "New Signups - July": "Нови регистрации - Юли",
   "Expired Subscriptions": "Изтекли абонаменти",
   "Save & Close": "Запази и затвори",
-  "Admin": "Администратор",
+  "Admin": "Админ",
   "Confirm Member Details": "Потвърдете данните на члена",
   "Home": "Начало",
   "Analytics": "Анализи",
@@ -330,5 +330,6 @@
   "Set Up PLans": "Настройване на планове",
   "Unsaved Changes": "Незаписани промени",
   "You have unsaved changes. If you leave this page, your changes will be lost.": "Имате незаписани промени. Ако напуснете тази страница, те ще бъдат загубени.",
+  "Member": "Член",
   "Leave": "Напусни"
 }

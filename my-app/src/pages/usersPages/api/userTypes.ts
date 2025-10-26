@@ -2,12 +2,8 @@ import { Dayjs } from "dayjs";
 export type Gender = ["MALE", "FEMALE", "NOT_SPECIFIED"];
 export type Abonnement = ["STARTER", "GROWTH", "PRO", null];
 export type AbonnementDuration = ["monthly", "annual", null];
-export type RolesTypes = [
-  "Facility Member",
-  "Facility Admin",
-  "System Admin",
-  "Facility Staff"
-];
+export type Role = "Member" | "Admin" | "Administrator" | "Staff";
+export type RolesTypes = ["Member", "Admin", "Administrator", "Staff"];
 
 export type Roles = RolesTypes[number];
 

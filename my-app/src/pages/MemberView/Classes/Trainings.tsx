@@ -1,8 +1,8 @@
 import { Box } from "@mui/system";
 import { IconButton, Typography } from "@mui/material";
-import { useLanguageContext } from "../../context/LanguageContext";
+import { useLanguageContext } from "../../../context/LanguageContext";
 import Add from "@mui/icons-material/Add";
-import Classes from "../MemberView/Classes/Classes";
+import Classes from "./Classes";
 
 const Trainings = () => {
   const { t } = useLanguageContext();

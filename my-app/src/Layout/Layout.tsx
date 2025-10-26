@@ -175,7 +175,7 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
           </IconButton>
         ) : null}
 
-        {authedUser?.roles?.[0] === "Facility Member" && <QrCodeButton />}
+        {authedUser?.roles?.[0] === "Member" && <QrCodeButton />}
 
         {smMediaQuery && extraRightNavMenu ? (
           <FloatingRightMenu extraMenu={extraRightNavMenu} />

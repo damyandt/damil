@@ -11,10 +11,13 @@ import {
 import { shiftHue } from "../Home/Home";
 import { useAuthedContext } from "../../context/AuthContext";
 import { useLanguageContext } from "../../context/LanguageContext";
-import NewsSection from "./News/NewsContainer";
+import NewsSection from "../Clients/News/NewsContainer";
 import ClassCard from "./Classes/ClassCard";
-import { useState } from "react";
-import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { NewsItem } from "../Clients/News/API/news";
+import callApi from "../../API/callApi";
+import { Response } from "../../Global/Types/commonTypes";
+import { getNews } from "../Clients/News/API/getQueries";
 
 const MembersHome = () => {
   const { authedUser } = useAuthedContext();
@@ -23,7 +26,8 @@ const MembersHome = () => {
   const isDark = theme.palette.mode === "dark";
   const primary = theme.palette.primary.main;
   const [joinedClasses, setJoinedClasses] = useState<number[]>([0, 1, 2]);
-
+  const [newsList, setNewsItems] = useState<NewsItem[]>([]);
+  const { setAuthedUser } = useAuthedContext();
   const subscription = {
     name: "Monthly",
     expiresAt: "2025-11-01",
@@ -36,85 +40,21 @@ const MembersHome = () => {
   const colorEnd = isDark
     ? shiftHue(darken(primary, 0.2), 20)
     : shiftHue(lighten(primary, 0.3), 20);
-  const classes = [
-    {
-      title: "Taekwondo",
-      date: "Sat, Oct 29 at 8:00 PM",
-      duration: "60 min",
-      trainer: "Donika Boteva",
-      trainerInfo: {
-        name: "Donika Boteva",
-        avatar: "/trainers/donika.png",
-        specialty: "Martial Arts & Self-Defense",
-      },
-      location: "Sevlievo Taekwondo Club",
-      address: "123 Martial Arts St, Sevlievo, Bulgaria",
-      spots: 10,
-      capacity: 20,
-      level: "Intermediate",
-      rating: 4.8,
-      reviews: [
-        {
-          user: "Anna",
-          comment: "Great energy and clear instructions!",
-          rating: 5,
-        },
-        { user: "Georgi", comment: "Challenging but rewarding.", rating: 4.5 },
-      ],
-    },
-    {
-      title: "Kickbox",
-      date: "Sat, Apr 11 at 9:00 PM",
-      duration: "60 min",
-      trainer: "Iliyan Todorov",
-      trainerInfo: {
-        name: "Iliyan Todorov",
-        avatar: "/trainers/iliyan.png",
-        specialty: "Kickboxing & Cardio Training",
-      },
-      location: "Vokil Varna",
-      address: "Vokil Varna",
-      spots: 5,
-      capacity: 15,
-      level: "Advanced",
-      rating: 4.6,
-      reviews: [
-        { user: "Petya", comment: "Intense and fun!", rating: 5 },
-        { user: "Ivan", comment: "Mihail is an amazing coach!", rating: 4.5 },
-      ],
-    },
-    {
-      title: "Muay thai",
-      date: "Sat, Apr 11 at 9:00 PM",
-      duration: "60 min",
-      trainer: "Damyan Todorov",
-      trainerInfo: {
-        name: "Damyan Todorov",
-        avatar: "/trainers/damyan.png",
-        specialty: "Fighting & Problems",
-      },
-      location: "Muay Thai Anton Petrov, Sofia",
-      address: "Muay Thai Anton Petrov NDK, Sofia",
-      spots: 5,
-      capacity: 10,
-      level: "Advanced",
-      rating: 4.9,
-      reviews: [
-        {
-          user: "Elena",
-          comment: "Very relaxing and well-structured.",
-          rating: 5,
-        },
-        {
-          user: "Stoyan",
-          comment: "Perfect for unwinding after work.",
-          rating: 4.8,
-        },
-      ],
-    },
-  ];
 
-  const displayedClasses = classes.filter((_, i) => joinedClasses.includes(i));
+  useEffect(() => {
+    const fetchNews = async () => {
+      const response = await callApi<Response<NewsItem[]>>({
+        query: getNews(),
+        auth: { setAuthedUser },
+      });
+
+      setNewsItems(response.data);
+    };
+
+    fetchNews();
+  }, [setAuthedUser]);
+
+  const displayedClasses = newsList.filter((_, i) => joinedClasses.includes(i));
   return (
     <Box
       sx={{
@@ -187,27 +127,7 @@ const MembersHome = () => {
         </Stack>
       </Box>
 
-      <NewsSection
-        news={[
-          {
-            id: "1",
-            title: t("Donika is Back!"),
-            content:
-              "Taekwondo with Donika returns next week — new time slots available!next week — new time slots available!",
-            importance: "Medium",
-            expiresOn: dayjs().add(7, "day").toISOString(),
-          },
-          {
-            id: "2",
-            title: t("Earlier Close!"),
-            content: t(
-              "This Friday the gym will close earlier — at 7:00 PM due to maintenance."
-            ),
-            importance: "High",
-            expiresOn: dayjs().add(2, "day").toISOString(),
-          },
-        ]}
-      />
+      <NewsSection news={newsList} editable={false} />
 
       <Box
         sx={{
@@ -251,7 +171,7 @@ const MembersHome = () => {
           </Grid>
         ) : (
           displayedClasses.map((cls: any, index: any) => {
-            const originalIndex = classes.indexOf(cls);
+            const originalIndex = newsList.indexOf(cls);
 
             return (
               <ClassCard

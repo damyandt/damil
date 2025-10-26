@@ -4,94 +4,94 @@ import { LEFT_NAV_SECTION } from "./leftNavData";
 export const pageRoles: any = {
   // Home
   "/": {
-    roles: ["Facility Admin", "System Admin", "Facility Member"],
+    roles: ["Admin", "Administrator", "Member"],
     abonnement: ["ALL"],
   },
   "Member/Classes": {
-    roles: ["Facility Member"],
+    roles: ["Member"],
     abonnement: ["ALL"],
   },
   "Member/Subscription": {
-    roles: ["Facility Member"],
+    roles: ["Member"],
     abonnement: ["ALL"],
   },
 
   // DAMIL Analytics
   "/DAMIL-Analytics/Overview": {
-    roles: ["Facility Admin", "System Admin"],
+    roles: ["Admin", "Administrator"],
     abonnement: ["PRO"],
   },
   "/DAMIL-Analytics/Visits": {
-    roles: ["Facility Admin", "System Admin"],
+    roles: ["Admin", "Administrator"],
     abonnement: ["PRO"],
   },
   "/DAMIL-Analytics/Goal": {
-    roles: ["Facility Admin", "System Admin"],
+    roles: ["Admin", "Administrator"],
     abonnement: ["PRO"],
   },
   "/DAMIL-Analytics/Ages": {
-    roles: ["Facility Admin", "System Admin"],
+    roles: ["Admin", "Administrator"],
     abonnement: ["PRO"],
   },
   "/DAMIL-Analytics/Memberships": {
-    roles: ["Facility Admin", "System Admin"],
+    roles: ["Admin", "Administrator"],
     abonnement: ["PRO"],
   },
 
   // DAMIL Access Control
   "/DAMIL-Access-Control/All-Clients": {
-    roles: ["Facility Admin", "System Admin", "Facility Staff"],
+    roles: ["Admin", "Administrator", "Staff"],
     abonnement: ["STARTER", "GROWTH", "PRO"],
   },
   "/DAMIL-Access-Control/All-Clients/:filter": {
-    roles: ["Facility Admin", "System Admin", "Facility Staff"],
+    roles: ["Admin", "Administrator", "Staff"],
     abonnement: ["STARTER", "GROWTH", "PRO"],
   },
   "/DAMIL-Access-Control/Daily-Visitors": {
-    roles: ["Facility Admin", "System Admin", "Facility Staff"],
+    roles: ["Admin", "Administrator", "Staff"],
     abonnement: ["STARTER", "GROWTH", "PRO"],
   },
   "/DAMIL-Access-Control/Accept-New-Client/subscriptionStatus=PENDING": {
-    roles: ["Facility Admin", "System Admin", "Facility Staff"],
+    roles: ["Admin", "Administrator", "Staff"],
     abonnement: ["STARTER", "GROWTH", "PRO"],
   },
 
   // DAMIL Clients
   "/DAMIL-Clients/News": {
-    roles: ["Facility Admin", "System Admin", "Facility Staff"],
+    roles: ["Admin", "Administrator", "Staff"],
     abonnement: ["STARTER", "GROWTH", "PRO"],
   },
   "/DAMIL-Clients/Classes": {
-    roles: ["Facility Admin", "System Admin", "Facility Staff"],
+    roles: ["Admin", "Administrator", "Staff"],
     abonnement: ["STARTER", "GROWTH", "PRO"],
   },
 
   // DAMIL Staff Members
   "/DAMIL-Staff/All": {
-    roles: ["Facility Admin", "System Admin"],
+    roles: ["Admin", "Administrator"],
     abonnement: ["PRO", "GROWTH"],
   },
   "/DAMIL-Staff/Roles": {
-    roles: ["Facility Admin", "System Admin"],
+    roles: ["Admin", "Administrator"],
     abonnement: ["PRO", "GROWTH"],
   },
   "/DAMIL-Staff/Shifts": {
-    roles: ["Facility Admin", "System Admin"],
+    roles: ["Admin", "Administrator"],
     abonnement: ["PRO", "GROWTH"],
   },
   "/DAMIL-Staff/Events": {
-    roles: ["Facility Admin", "System Admin"],
+    roles: ["Admin", "Administrator"],
     abonnement: ["PRO", "GROWTH"],
   },
 
   // DAMIL Configurations
   "/DAMIL-Configurations/Profile": { roles: ["ALL"], abonnement: ["ALL"] },
   "/DAMIL-Configurations/Member-Plans": {
-    roles: ["Facility Admin", "System Admin"],
+    roles: ["Admin", "Administrator"],
     abonnement: ["PRO", "GROWTH", "STARTER"],
   },
   "/DAMIL-Configurations/Subscription-Plans": {
-    roles: ["Facility Admin", "System Admin"],
+    roles: ["Admin", "Administrator"],
     abonnement: ["PRO", "GROWTH", "STARTER"],
   },
   "/account/change-credentials": { roles: ["ALL"], abonnement: ["ALL"] },
