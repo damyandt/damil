@@ -11,8 +11,8 @@ import {
 import { shiftHue } from "../Home/Home";
 import { useAuthedContext } from "../../context/AuthContext";
 import { useLanguageContext } from "../../context/LanguageContext";
-import NewsSection from "./NewsContainer";
-import ClassCard from "./ClassCard";
+import NewsSection from "./News/NewsContainer";
+import ClassCard from "./Classes/ClassCard";
 import { useState } from "react";
 import dayjs from "dayjs";
 

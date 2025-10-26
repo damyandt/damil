@@ -9,15 +9,16 @@ import {
   IconButton,
   LinearProgress,
   Chip,
+  CircularProgress,
 } from "@mui/material";
-import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
+import CustomTooltip from "../../../components/MaterialUI/CustomTooltip";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import { useLanguageContext } from "../../context/LanguageContext";
-import CustomModal from "../../components/MaterialUI/Modal";
-import Button from "../../components/MaterialUI/Button";
-import CellRenderer from "../../components/MaterialUI/Table/CellRenderer";
+import { useLanguageContext } from "../../../context/LanguageContext";
+import CustomModal from "../../../components/MaterialUI/Modal";
+import Button from "../../../components/MaterialUI/Button";
+import CellRenderer from "../../../components/MaterialUI/Table/CellRenderer";
 
 const ClassCard = ({
   isJoined,
@@ -32,7 +33,7 @@ const ClassCard = ({
 }) => {
   const { t } = useLanguageContext();
   const theme = useTheme();
-
+  const [loading, setLoading] = useState(true);
   const [openDetails, setOpenDetails] = useState(false);
 
   const handleJoin = (index: number) => {
@@ -277,13 +278,36 @@ const ClassCard = ({
                 <>
                   <Box
                     sx={{
+                      position: "relative",
                       width: "100%",
                       height: { xs: 250, md: 400 },
                       borderRadius: "16px",
                       overflow: "hidden",
-                      boxShadow: (theme) => theme.palette.customColors?.shodow,
                     }}
                   >
+                    {/* ✅ Loading overlay */}
+                    {loading && (
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          zIndex: 10,
+                          display: "flex", // ✅ centers the loader
+                          justifyContent: "center",
+                          alignItems: "center",
+                          backgroundColor: "rgba(255, 255, 255, 0.5)",
+                          transition: "opacity 0.3s ease",
+                          opacity: loading ? 1 : 0,
+                        }}
+                      >
+                        <CircularProgress />
+                      </Box>
+                    )}
+
+                    {/* Map iframe */}
                     <iframe
                       title="map"
                       width="100%"
@@ -295,7 +319,8 @@ const ClassCard = ({
                       src={`https://www.google.com/maps?q=${encodeURIComponent(
                         cls.location
                       )}&output=embed`}
-                    ></iframe>
+                      onLoad={() => setLoading(false)} // ✅ hide loader when done
+                    />
                   </Box>
                 </>
               ) : (

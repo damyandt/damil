@@ -25,10 +25,11 @@ import AccountCredentials from "../../components/pageComponents/UserComponents/A
 import SuccessPayment from "../../pages/usersPages/SuccessPayment";
 import Calendar from "../../pages/Staff/Calender";
 import AcceptClients from "../../pages/Access Control/AcceptClients";
-import Classes from "../../pages/MemberView/Classes";
 import MemberSubscription from "../../pages/MemberView/MemberSubscription";
 import NewsManagementPage from "../../pages/Clients/News";
 import BusinessSubscriptions from "../../pages/Configurations/BusinessSubscriptions";
+import Trainings from "../../pages/Clients/Trainings";
+import Classes from "../../pages/MemberView/Classes/Classes";
 export const createAppRouter = (
   userType:
     | "Facility Member"
@@ -154,7 +155,7 @@ const allRoutes = (role: string, abonnement: string | null) => {
     },
     {
       path: "/DAMIL-Clients/Classes",
-      element: <StaffRolesPage />,
+      element: <Trainings />,
     },
 
     // Configurations

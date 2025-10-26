@@ -84,7 +84,7 @@ const FiltersModal: React.FC<SearchModalProps> = ({
       <Grid container spacing={2}>
         <Grid size={12}>
           <List dense>
-            {Object.entries(flatData).map(([field, values]) => (
+            {Object.entries(flatData)?.map(([field, values]) => (
               <Box key={field} sx={{ mb: 1 }}>
                 <Typography
                   variant="subtitle1"
@@ -108,14 +108,14 @@ const FiltersModal: React.FC<SearchModalProps> = ({
                             pl: 0.5,
                             py: 0.5,
                             cursor: "pointer",
-                            color: tempSelected.includes(filterKey)
+                            color: tempSelected?.includes(filterKey)
                               ? theme.palette.text.primary
                               : "inherit",
                           }}
                           onClick={() => handleToggle(filterKey)}
                         >
                           <Checkbox
-                            checked={tempSelected.includes(filterKey)}
+                            checked={tempSelected?.includes(filterKey)}
                             size="small"
                           />
                           <Typography variant="body2">{`${key.replaceAll(

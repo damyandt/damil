@@ -14,6 +14,7 @@ interface DatePickerComponentProps
   sx?: SxProps<Theme>;
   format?: string;
   error?: boolean;
+  onEnterFunc?: () => void;
   helperText?: React.ReactNode;
 }
 
@@ -27,8 +28,24 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   sx = {},
   error,
   helperText,
+  onEnterFunc,
   ...rest
 }) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.stopPropagation();
+      e.preventDefault();
+      if (onEnterFunc) onEnterFunc();
+    }
+  };
+  const handlePopperKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.stopPropagation(); // stop event from bubbling up
+      if (onEnterFunc) onEnterFunc();
+      // DO NOT call e.preventDefault(), otherwise the date won't be picked
+    }
+  };
+
   return (
     <DatePicker
       label={label}
@@ -37,12 +54,32 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
       format={format}
       {...rest}
       slotProps={{
+        popper: {
+          onKeyDown: handlePopperKeyDown,
+        },
         textField: {
           fullWidth,
           margin: margin ?? "none",
           variant: "outlined",
           error,
           helperText,
+          onKeyDown: handleKeyDown,
+          openPickerButton: {
+            onClick: (e: React.MouseEvent) => {
+              e.stopPropagation();
+              e.preventDefault();
+            },
+            onMouseDown: (e: React.MouseEvent) => {
+              e.stopPropagation();
+              e.preventDefault();
+            },
+            onKeyDown: (e: React.KeyboardEvent) => {
+              if (e.key === "Enter") {
+                e.stopPropagation();
+                e.preventDefault();
+              }
+            },
+          },
           sx: {
             "& .MuiOutlinedInput-root": {
               borderRadius: 4,

@@ -5,7 +5,6 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-// import { NumericFormat, NumericFormatProps } from "react-number-format";
 import React from "react";
 import { SerializedStyles } from "@emotion/react";
 import AddIcon from "@mui/icons-material/Add";
@@ -91,42 +90,3 @@ const TextField: React.FC<TextFieldProps> = ({
 };
 
 export default TextField;
-
-// interface INumberFormatProps
-//   extends Omit<NumericFormatProps<string>, "onChange"> {
-//   onChange: (event: { target: { name: string; value: string } }) => void;
-//   name: string;
-//   nothousandseparator?: "true" | "false";
-//   allownegatives?: "true" | "false";
-//   noDecimalLimit?: "true" | "false";
-// }
-// type RefType = HTMLDivElement | null;
-
-// export const NumberFormatField = React.forwardRef<RefType, INumberFormatProps>(
-//   (props, ref) => {
-//     const { onChange, ...other } = props;
-
-//     const thousandSeparator = props.nothousandseparator !== "true";
-//     const decimalScale = props.noDecimalLimit === "true" ? undefined : 2;
-//     const allowNegative = props.allownegatives === "true";
-
-//     return (
-//       <NumericFormat
-//         {...other}
-//         getInputRef={ref}
-//         onValueChange={(values) => {
-//           onChange({
-//             target: {
-//               name: props.name || "",
-//               value: values.value,
-//             },
-//           });
-//         }}
-//         thousandSeparator={thousandSeparator}
-//         decimalScale={decimalScale}
-//         valueIsNumericString
-//         allowNegative={allowNegative}
-//       />
-//     );
-//   }
-// );

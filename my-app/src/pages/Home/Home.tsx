@@ -342,7 +342,7 @@ const HomePage: React.FC = () => {
             </Grid>
             <Grid size={12}>
               <Grid container spacing={2}>
-                {selectedFilters.map((filter: string, index: number) => {
+                {selectedFilters?.map((filter: string, index: number) => {
                   const [field, value] = filter.split(" - ");
 
                   return analyticsData ? (
