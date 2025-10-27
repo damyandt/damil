@@ -2,9 +2,9 @@ import { Box } from "@mui/system";
 import { IconButton, Typography } from "@mui/material";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import Add from "@mui/icons-material/Add";
-import Classes from "./Classes";
+import Classes from "../../MemberView/Classes/Classes";
 
-const Trainings = () => {
+const TrainingsPage = () => {
   const { t } = useLanguageContext();
 
   return (
@@ -28,4 +28,4 @@ const Trainings = () => {
   );
 };
 
-export default Trainings;
+export default TrainingsPage;

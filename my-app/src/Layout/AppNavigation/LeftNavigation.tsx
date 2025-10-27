@@ -264,7 +264,9 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
                 {authedUser?.lastName}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {authedUser?.roles?.join(", ")}
+                {authedUser?.roles
+                  ?.map((role) => t(role)) // translate each role
+                  .join(", ")}
               </Typography>
             </Box>
             <Box sx={{ display: "flex" }}>

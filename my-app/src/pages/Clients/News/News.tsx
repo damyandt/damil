@@ -12,7 +12,7 @@ import { getNews } from "./API/getQueries";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { NewsItem } from "./API/news";
 
-const NewsManagementPage = () => {
+const NewsPage = () => {
   const { t } = useLanguageContext();
   const [refresh, setRefresh] = useState<boolean>(false);
   const [newsList, setNewsItems] = useState<NewsItem[]>([]);
@@ -75,10 +75,13 @@ const NewsManagementPage = () => {
         title={t("Add")}
         paddingTop={0}
       >
-        <NewsForm setOpen={setOpen} />
+        <NewsForm
+          setOpen={setOpen}
+          triggerRefetch={() => setRefresh((prev: boolean) => !prev)}
+        />
       </CustomModal>
     </Box>
   );
 };
 
-export default NewsManagementPage;
+export default NewsPage;

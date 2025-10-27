@@ -41,7 +41,7 @@ export const descriptionMap = (type: string, word: string, t: any) => {
     case "plan":
       final = `${word} ${t("Plans")}`;
       break;
-    case "status":
+    case "subscriptionStatus":
       final = `${word} ${t("Members")}`;
       break;
   }
@@ -68,12 +68,10 @@ const HomePage: React.FC = () => {
   const [openFilterConfig, setOpenFilterConfig] = useState<boolean>(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const { t } = useLanguageContext();
-  const handleSearchMember = () => {
-    setOpenSearch(true);
-  };
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
   const primary = theme.palette.primary.main;
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const colorStart = isDark
     ? shiftHue(lighten(primary, 0.1), -20)
@@ -86,6 +84,10 @@ const HomePage: React.FC = () => {
     setSelectedFilters(preferences.homeFilters);
   }, [preferences]);
 
+  useEffect(() => {
+    fetchAnalyticsData();
+  }, []);
+
   const fetchAnalyticsData = async () => {
     const response = await callApi<Response<any>>({
       query: getAnalyticsForHomePage(),
@@ -94,11 +96,9 @@ const HomePage: React.FC = () => {
     response.success && response.data && setAnalyticsData(response.data.ratios);
   };
 
-  useEffect(() => {
-    fetchAnalyticsData();
-  }, []);
-
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const handleSearchMember = () => {
+    setOpenSearch(true);
+  };
 
   return (
     <>
@@ -236,7 +236,7 @@ const HomePage: React.FC = () => {
                   transform: "scale(0.97)",
                 },
               }}
-              color={isDark ? "info" : "primary"}
+              color={"primary"}
               startIcon={<LoginIcon />}
               onClick={() => setOpenCheckIn(true)}
             >
@@ -309,14 +309,14 @@ const HomePage: React.FC = () => {
                   transform: "scale(0.97)",
                 },
               }}
-              color={isDark ? "info" : "primary"}
+              color={"primary"}
               onClick={handleSearchMember}
             >
               {t("Search Member")}
             </Button>
           </Grid>
         </Grid>
-        {tenant.abonnement === "PRO" && (
+        {tenant?.abonnement === "PRO" && (
           <Grid container spacing={3} pt={3}>
             <Grid size={12}>
               <Button

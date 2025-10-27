@@ -172,9 +172,9 @@ const NewCard = ({ item, handleOpen, editable, triggerRefetch }: any) => {
         open={openDeleteModal}
         onClose={() => setOpenDeleteModal(false)}
         title={t("Confirm Deletion")}
-        width={"lg"}
+        width={"md"}
       >
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h5" gutterBottom textAlign={"center"}>
           {t("Are you sure you want to delete it?")}
         </Typography>
         <Stack

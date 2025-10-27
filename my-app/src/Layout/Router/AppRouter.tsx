@@ -26,9 +26,9 @@ import SuccessPayment from "../../pages/usersPages/SuccessPayment";
 import Calendar from "../../pages/Staff/Calender";
 import AcceptClients from "../../pages/Access Control/AcceptClients";
 import MemberSubscription from "../../pages/MemberView/MemberSubscription";
-import NewsManagementPage from "../../pages/Clients/News/News";
+import NewsPage from "../../pages/Clients/News/News";
 import BusinessSubscriptions from "../../pages/Configurations/BusinessSubscriptions";
-import Trainings from "../../pages/MemberView/Classes/Trainings";
+import TrainingsPage from "../../pages/Clients/Classes/TrainingsPage";
 import Classes from "../../pages/MemberView/Classes/Classes";
 import { Role } from "../../pages/usersPages/api/userTypes";
 export const createAppRouter = (
@@ -148,11 +148,11 @@ const allRoutes = (role: string, abonnement: string | null) => {
     // For Clients
     {
       path: "/DAMIL-Clients/News",
-      element: <NewsManagementPage />,
+      element: <NewsPage />,
     },
     {
       path: "/DAMIL-Clients/Classes",
-      element: <Trainings />,
+      element: <TrainingsPage />,
     },
 
     // Configurations

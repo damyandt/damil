@@ -41,16 +41,18 @@ const FiltersModal: React.FC<SearchModalProps> = ({
   }, [openFilterConfig, selectedFilters]);
 
   const handleToggle = (key: string) => {
-    if (tempSelected.includes(key)) {
-      setTempSelected(tempSelected.filter((f) => f !== key));
+    const selected = tempSelected || [];
+    if (selected.includes(key)) {
+      setTempSelected(selected.filter((f) => f !== key));
     } else {
-      if (tempSelected.length < 4) {
-        setTempSelected([...tempSelected, key]);
+      if (selected.length < 4) {
+        setTempSelected([...selected, key]);
       } else {
-        setTempSelected([...tempSelected.slice(1), key]);
+        setTempSelected([...selected.slice(1), key]);
       }
     }
   };
+
   const handleSave = async () => {
     setSelectedFilters(tempSelected);
     await callApi<Response<any>>({

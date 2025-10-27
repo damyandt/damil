@@ -13,10 +13,12 @@ import callApi from "../../../API/callApi";
 import { editNewsItem, postNewsItem } from "./API/postQueries";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { NewsItem } from "./API/news";
+import dayjs from "dayjs";
 
 interface NewsFormProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
   data?: NewsItem;
+  triggerRefetch?: () => void;
 }
 
 const roles: { label: string; value: Role }[] = [
@@ -24,19 +26,7 @@ const roles: { label: string; value: Role }[] = [
   { label: "Staff", value: "Staff" },
 ];
 
-// export interface NewsItem {
-//   id?: number | null;
-//   title: string;
-//   content: string;
-//   importance: "Low" | "Medium" | "High";
-//   expiresOn: any;
-//   publicationType?: "ALL" | "TARGETED";
-//   targetRoles?: Roles[] | [];
-//   targetSpecific?: boolean;
-//   recipientsIds?: number[];
-// }
-
-const NewsForm = ({ setOpen, data }: NewsFormProps) => {
+const NewsForm = ({ setOpen, data, triggerRefetch }: NewsFormProps) => {
   const { t } = useLanguageContext();
   const { setAuthedUser } = useAuthedContext();
   const [formData, setFormData] = useState<NewsItem>(
@@ -59,6 +49,8 @@ const NewsForm = ({ setOpen, data }: NewsFormProps) => {
       query: data ? editNewsItem(formData) : postNewsItem(formData),
       auth: { setAuthedUser },
     });
+    triggerRefetch?.();
+    setOpen(false);
   };
 
   // useEffect(() => {}, []);
@@ -109,6 +101,7 @@ const NewsForm = ({ setOpen, data }: NewsFormProps) => {
           label={t("Expires On")}
           value={formData.expiresOn}
           onChange={(date) => setFormData({ ...formData, expiresOn: date })}
+          minDate={dayjs()}
         />
       </Grid>
 

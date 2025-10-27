@@ -81,7 +81,11 @@ const NewsSection: React.FC<NewsSectionProps> = ({
         width="md"
         title={t("Edit")}
       >
-        <NewsForm setOpen={setOpenEdit} data={formData} />
+        <NewsForm
+          setOpen={setOpenEdit}
+          data={formData}
+          triggerRefetch={triggerRefetch}
+        />
       </CustomModal>
       <CustomModal
         open={openView}
