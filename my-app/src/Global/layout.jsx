@@ -1,7 +1,7 @@
 export const TOP_RIGHT_NAV_HEIGHT = "54px";
 export const TOP_NAV_PADDING = "24px";
 export const RIGHT_NAV_PADDING = "12px";
-export const TOP_NAV_SPACING_WITH_SITE_CONTENT = `calc(${TOP_RIGHT_NAV_HEIGHT} + ${TOP_NAV_PADDING})`;
+export const TOP_NAV_SPACING_WITH_SITE_CONTENT = `calc(${TOP_NAV_PADDING})`;
 export const LEFT_NAV_WIDTH = "350px";
 export const HELP_PAGE_WIDTH = "50vw";
 export const HELP_PAGE_WIDTH_MOBILE = "100vw";

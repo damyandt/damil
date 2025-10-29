@@ -1,19 +1,20 @@
 import { Grid } from "@mui/system";
 import TextField from "../../../components/MaterialUI/FormFields/TextField";
 import { useLanguageContext } from "../../../context/LanguageContext";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import DatePickerComponent from "../../../components/MaterialUI/FormFields/DatePicker";
 import { FormControlLabel, MenuItem } from "@mui/material";
 import Checkbox from "../../../components/MaterialUI/FormFields/Checkbox";
 import Collapse from "../../../components/MaterialUI/Collapse";
 import Button from "../../../components/MaterialUI/Button";
 import { Role } from "../../usersPages/api/userTypes";
-import { Response } from "../../../Global/Types/commonTypes";
+import { Enum, Response } from "../../../Global/Types/commonTypes";
 import callApi from "../../../API/callApi";
 import { editNewsItem, postNewsItem } from "./API/postQueries";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { NewsItem } from "./API/news";
 import dayjs from "dayjs";
+import { getMembersEnums, getStaffEnums } from "./API/getQueries";
 
 interface NewsFormProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -21,14 +22,16 @@ interface NewsFormProps {
   triggerRefetch?: () => void;
 }
 
-const roles: { label: string; value: Role }[] = [
-  { label: "Member", value: "Member" },
-  { label: "Staff", value: "Staff" },
+const roles: Enum[] = [
+  { title: "Member", value: "Member" },
+  { title: "Staff", value: "Staff" },
 ];
 
 const NewsForm = ({ setOpen, data, triggerRefetch }: NewsFormProps) => {
   const { t } = useLanguageContext();
   const { setAuthedUser } = useAuthedContext();
+  const [members, setMembers] = useState<Enum[]>();
+  const [staffs, setStaffs] = useState<Enum[]>();
   const [formData, setFormData] = useState<NewsItem>(
     data ?? {
       title: "",
@@ -36,12 +39,12 @@ const NewsForm = ({ setOpen, data, triggerRefetch }: NewsFormProps) => {
       importance: "LOW",
       expiresOn: null,
       publicationType: "ALL",
-      targetRoles: [],
+      targetRoles: ["Member", "Staff"],
       targetSpecific: false,
       recipientsIds: [0],
     }
   );
-
+  const firstRender = useRef<boolean>(true);
   const handleSave = async () => {
     if (!formData.title.trim()) return;
 
@@ -53,7 +56,62 @@ const NewsForm = ({ setOpen, data, triggerRefetch }: NewsFormProps) => {
     setOpen(false);
   };
 
-  // useEffect(() => {}, []);
+  const handleFetchMembers = async () => {
+    const membersRes = await callApi<Response<any>>({
+      query: getMembersEnums(),
+      auth: { setAuthedUser },
+    });
+    membersRes.success && setMembers(membersRes.data);
+  };
+
+  const handleFetchStaff = async () => {
+    const staffRes = await callApi<Response<any>>({
+      query: getStaffEnums(),
+      auth: { setAuthedUser },
+    });
+    staffRes.success && setStaffs(staffRes.data);
+  };
+
+  useEffect(() => {
+    const fetchPeople = async () => {
+      const { targetRoles } = formData;
+
+      if (!members) await handleFetchMembers();
+      if (!staffs) await handleFetchStaff();
+
+      if (firstRender.current) {
+        // Skip resetting recipientsIds on first render
+        firstRender.current = false;
+        return;
+      }
+
+      if (targetRoles.length === 0) {
+        setFormData((prev) => ({ ...prev, recipientsIds: [] }));
+        return;
+      }
+
+      if (targetRoles.length <= 1) {
+        setFormData((prev) => ({
+          ...prev,
+          recipientsIds: [],
+        }));
+        return;
+      }
+    };
+
+    fetchPeople();
+  }, [formData.targetRoles]);
+
+  const availableUsers: Enum[] = (
+    (formData.targetRoles as Role[] | undefined)?.includes("Member")
+      ? members ?? []
+      : []
+  ).concat(
+    (formData.targetRoles as Role[] | undefined)?.includes("Staff")
+      ? staffs ?? []
+      : []
+  );
+
   return (
     <Grid container spacing={2}>
       <Grid size={12}>
@@ -115,7 +173,6 @@ const NewsForm = ({ setOpen, data, triggerRefetch }: NewsFormProps) => {
                 setFormData({
                   ...formData,
                   publicationType: e.target.checked ? "ALL" : "TARGETED",
-                  targetRoles: [],
                   recipientsIds: [],
                 })
               }
@@ -138,9 +195,9 @@ const NewsForm = ({ setOpen, data, triggerRefetch }: NewsFormProps) => {
                 const labels = selectedRoles
                   .map(
                     (role: Role) =>
-                      roles.find((r) => r.value === role)?.label || role
+                      roles.find((r) => r.value === role)?.title || role
                   )
-                  .map((label) => t(label))
+                  .map((title) => t(title))
                   .join(", ");
                 return labels;
               },
@@ -153,9 +210,9 @@ const NewsForm = ({ setOpen, data, triggerRefetch }: NewsFormProps) => {
             }
             fullWidth
           >
-            {roles.map((item: { label: string; value: Role }) => (
+            {roles.map((item: Enum) => (
               <MenuItem key={item.value} value={item.value}>
-                {t(item.label)}
+                {t(item.title)}
               </MenuItem>
             ))}
           </TextField>
@@ -187,36 +244,40 @@ const NewsForm = ({ setOpen, data, triggerRefetch }: NewsFormProps) => {
           <TextField
             select
             label={t("Select Person(s)")}
+            value={formData.recipientsIds || []}
             SelectProps={{
               multiple: true,
               renderValue: (selected) => {
-                const selectedRoles = selected as Role[];
+                const selectedRoles = selected as number[];
                 const labels = selectedRoles
                   .map(
-                    (role: Role) =>
-                      roles.find((r) => r.value === role)?.label || role
+                    (person: number) =>
+                      availableUsers.find((r) => r.value == person)?.title ||
+                      person
                   )
-                  .map((label) => t(label))
                   .join(", ");
                 return labels;
               },
             }}
-            value={formData.recipientsIds}
             onChange={(e) => {
-              const value = e.target.value;
               setFormData({
                 ...formData,
-                recipientsIds:
-                  typeof value === "string"
-                    ? value.split(",").map(Number)
-                    : (value as (string | number)[]).map(Number),
+                recipientsIds: e.target.value as unknown as number[],
               });
             }}
             fullWidth
           >
-            <MenuItem value={3}>John Doe</MenuItem>
-            <MenuItem value={2}>Jane Smith</MenuItem>
-            <MenuItem value={1}>Alex Kim</MenuItem>
+            {availableUsers.length === 0 ? (
+              <MenuItem key={"No Users"} value={"no"} disabled>
+                {t("No Users")}
+              </MenuItem>
+            ) : (
+              availableUsers.map((person) => (
+                <MenuItem key={person.value} value={person.value}>
+                  {person.title}
+                </MenuItem>
+              ))
+            )}
           </TextField>
         </Collapse>
       </Grid>

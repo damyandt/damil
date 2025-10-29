@@ -39,7 +39,7 @@ export interface Response<TData> {
 
 export type Enum = {
   title: string;
-  value: string;
+  value: string | number;
 };
 
 export type ColumnType =

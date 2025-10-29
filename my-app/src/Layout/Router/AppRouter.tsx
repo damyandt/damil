@@ -29,8 +29,8 @@ import MemberSubscription from "../../pages/MemberView/MemberSubscription";
 import NewsPage from "../../pages/Clients/News/News";
 import BusinessSubscriptions from "../../pages/Configurations/BusinessSubscriptions";
 import TrainingsPage from "../../pages/Clients/Classes/TrainingsPage";
-import Classes from "../../pages/MemberView/Classes/Classes";
 import { Role } from "../../pages/usersPages/api/userTypes";
+import MembersClassesView from "../../pages/MemberView/Classes/MembersClassesView";
 export const createAppRouter = (
   userType: Role,
   abonnement: "PRO" | "STARTER" | "GROWTH" | null
@@ -82,7 +82,7 @@ const allRoutes = (role: string, abonnement: string | null) => {
     },
     {
       path: "Member/Classes",
-      element: <Classes />,
+      element: <MembersClassesView />,
     },
     {
       path: "Member/Subscription",

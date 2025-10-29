@@ -12,7 +12,7 @@ import { shiftHue } from "../Home/Home";
 import { useAuthedContext } from "../../context/AuthContext";
 import { useLanguageContext } from "../../context/LanguageContext";
 import NewsSection from "../Clients/News/NewsContainer";
-import ClassCard from "./Classes/ClassCard";
+import ClassCard from "../Clients/Classes/ClassCard";
 import { useEffect, useState } from "react";
 import { NewsItem } from "../Clients/News/API/news";
 import callApi from "../../API/callApi";
