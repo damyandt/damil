@@ -120,6 +120,42 @@ const CellRenderer = ({
       );
       break;
 
+    case "datetime": {
+      const isISODate =
+        typeof value === "string" &&
+        /^\d{4}-\d{2}-\d{2}T/.test(value) &&
+        dayjs(value).isValid();
+
+      const formatted = isISODate
+        ? dayjs(value).format("DD/MM/YYYY HH:mm")
+        : dayjs(value).isValid()
+        ? dayjs(value).format("DD/MM/YYYY HH:mm")
+        : "Invalid DateTime";
+
+      displayValue = (
+        <Box
+          component={"span"}
+          sx={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 1,
+            px: 1.5,
+            py: 0.5,
+            border: `1px solid ${isDark ? "#81d4fa" : "#0288d1"}`,
+            backgroundColor: isDark ? "#0d47a1" : "#e1f5fe",
+            borderRadius: "10px",
+            fontSize: "0.75rem",
+            color: isDark ? "#81d4fa" : "#0288d1",
+            fontWeight: 700,
+          }}
+        >
+          <EventIcon fontSize="small" />
+          {formatted}
+        </Box>
+      );
+      break;
+    }
+
     case "dropdown":
     case "enum": {
       if (

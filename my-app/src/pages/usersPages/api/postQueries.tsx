@@ -48,7 +48,7 @@ export const updateProfile = (input: any): Query => ({
 });
 
 export const savePreferences = (input: any): Query => ({
-  endpoint: `users/settings/update/me`,
+  endpoint: `settings`,
   method: "PUT",
   variables: input,
 });
@@ -60,7 +60,7 @@ export const stripePaymentIntent = (input: any): Query => ({
 });
 
 export const selfAdding = (input: any, id: number): Query => ({
-  endpoint: `public/access-requests/${id}`,
+  endpoint: `access-requests/${id}`,
   method: "POST",
   variables: input,
 });

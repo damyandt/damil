@@ -7,6 +7,8 @@ import ClassCard from "./ClassCard";
 import { Class } from "./API/classes";
 import CalendarView from "./CalenderView";
 import { useState } from "react";
+import TableComponent from "../../../components/MaterialUI/Table/Table";
+import { dataForTable } from "./mockData";
 
 interface ClassesProps {
   classes: Class[];
@@ -14,7 +16,9 @@ interface ClassesProps {
 
 const ClassesContainer: React.FC<ClassesProps> = ({ classes }) => {
   const { t } = useLanguageContext();
-  const [tab, setTab] = useState("Card View");
+  const [tab, setTab] = useState<"Card View" | "Calender View" | "Table View">(
+    "Card View"
+  );
   // const [joinedClasses, setJoinedClasses] = useState<number[]>([4, 5, 6]);
 
   // const displayedClasses =
@@ -23,7 +27,7 @@ const ClassesContainer: React.FC<ClassesProps> = ({ classes }) => {
   //     : classes.filter((_, i) => joinedClasses.includes(i)); // Booked
 
   return (
-    <Box sx={{ p: 2, minHeight: `calc(100dvh - 140px)` }}>
+    <Box sx={{ p: 2 }}>
       {/* Tabs */}
       <Box
         sx={{
@@ -41,6 +45,7 @@ const ClassesContainer: React.FC<ClassesProps> = ({ classes }) => {
         >
           <Tab value={"Card View"} label={t("Card View")} />
           <Tab value={"Calender View"} label={t("Calender View")} />
+          <Tab value={"Table View"} label={t("Table View")} />
         </Tabs>
       </Box>
 
@@ -75,6 +80,15 @@ const ClassesContainer: React.FC<ClassesProps> = ({ classes }) => {
         </Grid>
       )}
       {tab === "Calender View" && <CalendarView classes={classes} />}
+      {tab === "Table View" && (
+        <TableComponent
+          configurations={dataForTable?.config}
+          columns={dataForTable?.columns || []}
+          rows={classes || []}
+          // setRefreshTable={setRefreshTable}
+          title={t("Subscription Plans")}
+        />
+      )}
     </Box>
   );
 };

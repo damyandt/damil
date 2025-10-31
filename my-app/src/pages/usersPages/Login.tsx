@@ -16,6 +16,7 @@ import { useLanguageContext } from "../../context/LanguageContext";
 import LoginForm from "../../components/pageComponents/UserComponents/LoginForm";
 import TextType from "../../components/ogl/textTyping";
 import CustomTooltip from "../../components/MaterialUI/CustomTooltip";
+import { useMediaQuery } from "@mui/system";
 
 export const hexToVec3 = (hex: string): [number, number, number] => {
   const [r, g, b] = hexToRgb(hex)
@@ -28,7 +29,7 @@ const LoginPage = () => {
   const { t, setLanguage, language } = useLanguageContext();
   const theme = useTheme();
   const MemoizedOrb = React.memo(Orb);
-
+  const smMediaQuery = useMediaQuery("(max-width:600px)");
   const primaryColor = hexToVec3(theme.palette.primary.main);
   return (
     <>
@@ -121,7 +122,7 @@ const LoginPage = () => {
         <Box
           sx={{
             width: "100%",
-            maxWidth: "28vw",
+            maxWidth: smMediaQuery ? "90vw" : "28vw",
             display: "flex",
             flexDirection: "column",
             gap: 2,

@@ -487,10 +487,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
         <NewSubscriptionPlan
           rowData={userDetails ? userDetails[0] : null}
           setOpen={setOpenBuyPlan}
-          enumEndpoints={[
-            "users/membership/plans/options",
-            "Employment/values",
-          ]}
+          enumEndpoints={["users/membership/plans/options", "enums/Employment"]}
           refreshFunc={async () => {
             const response: Response<Array<Partial<User>>> = await callApi<any>(
               {
@@ -500,10 +497,10 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
             );
 
             if (response.success && response.data.length > 0) {
-              setUserDetails(response.data); // ✅ show results in Popper
+              setUserDetails(response.data);
               setErrors({});
             } else {
-              setUserDetails([]); // empty dropdown
+              setUserDetails([]);
               setErrors({
                 search: t(
                   `Can't find user with ${searchType} - ${searchInput}`

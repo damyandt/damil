@@ -18,11 +18,11 @@ export const postSubscription = (formData: any, id: any): Query => ({
 });
 
 export const acceptClient = (id: any): Query => ({
-  endpoint: `admin/access-requests/${id}/approve`,
+  endpoint: `access-requests/${id}/approve`,
   method: "PATCH",
 });
 
 export const rejectClient = (id: any): Query => ({
-  endpoint: `admin/access-requests/${id}/reject`,
+  endpoint: `access-requests/${id}/reject`,
   method: "PATCH",
 });

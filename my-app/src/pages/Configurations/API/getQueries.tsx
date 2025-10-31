@@ -13,7 +13,7 @@ export const postPlans = (plans: SubscriptionPlan[]): Query => ({
 });
 
 export const getSubscriptionPlans = (): Query => ({
-  endpoint: `SubscriptionPlan/values`,
+  endpoint: `enums/SubscriptionPlan`,
   method: "GET",
 });
 

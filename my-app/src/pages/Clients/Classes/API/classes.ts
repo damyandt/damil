@@ -1,4 +1,5 @@
 export interface Class {
+  id?: number;
   title: string;
   date: string;
   duration: string;

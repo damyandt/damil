@@ -229,10 +229,10 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
                 }
                 fullWidth
               >
-                {!options["Employment/values"] ? (
+                {!options["admin/Employment"] ? (
                   <MenuItem value="loading">{t("Loading...")}</MenuItem>
                 ) : (
-                  options["Employment/values"].map(
+                  options["admin/Employment"].map(
                     (option: { title: string; value: string | number }) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.title}

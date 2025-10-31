@@ -2,7 +2,7 @@ import { Query } from "../../../API/callApi";
 import { DataForCardLinkStripe } from "./userTypes";
 
 export const getPreferences = (): Query => ({
-  endpoint: `users/settings/me`,
+  endpoint: `settings`,
   method: "GET",
 });
 

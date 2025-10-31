@@ -47,6 +47,7 @@ export type ColumnType =
   | "number"
   | "boolean"
   | "date"
+  | "datetime"
   | "custom"
   | "enum"
   | "dropdown"
