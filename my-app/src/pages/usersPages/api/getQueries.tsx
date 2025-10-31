@@ -7,7 +7,7 @@ export const getPreferences = (): Query => ({
 });
 
 export const getGyms = (): Query => ({
-  endpoint: "tenant/all/short",
+  endpoint: "tenants/lookup",
   method: "GET",
 });
 

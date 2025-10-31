@@ -6,11 +6,11 @@ export const getNews = (): Query => ({
 });
 
 export const getMembersEnums = (): Query => ({
-  endpoint: `user/users/roles?roleNames=MEMBER`,
+  endpoint: `users/lookup?roleNames=MEMBER`,
   method: "GET",
 });
 
 export const getStaffEnums = (): Query => ({
-  endpoint: `user/users/roles?roleNames=STAFF`,
+  endpoint: `user/lookup/roles?roleNames=STAFF`,
   method: "GET",
 });

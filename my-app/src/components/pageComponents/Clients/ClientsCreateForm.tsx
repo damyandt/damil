@@ -294,8 +294,8 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 helperText={errors["subscriptionPlan"]}
                 fullWidth
               >
-                {!options?.["users/membership/plans/options"] ||
-                options?.["users/membership/plans/options"]?.length < 1 ? (
+                {!options?.["memberships"] ||
+                options?.["memberships"]?.length < 1 ? (
                   <MenuItem
                     onClick={() =>
                       navigate("/DAMIL-Configurations/Member-Plans")

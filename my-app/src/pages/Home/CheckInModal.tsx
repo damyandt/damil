@@ -487,7 +487,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
         <NewSubscriptionPlan
           rowData={userDetails ? userDetails[0] : null}
           setOpen={setOpenBuyPlan}
-          enumEndpoints={["users/membership/plans/options", "enums/Employment"]}
+          enumEndpoints={["memberships", "enums/Employment"]}
           refreshFunc={async () => {
             const response: Response<Array<Partial<User>>> = await callApi<any>(
               {

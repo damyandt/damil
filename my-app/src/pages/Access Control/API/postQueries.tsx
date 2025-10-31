@@ -1,12 +1,12 @@
 import { Query } from "../../../API/callApi";
 
 export const checkInMember = (searchQuery: string | number): Query => ({
-  endpoint: `users/members/${searchQuery}/check-in`,
+  endpoint: `members/${searchQuery}/check-in`,
   method: "POST",
 });
 
 export const postMember = (formData: any): Query => ({
-  endpoint: `users/members`,
+  endpoint: `members`,
   method: "POST",
   variables: formData,
 });

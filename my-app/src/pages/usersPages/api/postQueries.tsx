@@ -36,13 +36,8 @@ export const codeVerificationResend = (input: any): Query => ({
   variables: input,
 });
 
-export const completeProfile = (input: any): Query => ({
-  endpoint: `user/update`,
-  method: "PUT",
-  variables: input,
-});
 export const updateProfile = (input: any): Query => ({
-  endpoint: `user`,
+  endpoint: `users`,
   method: "PATCH",
   variables: input,
 });

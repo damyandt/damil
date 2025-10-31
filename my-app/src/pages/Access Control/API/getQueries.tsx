@@ -1,7 +1,7 @@
 import { Query } from "../../../API/callApi";
 
 export const getClientsTable = (filter?: string): Query => {
-  let endpoint = "users/members";
+  let endpoint = "members";
 
   filter && (endpoint += `?${filter}`);
 
@@ -15,7 +15,7 @@ export const getMember = (
   searchQuery: string | number,
   searchType: any = "id"
 ): Query => {
-  let endpoint = "users/members/search?";
+  let endpoint = "members/search?";
 
   switch (searchType) {
     case "id":
@@ -63,12 +63,12 @@ export const getPeriodVisitors = (
   startDate: string,
   endDate: string
 ): Query => ({
-  endpoint: `members/period/${id}/${startDate}/${endDate}`,
+  endpoint: `visits/period/${id}/${startDate}/${endDate}`,
   method: "GET",
 });
 
 export const getClientVisits = (id: string): Query => ({
-  endpoint: `members/${id}/visits`,
+  endpoint: `visits/${id}`,
   method: "GET",
 });
 

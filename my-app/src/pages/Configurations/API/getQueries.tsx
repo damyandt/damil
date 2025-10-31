@@ -2,7 +2,7 @@ import { Query } from "../../../API/callApi";
 import { SubscriptionPlan } from "../../../components/pageComponents/Configurations/MemberSubscription/AddNewPlanPaper";
 
 export const getSubscriptionPlansTable = (): Query => ({
-  endpoint: `membership-plans`,
+  endpoint: `membership-plans/table`,
   method: "GET",
 });
 
@@ -18,6 +18,6 @@ export const getSubscriptionPlans = (): Query => ({
 });
 
 export const getCurrentSubscriptionPlans = (): Query => ({
-  endpoint: `users/membership/plans/options`,
+  endpoint: "memberships",
   method: "GET",
 });

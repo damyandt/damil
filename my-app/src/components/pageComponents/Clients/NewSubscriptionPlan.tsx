@@ -194,8 +194,8 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
                 }
                 fullWidth
               >
-                {!options?.["users/membership/plans/options"] ||
-                options?.["users/membership/plans/options"]?.length < 1 ? (
+                {!options?.["memberships"] ||
+                options?.["memberships"]?.length < 1 ? (
                   <MenuItem
                     onClick={() =>
                       navigate("/DAMIL-Configurations/Member-Plans")
@@ -207,7 +207,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
                     {t("Set Up PLans")}
                   </MenuItem>
                 ) : (
-                  options["users/membership/plans/options"].map(
+                  options["memberships"].map(
                     (option: { title: string; value: string | number }) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.title}

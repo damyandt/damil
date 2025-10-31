@@ -1,12 +1,12 @@
 import { Query } from "../../API/callApi";
 
 export const getQueryUsersGetCurrentUser = (): Query => ({
-  endpoint: "user/me",
+  endpoint: "users/current",
   method: "GET",
 });
 
 export const getQueryUserTenant = (): Query => ({
-  endpoint: "tenant",
+  endpoint: "tenants",
   method: "GET",
 });
 

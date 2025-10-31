@@ -126,7 +126,7 @@ const clientCustomActions = [
       <NewSubscriptionPlan
         rowData={rowData}
         setOpen={setOpen}
-        enumEndpoints={["users/membership/plans/options", "enums/Employment"]}
+        enumEndpoints={["memberships", "enums/Employment"]}
         refreshFunc={() => {
           setRefreshTable((prev: boolean) => !prev);
         }}
