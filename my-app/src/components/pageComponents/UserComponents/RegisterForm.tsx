@@ -1,5 +1,6 @@
 import {
   Box,
+  CircularProgress,
   Grid,
   IconButton,
   InputAdornment,
@@ -40,6 +41,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
   const { t } = useLanguageContext();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [verificationCode, setCode] = useState<string>("");
   const [resendCooldown, setResendCooldown] = useState<number>(0);
   const [business, setBusiness] = useState<Business>({
@@ -56,11 +58,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
   });
 
   const handleRegister = async () => {
-    if (!registerValidator(step, business, admin, setErrors)) {
+    if (!registerValidator(step, business, admin, setErrors, t)) {
       console.warn("Form validation failed!");
       return;
     }
     try {
+      setLoading(true);
       const responce = await callApi<Response<any>>({
         query: postRegister({ tenantDto: business, userDto: admin }),
         auth: null,
@@ -84,6 +87,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
       }
     } catch (error) {
       console.error("Register failed:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -130,7 +135,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
   }, [resendCooldown]);
 
   const handleSubmitVerificationCode = async () => {
-    if (!registerValidator(step, business, admin, setErrors)) {
+    if (!registerValidator(step, business, admin, setErrors, t)) {
       console.warn("Form validation failed!");
       return;
     }
@@ -181,6 +186,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
               fullWidth
               label={errors["name"] || t("Business Name")}
               error={!!errors["name"]}
+              value={business.name}
               onChange={(e) =>
                 setBusiness((prev: Business) => ({
                   ...prev,
@@ -191,23 +197,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
           </Grid>
           <Grid size={12}>
             <TextField
-              fullWidth
-              label={errors["email"] || t("Business Email")}
               type="email"
-              error={!!errors["email"]}
+              fullWidth
+              label={errors["businessEmail"] || t("Business Email")}
+              error={!!errors["businessEmail"]}
+              value={business.businessEmail}
               onChange={(e) =>
                 setBusiness((prev: Business) => ({
                   ...prev,
                   businessEmail: e.target.value,
                 }))
               }
-              // onKeyDown={(e) => {
-              //   e.key === "Enter" &&
-              //     registerValidator(step, business, admin, setErrors) &&
-              //     setStep((prev: number) => (prev += 1));
-              // }}
               onEnterFunc={() => {
-                registerValidator(step, business, admin, setErrors) &&
+                registerValidator(step, business, admin, setErrors, t) &&
                   setStep((prev: number) => (prev += 1));
               }}
               InputProps={{
@@ -217,8 +219,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
                       <IconButton
                         edge="end"
                         onClick={() => {
-                          registerValidator(step, business, admin, setErrors) &&
-                            setStep((prev: number) => (prev += 1));
+                          registerValidator(
+                            step,
+                            business,
+                            admin,
+                            setErrors,
+                            t
+                          ) && setStep((prev: number) => (prev += 1));
                         }}
                         size="small"
                       >
@@ -252,17 +259,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
               fullWidth
               label={errors["address"] || t("Address")}
               error={!!errors["address"]}
-              // onKeyDown={(e) => {
-              //   if (e.key === "Enter") {
-              //     e.preventDefault(); // ✅ Prevent form submission or unwanted action
-              //     e.stopPropagation(); // ✅ Optional: block global handlers
-
-              //     registerValidator(step, business, admin, setErrors) &&
-              //       setStep((prev: number) => (prev += 1));
-              //   }
-              // }}
               onEnterFunc={() => {
-                registerValidator(step, business, admin, setErrors) &&
+                registerValidator(step, business, admin, setErrors, t) &&
                   setStep((prev: number) => (prev += 1));
               }}
               onChange={(e) =>
@@ -278,8 +276,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
                       <IconButton
                         edge="end"
                         onClick={() => {
-                          registerValidator(step, business, admin, setErrors) &&
-                            setStep((prev: number) => (prev += 1));
+                          registerValidator(
+                            step,
+                            business,
+                            admin,
+                            setErrors,
+                            t
+                          ) && setStep((prev: number) => (prev += 1));
                         }}
                         size="small"
                       >
@@ -297,6 +300,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
         <Grid container spacing={2} zIndex={10}>
           <Grid size={12}>
             <TextField
+              disabled={loading}
               fullWidth
               label={errors["email"] || t("Email")}
               type="email"
@@ -306,6 +310,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
           </Grid>
           <Grid size={12}>
             <TextField
+              disabled={loading}
               label={errors["password"] || t("Password")}
               fullWidth
               type={showPassword ? "text" : "password"}
@@ -335,6 +340,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
           </Grid>
           <Grid size={12}>
             <TextField
+              disabled={loading}
               label={errors["confirmPassword"] || "Confirm Password"}
               fullWidth
               type={showPassword ? "text" : "password"}
@@ -363,7 +369,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
                         }}
                         size="small"
                       >
-                        <ArrowForwardIcon />
+                        {loading ? <CircularProgress /> : <ArrowForwardIcon />}
                       </IconButton>
                     </InputAdornment>
                   </Box>

@@ -6,7 +6,7 @@ const TrainingsPage = () => {
   return (
     <Box
       sx={{
-        p: 1,
+        // p: 1,
         minHeight: `calc(100dvh - 140px)`,
       }}
     >

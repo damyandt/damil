@@ -6,7 +6,12 @@ import { getCookie } from "../Global/Utils/commonFunctions";
 import { User } from "../pages/usersPages/api/userTypes";
 export const COOKIE_ACCESS_TOKEN = "accessToken";
 export const COOKIE_REFRESH_TOKEN = "refreshToken";
+const NO_AUTH_ENDPOINTS = ["/tenants/lookup", "/access-requests"];
 
+const shouldSkipToken = (endpoint: string) =>
+  NO_AUTH_ENDPOINTS.some((path) => endpoint.includes(path)) ||
+  endpoint.startsWith("/auth/") ||
+  endpoint.startsWith("/api/v1/auth/");
 export type ResponseError = {
   detail: string;
 };
@@ -54,6 +59,7 @@ const callApi = async <T>(
   const endpointToUse = "https://fitmanage-b0bb9372ef38.herokuapp.com/api/v1/";
   let response: Response;
   const accessToken = getCookie(COOKIE_ACCESS_TOKEN);
+
   if (method === "GET" || method === "DELETE") {
     let input: string = "";
 
@@ -61,13 +67,14 @@ const callApi = async <T>(
       const params = new URLSearchParams(variables).toString();
       input = `?${params}`;
     }
-
     const url = `${endpointToUse}${endpoint}${input}`;
     response = await fetch(url, {
       method,
       headers: {
         "Content-Type": "application/json",
-        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        ...(!shouldSkipToken(endpoint) && accessToken
+          ? { Authorization: `Bearer ${accessToken}` }
+          : {}),
       },
       credentials: "include",
     });

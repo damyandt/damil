@@ -27,7 +27,7 @@ const ClassesContainer: React.FC<ClassesProps> = ({ classes }) => {
   //     : classes.filter((_, i) => joinedClasses.includes(i)); // Booked
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box>
       {/* Tabs */}
       <Box
         sx={{

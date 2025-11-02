@@ -1,5 +1,6 @@
 import {
   Box,
+  CircularProgress,
   Grid,
   IconButton,
   InputAdornment,
@@ -34,6 +35,8 @@ const LoginForm = () => {
   const [verificationCode, setVerificationCode] = useState<string>("");
   const [disableEmail, setDisableEmail] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showPasswordField, setShowPasswordField] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -112,6 +115,7 @@ const LoginForm = () => {
       return;
     }
     try {
+      setLoading(true);
       const responce = await callApi<any>({
         query: postLogin(formData),
         auth: null,
@@ -146,6 +150,8 @@ const LoginForm = () => {
       // setErrors({
       //   password: errorMessages(t).internalServerError,
       // });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -268,25 +274,35 @@ const LoginForm = () => {
               InputProps={{
                 endAdornment: (
                   <Box sx={{ display: "flex", gap: 0, padding: 0 }}>
-                    <InputAdornment
-                      position="start"
-                      sx={{ margin: "0", paddingLeft: "0" }}
-                    >
-                      <IconButton
-                        onClick={() => setShowPassword((prev) => !prev)}
-                        edge="start"
-                        tabIndex={-1}
-                        size="small"
-                        sx={{ mr: -0.5 }}
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                    <InputAdornment position="end" sx={{ ml: 0 }}>
-                      <IconButton edge="end" onClick={handleLogin} size="small">
-                        <ArrowForwardIcon />
-                      </IconButton>
-                    </InputAdornment>
+                    {loading ? (
+                      <CircularProgress />
+                    ) : (
+                      <>
+                        <InputAdornment
+                          position="start"
+                          sx={{ margin: "0", paddingLeft: "0" }}
+                        >
+                          <IconButton
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            edge="start"
+                            tabIndex={-1}
+                            size="small"
+                            sx={{ mr: -0.5 }}
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                        <InputAdornment position="end" sx={{ ml: 0 }}>
+                          <IconButton
+                            edge="end"
+                            onClick={handleLogin}
+                            size="small"
+                          >
+                            <ArrowForwardIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      </>
+                    )}
                   </Box>
                 ),
               }}

@@ -7,39 +7,39 @@ export const registerValidator = (
   step: number,
   business: Business,
   admin: AdminDataRegister,
-  setErrors: any
+  setErrors: any,
+  t: any
 ): boolean => {
   const newErrors: { [key: string]: string } = {};
-
   if (step === 0) {
     if (!business.name?.trim())
-      newErrors["name"] = "Business name is required.";
+      newErrors["name"] = t("Business name is required.");
     if (!business.businessEmail?.trim())
-      newErrors["businessEmail"] = "Business email is required.";
+      newErrors["businessEmail"] = t("Business email is required.");
   }
 
   if (step === 1) {
-    if (!business.city?.trim()) newErrors["city"] = "City is required.";
+    if (!business.city?.trim()) newErrors["city"] = t("City is required.");
     if (!business.address?.trim())
-      newErrors["address"] = "Address is required.";
+      newErrors["address"] = t("Address is required.");
   }
 
   if (step === 2) {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!admin.email.trim()) {
-      newErrors["email"] = "Email is required.";
+      newErrors["email"] = t("Email is required.");
     } else if (!emailPattern.test(admin.email)) {
-      newErrors["email"] = "Invalid email format.";
+      newErrors["email"] = t("Invalid email format.");
     }
 
     if (admin.password.length < 8) {
-      newErrors["password"] = "Password must be at least 8 characters.";
+      newErrors["password"] = t("Password must be at least 8 characters.");
     }
 
     if (!admin.confirmPassword) {
-      newErrors["confirmPassword"] = "Confirm password is required.";
+      newErrors["confirmPassword"] = t("Confirm password is required.");
     } else if (admin.confirmPassword !== admin.password) {
-      newErrors["confirmPassword"] = "Passwords do not match.";
+      newErrors["confirmPassword"] = t("Passwords do not match.");
     }
   }
 
