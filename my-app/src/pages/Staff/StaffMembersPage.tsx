@@ -35,10 +35,12 @@ const StaffPage = () => {
     // } else {
     setExtraRightNavMenu(
       <RightMenu
+        title={t("Employee")}
         setRefreshTable={setRefreshTable}
         columns={tableData?.columns ?? []}
         configurations={tableData?.config}
         addNew={true}
+        createUrl="employees"
       />
     );
     // }
@@ -54,7 +56,7 @@ const StaffPage = () => {
         query: getStaffMembers(),
         auth: { setAuthedUser },
       });
-      setTableData(data.data);
+      data.success && setTableData(data.data);
     } catch (err) {
       console.error(err);
     }

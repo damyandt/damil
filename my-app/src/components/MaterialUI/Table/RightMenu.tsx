@@ -12,6 +12,8 @@ interface RightMenuProps {
   columns: Column[];
   addNew?: boolean;
   configurations?: Configuration;
+  title: string;
+  createUrl: string;
 }
 
 const RightMenu: React.FC<RightMenuProps> = ({
@@ -19,6 +21,8 @@ const RightMenu: React.FC<RightMenuProps> = ({
   columns,
   addNew,
   configurations,
+  title,
+  createUrl,
 }) => {
   const { t } = useLanguageContext();
 
@@ -29,31 +33,32 @@ const RightMenu: React.FC<RightMenuProps> = ({
         <Stack alignItems="center">
           <CustomTooltip title={t("Add")}>
             <IconButton
-              aria-label="Add new Client"
-              onClick={() => setModalTitle("Add new Client")}
+              aria-label={`${t("Add new")} ${title}`}
+              onClick={() => setModalTitle("Add new")}
             >
               <AddOutlinedIcon />
             </IconButton>
           </CustomTooltip>
         </Stack>
       </Stack>
-
-      <CustomModal
-        open={!!modalTitle}
-        onClose={() => setModalTitle(null)}
-        title="Add New Client"
-        width={"lg"}
-      >
-        {addNew && columns.length !== 0 && (
-          <CreateForm
-            setRefreshTable={setRefreshTable}
-            columns={columns}
-            configurations={configurations}
-            actionUrl="staff-members/staff"
-            setModalTitle={setModalTitle}
-          />
-        )}
-      </CustomModal>
+      {modalTitle && (
+        <CustomModal
+          open={!!modalTitle}
+          onClose={() => setModalTitle(null)}
+          title={`${t(modalTitle)} ${title}`}
+          width={"lg"}
+        >
+          {modalTitle === "Add new" && addNew && columns.length !== 0 && (
+            <CreateForm
+              setRefreshTable={setRefreshTable}
+              columns={columns}
+              configurations={configurations}
+              actionUrl={createUrl}
+              setModalTitle={setModalTitle}
+            />
+          )}
+        </CustomModal>
+      )}
     </>
   );
 };

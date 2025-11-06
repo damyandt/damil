@@ -12,7 +12,6 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import GroupIcon from "@mui/icons-material/Group";
 import BadgeIcon from "@mui/icons-material/Badge";
 import DateRangeIcon from "@mui/icons-material/DateRange";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import TuneIcon from "@mui/icons-material/Tune";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOnOutlined";
@@ -188,12 +187,6 @@ export const NAV_DAMIL_STAFF: LeftNavMenu = {
           text: "Staff Members",
           url: "/DAMIL-Staff/All",
           Icon: GroupIcon,
-          disabled: false,
-        },
-        {
-          text: "Staff Roles",
-          url: "/DAMIL-Staff/Roles",
-          Icon: AdminPanelSettingsIcon,
           disabled: false,
         },
         {

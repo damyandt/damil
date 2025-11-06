@@ -340,7 +340,7 @@ const Calendar = ({
       </Grid>
 
       <CustomModal
-        title="Add Event"
+        title={t("Add Event")}
         open={openDialog}
         onClose={() => {
           setOpenDialog(false);
@@ -352,7 +352,7 @@ const Calendar = ({
             <TextField
               select
               fullWidth
-              label="Title"
+              label={t("Title")}
               margin="normal"
               value={formData.title}
               onChange={(e) => handleChange("title", e.target.value)}
@@ -364,11 +364,12 @@ const Calendar = ({
               ))}
             </TextField>
           </Grid>
+
           <Grid size={6}>
             <TextField
               select
               fullWidth
-              label="Person"
+              label={t("Person")}
               margin="normal"
               value={formData.person}
               onChange={(e) => handleChange("person", e.target.value)}
@@ -382,11 +383,12 @@ const Calendar = ({
               )}
             </TextField>
           </Grid>
+
           <Grid size={6}>
             <TextField
               select
               fullWidth
-              label="Period"
+              label={t("Period")}
               margin="normal"
               value={formData.period}
               onChange={(e) => handleChange("period", e.target.value)}
@@ -398,16 +400,20 @@ const Calendar = ({
               ))}
             </TextField>
           </Grid>
+
           <Grid size={3}>
             <DatePickerComponent
-              label="Start Date"
+              sx={{ width: "100%", margin: 0 }}
+              label={t("Start Date")}
               value={formData.start}
               onChange={(newValue: any) => handleChange("start", newValue)}
             />
           </Grid>
+
           <Grid size={3}>
             <DatePickerComponent
-              label="End Date"
+              sx={{ width: "100%", margin: 0 }}
+              label={t("End Date")}
               value={formData.end}
               onChange={(newValue: Dayjs | null) =>
                 handleChange("end", newValue)
@@ -418,7 +424,7 @@ const Calendar = ({
           <Grid size={12}>
             <TextField
               fullWidth
-              label="Message"
+              label={t("Message")}
               margin="normal"
               value={formData.message}
               onChange={(e) => handleChange("message", e.target.value)}
@@ -437,26 +443,26 @@ const Calendar = ({
         </Grid>
       </CustomModal>
       <CustomModal
-        title="Confirm Large Date Range"
+        title={t("Confirm Large Date Range")}
         open={openConfirm}
         onClose={handleCancelConfirm}
         width={"md"}
       >
         <Box component="div" textAlign={"center"}>
           <Typography variant="h6">
-            You are setting events for <strong>{diffDays + 1}</strong> days. Are
-            you sure?
+            {t("You are setting events for")} <strong>{diffDays + 1}</strong>{" "}
+            {t("days")}. {t("Are you sure?")}
           </Typography>
         </Box>
 
         <Grid container spacing={2} justifyContent="flex-end">
           <Grid>
             <Button color="error" onClick={handleCancelConfirm}>
-              Cancel
+              {t("Cancel")}
             </Button>
           </Grid>
           <Grid>
-            <Button onClick={handleConfirm}>Confirm</Button>
+            <Button onClick={handleConfirm}>{t("Confirm")}</Button>
           </Grid>
         </Grid>
       </CustomModal>

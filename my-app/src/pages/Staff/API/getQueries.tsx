@@ -1,7 +1,7 @@
 import { Query } from "../../../API/callApi";
 
 export const getStaffMembers = (): Query => ({
-  endpoint: `users/employee`,
+  endpoint: `employees`,
   method: "GET",
 });
 

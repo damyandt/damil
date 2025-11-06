@@ -14,12 +14,7 @@ const App: React.FC = () => {
   const { authedUser, authedUserLoading, tenant, tenantLoading } =
     useAuthedContext();
 
-  if (
-    authedUserLoading ||
-    tenantLoading ||
-    !tenant ||
-    Object.entries(tenant).length === 0
-  ) {
+  if (authedUserLoading || tenantLoading) {
     return <LoadingScreen />;
   }
   const role: Role = authedUser?.roles?.[0] || "Member";

@@ -189,7 +189,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
                           <TextField
                             fullWidth
                             sx={{ width: "100%" }}
-                            label={col.header}
+                            label={t(col.header)}
                             value={value}
                             onChange={(e: any) =>
                               handleChange(col.field, e.target.value)
@@ -203,13 +203,6 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             onEnterFunc={() => {
                               handleKeyDown();
                             }}
-                            // onKeyDown={(e) => {
-                            //   if (e.key === "Enter") {
-                            //     e.preventDefault(); // ✅ Prevent form submission or unwanted action
-                            //     e.stopPropagation(); // ✅ Optional: block global handlers
-                            //     handleKeyDown();
-                            //   }
-                            // }}
                           />
                         );
 
@@ -218,7 +211,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
                           <TextField
                             fullWidth
                             sx={{ width: "100%" }}
-                            label={col.header}
+                            label={t(col.header)}
                             type="number"
                             value={value}
                             onChange={(e: any) =>
@@ -230,13 +223,6 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             inputRef={(el: HTMLInputElement) => {
                               inputRefs.current[index] = el;
                             }}
-                            // onKeyDown={(e) => {
-                            //   if (e.key === "Enter") {
-                            //     e.preventDefault(); // ✅ Prevent form submission or unwanted action
-                            //     e.stopPropagation(); // ✅ Optional: block global handlers
-                            //     handleKeyDown(e);
-                            //   }
-                            // }}
                             onEnterFunc={() => {
                               handleKeyDown();
                             }}
@@ -265,7 +251,8 @@ const CreateForm: React.FC<CreateFormProps> = ({
                                     gap: 1, // space between spinner and text
                                   }}
                                 >
-                                  <CircularProgress size={16} /> Loading...
+                                  <CircularProgress size={16} />{" "}
+                                  {t("Loading...")}
                                 </MenuItem>,
                               ]
                             : fieldOptions?.map(
@@ -277,7 +264,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
                                     key={option.value}
                                     value={option.value}
                                   >
-                                    {option.title}
+                                    {t(option.title)}
                                   </MenuItem>
                                 )
                               );
@@ -287,7 +274,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             fullWidth
                             select
                             sx={{ width: "100%" }}
-                            label={col.header}
+                            label={t(col.header)}
                             value={
                               isLoading && hasValue ? "loading" : value ?? ""
                             }
@@ -300,13 +287,6 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             inputRef={(el: HTMLInputElement) => {
                               inputRefs.current[index] = el;
                             }}
-                            // onKeyDown={(e) => {
-                            //   if (e.key === "Enter") {
-                            //     e.preventDefault(); // ✅ Prevent form submission or unwanted action
-                            //     e.stopPropagation(); // ✅ Optional: block global handlers
-                            //     handleKeyDown(e);
-                            //   }
-                            // }}
                             onEnterFunc={() => {
                               handleKeyDown();
                             }}
@@ -320,7 +300,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
                         return (
                           <DatePickerComponent
                             sx={{ width: "100%", margin: 0 }}
-                            label={col.header}
+                            label={t(col.header)}
                             value={value}
                             onChange={(newValue: any) =>
                               handleChange(col.field, newValue)
@@ -333,7 +313,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
                           <TextField
                             fullWidth
                             sx={{ width: "100%" }}
-                            label={col.header}
+                            label={t(col.header)}
                             value={value}
                             onChange={(e: any) =>
                               handleChange(col.field, e.target.value)
@@ -344,13 +324,6 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             inputRef={(el: HTMLInputElement) => {
                               inputRefs.current[index] = el;
                             }}
-                            // onKeyDown={(e) => {
-                            //   if (e.key === "Enter") {
-                            //     e.preventDefault(); // ✅ Prevent form submission or unwanted action
-                            //     e.stopPropagation(); // ✅ Optional: block global handlers
-                            //     handleKeyDown(e);
-                            //   }
-                            // }}
                             onEnterFunc={() => {
                               handleKeyDown();
                             }}
@@ -386,7 +359,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
                 </Button>
               </Grid>
               <Grid sx={disabled ? { display: "none" } : {}}>
-                <Button onClick={handleSave}>Submit</Button>
+                <Button onClick={handleSave}>{t("Submit")}</Button>
               </Grid>
             </>
           )}
