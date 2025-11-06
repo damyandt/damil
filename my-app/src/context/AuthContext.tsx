@@ -94,12 +94,15 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         auth: { setAuthedUser },
       });
       tenantInfo.success === true && setTenant(tenantInfo.data);
-      setLoadingTenant(false);
     } catch (err) {
       console.error("Tenant fetch error", err);
     }
   };
-
+  useEffect(() => {
+    if (tenant.id) {
+      setLoadingTenant(false);
+    }
+  }, [tenant]);
   useEffect(() => {
     if (userSignedIn) {
       fetchPreferences();

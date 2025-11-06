@@ -31,9 +31,8 @@ export const codeVerification = (input: any): Query => ({
 });
 
 export const codeVerificationResend = (input: any): Query => ({
-  endpoint: `auth/resend`,
+  endpoint: `auth/verification-code/${input.email}`,
   method: "POST",
-  variables: input,
 });
 
 export const updateProfile = (input: any): Query => ({

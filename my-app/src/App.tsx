@@ -14,7 +14,12 @@ const App: React.FC = () => {
   const { authedUser, authedUserLoading, tenant, tenantLoading } =
     useAuthedContext();
 
-  if (authedUserLoading || tenantLoading) {
+  if (
+    authedUserLoading ||
+    tenantLoading ||
+    !tenant ||
+    Object.entries(tenant).length === 0
+  ) {
     return <LoadingScreen />;
   }
   const role: Role = authedUser?.roles?.[0] || "Member";
@@ -49,9 +54,7 @@ const App: React.FC = () => {
           }}
         />
         <GlobalBarcodeScanner />
-        <RouterProvider router={appRouter}>
-          {/* <NavigationGuardProvider /> */}
-        </RouterProvider>
+        <RouterProvider router={appRouter} />
       </Box>
     );
   }

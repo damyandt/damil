@@ -3,9 +3,8 @@ import { Box, Grid, Stack, useTheme } from "@mui/system";
 import CellRenderer from "../../../components/MaterialUI/Table/CellRenderer";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import { motion } from "framer-motion";
-import InfoIcon from "@mui/icons-material/Info";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import dayjs from "dayjs";
 import { Response } from "../../../Global/Types/commonTypes";
@@ -67,7 +66,7 @@ const NewCard = ({ item, handleOpen, editable, triggerRefetch }: any) => {
             >
               <InfoIcon fontSize="small" />
             </IconButton>
-            {editable ? (
+            {editable && (
               <>
                 <IconButton
                   size="small"
@@ -91,26 +90,11 @@ const NewCard = ({ item, handleOpen, editable, triggerRefetch }: any) => {
                   onClick={(e) => {
                     e.stopPropagation();
                     setOpenDeleteModal(true);
-                    // handleRemove(item.id);
                   }}
                 >
                   <DeleteIcon fontSize="small" />
                 </IconButton>
               </>
-            ) : (
-              <IconButton
-                size="small"
-                sx={{
-                  zIndex: 10,
-                  "&:hover": { transform: "scale(1.04)" },
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setOpenDeleteModal(true);
-                }}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
             )}
           </Box>
 

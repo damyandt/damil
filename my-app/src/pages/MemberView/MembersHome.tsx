@@ -67,36 +67,6 @@ const MembersHome = () => {
     >
       <Box
         sx={{
-          background: `linear-gradient(90deg, ${colorStart}, ${colorEnd})`,
-          color: "#fff",
-          borderRadius: "20px",
-          p: 3,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexDirection: { xs: "column", md: "row" },
-        }}
-      >
-        <Box>
-          <Typography variant="h4" fontWeight={700}>
-            {`${t("Hi")}, ${authedUser.firstName}!`}
-          </Typography>
-          <Typography variant="subtitle1">
-            {t("Ready? Get set. Sweat. Repeat!")}
-          </Typography>
-        </Box>
-
-        <Box sx={{ mt: { xs: 2, md: 0 } }}>
-          <img
-            src="/damil-logo.png"
-            alt="Damil"
-            style={{ width: 80, borderRadius: "20px" }}
-          />
-        </Box>
-      </Box>
-
-      <Box
-        sx={{
           borderRadius: "20px",
           p: 2.5,
           backgroundColor: isDark
@@ -125,6 +95,35 @@ const MembersHome = () => {
             </Typography>
           </Typography>
         </Stack>
+      </Box>
+      <Box
+        sx={{
+          background: `linear-gradient(90deg, ${colorStart}, ${colorEnd})`,
+          color: "#fff",
+          borderRadius: "20px",
+          p: 3,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexDirection: { xs: "column", md: "row" },
+        }}
+      >
+        <Box>
+          <Typography variant="h4" fontWeight={700}>
+            {`${t("Hi")}, ${authedUser.firstName}!`}
+          </Typography>
+          <Typography variant="subtitle1">
+            {t("Ready? Get set. Sweat. Repeat!")}
+          </Typography>
+        </Box>
+
+        <Box sx={{ mt: { xs: 2, md: 0 } }}>
+          <img
+            src="/damil-logo.png"
+            alt="Damil"
+            style={{ width: 80, borderRadius: "20px" }}
+          />
+        </Box>
       </Box>
 
       <NewsSection news={newsList} editable={false} />
