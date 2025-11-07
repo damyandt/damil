@@ -9,12 +9,12 @@ import {
 } from "@mui/material";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import { alpha } from "@mui/material/styles";
-import DatePickerComponent from "../../components/MaterialUI/FormFields/DatePicker";
 import CustomModal from "../../components/MaterialUI/Modal";
 import dayjs, { Dayjs } from "dayjs";
 import Button from "../../components/MaterialUI/Button";
-import TextField from "../../components/MaterialUI/FormFields/TextField";
 import { useLanguageContext } from "../../context/LanguageContext";
+import DatePickerComponent from "../../components/MaterialUI/FormFields/DatePicker";
+import TextField from "../../components/MaterialUI/FormFields/TextField";
 
 const Calendar = ({
   eventsData,
@@ -235,110 +235,113 @@ const Calendar = ({
   };
 
   return (
-    <Box
-      sx={{
-        // p: 4,
-        borderRadius: 3,
-        backdropFilter: "blur(6px)",
-        mx: "auto",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-      }}
-    >
-      {/* Header */}
+    <>
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        alignContent={"center"}
-        mb={3}
+        sx={{
+          borderRadius: 3,
+          backdropFilter: "blur(6px)",
+          mx: "auto",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
       >
-        <IconButton onClick={handlePrevMonth}>
-          <ArrowBackIos fontSize="small" />
-        </IconButton>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          alignContent={"center"}
+          mb={3}
+        >
+          <IconButton onClick={handlePrevMonth}>
+            <ArrowBackIos fontSize="small" />
+          </IconButton>
 
-        <Typography variant="h4" fontWeight={600}>
-          {monthNames[currentMonth]} {currentYear}
-        </Typography>
+          <Typography variant="h4" fontWeight={600}>
+            {monthNames[currentMonth]} {currentYear}
+          </Typography>
 
-        <IconButton onClick={handleNextMonth}>
-          <ArrowForwardIos fontSize="small" />
-        </IconButton>
-      </Box>
+          <IconButton onClick={handleNextMonth}>
+            <ArrowForwardIos fontSize="small" />
+          </IconButton>
+        </Box>
 
-      {/* Weekday labels */}
-      <Grid container>
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-          <Grid size={12 / 7} key={day}>
-            <Typography align="center" fontWeight={600} mb={1}>
-              {day}
-            </Typography>
-          </Grid>
-        ))}
-      </Grid>
-
-      {/* Days grid */}
-      <Grid container spacing={1}>
-        {calendarDays.map((day, index) => {
-          const dateKey = day
-            ? dayjs(new Date(currentYear, currentMonth, day)).format(
-                "YYYY-MM-DD"
-              )
-            : "";
-
-          const dayEvents = events[dateKey] || [];
-          const isToday =
-            day &&
-            day === today.getDate() &&
-            currentMonth === today.getMonth() &&
-            currentYear === today.getFullYear();
-
-          return (
-            <Grid size={12 / 7} key={index}>
-              <Box
-                sx={{
-                  minHeight: 100,
-                  borderRadius: 2,
-                  border: `1px solid ${alpha(theme.palette.text.primary, 0.1)}`,
-                  p: 1,
-                  backgroundColor: isToday
-                    ? alpha(theme.palette.primary.main, 0.1)
-                    : "transparent",
-                  cursor: day ? "pointer" : "default",
-                  "&:hover": {
-                    backgroundColor: day
-                      ? alpha(theme.palette.primary.main, 0.05)
-                      : "transparent",
-                  },
-                  transition: "0.2s",
-                }}
-                onClick={() => !noAddEvent && day && handleOpenDialog(day)}
-              >
-                <Typography fontWeight={600}>{day}</Typography>
-
-                {dayEvents.map((ev: any, i: any) => (
-                  <Typography
-                    key={i}
-                    variant="caption"
-                    sx={{
-                      display: "block",
-                      mt: 0.5,
-                      px: 1,
-                      borderRadius: 1,
-                      backgroundColor: alpha(theme.palette.primary.main, 0.15),
-                    }}
-                  >
-                    {ev.title}
-                  </Typography>
-                ))}
-              </Box>
+        <Grid container>
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+            <Grid size={12 / 7} key={day}>
+              <Typography align="center" fontWeight={600} mb={1}>
+                {day}
+              </Typography>
             </Grid>
-          );
-        })}
-      </Grid>
+          ))}
+        </Grid>
 
+        <Grid container spacing={1}>
+          {calendarDays.map((day, index) => {
+            const dateKey = day
+              ? dayjs(new Date(currentYear, currentMonth, day)).format(
+                  "YYYY-MM-DD"
+                )
+              : "";
+
+            const dayEvents = events[dateKey] || [];
+            const isToday =
+              day &&
+              day === today.getDate() &&
+              currentMonth === today.getMonth() &&
+              currentYear === today.getFullYear();
+
+            return (
+              <Grid size={12 / 7} key={index}>
+                <Box
+                  sx={{
+                    minHeight: 100,
+                    borderRadius: 2,
+                    border: `1px solid ${alpha(
+                      theme.palette.text.primary,
+                      0.1
+                    )}`,
+                    p: 1,
+                    backgroundColor: isToday
+                      ? alpha(theme.palette.primary.main, 0.1)
+                      : "transparent",
+                    cursor: day ? "pointer" : "default",
+                    "&:hover": {
+                      backgroundColor: day
+                        ? alpha(theme.palette.primary.main, 0.05)
+                        : "transparent",
+                    },
+                    transition: "0.2s",
+                  }}
+                  onClick={() => !noAddEvent && day && handleOpenDialog(day)}
+                >
+                  <Typography fontWeight={600}>{day}</Typography>
+
+                  {dayEvents.map((ev: any, i: any) => (
+                    <Typography
+                      key={i}
+                      variant="caption"
+                      sx={{
+                        display: "block",
+                        mt: 0.5,
+                        px: 1,
+                        borderRadius: 1,
+                        backgroundColor: alpha(
+                          theme.palette.primary.main,
+                          0.15
+                        ),
+                      }}
+                    >
+                      {ev.title}
+                    </Typography>
+                  ))}
+                </Box>
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Box>
       <CustomModal
         title={t("Add Event")}
         open={openDialog}
@@ -348,12 +351,11 @@ const Calendar = ({
         width={"lg"}
       >
         <Grid container spacing={2}>
-          <Grid size={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               select
               fullWidth
               label={t("Title")}
-              margin="normal"
               value={formData.title}
               onChange={(e) => handleChange("title", e.target.value)}
             >
@@ -365,12 +367,11 @@ const Calendar = ({
             </TextField>
           </Grid>
 
-          <Grid size={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               select
               fullWidth
               label={t("Person")}
-              margin="normal"
               value={formData.person}
               onChange={(e) => handleChange("person", e.target.value)}
             >
@@ -384,12 +385,11 @@ const Calendar = ({
             </TextField>
           </Grid>
 
-          <Grid size={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               select
               fullWidth
               label={t("Period")}
-              margin="normal"
               value={formData.period}
               onChange={(e) => handleChange("period", e.target.value)}
             >
@@ -401,18 +401,16 @@ const Calendar = ({
             </TextField>
           </Grid>
 
-          <Grid size={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <DatePickerComponent
-              sx={{ width: "100%", margin: 0 }}
               label={t("Start Date")}
               value={formData.start}
               onChange={(newValue: any) => handleChange("start", newValue)}
             />
           </Grid>
 
-          <Grid size={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <DatePickerComponent
-              sx={{ width: "100%", margin: 0 }}
               label={t("End Date")}
               value={formData.end}
               onChange={(newValue: Dayjs | null) =>
@@ -421,27 +419,29 @@ const Calendar = ({
             />
           </Grid>
 
-          <Grid size={12}>
+          <Grid size={{ xs: 12, md: 12 }}>
             <TextField
               fullWidth
               label={t("Message")}
-              margin="normal"
               value={formData.message}
               onChange={(e) => handleChange("message", e.target.value)}
             />
           </Grid>
         </Grid>
+
         <Grid container spacing={2} display={"flex"} justifyContent={"end"}>
           <Grid>
             <Button onClick={() => setOpenDialog(false)} color="error">
               {t("Cancel")}
             </Button>
           </Grid>
+
           <Grid>
             <Button onClick={handleSave}>{t("Confirm")}</Button>
           </Grid>
         </Grid>
       </CustomModal>
+
       <CustomModal
         title={t("Confirm Large Date Range")}
         open={openConfirm}
@@ -466,7 +466,7 @@ const Calendar = ({
           </Grid>
         </Grid>
       </CustomModal>
-    </Box>
+    </>
   );
 };
 

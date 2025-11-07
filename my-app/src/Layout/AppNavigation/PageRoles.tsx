@@ -72,11 +72,11 @@ export const pageRoles: any = {
     abonnement: ["PRO", "GROWTH"],
   },
   "/DAMIL-Staff/Shifts": {
-    roles: ["Admin", "Administrator"],
+    roles: ["Admin", "Administrator", "Staff"],
     abonnement: ["PRO", "GROWTH"],
   },
   "/DAMIL-Staff/Events": {
-    roles: ["Admin", "Administrator"],
+    roles: ["Admin", "Administrator", "Staff"],
     abonnement: ["PRO", "GROWTH"],
   },
 

@@ -299,7 +299,6 @@ const CreateForm: React.FC<CreateFormProps> = ({
                       case "date":
                         return (
                           <DatePickerComponent
-                            sx={{ width: "100%", margin: 0 }}
                             label={t(col.header)}
                             value={value}
                             onChange={(newValue: any) =>

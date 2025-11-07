@@ -136,6 +136,7 @@ const theme = (mode: PaletteMode, mainColor: string) => {
         },
       },
     },
+
     palette: {
       mode,
       common: {

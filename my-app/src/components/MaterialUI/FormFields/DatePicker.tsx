@@ -23,7 +23,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   value,
   onChange,
   fullWidth = true,
-  margin = "none",
+  // margin = "none",
   format = "DD/MM/YYYY",
   sx = {},
   error,
@@ -59,7 +59,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
         },
         textField: {
           fullWidth,
-          margin: margin ?? "none",
+          // margin: margin ?? "16px 8px",
           variant: "outlined",
           error,
           helperText,
@@ -81,6 +81,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
             },
           },
           sx: {
+            width: "100%",
             "& .MuiOutlinedInput-root": {
               borderRadius: 4,
             },
