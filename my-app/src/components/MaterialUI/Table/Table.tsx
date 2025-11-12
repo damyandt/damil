@@ -193,12 +193,14 @@ const TableComponent = ({
         <TableContainer
           sx={{
             backgroundColor: theme.palette.customColors?.tableBackground,
-            paddingX: "5px",
             marginBottom: "10dvh",
+            pl: 0.5,
           }}
         >
           <MuiTable
             sx={{
+              width: "100%",
+              tableLayout: "auto",
               borderCollapse: "separate",
               borderSpacing: "0px 4px",
               "& .MuiTableCell-root": {
@@ -238,9 +240,24 @@ const TableComponent = ({
                   </TableCell>
                 ))}
                 {configurations?.actions && (
-                  <TableCell sx={{ fontWeight: "400" }} align="right">
-                    {t("Actions")}
-                  </TableCell>
+                  <TableCell
+                    align="right"
+                    sx={{
+                      position: "sticky",
+                      right: 0,
+                      zIndex: 3,
+                      backgroundColor:
+                        theme.palette.customColors?.tableRow ||
+                        theme.palette.background.paper,
+                      borderBottom: "none",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                      height: "3em !important",
+                      paddingBottom: "0 !important",
+                      minWidth: "5em",
+                    }}
+                  />
                 )}
               </TableRow>
             </TableHead>
@@ -250,7 +267,6 @@ const TableComponent = ({
                   <TableCell
                     colSpan={columns.length}
                     align="center"
-                    // sx={{ py: 6 }}
                     sx={{
                       position: "relative",
                       borderBottom: "none",
@@ -263,7 +279,6 @@ const TableComponent = ({
                             ? "rgba(96, 96, 96, 0.78)"
                             : "#fff",
                         cursor: "pointer",
-                        // transform: "scale(0.99)",
                         zIndex: 10,
                         position: "relative",
                       },
@@ -307,6 +322,7 @@ const TableComponent = ({
                       }}
                       key={row.id}
                       sx={{
+                        paddingRight: "5em",
                         position: "relative",
                         borderBottom: "none",
                         backgroundColor: isDeleting
@@ -322,7 +338,6 @@ const TableComponent = ({
                               ? "rgba(96, 96, 96, 0.78)"
                               : "#fff",
                           cursor: "pointer",
-                          // transform: "scale(0.99)",
                           zIndex: 10,
                           position: "relative",
                         },
@@ -356,10 +371,21 @@ const TableComponent = ({
                         <TableCell
                           align="right"
                           sx={{
-                            zIndex: 100,
+                            position: "sticky",
+                            right: 0,
+                            zIndex: 3,
                             borderBottom: "none",
-                            display: "flex",
-                            alignItems: "flex-end",
+                            border: "none",
+                            display: "flex !important",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor:
+                              theme.palette.customColors?.tableRow ||
+                              theme.palette.background.paper,
+                            boxShadow: `-2px 0 4px ${theme.palette.customColors?.shodowColor}`,
+                            padding: "0 !important",
+                            minHeight: "3.5em !important",
+                            minWidth: "5em",
                           }}
                         >
                           {isDeleting ? (
