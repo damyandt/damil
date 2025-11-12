@@ -6,25 +6,63 @@ import { useLanguageContext } from "../../../context/LanguageContext";
 import ClassCard from "./ClassCard";
 import { Class } from "./API/classes";
 import CalendarView from "./CalenderView";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TableComponent from "../../../components/MaterialUI/Table/Table";
-import { dataForTable } from "./mockData";
+import callApi from "../../../API/callApi";
+import { useAuthedContext } from "../../../context/AuthContext";
+import { Response } from "../../../Global/Types/commonTypes";
+import { getClasses } from "./API/getQueries";
+import RightMenu from "../../../components/MaterialUI/Table/RightMenu";
+import { useOutletContext } from "react-router-dom";
+import { AppRouterProps } from "../../../Layout/layoutVariables";
+// import { dataForTable } from "./mockData";
 
 interface ClassesProps {
-  classes: Class[];
+  // classes: Class[];
 }
 
-const ClassesContainer: React.FC<ClassesProps> = ({ classes }) => {
+const ClassesContainer: React.FC<ClassesProps> = () => {
   const { t } = useLanguageContext();
   const [tab, setTab] = useState<"Card View" | "Calender View" | "Table View">(
     "Card View"
   );
-  // const [joinedClasses, setJoinedClasses] = useState<number[]>([4, 5, 6]);
+  const [refreshtable, setRefreshTable] = useState<any>();
+  const [classesTable, setClassestable] = useState<any>();
+  const { setExtraRightNavMenu } = useOutletContext<AppRouterProps>();
+  const { setAuthedUser } = useAuthedContext();
+  useEffect(() => {
+    const fetchClasses = async () => {
+      const response = await callApi<Response<any>>({
+        query: getClasses(),
+        auth: { setAuthedUser },
+      });
 
-  // const displayedClasses =
-  //   tab === 0
-  //     ? classes.filter((_, i) => !joinedClasses.includes(i)) // Upcoming
-  //     : classes.filter((_, i) => joinedClasses.includes(i)); // Booked
+      response.success && setClassestable(response.data);
+    };
+
+    fetchClasses();
+  }, [refreshtable]);
+
+  useEffect(() => {
+    // if (smMediaQuery) {
+    //   setExtraRightNavMenu(null);
+    // } else {
+    setExtraRightNavMenu(
+      <RightMenu
+        title={t("Classes")}
+        setRefreshTable={setRefreshTable}
+        columns={classesTable?.columns ?? []}
+        configurations={classesTable?.config}
+        addNew={true}
+        createUrl="trainings"
+      />
+    );
+    // }
+
+    return () => {
+      setExtraRightNavMenu(null);
+    };
+  }, [classesTable]);
 
   return (
     <Box>
@@ -52,7 +90,7 @@ const ClassesContainer: React.FC<ClassesProps> = ({ classes }) => {
       {/* Class cards */}
       {tab === "Card View" && (
         <Grid container spacing={2}>
-          {classes.length === 0 ? (
+          {classesTable?.rows?.length === 0 ? (
             <Grid size={12}>
               <Typography
                 variant="body1"
@@ -63,13 +101,12 @@ const ClassesContainer: React.FC<ClassesProps> = ({ classes }) => {
               </Typography>
             </Grid>
           ) : (
-            classes.map((cls, index) => {
-              const originalIndex = classes.indexOf(cls);
-
+            classesTable?.rows.map((cls: Class, index: number) => {
+              const originalIndex = classesTable?.rows.indexOf(cls);
               return (
                 <ClassCard
                   key={index}
-                  isJoined={false}
+                  isJoined={cls.joined}
                   cls={cls}
                   setJoinedClasses={false}
                   originalIndex={originalIndex}
@@ -79,12 +116,14 @@ const ClassesContainer: React.FC<ClassesProps> = ({ classes }) => {
           )}
         </Grid>
       )}
-      {tab === "Calender View" && <CalendarView classes={classes} />}
+      {tab === "Calender View" && (
+        <CalendarView classes={classesTable?.rows || []} />
+      )}
       {tab === "Table View" && (
         <TableComponent
-          configurations={dataForTable?.config}
-          columns={dataForTable?.columns || []}
-          rows={classes || []}
+          configurations={classesTable?.config || {}}
+          columns={classesTable?.columns || []}
+          rows={classesTable?.rows || []}
           // setRefreshTable={setRefreshTable}
           title={t("Subscription Plans")}
         />

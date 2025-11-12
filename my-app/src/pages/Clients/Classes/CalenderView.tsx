@@ -176,7 +176,6 @@ const CalendarView: React.FC<CalendarViewProps> = ({ classes }) => {
                   `1px solid ${
                     theme.palette.mode === "dark" ? "#2b2b2bff" : "#e0e0e0"
                   }`,
-                // borderRight: dayIndex === 6 ? "none" : "1px solid #2b2b2bff",
                 "&::before": {
                   content: `"${day}"`,
                   display: "block",
@@ -189,9 +188,6 @@ const CalendarView: React.FC<CalendarViewProps> = ({ classes }) => {
                   lineHeight: "40px",
                   height: 40,
                 },
-                // "& > div:first-of-type": {
-                //   borderBottom: "none", // removes bottom line in last hour cell
-                // },
               }}
             >
               {hours.map((_, i) => (
@@ -265,7 +261,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ classes }) => {
                           bottom={0}
                           position={"absolute"}
                         >
-                          {c.trainerInfo.name}
+                          {c.trainer}
                         </Typography>
                       )}
                     </Box>
@@ -284,7 +280,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ classes }) => {
       >
         <ClassDetails
           cls={modalData.data!}
-          isJoined={false}
+          isJoined={modalData.data?.joined || false}
           handleDetailsClose={handleClose}
           handleJoin={() => console.warn("da")}
         />
