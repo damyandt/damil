@@ -8,6 +8,8 @@ import Alert from "../MaterialUI/Alert";
 import TextField from "../MaterialUI/FormFields/TextField";
 import Button from "../MaterialUI/Button";
 import DatePickerComponent from "../MaterialUI/FormFields/DatePicker";
+import { DateTimePicker } from "@mui/x-date-pickers";
+
 import {
   Column,
   Configuration,
@@ -304,6 +306,20 @@ const CreateForm: React.FC<CreateFormProps> = ({
                             onChange={(newValue: any) =>
                               handleChange(col.field, newValue)
                             }
+                          />
+                        );
+                      case "datetime":
+                        return (
+                          <DateTimePicker
+                            label={t(col.header)}
+                            value={value}
+                            onChange={(newValue: any) =>
+                              handleChange(col.field, newValue)
+                            }
+                            slots={{ textField: TextField }}
+                            slotProps={{
+                              textField: { size: "small", fullWidth: true },
+                            }}
                           />
                         );
 

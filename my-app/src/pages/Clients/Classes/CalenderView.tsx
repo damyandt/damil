@@ -71,9 +71,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ classes }) => {
         sx={{
           display: "flex",
           alignItems: "center",
-          // gap: 1,
-          // mt: "-50px",
-          // mb: 4,
+          gap: 2,
           width: "100%",
           justifyContent: "center",
         }}
