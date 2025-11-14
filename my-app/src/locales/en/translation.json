@@ -378,5 +378,6 @@
   "Created At": "Created At",
   "Updated At": "Updated At",
   "Roles": "Roles",
-  "Id": "Id"
+  "Id": "Id",
+  "None": "None"
 }

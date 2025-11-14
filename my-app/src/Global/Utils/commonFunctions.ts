@@ -58,3 +58,9 @@ export const isObject = (value: any) => {
 export const isArray = (value: any) => {
   return value instanceof Array;
 };
+
+export const toSentenceCase = (str: string) => {
+  if (!str) return "";
+  const s = String(str);
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+};

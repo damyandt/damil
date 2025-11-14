@@ -99,3 +99,22 @@ export type PreferencesType = {
 export type EnumMap = {
   [key: string]: Enum[];
 };
+
+export const employeeRoles = [
+  "manager",
+  "nutritionist",
+  "trainer",
+  "receptionist",
+  "cleaner",
+  "physiotherapist",
+];
+export const genders = ["male", "female"];
+export const statuses = [
+  "active",
+  "inactive",
+  "pending",
+  "cancelled",
+  "low",
+  "medium",
+  "high",
+];

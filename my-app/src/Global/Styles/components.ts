@@ -21,7 +21,7 @@ const cssComponentsStyles = (theme: Theme) => ({
     backgroundColor:
       theme.palette.mode === "light"
         ? theme.palette.grey["100"]
-        : theme.palette.customColors.darkBackgroundColor,
+        : theme.palette.customColors?.darkBackgroundColor,
     paddingBottom: 0,
   },
   tooltipStyle: css({
