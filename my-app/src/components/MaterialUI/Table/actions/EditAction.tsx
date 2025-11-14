@@ -27,7 +27,7 @@ export const EditAction = ({
   const [open, setOpen] = useState<string | null>(null);
   return (
     <>
-      <CustomTooltip title="Edit" placement="bottom">
+      <CustomTooltip title={t("Edit")} placement="bottom">
         <IconButton
           onClick={() => {
             setOpen("open");

@@ -369,5 +369,14 @@
   "Employee": "Employee",
   "Employee Role": "Employee Role",
   "Card Details": "Card Details",
-  "Accept New Client": "Accept New Client"
+  "Accept New Client": "Accept New Client",
+  "Accept Client": "Accept Client",
+  "History Visits": "History Visits",
+  "Assign Subscription Plan": "Assign Subscription Plan",
+  "Delete": "Delete",
+  "More": "More",
+  "Created At": "Created At",
+  "Updated At": "Updated At",
+  "Roles": "Roles",
+  "Id": "Id"
 }

@@ -12,6 +12,7 @@ import {
   Response,
   Row,
 } from "../../../../Global/Types/commonTypes";
+import { useLanguageContext } from "../../../../context/LanguageContext";
 
 type DeleteActionProps = {
   setDeleteQueue: Dispatch<SetStateAction<DeleteQueueType>>;
@@ -30,7 +31,9 @@ export const DeleteAction = ({
   handleMenuClose,
   selectedRow,
 }: DeleteActionProps) => {
+  const { t } = useLanguageContext();
   const { setAuthedUser } = useAuthedContext();
+
   const handleDeleteClick = (row: Row) => {
     const id = row.id;
     if (deleteQueue[id]) return;
@@ -93,7 +96,7 @@ export const DeleteAction = ({
   };
 
   return (
-    <CustomTooltip title="Delete" placement="bottom">
+    <CustomTooltip title={t("Delete")} placement="bottom">
       <IconButton
         onClick={() => {
           selectedRow && handleDeleteClick(selectedRow);
@@ -117,6 +120,7 @@ export const DeleteUndo = ({
   setDeleteQueue,
   rowId,
 }: DeleteUndoProps) => {
+  const { t } = useLanguageContext();
   const handleUndo = (id: string) => {
     if (deleteQueue[id]) {
       clearInterval(deleteQueue[id].timerId);
@@ -138,7 +142,7 @@ export const DeleteUndo = ({
         zIndex: 100,
       }}
     >
-      <CustomTooltip title="Undo" placement="left">
+      <CustomTooltip title={t("Undo")} placement="left">
         <IconButton
           size="small"
           onClick={(e) => {

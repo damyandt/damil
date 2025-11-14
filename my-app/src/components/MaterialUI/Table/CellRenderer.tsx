@@ -7,7 +7,8 @@ import EventIcon from "@mui/icons-material/Event";
 import { ColumnType } from "../../../Global/Types/commonTypes";
 import CustomTooltip from "../CustomTooltip";
 import { useEffect, useRef, useState } from "react";
-
+import { useLanguageContext } from "../../../context/LanguageContext";
+import DoNotDisturbIcon from "@mui/icons-material/DoNotDisturb";
 type CellRendererProps = {
   value: any;
   dataType: ColumnType;
@@ -25,6 +26,7 @@ const CellRenderer = ({
   ellipsis = true,
   sx = {}, // default empty object
 }: CellRendererProps) => {
+  const { t } = useLanguageContext();
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
   let displayValue: React.ReactNode = String(value);
@@ -335,6 +337,38 @@ const CellRenderer = ({
     displayValue = (
       <Box display="flex" alignItems="center" gap={0.5}>
         <CloseIcon fontSize="small" color="error" />
+      </Box>
+    );
+  }
+  if (value === null || value === undefined) {
+    // Neutral, muted colors for "None"
+    const nullColor = isDark
+      ? theme.palette.grey[400]
+      : theme.palette.grey[700];
+    const nullBg = isDark ? theme.palette.grey[800] : theme.palette.grey[100];
+    const nullBorder = isDark
+      ? theme.palette.grey[600]
+      : theme.palette.grey[400];
+
+    displayValue = (
+      <Box
+        component={"span"}
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 1,
+          px: 1.5,
+          py: 0.5,
+          border: `1px solid ${nullBorder}`,
+          backgroundColor: nullBg,
+          borderRadius: "10px",
+          fontSize: "0.75rem",
+          color: nullColor,
+          fontWeight: 600, // 700 might be too bold, 600 is a good medium
+        }}
+      >
+        <DoNotDisturbIcon sx={{ fontSize: "0.875rem" }} />
+        {t("None")}
       </Box>
     );
   }

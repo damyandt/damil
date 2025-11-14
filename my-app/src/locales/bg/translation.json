@@ -369,5 +369,14 @@
   "Employee": "Служител",
   "Employee Role": "Роля на служител",
   "Card Details": "Детайли на картата",
-  "Accept New Client": "Приеми нов клиент"
+  "Accept New Client": "Приеми нов клиент",
+  "Accept Client": "Приеми клиент",
+  "History Visits": "История на посещенията",
+  "Assign Subscription Plan": "Добави абонаментен план",
+  "Delete": "Изтрий",
+  "More": "Още",
+  "Created At": "Създадено на",
+  "Updated At": "Актуализирано на",
+  "Roles": "Роли",
+  "Id": "Номер"
 }

@@ -12,7 +12,7 @@ export const postMember = (formData: any): Query => ({
 });
 
 export const postSubscription = (formData: any, id: any): Query => ({
-  endpoint: `users/membership/${id}`,
+  endpoint: `memberships/${id}`,
   method: "PUT",
   variables: formData,
 });

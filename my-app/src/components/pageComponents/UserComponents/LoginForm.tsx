@@ -131,7 +131,7 @@ const LoginForm = () => {
         });
       }
 
-      const refresh_token = responce.refreshToken;
+      const refresh_token = responce.data.refreshToken;
       const refreshCookie: SetCookieParams = {
         name: COOKIE_REFRESH_TOKEN,
         value: refresh_token,

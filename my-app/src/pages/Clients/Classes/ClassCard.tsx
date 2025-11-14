@@ -128,7 +128,6 @@ const ClassCard = ({
           cls={cls!}
           isJoined={cls.joined || false}
           handleDetailsClose={handleDetailsClose}
-          handleJoin={() => console.warn("da")}
         />
       </CustomModal>
     </>

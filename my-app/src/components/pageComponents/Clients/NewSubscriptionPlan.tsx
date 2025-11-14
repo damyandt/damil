@@ -1,4 +1,5 @@
 import {
+  AlertColor,
   Box,
   Grid,
   ListItemIcon,
@@ -52,6 +53,8 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
   const { setAuthedUser, preferences } = useAuthedContext();
   const [price, setPrice] = useState<number>(0);
   const [subscriptionData, setSubscriptionData] = useState<any>({});
+  const [alert, setAlert] = useState<string | null>(null);
+  const [alertSeverity, setAlertSeverity] = useState<AlertColor>("info");
   const [options, setOptions] = useState<EnumMap>({});
   const [renew, setRenew] = useState<boolean>(false);
   const [step, setStep] = useState<number>(0);
@@ -126,12 +129,17 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
     } else if (step === 1) {
       setStep((prev: number) => (prev += 1));
     } else if (step === 2) {
-      await callApi<Response<any>>({
+      const response = await callApi<Response<any>>({
         query: postSubscription(subscriptionData, rowData.id),
         auth: { setAuthedUser },
       });
-      setOpen(false);
-      refreshFunc?.();
+      response.success && setOpen(false);
+      response.success && refreshFunc?.();
+      response.success && setAlert(t("Subscription plan added successfully!"));
+      response.success && setAlertSeverity("success");
+      !response.success &&
+        setAlert(t("Failed to add subscription plan. Please try again."));
+      !response.success && setAlertSeverity("error");
     }
 
     setLoading(false);
@@ -142,7 +150,6 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
       if (!enumEndpoints) return;
 
       const optionsMap: EnumMap = {};
-      // const enumEndpoints: string[] = ["subscriptionPlan", "employment"];
       for (const url of enumEndpoints) {
         try {
           const options = await callApi<Response<Enum[]>>({
@@ -229,10 +236,10 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
                 }
                 fullWidth
               >
-                {!options["admin/Employment"] ? (
+                {!options["enums/Employment"] ? (
                   <MenuItem value="loading">{t("Loading...")}</MenuItem>
                 ) : (
-                  options["admin/Employment"].map(
+                  options["enums/Employment"].map(
                     (option: { title: string; value: string | number }) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.title}
@@ -404,6 +411,15 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
             </Grid>
           </>
         )}
+
+        <Box>
+          <Alert
+            message={alert}
+            showAlert={!!alert}
+            severity={alertSeverity}
+            autoClose
+          />
+        </Box>
 
         <Grid size={12}>
           <Alert

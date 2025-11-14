@@ -250,10 +250,11 @@ const TableComponent = ({
                         theme.palette.customColors?.tableRow ||
                         theme.palette.background.paper,
                       borderBottom: "none",
+                      boxShadow: `-2px 0 4px ${theme.palette.customColors?.shodowColor}`,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "flex-end",
-                      height: "3em !important",
+                      height: "4.2em !important",
                       paddingBottom: "0 !important",
                       minWidth: "5em",
                     }}
@@ -396,7 +397,7 @@ const TableComponent = ({
                             />
                           ) : (
                             <CustomTooltip
-                              title="Show Actions"
+                              title={t("More")}
                               placement="left"
                               sx={{ width: "fit-content" }}
                             >

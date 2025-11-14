@@ -4,19 +4,33 @@ import { Avatar, LinearProgress, Typography } from "@mui/material";
 import CellRenderer from "../../../components/MaterialUI/Table/CellRenderer";
 import Button from "../../../components/MaterialUI/Button";
 import { useLanguageContext } from "../../../context/LanguageContext";
+import { useAuthedContext } from "../../../context/AuthContext";
+import { Response } from "../../../Global/Types/commonTypes";
+import callApi from "../../../API/callApi";
+import { postJoinOrLeaveClass } from "./API/postQueries";
+import Alert from "../../../components/MaterialUI/Alert";
+import { useState } from "react";
 
 const ClassDetails = ({
   cls,
   isJoined,
   handleDetailsClose,
-  handleJoin,
 }: {
   cls: Class;
   isJoined: boolean;
   handleDetailsClose: () => void;
-  handleJoin: (originalIndex: any) => void;
 }) => {
+  const [alert, setAlert] = useState<string | null>(null);
+  const { setAuthedUser, authedUser } = useAuthedContext();
   const { t } = useLanguageContext();
+  const handleJoin = async (id: number, join: boolean) => {
+    const options = await callApi<Response<any>>({
+      query: postJoinOrLeaveClass(id, join),
+      auth: { setAuthedUser },
+    });
+    options.success && join && setAlert(`${t("Succesfully join class")}`);
+    options.success && !join && setAlert(`${t("Succesfully leave class")}`);
+  };
   return (
     <Box sx={{ p: 2 }}>
       <Grid container spacing={3}>
@@ -177,6 +191,9 @@ const ClassDetails = ({
           )}
         </Grid>
       </Grid>
+      <Box>
+        <Alert message={alert} showAlert={!!alert} severity="loading" />
+      </Box>
 
       <Stack
         direction="row"
@@ -187,9 +204,16 @@ const ClassDetails = ({
         <Button onClick={handleDetailsClose} color="error" variant="outlined">
           {t("Close")}
         </Button>
-        <Button onClick={() => handleJoin(cls.id)}>
-          {isJoined ? t("Leave Class") : t("Join Class")}
-        </Button>
+        {authedUser?.roles?.includes("Member") && !isJoined && (
+          <Button onClick={() => handleJoin(cls.id!, true)}>
+            {t("Join Class")}
+          </Button>
+        )}
+        {authedUser?.roles?.includes("Member") && isJoined && (
+          <Button onClick={() => handleJoin(cls.id!, false)}>
+            {t("Leave Class")}
+          </Button>
+        )}
       </Stack>
     </Box>
   );

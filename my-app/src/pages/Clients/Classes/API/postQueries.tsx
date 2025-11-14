@@ -1,5 +1,5 @@
 import { Query } from "../../../../API/callApi";
-import { NewsItem } from "./news";
+import { NewsItem } from "../../News/API/news";
 
 export const postNewsItem = (formData: NewsItem): Query => ({
   endpoint: `news`,
@@ -16,4 +16,8 @@ export const editNewsItem = (formData: NewsItem): Query => ({
 export const deleteNewsItem = (newsId: number): Query => ({
   endpoint: `news/${newsId}`,
   method: "DELETE",
+});
+export const postJoinOrLeaveClass = (id: number, join: boolean): Query => ({
+  endpoint: `trainings/${join ? "join" : "cancel"}/${id}`,
+  method: "POST",
 });

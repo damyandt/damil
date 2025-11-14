@@ -3,6 +3,7 @@ import CustomTooltip from "../../CustomTooltip";
 import CustomModal from "../../Modal";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Column, Row } from "../../../../Global/Types/commonTypes";
+import { useLanguageContext } from "../../../../context/LanguageContext";
 
 type CustomActionProps = {
   columns: Column[];
@@ -33,10 +34,10 @@ export const CustomAction = ({
   setRefreshTable,
 }: CustomActionProps) => {
   const [open, setOpen] = useState<boolean>(false);
-
+  const { t } = useLanguageContext();
   return (
     <>
-      <CustomTooltip title={tooltip || ""} placement="bottom">
+      <CustomTooltip title={t(tooltip || "")} placement="bottom">
         <IconButton
           onClick={() => {
             setOpen(true);
@@ -53,8 +54,8 @@ export const CustomAction = ({
           setOpen(false);
           setAnchorEl?.(null);
         }}
-        title={modalTitle}
-        width={modalWidth}
+        title={t(modalTitle)}
+        width={t(modalWidth)}
       >
         {renderContent?.(rowData, setOpen, setRefreshTable)}
       </CustomModal>

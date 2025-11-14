@@ -32,7 +32,6 @@ export type Column = {
 export interface Response<TData> {
   success: boolean;
   message: string;
-  errorCode: string | null;
   data: TData;
   validationErrors: Record<string, string> | {};
 }
