@@ -17,7 +17,6 @@ import FloatingRightMenu from "./AppNavigation/FloatingRightNav";
 import { useAuthedContext } from "../context/AuthContext";
 import QrCodeButton from "../components/pageComponents/UserComponents/QRCodeButton";
 import { NavigationGuardProvider } from "../context/UnsavedChangesProvider";
-// import ClientsRightMenu from "../components/pageComponents/Clients/ClientsRightNav";
 
 interface AuthLayoutProps {
   css?: SerializedStyles[] | SerializedStyles;
@@ -113,6 +112,8 @@ const Layout: React.FC<AuthLayoutProps> = ({ className }) => {
   const lgMediaQuery = useMediaQuery("(max-width:1024px)");
   const smMediaQuery = useMediaQuery("(max-width:599px)");
   const { authedUser } = useAuthedContext();
+  // const { messages, handleCloseMessage } = useSnackbarContext();
+
   const [isRightNavVisible, setIsRightNavVisible] = useState<boolean>(
     smMediaQuery ? false : true
   );

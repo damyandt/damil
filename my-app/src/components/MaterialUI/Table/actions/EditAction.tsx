@@ -10,8 +10,8 @@ type EditActionProps = {
   columns: any;
   actionUrl: string;
   setAnchorEl: any;
-  setRefreshTable: any;
   configurations: any;
+  setFinalRows: any;
 };
 
 export const EditAction = ({
@@ -19,8 +19,8 @@ export const EditAction = ({
   columns,
   actionUrl,
   setAnchorEl,
-  setRefreshTable,
   configurations,
+  setFinalRows,
 }: EditActionProps) => {
   const { t } = useLanguageContext();
 
@@ -50,8 +50,8 @@ export const EditAction = ({
             actionUrl={actionUrl}
             setModalTitle={setOpen}
             selectedRow={selectedRow}
-            setRefreshTable={setRefreshTable}
             configurations={configurations}
+            setFinalRows={setFinalRows}
           />
         )}
       </CustomModal>

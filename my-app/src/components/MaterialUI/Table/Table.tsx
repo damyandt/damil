@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table as MuiTable,
   TableBody,
@@ -38,6 +38,7 @@ import {
 import ColumnVisibilityModal from "./ColumnVisibility";
 import Button from "../Button";
 import { DeleteUndo } from "./actions/DeleteAction";
+// import CustomSnackbar from "../FormFields/Snackbar";
 
 export type TableProps = {
   columns: Column[] | [];
@@ -65,6 +66,7 @@ const TableComponent = ({
   > | null>(configurations?.columnsLayoutConfig?.columnVisibility ?? null);
   const [openDetails, setOpenDetails] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [finalRows, setFinalRows] = useState<Row[]>(rows);
   const [anchorEl, setAnchorEl] = useState<
     null | HTMLElement | "closeOnlyAnchor"
   >(null);
@@ -72,6 +74,7 @@ const TableComponent = ({
   const [deleteQueue, setDeleteQueue] = useState<DeleteQueueType>({});
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(7);
+
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, row: Row) => {
     setAnchorEl(event.currentTarget);
     setSelectedRow(row);
@@ -81,6 +84,7 @@ const TableComponent = ({
       value?.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
+
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   let sortedRows = [...(filteredRows || [])];
   if (configurations?.sortable?.field) {
@@ -116,6 +120,10 @@ const TableComponent = ({
     (page - 1) * rowsPerPage,
     page * rowsPerPage
   );
+
+  useEffect(() => {
+    setFinalRows(paginatedRows);
+  }, [rows, searchQuery, page, rowsPerPage, configurations?.sortable]);
 
   const isRowDeleting = (id: string) => !!deleteQueue[id];
 
@@ -263,7 +271,7 @@ const TableComponent = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedRows.length === 0 ? (
+              {finalRows.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
@@ -304,7 +312,7 @@ const TableComponent = ({
                   </TableCell>
                 </TableRow>
               ) : (
-                paginatedRows?.map((row: Row) => {
+                finalRows?.map((row: Row) => {
                   const isDeleting = isRowDeleting(row.id);
                   const progress = deleteQueue[row.id]?.progress || 0;
 
@@ -442,10 +450,10 @@ const TableComponent = ({
       )}
       {isMobile && (
         <Box display="flex" flexDirection="column" gap={2}>
-          {paginatedRows.length === 0 ? (
+          {finalRows.length === 0 ? (
             <Typography align="center">{t("No Data...")}</Typography>
           ) : (
-            paginatedRows.map((row: Row) => (
+            finalRows.map((row: Row) => (
               <Card
                 key={row.id}
                 sx={{
@@ -503,6 +511,7 @@ const TableComponent = ({
         open={openDetails}
         setOpen={setOpenDetails}
         customActions={customActions}
+        setFinalRows={setFinalRows}
       />
       <PaginationControls
         currentPage={page}

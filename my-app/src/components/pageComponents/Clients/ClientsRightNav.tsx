@@ -39,7 +39,7 @@ const ClientsRightMenu: React.FC<ClientsRightMenuProps> = ({
           setModalTitle(null);
           setRefreshTable((prev: boolean) => !prev);
         }}
-        title="Add New Client"
+        title={t("Add New Client")}
         width={"lg"}
       >
         <ClientsCreateForm

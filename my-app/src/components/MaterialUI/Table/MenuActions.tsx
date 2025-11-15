@@ -21,6 +21,7 @@ type MenuActionsProps = {
   anchorEl: null | HTMLElement | "closeOnlyAnchor";
   setSelectedRow: Dispatch<SetStateAction<Record<string, unknown> | null>>;
   setAnchorEl: Dispatch<SetStateAction<null | HTMLElement | "closeOnlyAnchor">>;
+  setFinalRows: Dispatch<SetStateAction<Row[]>>;
   columns: Column[];
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -35,6 +36,7 @@ export const MenuActions = ({
   selectedRow,
   anchorEl,
   setSelectedRow,
+  setFinalRows,
   setAnchorEl,
   columns,
   open,
@@ -86,11 +88,11 @@ export const MenuActions = ({
           }}
         >
           <EditAction
-            setRefreshTable={setRefreshTable}
             columns={columns || []}
             selectedRow={selectedRow}
             actionUrl={editUrl || ""}
             setAnchorEl={setAnchorEl}
+            setFinalRows={setFinalRows}
             configurations={configurations || {}}
           />
         </MenuItem>
@@ -109,6 +111,7 @@ export const MenuActions = ({
             configurations={configurations}
             setRefreshTable={setRefreshTable}
             handleMenuClose={handleMenuClose}
+            setFinalRows={setFinalRows}
             selectedRow={selectedRow}
           />
         </MenuItem>

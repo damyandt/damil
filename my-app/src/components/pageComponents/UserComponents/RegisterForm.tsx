@@ -23,7 +23,7 @@ import { SetCookieParams } from "../../../Auth/authTypes";
 import { setCookie } from "../../../Global/Utils/commonFunctions";
 import { useAuthedContext } from "../../../context/AuthContext";
 import CustomTooltip from "../../MaterialUI/CustomTooltip";
-import { registerValidator } from "./registerValidator";
+// import { registerValidator } from "./registerValidator";
 import {
   AdminDataRegister,
   Business,
@@ -58,35 +58,27 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
   });
 
   const handleRegister = async () => {
-    if (!registerValidator(step, business, admin, setErrors, t)) {
-      console.warn("Form validation failed!");
-      return;
-    }
     try {
       setLoading(true);
-      const responce = await callApi<Response<any>>({
+      await callApi<Response<any>>({
         query: postRegister({ tenantDto: business, userDto: admin }),
         auth: null,
       });
-      if (responce.success === false) {
-        setErrors(responce.validationErrors);
 
-        const errorFields = Object.keys(responce.validationErrors);
-
-        if (
-          errorFields.some((field) => ["name", "businessEmail"].includes(field))
-        ) {
-          setStep(0);
-        } else if (
-          errorFields.some((field) => ["city", "address"].includes(field))
-        ) {
-          setStep(1);
-        }
-      } else if (responce.success === true) {
-        setStep(3);
-      }
+      setStep(3);
     } catch (error) {
       console.error("Register failed:", error);
+      setErrors(error.validationErrors);
+      const errorFields = Object.keys(error.validationErrors);
+      if (
+        errorFields.some((field) => ["name", "businessEmail"].includes(field))
+      ) {
+        setStep(0);
+      } else if (
+        errorFields.some((field) => ["city", "address"].includes(field))
+      ) {
+        setStep(1);
+      }
     } finally {
       setLoading(false);
     }
@@ -135,46 +127,39 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
   }, [resendCooldown]);
 
   const handleSubmitVerificationCode = async () => {
-    if (!registerValidator(step, business, admin, setErrors, t)) {
-      console.warn("Form validation failed!");
-      return;
-    }
     try {
-      const responce = await callApi<Response<any>>({
+      await callApi<Response<any>>({
         query: codeVerification({
           verificationCode: verificationCode,
           email: admin.email,
         }),
         auth: null,
       });
-      if (responce.success === true) {
-        const responceLogin = await callApi<any>({
-          query: postLogin({
-            email: admin.email,
-            password: admin.password,
-          }),
-          auth: null,
-        });
+      const responceLogin = await callApi<any>({
+        query: postLogin({
+          email: admin.email,
+          password: admin.password,
+        }),
+        auth: null,
+      });
 
-        const refresh_token = responceLogin.refreshToken;
-        const refreshCookie: SetCookieParams = {
-          name: COOKIE_REFRESH_TOKEN,
-          value: refresh_token,
-          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
-          sameSite: "strict",
-          secure: true,
-        };
+      const refresh_token = responceLogin.refreshToken;
+      const refreshCookie: SetCookieParams = {
+        name: COOKIE_REFRESH_TOKEN,
+        value: refresh_token,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
+        sameSite: "strict",
+        secure: true,
+      };
 
-        setCookie(refreshCookie);
-        setUserSignedIn(false);
-        setUserSignedIn(true);
-        navigate("/");
-        window.location.reload();
-      } else {
-        setErrors(responce.validationErrors);
-      }
+      setCookie(refreshCookie);
+      setUserSignedIn(false);
+      setUserSignedIn(true);
+      navigate("/");
+      window.location.reload();
     } catch (error) {
       console.error("Verification failed:", error);
+      setErrors(error.message);
     }
   };
   return (
@@ -209,8 +194,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
                 }))
               }
               onEnterFunc={() => {
-                registerValidator(step, business, admin, setErrors, t) &&
-                  setStep((prev: number) => (prev += 1));
+                setStep((prev: number) => (prev += 1));
               }}
               InputProps={{
                 endAdornment: (
@@ -219,13 +203,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
                       <IconButton
                         edge="end"
                         onClick={() => {
-                          registerValidator(
-                            step,
-                            business,
-                            admin,
-                            setErrors,
-                            t
-                          ) && setStep((prev: number) => (prev += 1));
+                          setStep((prev: number) => (prev += 1));
                         }}
                         size="small"
                       >
@@ -260,8 +238,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
               label={errors["address"] || t("Address")}
               error={!!errors["address"]}
               onEnterFunc={() => {
-                registerValidator(step, business, admin, setErrors, t) &&
-                  setStep((prev: number) => (prev += 1));
+                // registerValidator(step, business, admin, setErrors, t) &&
+                setStep((prev: number) => (prev += 1));
               }}
               onChange={(e) =>
                 setBusiness((prev: Business) => ({
@@ -276,13 +254,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
                       <IconButton
                         edge="end"
                         onClick={() => {
-                          registerValidator(
-                            step,
-                            business,
-                            admin,
-                            setErrors,
-                            t
-                          ) && setStep((prev: number) => (prev += 1));
+                          // registerValidator(
+                          //   step,
+                          //   business,
+                          //   admin,
+                          //   setErrors,
+                          //   t
+                          // ) &&
+                          setStep((prev: number) => (prev += 1));
                         }}
                         size="small"
                       >
@@ -302,19 +281,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
             <TextField
               disabled={loading}
               fullWidth
-              label={errors["email"] || t("Email")}
+              label={errors["userDto.email"] || t("Email")}
               type="email"
-              error={!!errors["email"]}
+              error={!!errors["userDto.email"]}
               onChange={(e) => handleChangeAdmin("email", e.target.value)}
             />
           </Grid>
           <Grid size={12}>
             <TextField
               disabled={loading}
-              label={errors["password"] || t("Password")}
+              label={errors["userDto.password"] || t("Password")}
               fullWidth
               type={showPassword ? "text" : "password"}
-              error={!!errors["password"]}
+              error={!!errors["userDto.password"]}
               onChange={(e) => handleChangeAdmin("password", e.target.value)}
               InputProps={{
                 endAdornment: (
@@ -341,20 +320,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
           <Grid size={12}>
             <TextField
               disabled={loading}
-              label={errors["confirmPassword"] || "Confirm Password"}
+              label={errors["confirmPassword"] || t("Confirm Password")}
               fullWidth
               type={showPassword ? "text" : "password"}
               error={!!errors["confirmPassword"]}
               onChange={(e) =>
                 handleChangeAdmin("confirmPassword", e.target.value)
               }
-              // onKeyDown={(e: any) => {
-              //   if (e.key === "Enter") {
-              //     e.preventDefault(); // ✅ Prevent form submission or unwanted action
-              //     e.stopPropagation(); // ✅ Optional: block global handlers
-              //     handleRegister();
-              //   }
-              // }}
               onEnterFunc={() => {
                 handleRegister();
               }}

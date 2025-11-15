@@ -75,14 +75,10 @@ const LoginForm = () => {
         return;
       }
 
-      const responce = await callApi<any>({
+      await callApi<any>({
         query: validateEmail({ email: formData.email }),
         auth: null,
       });
-
-      if (responce.success === false) {
-        return setErrors({ email: responce.message });
-      }
 
       setShowPasswordField(true);
       setDisableEmail(true);
@@ -91,9 +87,7 @@ const LoginForm = () => {
       }, 100);
     } catch (error) {
       console.error("Failed:", error);
-      // setErrors({
-      //   email: errorMessages(t).internalServerError,
-      // });
+      setErrors({ email: error.message });
     }
   };
 
@@ -121,16 +115,6 @@ const LoginForm = () => {
         auth: null,
       });
 
-      if (
-        responce.message === "Account not verified. Please verify your account"
-      ) {
-        return setOpenModal(true);
-      } else if (responce.success === false) {
-        return setErrors({
-          password: responce.message,
-        });
-      }
-
       const refresh_token = responce.data.refreshToken;
       const refreshCookie: SetCookieParams = {
         name: COOKIE_REFRESH_TOKEN,
@@ -147,9 +131,15 @@ const LoginForm = () => {
       window.location.reload();
     } catch (error) {
       console.error("Login failed:", error);
-      // setErrors({
-      //   password: errorMessages(t).internalServerError,
-      // });
+
+      if (
+        error.message === "Account not verified. Please verify your account"
+      ) {
+        return setOpenModal(true);
+      }
+      setErrors({
+        password: error.message,
+      });
     } finally {
       setLoading(false);
     }
@@ -162,19 +152,19 @@ const LoginForm = () => {
       return;
     }
     try {
-      const responce = await callApi<any>({
+      await callApi<any>({
         query: codeVerification({
           verificationCode: verificationCode,
           email: formData.email,
         }),
         auth: null,
       });
-      responce.success === true && setOpenModal(false);
-      responce.success === true && handleLogin();
-      responce.success === true && navigate("/");
-      responce.success === false && setErrors(responce.validationErrors);
+      setOpenModal(false);
+      handleLogin();
+      navigate("/");
     } catch (error) {
       console.error("Verification failed:", error);
+      setErrors(error.message);
     }
   };
 
@@ -222,7 +212,7 @@ const LoginForm = () => {
             fullWidth
             type="email"
             disabled={disableEmail}
-            label={errors["email"] || t("Email")}
+            label={t(errors["email"]) || t("Email")}
             error={!!errors["email"]}
             onEnterFunc={() => {
               handleNextClick();
@@ -256,18 +246,11 @@ const LoginForm = () => {
           <Collapse in={showPasswordField}>
             <TextField
               fullWidth
-              label={errors["password"] || t("Password")}
+              label={t(errors["password"]) || t("Password")}
               type={showPassword ? "text" : "password"}
               error={!!errors["password"]}
               onChange={(e) => handleChange("password", e.target.value)}
               inputRef={passwordInputRef}
-              // onKeyDown={(e) => {
-              //   if (e.key === "Enter") {
-              //     e.preventDefault();
-              //     e.stopPropagation();
-              //     handleLogin();
-              //   }
-              // }}
               onEnterFunc={() => {
                 handleLogin();
               }}

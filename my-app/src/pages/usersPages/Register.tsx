@@ -16,50 +16,6 @@ const RegisterPage = () => {
   const [step, setStep] = useState<number>(0);
   const primaryColor = hexToVec3(theme.palette.primary.main);
 
-  // useEffect(() => {
-  //   const delayDebounce = setTimeout(async () => {
-  //     if (admin.email) {
-  //       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //       if (admin.email && !emailPattern.test(admin.email)) {
-  //         return setErrors((prev) => ({
-  //           ...prev,
-  //           email: "Invalid Email!",
-  //         }));
-  //       }
-  //     }
-  //   }, 700);
-
-  //   return () => clearTimeout(delayDebounce);
-  // }, [admin.email]);
-
-  // useEffect(() => {
-  //   const delayDebounce = setTimeout(async () => {
-  //     if (admin.password) {
-  //       if (admin.password.length < 8) {
-  //         return setErrors((prev) => ({
-  //           ...prev,
-  //           password: t("At least 8 characters"),
-  //         }));
-  //       }
-  //     }
-  //   }, 700);
-  //   return () => clearTimeout(delayDebounce);
-  // }, [admin.password]);
-
-  // useEffect(() => {
-  //   const delayDebounce = setTimeout(async () => {
-  //     if (admin.confirmPassword) {
-  //       if (admin.confirmPassword !== admin.password) {
-  //         return setErrors((prev) => ({
-  //           ...prev,
-  //           confirmPassword: t("Passwords do not match."),
-  //         }));
-  //       }
-  //     }
-  //   }, 700);
-  //   return () => clearTimeout(delayDebounce);
-  // }, [admin.confirmPassword]);
-
   return (
     <>
       <CustomTooltip
@@ -177,7 +133,7 @@ const RegisterPage = () => {
           </Typography>
           <RegisterForm step={step} setStep={setStep} />
           <Typography variant="body2" zIndex={10}>
-            {"You already have an Account? "}
+            {t("You already have an Account?")}{" "}
             <MuiLink component={RouterLink} to="/login" underline="hover">
               {t("Login Here")}
             </MuiLink>

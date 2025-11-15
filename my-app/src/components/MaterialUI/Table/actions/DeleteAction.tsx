@@ -13,12 +13,14 @@ import {
   Row,
 } from "../../../../Global/Types/commonTypes";
 import { useLanguageContext } from "../../../../context/LanguageContext";
+import { useSnackbarContext } from "../../../../context/SnackbarContext";
 
 type DeleteActionProps = {
   setDeleteQueue: Dispatch<SetStateAction<DeleteQueueType>>;
   deleteQueue: DeleteQueueType;
   configurations?: Configuration;
   setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
+  setFinalRows: any;
   handleMenuClose: (event?: MouseEvent | React.KeyboardEvent) => void;
   selectedRow: Row | null;
 };
@@ -27,13 +29,13 @@ export const DeleteAction = ({
   setDeleteQueue,
   deleteQueue,
   configurations,
-  setRefreshTable,
+  setFinalRows,
   handleMenuClose,
   selectedRow,
 }: DeleteActionProps) => {
   const { t } = useLanguageContext();
   const { setAuthedUser } = useAuthedContext();
-
+  const { addMessage } = useSnackbarContext();
   const handleDeleteClick = (row: Row) => {
     const id = row.id;
     if (deleteQueue[id]) return;
@@ -51,17 +53,6 @@ export const DeleteAction = ({
 
           const newQueue = { ...prev };
           delete newQueue[id];
-
-          deletePromise.finally(() => {
-            setTimeout(() => {
-              setDeleteQueue((current: DeleteQueueType) => {
-                if (Object.keys(current).length === 0) {
-                  setRefreshTable?.((prev: boolean) => !prev);
-                }
-                return current;
-              });
-            }, 100);
-          });
 
           return newQueue;
         }
@@ -90,22 +81,31 @@ export const DeleteAction = ({
         query: deleteQueryAction(url),
         auth: { setAuthedUser },
       });
+      addMessage(`${row.id} successfully deleted.`, "success");
+
+      setFinalRows((prevRows: Row[]) => prevRows.filter((r) => r.id !== id));
     } catch (err) {
       console.error(err);
+      addMessage(
+        err.message || "An unknown error occurred during deletion.",
+        "error"
+      );
     }
   };
 
   return (
-    <CustomTooltip title={t("Delete")} placement="bottom">
-      <IconButton
-        onClick={() => {
-          selectedRow && handleDeleteClick(selectedRow);
-          handleMenuClose();
-        }}
-      >
-        <DeleteIcon fontSize="small" />
-      </IconButton>
-    </CustomTooltip>
+    <>
+      <CustomTooltip title={t("Delete")} placement="bottom">
+        <IconButton
+          onClick={() => {
+            selectedRow && handleDeleteClick(selectedRow);
+            handleMenuClose();
+          }}
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      </CustomTooltip>
+    </>
   );
 };
 

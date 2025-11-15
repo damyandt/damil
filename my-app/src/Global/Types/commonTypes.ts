@@ -33,7 +33,7 @@ export interface Response<TData> {
   success: boolean;
   message: string;
   data: TData;
-  validationErrors: Record<string, string> | {};
+  // validationErrors?: Record<string, string> | {};
 }
 
 export type Enum = {

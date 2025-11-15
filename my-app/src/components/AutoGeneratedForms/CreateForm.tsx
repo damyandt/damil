@@ -16,11 +16,12 @@ import {
   Response,
   Row,
 } from "../../Global/Types/commonTypes";
+import { useSnackbarContext } from "../../context/SnackbarContext";
 
 interface CreateFormProps {
   columns?: Column[];
   actionUrl?: string;
-  setRefreshTable: Dispatch<SetStateAction<boolean>>;
+  setRefreshTable?: Dispatch<SetStateAction<boolean>>;
   setModalTitle?: Dispatch<SetStateAction<string | null>>;
   setAnchorEl?: Dispatch<
     SetStateAction<null | HTMLElement | "closeOnlyAnchor">
@@ -30,12 +31,14 @@ interface CreateFormProps {
   disabled?: boolean;
   configurations?: Configuration;
   removeButtons?: boolean;
+  setFinalRows: any;
 }
 
 const CreateForm: React.FC<CreateFormProps> = ({
   columns,
   actionUrl = "",
   setRefreshTable,
+  setFinalRows,
   setModalTitle,
   selectedRow,
   disabled,
@@ -49,6 +52,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
     id?: string | number;
     [key: string]: any;
   };
+  const { addMessage } = useSnackbarContext();
   const [formValues, setFormValues] = useState<Record<string, any>>(rest);
   const [loading, setLoading] = useState<boolean>(false);
   const excludedKeys = ["id", "actions", "createdAt", "updatedAt"];
@@ -77,14 +81,13 @@ const CreateForm: React.FC<CreateFormProps> = ({
           const url = rawUrl?.startsWith("/v1/") ? rawUrl.slice(4) : rawUrl;
 
           try {
-            const options = await callApi<Response<any>>({
+            const response = await callApi<Response<any>>({
               query: getQueryOptions(url ?? ""),
               auth: { setAuthedUser },
             });
-            options.success && (optionsMap[col.field] = options.data);
-            !options.success &&
-              console.error("Error fetching options for: ", col.field);
+            optionsMap[col.field] = response.data;
           } catch (error) {
+            addMessage(`${t("Error fetching options for")} ${t(col.field)}`);
             console.error("Error fetching options for", col.field, error);
           }
         }
@@ -102,6 +105,13 @@ const CreateForm: React.FC<CreateFormProps> = ({
       setFormValues({});
       setModalTitle?.(null);
     }
+  };
+  const handleUpdateRow = (updatedRow: any) => {
+    setFinalRows((prev: Row[]) =>
+      prev.map((row: Row) =>
+        row.id === updatedRow.id ? { ...row, ...updatedRow } : row
+      )
+    );
   };
 
   const getQueryOptions = (url: string): Query => ({
@@ -140,25 +150,26 @@ const CreateForm: React.FC<CreateFormProps> = ({
         variables: { ...payload },
       };
 
-      const responce = await callApi<Response<any>>({
+      const response = await callApi<Response<any>>({
         query,
         auth: { setAuthedUser },
       });
 
-      responce.success ? setStatus("success") : setStatus("error");
+      setStatus("success");
+      handleUpdateRow?.(response.data);
 
-      responce.success === false && setErrors(responce.validationErrors || {});
-
-      setLoading(false);
       setActiveStep
         ? setActiveStep((prev: number) => prev + 1)
-        : responce.success &&
-          setTimeout(() => {
+        : setTimeout(() => {
             handleClose();
+            addMessage("User updated successfully", "success");
           }, 1000);
     } catch (error) {
       console.error("Error creating item:", error);
       setStatus("error");
+      addMessage(error.message, "error");
+      setErrors(error.validationErrors || {});
+    } finally {
       setLoading(false);
     }
   };
@@ -234,6 +245,8 @@ const CreateForm: React.FC<CreateFormProps> = ({
                       case "enum":
                       case "dropdown": {
                         const fieldOptions = options[col.field];
+                        console.log(options);
+                        console.log(col.field);
                         const isLoading =
                           !fieldOptions || fieldOptions.length === 0;
                         const hasValue =

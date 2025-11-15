@@ -422,7 +422,21 @@ const HomePage: React.FC = () => {
         setSelectedFilters={setSelectedFilters}
         flatData={analyticsData}
       />
-
+      {/* {messages?.map((msg: any, index: number) => (
+        // <CustomSnackbar
+        //   open={true}
+        //   onClose={() => handleCloseMessage(index)}
+        //   message={msg.message || "Message"}
+        //   key={`msg-${index}`}
+        //   // position={{ vertical: "bottom", horizontal: "right" }}
+        // />
+        <CustomSnackbar
+          open={true}
+          onClose={() => handleCloseMessage(index)}
+          message={msg.message || "Message"}
+          key={"bottom + right"}
+        />
+      ))} */}
       <CustomSnackbar
         open={copied}
         onClose={() => setCopied(false)}

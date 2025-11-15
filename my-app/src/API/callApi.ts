@@ -2,6 +2,7 @@ import {
   handleFetchUserAccessToken,
   handleUserSignOut,
 } from "../context/authContextUtils";
+// import { Response } from "../Global/Types/commonTypes";
 import { getCookie } from "../Global/Utils/commonFunctions";
 import { User } from "../pages/usersPages/api/userTypes";
 export const COOKIE_ACCESS_TOKEN = "accessToken";
@@ -57,9 +58,11 @@ const callApi = async <T>(
     triggerDownload,
   } = query;
   const endpointToUse = "https://fitmanage-b0bb9372ef38.herokuapp.com/api/v1/";
-  let response: Response;
+  let response: any;
   const accessToken = getCookie(COOKIE_ACCESS_TOKEN);
-
+  const normalizedEndpoint = endpoint.startsWith("/")
+    ? endpoint.substring(1)
+    : endpoint;
   if (method === "GET" || method === "DELETE") {
     let input: string = "";
 
@@ -67,12 +70,12 @@ const callApi = async <T>(
       const params = new URLSearchParams(variables).toString();
       input = `?${params}`;
     }
-    const url = `${endpointToUse}${endpoint}${input}`;
+    const url = `${endpointToUse}${normalizedEndpoint}${input}`;
     response = await fetch(url, {
       method,
       headers: {
         "Content-Type": "application/json",
-        ...(!shouldSkipToken(endpoint) && accessToken
+        ...(!shouldSkipToken(normalizedEndpoint) && accessToken
           ? { Authorization: `Bearer ${accessToken}` }
           : {}),
       },
@@ -114,7 +117,7 @@ const callApi = async <T>(
         });
       }
 
-      response = await fetch(`${endpointToUse}${endpoint}`, {
+      response = await fetch(`${endpointToUse}${normalizedEndpoint}`, {
         method: method,
         headers: {
           "Content-Type": "application/json",
@@ -123,7 +126,7 @@ const callApi = async <T>(
         body: formData,
       });
     } else {
-      response = await fetch(`${endpointToUse}${endpoint}`, {
+      response = await fetch(`${endpointToUse}${normalizedEndpoint}`, {
         method: method,
         headers: {
           "Content-Type": "application/json",
@@ -139,7 +142,7 @@ const callApi = async <T>(
       responseBody = JSON.stringify(variables);
     }
 
-    response = await fetch(`${endpointToUse}${endpoint}`, {
+    response = await fetch(`${endpointToUse}${normalizedEndpoint}`, {
       method: method,
       headers: {
         "Content-Type": "application/json",
@@ -211,9 +214,15 @@ const callApi = async <T>(
     }
   }
 
-  // if status code is not within 200, there is an error
   if (!response.status.toString().startsWith("2") && !receiveErrorMessage) {
-    throw new Error(`API error - ${response.url}`);
+    let errorData: any = await response.json();
+
+    const errorObject = {
+      status: response.status,
+      ...errorData,
+    };
+
+    throw errorObject;
   }
 
   if (query.responseType === "blob") {
