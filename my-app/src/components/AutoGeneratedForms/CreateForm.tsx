@@ -245,8 +245,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
                       case "enum":
                       case "dropdown": {
                         const fieldOptions = options[col.field];
-                        console.log(options);
-                        console.log(col.field);
+
                         const isLoading =
                           !fieldOptions || fieldOptions.length === 0;
                         const hasValue =
