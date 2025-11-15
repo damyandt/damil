@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import TableComponent from "../../../components/MaterialUI/Table/Table";
 import callApi from "../../../API/callApi";
 import { useAuthedContext } from "../../../context/AuthContext";
-import { Response } from "../../../Global/Types/commonTypes";
+import { Response, Row } from "../../../Global/Types/commonTypes";
 import { getClasses } from "./API/getQueries";
 import RightMenu from "../../../components/MaterialUI/Table/RightMenu";
 import { useOutletContext } from "react-router-dom";
@@ -26,7 +26,7 @@ const ClassesContainer: React.FC<ClassesProps> = () => {
   const [tab, setTab] = useState<"Card View" | "Calender View" | "Table View">(
     "Card View"
   );
-  const [refreshtable, setRefreshTable] = useState<any>();
+  const [rows, setRows] = useState<Row[]>([]);
   const [classesTable, setClassestable] = useState<any>();
   const { setExtraRightNavMenu } = useOutletContext<AppRouterProps>();
   const { setAuthedUser } = useAuthedContext();
@@ -37,7 +37,7 @@ const ClassesContainer: React.FC<ClassesProps> = () => {
           query: getClasses(),
           auth: { setAuthedUser },
         });
-
+        setRows(response.data.rows);
         setClassestable(response.data);
       } catch (error) {
         console.error(error);
@@ -45,7 +45,7 @@ const ClassesContainer: React.FC<ClassesProps> = () => {
     };
 
     fetchClasses();
-  }, [refreshtable]);
+  }, []);
 
   useEffect(() => {
     // if (smMediaQuery) {
@@ -54,7 +54,7 @@ const ClassesContainer: React.FC<ClassesProps> = () => {
     setExtraRightNavMenu(
       <RightMenu
         title={t("Classes")}
-        setRefreshTable={setRefreshTable}
+        setRows={setRows}
         columns={classesTable?.columns ?? []}
         configurations={classesTable?.config}
         addNew={true}
@@ -127,7 +127,7 @@ const ClassesContainer: React.FC<ClassesProps> = () => {
         <TableComponent
           configurations={classesTable?.config || {}}
           columns={classesTable?.columns || []}
-          rows={classesTable?.rows || []}
+          rows={rows || []}
           // setRefreshTable={setRefreshTable}
           title={t("Subscription Plans")}
         />
