@@ -57,19 +57,27 @@ const NewsForm = ({ setOpen, data, triggerRefetch }: NewsFormProps) => {
   };
 
   const handleFetchMembers = async () => {
-    const membersRes = await callApi<Response<any>>({
-      query: getMembersEnums(),
-      auth: { setAuthedUser },
-    });
-    membersRes.success && setMembers(membersRes.data);
+    try {
+      const membersRes = await callApi<Response<any>>({
+        query: getMembersEnums(),
+        auth: { setAuthedUser },
+      });
+      setMembers(membersRes.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleFetchStaff = async () => {
-    const staffRes = await callApi<Response<any>>({
-      query: getStaffEnums(),
-      auth: { setAuthedUser },
-    });
-    staffRes.success && setStaffs(staffRes.data);
+    try {
+      const staffRes = await callApi<Response<any>>({
+        query: getStaffEnums(),
+        auth: { setAuthedUser },
+      });
+      setStaffs(staffRes.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {

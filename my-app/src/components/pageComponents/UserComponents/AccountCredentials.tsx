@@ -18,6 +18,7 @@ import Alert from "../../MaterialUI/Alert";
 import TextField from "../../MaterialUI/FormFields/TextField";
 import Button from "../../MaterialUI/Button";
 import { useLanguageContext } from "../../../context/LanguageContext";
+import { useSnackbarContext } from "../../../context/SnackbarContext";
 
 const AccountCredentials = () => {
   const { authedUser, setAuthedUser, setRefreshUserData } = useAuthedContext();
@@ -36,22 +37,20 @@ const AccountCredentials = () => {
   const [successEmail, setSuccessEmail] = useState<string | null>(null);
   const [errorPassword, setErrorPassword] = useState<string | null>(null);
   const [successPassword, setSuccessPassword] = useState<string | null>(null);
-
+  const { addMessage } = useSnackbarContext();
   const handleSaveEmail = async () => {
     setErrorEmail(null);
     setLoading(true);
 
     try {
-      const emailRes = await callApi<Response<any>>({
+      await callApi<Response<any>>({
         query: updateProfile({ email: newEmail }),
         auth: { setAuthedUser },
       });
 
-      emailRes.success === true && setRefreshUserData(true);
-      emailRes.success === true &&
-        setSuccessEmail("Email updated successfully.");
-      emailRes.success === false &&
-        setSuccessEmail(emailRes.message || "Failed to update email.");
+      setRefreshUserData(true);
+      setSuccessEmail("Email updated successfully.");
+      addMessage("Email updated successfully.");
     } catch (err: any) {
       setErrorEmail(err?.message || "Failed to update email.");
     } finally {
@@ -68,22 +67,17 @@ const AccountCredentials = () => {
 
     setLoading(true);
     try {
-      const passwordResp = await callApi<Response<any>>({
+      await callApi<Response<any>>({
         query: updateCredentials({
           oldPassword,
           newPassword: newPassword,
         }),
         auth: { setAuthedUser },
       });
-      passwordResp.success === true && setRefreshUserData(true);
-
-      passwordResp.success === true &&
-        setSuccessPassword("Password updated successfully.");
-      passwordResp.success === false &&
-        setSuccessPassword(
-          passwordResp.message || "Failed to update password."
-        );
+      setRefreshUserData(true);
+      setSuccessPassword("Password updated successfully.");
     } catch (err: any) {
+      console.error(err);
       setErrorPassword(err?.message || "Failed to update password.");
     } finally {
       setLoading(false);

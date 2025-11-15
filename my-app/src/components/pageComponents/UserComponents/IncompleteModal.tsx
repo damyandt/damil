@@ -26,6 +26,7 @@ import DatePickerComponent from "../../MaterialUI/FormFields/DatePicker";
 import dayjs from "dayjs";
 import Alert from "../../MaterialUI/Alert";
 import { User } from "../../../pages/usersPages/api/userTypes";
+import { useSnackbarContext } from "../../../context/SnackbarContext";
 
 const IncompleteProfileModal = () => {
   const {
@@ -41,30 +42,10 @@ const IncompleteProfileModal = () => {
   const { t } = useLanguageContext();
   const [step, setStep] = useState<number>(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [formData, setFormData] = useState<Partial<User>>(
-    authedUser
-    // {
-    //   username: authedUser?.username || "",
-    //   firstName: authedUser?.firstName || "",
-    //   lastName: authedUser?.lastName || "",
-    //   city: authedUser?.city || "",
-    //   phone: authedUser?.phone || "",
-    //   address: authedUser?.address || "",
-    //   email: authedUser?.email || "",
-    //   gender: authedUser?.gender,
-    //   birthDate: authedUser?.birthDate ? dayjs(authedUser.birthDate) : dayjs(),
-    // }
-  );
-  const [preferancesData, setPreferencesData] = useState<PreferencesType>(
-    preferences
-    //   {
-    //   currency: preferences.currency || "",
-    //   language: preferences.language || "",
-    //   mode: preferences.mode || "",
-    //   themeColor: preferences.themeColor || "",
-    //   homeFilters: preferences.homeFilters || [],
-    // }
-  );
+  const [formData, setFormData] = useState<Partial<User>>(authedUser);
+  const [preferancesData, setPreferencesData] =
+    useState<PreferencesType>(preferences);
+  const { addMessage } = useSnackbarContext();
   const navigate = useNavigate();
   const handleChange = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -112,27 +93,37 @@ const IncompleteProfileModal = () => {
         if (Object.keys(changes).length === 0) {
           return;
         }
-
-        const info = await callApi<Response<any>>({
-          query: updateProfile(changes),
-          auth: { setAuthedUser },
-        });
-        info.success === true && setStep(2);
-        info.success === true && setErrors({});
-        info.success === true && setRefreshUserData(true);
-        info.success === false && setErrors(info.validationErrors || {});
+        try {
+          await callApi<Response<any>>({
+            query: updateProfile(changes),
+            auth: { setAuthedUser },
+          });
+          setStep(2);
+          setErrors({});
+          setRefreshUserData(true);
+          addMessage("Information updated!", "success");
+        } catch (error) {
+          setErrors(error.validationErrors || {});
+          addMessage(error.message, "error");
+        }
       } else if (step === 2) {
-        const preferencesInfo = await callApi<any>({
-          query: savePreferences(preferancesData),
-          auth: { setAuthedUser },
-        });
+        try {
+          const preferencesInfo = await callApi<any>({
+            query: savePreferences(preferancesData),
+            auth: { setAuthedUser },
+          });
 
-        preferencesInfo.mode &&
-          localStorage.setItem("themeMode", preferancesData.mode);
-        preferencesInfo.themeColor &&
-          localStorage.setItem("themeColor", preferancesData.themeColor);
-        preferencesInfo.success === true && setStep(3);
-        preferencesInfo.success === true && setRefreshUserData(true);
+          preferencesInfo.mode &&
+            localStorage.setItem("themeMode", preferancesData.mode);
+          preferencesInfo.themeColor &&
+            localStorage.setItem("themeColor", preferancesData.themeColor);
+          setStep(3);
+          setRefreshUserData(true);
+          addMessage("Information updated!", "success");
+        } catch (error) {
+          console.error(error);
+          addMessage(error.message, "error");
+        }
       } else {
         navigate("DAMIL-Configurations/Member-Plans");
       }

@@ -79,11 +79,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
           auth: { setAuthedUser },
         });
 
-        if (response.success && response.data.length > 0) {
-          setUsersFound(response.data);
-        } else {
-          setUsersFound([]);
-        }
+        response.data.length > 0 && setUsersFound(response.data);
       } catch (err: any) {
         console.error(err);
         setUsersFound([]);
@@ -98,7 +94,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
         auth: { setAuthedUser },
       });
 
-      if (response.success && response.data.length > 0) {
+      if (response.data.length > 0) {
         setUsersFound(response.data); // ✅ show results in Popper
         setErrors({});
       } else {
@@ -117,20 +113,19 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
   // const handleBack = () => setActiveStep((prev) => prev - 1);
 
   const handleFinish = async () => {
-    const checkIn = await callApi<any>({
-      query: checkInMember(userDetails[0].id),
-      auth: { setAuthedUser },
-    });
+    try {
+      await callApi<any>({
+        query: checkInMember(userDetails[0].id),
+        auth: { setAuthedUser },
+      });
+      setActiveStep((prev) => prev + 1);
 
-    checkIn.success === true
-      ? setActiveStep((prev) => prev + 1)
-      : setErrors({ noVisits: checkIn.message });
-
-    if (checkIn.success === true) {
       setSearchInput("");
       setUserDetails(null);
       setActiveStep(0);
       setErrors({});
+    } catch (error) {
+      setErrors({ noVisits: error.message });
     }
   };
 
@@ -496,7 +491,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
               }
             );
 
-            if (response.success && response.data.length > 0) {
+            if (response.data.length > 0) {
               setUserDetails(response.data);
               setErrors({});
             } else {

@@ -8,18 +8,28 @@ import CellRenderer from "../../MaterialUI/Table/CellRenderer";
 import callApi from "../../../API/callApi";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { acceptClient } from "../../../pages/Access Control/API/postQueries";
+import { useSnackbarContext } from "../../../context/SnackbarContext";
+import { Row } from "../../../Global/Types/commonTypes";
 
-const AcceptClient = ({ rowData, setOpen, setRefreshTable }: any) => {
+const AcceptClient = ({ rowData, setOpen, setFinalRows }: any) => {
   const { t } = useLanguageContext();
   const { setAuthedUser } = useAuthedContext();
-
+  const { addMessage } = useSnackbarContext();
   const handleSubmit = async () => {
-    const response = await callApi<any>({
-      query: acceptClient(rowData.id),
-      auth: { setAuthedUser },
-    });
-    response.success && setRefreshTable((prev: boolean) => !prev);
-    response.success && setOpen(false);
+    try {
+      const response = await callApi<any>({
+        query: acceptClient(rowData.id),
+        auth: { setAuthedUser },
+      });
+      setFinalRows((prev: Row[]) =>
+        prev.filter((row: Row) => row.id !== response.data.id)
+      );
+      addMessage(response.message, "success");
+    } catch (error) {
+      addMessage(error.message, "error");
+    } finally {
+      setOpen(false);
+    }
   };
   return (
     <>

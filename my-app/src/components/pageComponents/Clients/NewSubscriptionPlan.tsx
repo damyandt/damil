@@ -35,6 +35,7 @@ import CellRenderer from "../../MaterialUI/Table/CellRenderer";
 import { postSubscription } from "../../../pages/Access Control/API/postQueries";
 import { User } from "../../../pages/usersPages/api/userTypes";
 import { useNavigate } from "react-router-dom";
+import { useSnackbarContext } from "../../../context/SnackbarContext";
 
 interface NewSubscriptionPlanProps {
   rowData: Row;
@@ -62,6 +63,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [paymentMethod, setPaymentMethod] = useState<"CARD" | "CASH">("CASH");
   const steps = ["New Plan", "Payment", "Confirm Info"];
+  const { addMessage } = useSnackbarContext();
   const navigate = useNavigate();
   const handlePaymentMethodChange = (
     _: React.MouseEvent<HTMLElement>,
@@ -73,12 +75,16 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
   };
 
   const fetchUser = async () => {
-    const responseUser: Response<Array<Partial<User>>> = await callApi<any>({
-      query: getMember(rowData.id, "id"),
-      auth: { setAuthedUser },
-    });
+    try {
+      const responseUser: Response<Array<Partial<User>>> = await callApi<any>({
+        query: getMember(rowData.id, "id"),
+        auth: { setAuthedUser },
+      });
 
-    responseUser.success && setDetails(responseUser.data[0]);
+      setDetails(responseUser.data[0]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -117,29 +123,39 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
         setLoading(false);
         return;
       }
-      const response = await callApi<Response<any>>({
-        query: getPrice(
-          subscriptionData.subscriptionPlan,
-          subscriptionData.employment
-        ),
-        auth: { setAuthedUser },
-      });
-      response.success && setPrice(response.data.price);
-      setStep((prev: number) => (prev += 1));
+      try {
+        const response = await callApi<Response<any>>({
+          query: getPrice(
+            subscriptionData.subscriptionPlan,
+            subscriptionData.employment
+          ),
+          auth: { setAuthedUser },
+        });
+        setPrice(response.data.price);
+        setStep((prev: number) => (prev += 1));
+      } catch (error) {
+        addMessage(error.message, "error");
+        console.error(error);
+      }
     } else if (step === 1) {
       setStep((prev: number) => (prev += 1));
     } else if (step === 2) {
-      const response = await callApi<Response<any>>({
-        query: postSubscription(subscriptionData, rowData.id),
-        auth: { setAuthedUser },
-      });
-      response.success && setOpen(false);
-      response.success && refreshFunc?.();
-      response.success && setAlert(t("Subscription plan added successfully!"));
-      response.success && setAlertSeverity("success");
-      !response.success &&
+      try {
+        await callApi<Response<any>>({
+          query: postSubscription(subscriptionData, rowData.id),
+          auth: { setAuthedUser },
+        });
+        setOpen(false);
+        refreshFunc?.();
+        setAlert(t("Subscription plan added successfully!"));
+        setAlertSeverity("success");
+        addMessage(t("Subscription plan added successfully!"), "success");
+      } catch (error) {
+        console.error(error);
+
         setAlert(t("Failed to add subscription plan. Please try again."));
-      !response.success && setAlertSeverity("error");
+        setAlertSeverity("error");
+      }
     }
 
     setLoading(false);
@@ -152,13 +168,11 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
       const optionsMap: EnumMap = {};
       for (const url of enumEndpoints) {
         try {
-          const options = await callApi<Response<Enum[]>>({
+          const response = await callApi<Response<Enum[]>>({
             query: getQueryOptions(url ?? ""),
             auth: { setAuthedUser },
           });
-          options.success && (optionsMap[url] = options.data);
-          !options.success &&
-            console.error("Error fetching options for: ", url);
+          optionsMap[url] = response.data;
         } catch (error) {
           console.error("Error fetching options for", url, error);
         }

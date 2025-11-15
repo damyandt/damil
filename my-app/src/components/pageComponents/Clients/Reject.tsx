@@ -8,18 +8,28 @@ import CellRenderer from "../../MaterialUI/Table/CellRenderer";
 import { useAuthedContext } from "../../../context/AuthContext";
 import callApi from "../../../API/callApi";
 import { rejectClient } from "../../../pages/Access Control/API/postQueries";
+import { Row } from "../../../Global/Types/commonTypes";
+import { useSnackbarContext } from "../../../context/SnackbarContext";
 
-const RejectClient = ({ rowData, setOpen, setRefreshTable }: any) => {
+const RejectClient = ({ rowData, setOpen, setFinalRows }: any) => {
   const { t } = useLanguageContext();
   const { setAuthedUser } = useAuthedContext();
-
+  const { addMessage } = useSnackbarContext();
   const handleSubmit = async () => {
-    const response = await callApi<any>({
-      query: rejectClient(rowData.id),
-      auth: { setAuthedUser },
-    });
-    response.success && setRefreshTable((prev: boolean) => !prev);
-    response.success && setOpen(false);
+    try {
+      const response = await callApi<any>({
+        query: rejectClient(rowData.id),
+        auth: { setAuthedUser },
+      });
+      setFinalRows((prev: Row[]) =>
+        prev.filter((row: Row) => row.id !== response.data.id)
+      );
+      setOpen(false);
+      addMessage("User rejected!", "success");
+    } catch (error) {
+      console.error(error);
+      addMessage(error.message, "error");
+    }
   };
   return (
     <>

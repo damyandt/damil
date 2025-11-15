@@ -19,7 +19,6 @@ type DeleteActionProps = {
   setDeleteQueue: Dispatch<SetStateAction<DeleteQueueType>>;
   deleteQueue: DeleteQueueType;
   configurations?: Configuration;
-  setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
   setFinalRows: any;
   handleMenuClose: (event?: MouseEvent | React.KeyboardEvent) => void;
   selectedRow: Row | null;

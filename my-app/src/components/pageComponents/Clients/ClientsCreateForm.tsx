@@ -29,6 +29,7 @@ import {
   Enum,
   EnumMap,
   Response,
+  Row,
 } from "../../../Global/Types/commonTypes";
 import { Dayjs } from "dayjs";
 import {
@@ -38,15 +39,15 @@ import {
 import { useNavigate } from "react-router-dom";
 
 interface ClientsCreateFormProps {
-  setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>;
   columns: Column[];
   setModalTitle: React.Dispatch<React.SetStateAction<string | null>>;
+  setFinalRows: any;
 }
 
 const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
-  setRefreshTable,
   setModalTitle,
   columns,
+  setFinalRows,
 }) => {
   const { setAuthedUser, preferences } = useAuthedContext();
   const { t } = useLanguageContext();
@@ -72,19 +73,21 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
   const handleNext = async () => {
     setLoading(true);
     if (activeStep === 0) {
-      const response = await callApi<any>({
-        query: postMember(formData),
-        auth: { setAuthedUser },
-      });
-      if (response.success === false) {
-        setErrors(response.validationErrors);
-        return setLoading(false);
-      }
-      response.success === true && setId(response.data.id);
-      response.success === true &&
+      try {
+        const response = await callApi<any>({
+          query: postMember(formData),
+          auth: { setAuthedUser },
+        });
+        setFinalRows((prev: Row[]) => [...prev, response.data]);
+
+        setId(response.data.id);
         setActiveStep((prevActiveStep) =>
           Math.min(prevActiveStep + 1, steps.length - 1)
         );
+      } catch (error) {
+        setErrors(error.validationErrors);
+        return setLoading(false);
+      }
     } else if (activeStep === 1) {
       const newErrors: any = {}; // keep previous errors
 
@@ -101,35 +104,37 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
         setLoading(false);
         return; // stop execution here
       }
-      const response = await callApi<Response<any>>({
-        query: getPrice(
-          subscriptionData.subscriptionPlan,
-          subscriptionData.employment
-        ),
-        auth: { setAuthedUser },
-      });
-
-      response.success && setPrice(response.data.price);
-      !response.success &&
-        response.validationErrors &&
-        setErrors(response.validationErrors);
-
-      setActiveStep((prevActiveStep) =>
-        Math.min(prevActiveStep + 1, steps.length - 1)
-      );
+      try {
+        const response = await callApi<Response<any>>({
+          query: getPrice(
+            subscriptionData.subscriptionPlan,
+            subscriptionData.employment
+          ),
+          auth: { setAuthedUser },
+        });
+        setPrice(response.data.price);
+        setActiveStep((prevActiveStep) =>
+          Math.min(prevActiveStep + 1, steps.length - 1)
+        );
+      } catch (error) {
+        setErrors(error.validationErrors);
+      }
     } else if (activeStep === 2) {
       setActiveStep((prevActiveStep) =>
         Math.min(prevActiveStep + 1, steps.length - 1)
       );
     } else if (activeStep === 3) {
-      await callApi<Response<any>>({
-        query: postSubscription(subscriptionData, id),
-        auth: { setAuthedUser },
-      });
+      try {
+        await callApi<Response<any>>({
+          query: postSubscription(subscriptionData, id),
+          auth: { setAuthedUser },
+        });
+      } catch (error) {
+        setErrors(error.validationErrors);
+      }
+
       setModalTitle(null);
-      setRefreshTable && setRefreshTable((prev: boolean) => !prev);
     }
-    // setErrors({});
     setLoading(false);
   };
 
@@ -177,13 +182,11 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
           const url = rawUrl?.startsWith("/v1/") ? rawUrl.slice(4) : rawUrl;
 
           try {
-            const options = await callApi<Response<Enum[]>>({
+            const response = await callApi<Response<Enum[]>>({
               query: getQueryOptions(url ?? ""),
               auth: { setAuthedUser },
             });
-            options.success && (optionsMap[col.field] = options.data);
-            !options.success &&
-              console.error("Error fetching options for: ", col.field);
+            optionsMap[col.field] = response.data;
           } catch (error) {
             console.error("Error fetching options for", col.field, error);
           }
@@ -563,7 +566,6 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 color="error"
                 onClick={() => {
                   setModalTitle(null);
-                  setRefreshTable && setRefreshTable((prev: boolean) => !prev);
                 }}
                 loading={loading}
               >

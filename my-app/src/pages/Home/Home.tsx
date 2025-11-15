@@ -89,11 +89,15 @@ const HomePage: React.FC = () => {
   }, []);
 
   const fetchAnalyticsData = async () => {
-    const response = await callApi<Response<any>>({
-      query: getAnalyticsForHomePage(),
-      auth: { setAuthedUser },
-    });
-    response.success && response.data && setAnalyticsData(response.data.ratios);
+    try {
+      const response = await callApi<Response<any>>({
+        query: getAnalyticsForHomePage(),
+        auth: { setAuthedUser },
+      });
+      setAnalyticsData(response.data.ratios);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleSearchMember = () => {

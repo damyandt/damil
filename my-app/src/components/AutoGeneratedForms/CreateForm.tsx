@@ -21,7 +21,6 @@ import { useSnackbarContext } from "../../context/SnackbarContext";
 interface CreateFormProps {
   columns?: Column[];
   actionUrl?: string;
-  setRefreshTable?: Dispatch<SetStateAction<boolean>>;
   setModalTitle?: Dispatch<SetStateAction<string | null>>;
   setAnchorEl?: Dispatch<
     SetStateAction<null | HTMLElement | "closeOnlyAnchor">
@@ -37,7 +36,6 @@ interface CreateFormProps {
 const CreateForm: React.FC<CreateFormProps> = ({
   columns,
   actionUrl = "",
-  setRefreshTable,
   setFinalRows,
   setModalTitle,
   selectedRow,
@@ -101,17 +99,21 @@ const CreateForm: React.FC<CreateFormProps> = ({
 
   const handleClose = (): void => {
     if (!loading) {
-      setRefreshTable?.((prev: boolean) => !prev);
       setFormValues({});
       setModalTitle?.(null);
     }
   };
   const handleUpdateRow = (updatedRow: any) => {
+    if (!setFinalRows) return;
     setFinalRows((prev: Row[]) =>
       prev.map((row: Row) =>
         row.id === updatedRow.id ? { ...row, ...updatedRow } : row
       )
     );
+  };
+  const handleAddRow = (newRow: Row) => {
+    if (!setFinalRows) return;
+    setFinalRows((prev: Row[]) => [...prev, newRow]);
   };
 
   const getQueryOptions = (url: string): Query => ({
@@ -157,7 +159,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
 
       setStatus("success");
       handleUpdateRow?.(response.data);
-
+      handleAddRow(response.data);
       setActiveStep
         ? setActiveStep((prev: number) => prev + 1)
         : setTimeout(() => {

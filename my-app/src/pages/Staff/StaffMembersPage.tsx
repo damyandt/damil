@@ -4,21 +4,22 @@ import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import callApi from "../../API/callApi";
 import { useAuthedContext } from "../../context/AuthContext";
-import { FormStatuses, Response, Table } from "../../Global/Types/commonTypes";
+import {
+  FormStatuses,
+  Response,
+  Row,
+  Table,
+} from "../../Global/Types/commonTypes";
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { getStaffMembers } from "./API/getQueries";
 import { useLanguageContext } from "../../context/LanguageContext";
 import RightMenu from "../../components/MaterialUI/Table/RightMenu";
 
-// export type StaffMember = {
-//   fullName: string;
-//   email: string;
-// };
-
 const StaffPage = () => {
   const { t } = useLanguageContext();
   const { setAuthedUser } = useAuthedContext();
   const [refreshTable, setRefreshTable] = useState<boolean>(false);
+  const [rows, setRows] = useState<Row[]>([]);
   const [tableData, setTableData] = useState<Table>();
   const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
   const { smMediaQuery, setExtraRightNavMenu } =
@@ -30,20 +31,16 @@ const StaffPage = () => {
   }, [refreshTable]);
 
   useEffect(() => {
-    // if (smMediaQuery) {
-    //   setExtraRightNavMenu(null);
-    // } else {
     setExtraRightNavMenu(
       <RightMenu
         title={t("Employee")}
-        setRefreshTable={setRefreshTable}
         columns={tableData?.columns ?? []}
         configurations={tableData?.config}
         addNew={true}
         createUrl="employees"
+        setRows={setRows}
       />
     );
-    // }
 
     return () => {
       setExtraRightNavMenu(null);
@@ -52,11 +49,12 @@ const StaffPage = () => {
 
   const fetchData = async () => {
     try {
-      const data = await callApi<Response<any>>({
+      const response = await callApi<Response<any>>({
         query: getStaffMembers(),
         auth: { setAuthedUser },
       });
-      data.success && setTableData(data.data);
+      setRows(response.data.rows);
+      setTableData(response.data);
     } catch (err) {
       console.error(err);
     }
@@ -82,7 +80,7 @@ const StaffPage = () => {
         <Box>
           <TableComponent
             columns={tableData?.columns || []}
-            rows={tableData?.rows || []}
+            rows={rows || []}
             configurations={tableData?.config}
             setRefreshTable={setRefreshTable}
             title={t("All Staff Members")}

@@ -61,12 +61,16 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
   });
 
   const fetchUserData = async () => {
-    const userInfo = await callApi<Response<any>>({
-      query: getQueryUsersGetCurrentUser(),
-      auth: { setAuthedUser },
-    });
+    try {
+      const userInfo = await callApi<Response<any>>({
+        query: getQueryUsersGetCurrentUser(),
+        auth: { setAuthedUser },
+      });
 
-    userInfo.success && userInfo.data && setAuthedUser(userInfo.data);
+      userInfo.data && setAuthedUser(userInfo.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -76,13 +80,17 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
 
   const fetchPreferences = async () => {
     if (!authedUser.roles?.includes("Member")) {
-      const preferencesInfo = await callApi<Response<any>>({
-        query: getPreferences(),
-        auth: { setAuthedUser },
-      });
-      preferencesInfo.success &&
+      try {
+        const preferencesInfo = await callApi<Response<any>>({
+          query: getPreferences(),
+          auth: { setAuthedUser },
+        });
+
         preferencesInfo.data.settings &&
-        setPreferences(preferencesInfo.data.settings);
+          setPreferences(preferencesInfo.data.settings);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -93,17 +101,13 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         query: getQueryUserTenant(),
         auth: { setAuthedUser },
       });
-      tenantInfo.success === true && setTenant(tenantInfo.data);
+      setTenant(tenantInfo.data);
       setLoadingTenant(false);
     } catch (err) {
       console.error("Tenant fetch error", err);
     }
   };
-  // useEffect(() => {
-  //   if (tenant.id) {
-  //     setLoadingTenant(false);
-  //   }
-  // }, [tenant]);
+
   useEffect(() => {
     if (userSignedIn) {
       fetchPreferences();

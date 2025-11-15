@@ -91,9 +91,11 @@ const clientCustomActions = [
     renderContent: (
       rowData: Row,
       setOpen: Dispatch<SetStateAction<boolean>>,
-      setRefreshTable: Dispatch<SetStateAction<boolean>>
+      setRefreshTable: Dispatch<SetStateAction<boolean>>,
+      setFinalRows: Dispatch<SetStateAction<Row[]>>
     ) => (
       <AcceptClient
+        setFinalRows={setFinalRows}
         rowData={rowData}
         setOpen={setOpen}
         setRefreshTable={setRefreshTable}
@@ -111,9 +113,11 @@ const clientCustomActions = [
     renderContent: (
       rowData: Row,
       setOpen: Dispatch<SetStateAction<boolean>>,
-      setRefreshTable: Dispatch<SetStateAction<boolean>>
+      setRefreshTable: Dispatch<SetStateAction<boolean>>,
+      setFinalRows: Dispatch<SetStateAction<Row[]>>
     ) => (
       <RejectClient
+        setFinalRows={setFinalRows}
         rowData={rowData}
         setOpen={setOpen}
         setRefreshTable={setRefreshTable}

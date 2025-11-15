@@ -38,9 +38,6 @@ const DailyVisitors = () => {
   }, [refreshTable]);
 
   useEffect(() => {
-    // if (smMediaQuery) {
-    //   setExtraRightNavMenu(null);
-    // } else {
     setExtraRightNavMenu(
       <VisitorsRightMenu
         setRefreshTable={setRefreshTable}

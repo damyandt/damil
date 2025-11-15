@@ -14,9 +14,9 @@ import {
 
 type MenuActionsProps = {
   setDeleteQueue: Dispatch<SetStateAction<DeleteQueueType>>;
+  setRefreshtable?: Dispatch<SetStateAction<boolean>>;
   deleteQueue: DeleteQueueType;
   configurations?: Configuration;
-  setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
   selectedRow: Row | null;
   anchorEl: null | HTMLElement | "closeOnlyAnchor";
   setSelectedRow: Dispatch<SetStateAction<Record<string, unknown> | null>>;
@@ -30,9 +30,9 @@ type MenuActionsProps = {
 
 export const MenuActions = ({
   setDeleteQueue,
+  setRefreshtable,
   deleteQueue,
   configurations,
-  setRefreshTable,
   selectedRow,
   anchorEl,
   setSelectedRow,
@@ -109,7 +109,6 @@ export const MenuActions = ({
             setDeleteQueue={setDeleteQueue}
             deleteQueue={deleteQueue}
             configurations={configurations}
-            setRefreshTable={setRefreshTable}
             handleMenuClose={handleMenuClose}
             setFinalRows={setFinalRows}
             selectedRow={selectedRow}
@@ -144,10 +143,11 @@ export const MenuActions = ({
         >
           <CustomAction
             {...action}
+            setFinalRows={setFinalRows}
             columns={columns}
             rowData={selectedRow}
             setAnchorEl={setAnchorEl}
-            setRefreshTable={setRefreshTable}
+            setRefreshtable={setRefreshtable}
           />
         </MenuItem>
       ))}

@@ -13,6 +13,7 @@ import callApi from "../../API/callApi";
 import { Response } from "../../Global/Types/commonTypes";
 import { useAuthedContext } from "../../context/AuthContext";
 import { selfAdding } from "./api/postQueries";
+import { useSnackbarContext } from "../../context/SnackbarContext";
 
 const SelfAddingPage = () => {
   const { id } = useParams();
@@ -22,6 +23,7 @@ const SelfAddingPage = () => {
   const [formData, setFormData] = useState<any>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState<boolean>(false);
+  const { addMessage } = useSnackbarContext();
   const navigate = useNavigate();
   const location = useLocation();
   const { tenantId } = location.state || {};
@@ -41,13 +43,21 @@ const SelfAddingPage = () => {
   };
   const handleSubmit = async () => {
     setLoading(true);
-    const response = await callApi<Response<any>>({
-      query: selfAdding(formData, tenantId),
-      auth: { setAuthedUser },
-    });
-    response.success === true && navigate("/?step=4");
-    response.success === false && setErrors(response.validationErrors);
-    setLoading(false);
+    try {
+      await callApi<Response<any>>({
+        query: selfAdding(formData, tenantId),
+        auth: { setAuthedUser },
+      });
+      navigate("/?step=4");
+      addMessage(t("Request send successfully!"), "success");
+    } catch (error) {
+      console.error(error.message);
+      addMessage(error.message, "error");
+      setErrors(error.validationErrors);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <>

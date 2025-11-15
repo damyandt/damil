@@ -64,7 +64,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
           auth: { setAuthedUser },
         });
 
-        if (response.success && response.data.length > 0) {
+        if (response.data.length > 0) {
           setUsersFound(response.data);
         } else {
           setUsersFound([]);
@@ -83,7 +83,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
         auth: { setAuthedUser },
       });
 
-      if (userDetails.success && userDetails.data.length > 0) {
+      if (userDetails.data.length > 0) {
         setUsersFound(userDetails.data);
         setErrors({});
       } else {

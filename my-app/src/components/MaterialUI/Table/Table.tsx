@@ -44,18 +44,18 @@ export type TableProps = {
   columns: Column[] | [];
   rows: Row[];
   configurations?: Configuration;
-  setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
   customActions?: any;
+  setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const TableComponent = ({
   columns = [],
   rows = [],
   configurations,
-  setRefreshTable,
   title,
   customActions,
+  setRefreshTable,
 }: TableProps) => {
   const theme = useTheme();
   const { t } = useLanguageContext();
@@ -502,7 +502,6 @@ const TableComponent = ({
         setDeleteQueue={setDeleteQueue}
         deleteQueue={deleteQueue}
         configurations={configurations}
-        setRefreshTable={setRefreshTable}
         selectedRow={selectedRow}
         anchorEl={anchorEl}
         setSelectedRow={setSelectedRow}
@@ -512,6 +511,7 @@ const TableComponent = ({
         setOpen={setOpenDetails}
         customActions={customActions}
         setFinalRows={setFinalRows}
+        setRefreshtable={setRefreshTable}
       />
       <PaginationControls
         currentPage={page}

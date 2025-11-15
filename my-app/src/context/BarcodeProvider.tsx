@@ -3,11 +3,13 @@ import callApi from "../API/callApi";
 import { getMember } from "../pages/Access Control/API/getQueries";
 import { useAuthedContext } from "./AuthContext";
 import CheckInModal from "../pages/Home/CheckInModal";
+import { useSnackbarContext } from "./SnackbarContext";
 
 const GlobalBarcodeScanner: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [info, setInfo] = useState<any>(null);
   const { setAuthedUser } = useAuthedContext();
+  const { addMessage } = useSnackbarContext();
   const buffer = useRef("");
 
   useEffect(() => {
@@ -35,9 +37,10 @@ const GlobalBarcodeScanner: React.FC = () => {
         query: getMember(code, "qrToken"),
         auth: { setAuthedUser },
       });
-      userDetails.success === true && setOpen(true);
-      userDetails.success === true && setInfo(userDetails.data);
+      setOpen(true);
+      setInfo(userDetails.data);
     } catch (error) {
+      addMessage(error.message, "error");
       console.error("Error fetching user info:", error);
       return null;
     }

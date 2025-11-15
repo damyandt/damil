@@ -14,6 +14,7 @@ import { Fade } from "../../MaterialUI/FormFields/Fade";
 import { useNavigate } from "react-router-dom";
 import { useNavigationGuard } from "../../../context/UnsavedChangesProvider";
 import { User } from "../../../pages/usersPages/api/userTypes";
+import { useSnackbarContext } from "../../../context/SnackbarContext";
 
 const AccountDetails = () => {
   const { t } = useLanguageContext();
@@ -22,6 +23,7 @@ const AccountDetails = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [formData, setFormData] = useState<Partial<User>>(authedUser);
   const navigate = useNavigate();
+  const { addMessage } = useSnackbarContext();
   const { setHasUnsavedChanges } = useNavigationGuard();
   const info: { label: string; field: string }[] = [
     { label: t("First Name"), field: "firstName" },
@@ -47,17 +49,21 @@ const AccountDetails = () => {
       setEditMode(false);
       return;
     }
-
-    await callApi<Response<any>>({
-      query: updateProfile(changes),
-      auth: { setAuthedUser },
-    });
-
-    setEditMode(false);
-    setHasUnsavedChanges(false);
-    setSaved(true);
-    setRefreshUserData((prev: boolean) => !prev);
-    setTimeout(() => setSaved(false), 2000);
+    try {
+      await callApi<Response<any>>({
+        query: updateProfile(changes),
+        auth: { setAuthedUser },
+      });
+      addMessage("Information updated", "success");
+      setEditMode(false);
+      setSaved(true);
+      setHasUnsavedChanges(false);
+      setRefreshUserData((prev: boolean) => !prev);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (error) {
+      console.error(error);
+      addMessage(error.message, "error");
+    }
   };
 
   const handleChange = (field: any, value: any): void => {

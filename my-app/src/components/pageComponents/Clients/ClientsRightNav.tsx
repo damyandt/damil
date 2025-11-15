@@ -5,15 +5,16 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import CustomTooltip from "../../MaterialUI/CustomTooltip";
 import CustomModal from "../../MaterialUI/Modal";
 import ClientsCreateForm from "./ClientsCreateForm";
+import { Row } from "../../../Global/Types/commonTypes";
 
 interface ClientsRightMenuProps {
-  setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>;
   columns: any;
+  setRows: React.Dispatch<React.SetStateAction<Row[]>>;
 }
 
 const ClientsRightMenu: React.FC<ClientsRightMenuProps> = ({
-  setRefreshTable,
   columns,
+  setRows,
 }) => {
   const { t } = useLanguageContext();
 
@@ -37,13 +38,12 @@ const ClientsRightMenu: React.FC<ClientsRightMenuProps> = ({
         open={!!modalTitle}
         onClose={() => {
           setModalTitle(null);
-          setRefreshTable((prev: boolean) => !prev);
         }}
         title={t("Add New Client")}
         width={"lg"}
       >
         <ClientsCreateForm
-          setRefreshTable={setRefreshTable}
+          setFinalRows={setRows}
           columns={columns}
           setModalTitle={setModalTitle}
         />

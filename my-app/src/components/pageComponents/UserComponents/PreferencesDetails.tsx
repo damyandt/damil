@@ -23,6 +23,7 @@ import { PreferencesType, Response } from "../../../Global/Types/commonTypes";
 import { useAuthedContext } from "../../../context/AuthContext";
 import { useCustomThemeProviderContext } from "../../../context/ThemeContext";
 import { useNavigationGuard } from "../../../context/UnsavedChangesProvider";
+import { useSnackbarContext } from "../../../context/SnackbarContext";
 const colorOptions: { name: string; color: string }[] = [
   { name: "purple", color: "#a250fa" },
   { name: "sky", color: "#0EA5E9" },
@@ -47,6 +48,7 @@ const AccountPref = () => {
   const { setAuthedUser, preferences, setRefreshUserData } = useAuthedContext();
   const [formData, setFormData] = useState<any>(preferences);
   const [editMode, setEditMode] = useState<boolean>(false);
+  const { addMessage } = useSnackbarContext();
 
   const handleSaveChangesAccount = async () => {
     const accountData = {
@@ -54,13 +56,19 @@ const AccountPref = () => {
       currency: formData.currency,
     };
 
-    await callApi<Response<any>>({
-      query: savePreferences(accountData),
-      auth: { setAuthedUser },
-    });
-    setRefreshUserData((prev: boolean) => !prev);
-    setEditMode(false);
-    setHasUnsavedChanges(false);
+    try {
+      await callApi<Response<any>>({
+        query: savePreferences(accountData),
+        auth: { setAuthedUser },
+      });
+      setRefreshUserData((prev: boolean) => !prev);
+      setEditMode(false);
+      setHasUnsavedChanges(false);
+      addMessage("Information updated!", "success");
+    } catch (error) {
+      console.error(error);
+      addMessage(error.message, "error");
+    }
   };
 
   const handleChange = (field: string | number, value: string): void => {
@@ -143,24 +151,29 @@ const ColorPref = () => {
   const { setAuthedUser, preferences, setRefreshUserData } = useAuthedContext();
   const [saved, setSaved] = useState<boolean>(false);
   const [formData, setFormData] = useState<any>(preferences);
-
+  const { addMessage } = useSnackbarContext();
   const handleSaveChangesTheme = async () => {
     const themeData = {
       themeColor: formData.themeColor,
       mode: formData.mode,
     };
-
-    await callApi<Response<any>>({
-      query: savePreferences(themeData),
-      auth: { setAuthedUser },
-    });
-    formData.mode && localStorage.setItem("themeMode", formData.mode);
-    formData.themeColor &&
-      localStorage.setItem("themeColor", formData.themeColor);
-    setRefreshUserData((prev: boolean) => !prev);
-    setSaved(true);
-    setHasUnsavedChanges(false);
-    setTimeout(() => setSaved(false), 2000);
+    try {
+      await callApi<Response<any>>({
+        query: savePreferences(themeData),
+        auth: { setAuthedUser },
+      });
+      formData.mode && localStorage.setItem("themeMode", formData.mode);
+      formData.themeColor &&
+        localStorage.setItem("themeColor", formData.themeColor);
+      setRefreshUserData((prev: boolean) => !prev);
+      setSaved(true);
+      setHasUnsavedChanges(false);
+      addMessage("Information updated!", "success");
+      setTimeout(() => setSaved(false), 2000);
+    } catch (error) {
+      console.error(error);
+      addMessage(error.message, "error");
+    }
   };
 
   const handleChange = (field: string | number, value: string): void => {

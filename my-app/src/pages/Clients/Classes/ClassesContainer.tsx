@@ -32,12 +32,16 @@ const ClassesContainer: React.FC<ClassesProps> = () => {
   const { setAuthedUser } = useAuthedContext();
   useEffect(() => {
     const fetchClasses = async () => {
-      const response = await callApi<Response<any>>({
-        query: getClasses(),
-        auth: { setAuthedUser },
-      });
+      try {
+        const response = await callApi<Response<any>>({
+          query: getClasses(),
+          auth: { setAuthedUser },
+        });
 
-      response.success && setClassestable(response.data);
+        setClassestable(response.data);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     fetchClasses();

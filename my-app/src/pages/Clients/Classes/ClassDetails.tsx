@@ -24,12 +24,16 @@ const ClassDetails = ({
   const { setAuthedUser, authedUser } = useAuthedContext();
   const { t } = useLanguageContext();
   const handleJoin = async (id: number, join: boolean) => {
-    const options = await callApi<Response<any>>({
-      query: postJoinOrLeaveClass(id, join),
-      auth: { setAuthedUser },
-    });
-    options.success && join && setAlert(`${t("Succesfully join class")}`);
-    options.success && !join && setAlert(`${t("Succesfully leave class")}`);
+    try {
+      await callApi<Response<any>>({
+        query: postJoinOrLeaveClass(id, join),
+        auth: { setAuthedUser },
+      });
+      join && setAlert(`${t("Succesfully join class")}`);
+    } catch (error) {
+      console.error(error);
+      !join && setAlert(`${t("Succesfully leave class")}`);
+    }
   };
   return (
     <Box sx={{ p: 2 }}>

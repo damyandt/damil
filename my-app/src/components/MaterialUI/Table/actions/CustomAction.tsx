@@ -17,10 +17,12 @@ type CustomActionProps = {
   renderContent?: (
     rowData?: Row,
     setOpen?: Dispatch<SetStateAction<boolean>>,
-    setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>
+    setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>,
+    setFinalRows?: React.Dispatch<React.SetStateAction<Row[]>>
   ) => React.ReactNode;
   setAnchorEl?: (value: any) => void;
   setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
+  setFinalRows: React.Dispatch<React.SetStateAction<Row[]>>;
 };
 
 export const CustomAction = ({
@@ -32,6 +34,7 @@ export const CustomAction = ({
   renderContent,
   setAnchorEl,
   setRefreshTable,
+  setFinalRows,
 }: CustomActionProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const { t } = useLanguageContext();
@@ -57,7 +60,7 @@ export const CustomAction = ({
         title={t(modalTitle)}
         width={t(modalWidth)}
       >
-        {renderContent?.(rowData, setOpen, setRefreshTable)}
+        {renderContent?.(rowData, setOpen, setRefreshTable, setFinalRows)}
       </CustomModal>
     </>
   );

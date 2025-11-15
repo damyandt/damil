@@ -24,8 +24,8 @@ export type Client = {
 const ClientsPage = () => {
   const { t } = useLanguageContext();
   const { filter } = useParams();
-  const [refreshTable, setRefreshTable] = useState<boolean>(false);
   const [tableData, setTableData] = useState<any>();
+  const [rows, setRows] = useState<Row[]>([]);
   const [pageStatus, setPageStatus] = useState<FormStatuses>("loading");
   const { setAuthedUser } = useAuthedContext();
   const { smMediaQuery, setExtraRightNavMenu } =
@@ -34,17 +34,14 @@ const ClientsPage = () => {
   useEffect(() => {
     setPageStatus("loading");
     fetchData();
-  }, [refreshTable]);
+  }, []);
 
   useEffect(() => {
     // if (smMediaQuery) {
     // setExtraRightNavMenu(null);
     // } else {
     setExtraRightNavMenu(
-      <ClientsRightMenu
-        setRefreshTable={setRefreshTable}
-        columns={tableData?.columns ?? []}
-      />
+      <ClientsRightMenu columns={tableData?.columns ?? []} setRows={setRows} />
     );
     // }
 
@@ -60,6 +57,7 @@ const ClientsPage = () => {
         auth: { setAuthedUser },
       });
       setTableData(data.data);
+      setRows(data.data.rows);
     } catch (err) {
       console.error(err);
     }
@@ -85,9 +83,8 @@ const ClientsPage = () => {
         <Box>
           <TableComponent
             columns={tableData?.columns || []}
-            rows={tableData?.rows || []}
+            rows={rows || []}
             configurations={tableData?.config || {}}
-            setRefreshTable={setRefreshTable}
             title={t("All Registered Clients")}
             customActions={clientCustomActions}
           />
