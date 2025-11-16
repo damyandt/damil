@@ -158,8 +158,8 @@ const CreateForm: React.FC<CreateFormProps> = ({
       });
 
       setStatus("success");
-      handleUpdateRow?.(response.data);
-      handleAddRow(response.data);
+      selectedRow && handleUpdateRow?.(response.data);
+      !selectedRow && handleAddRow(response.data);
       setActiveStep
         ? setActiveStep((prev: number) => prev + 1)
         : setTimeout(() => {

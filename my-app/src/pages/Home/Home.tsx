@@ -28,7 +28,7 @@ import callApi from "../../API/callApi";
 import { Response } from "../../Global/Types/commonTypes";
 import { getAnalyticsForHomePage } from "./API/getQueries";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import CustomSnackbar from "../../components/MaterialUI/FormFields/Snackbar";
+import { useSnackbarContext } from "../../context/SnackbarContext";
 export const descriptionMap = (type: string, word: string, t: any) => {
   let final = "";
   switch (type) {
@@ -53,9 +53,9 @@ export const shiftHue = (color: string, amount: number) =>
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
+  const { addMessage } = useSnackbarContext();
   const [analyticsData, setAnalyticsData] = useState<any>(null);
   const { preferences, setAuthedUser, tenant } = useAuthedContext();
-  const [copied, setCopied] = useState<boolean>(false);
   const [openCheckIn, setOpenCheckIn] = useState<boolean>(false);
   const [selectedFilters, setSelectedFilters] = useState<any>(
     preferences.homeFilters ?? [
@@ -269,7 +269,7 @@ const HomePage: React.FC = () => {
                   .writeText(textToCopy)
                   .then(() => {
                     console.warn("Copied!");
-                    setCopied(true);
+                    addMessage(t("Copied!"), "success");
                   })
                   .catch((err) => console.error("Failed to copy: ", err));
               }}
@@ -425,27 +425,6 @@ const HomePage: React.FC = () => {
         selectedFilters={selectedFilters}
         setSelectedFilters={setSelectedFilters}
         flatData={analyticsData}
-      />
-      {/* {messages?.map((msg: any, index: number) => (
-        // <CustomSnackbar
-        //   open={true}
-        //   onClose={() => handleCloseMessage(index)}
-        //   message={msg.message || "Message"}
-        //   key={`msg-${index}`}
-        //   // position={{ vertical: "bottom", horizontal: "right" }}
-        // />
-        <CustomSnackbar
-          open={true}
-          onClose={() => handleCloseMessage(index)}
-          message={msg.message || "Message"}
-          key={"bottom + right"}
-        />
-      ))} */}
-      <CustomSnackbar
-        open={copied}
-        onClose={() => setCopied(false)}
-        message="Copied"
-        key={"bottom + right"}
       />
     </>
   );

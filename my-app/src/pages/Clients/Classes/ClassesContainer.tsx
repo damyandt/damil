@@ -1,4 +1,4 @@
-import { Tab, Tabs, Typography } from "@mui/material";
+import { CircularProgress, Tab, Tabs, Typography } from "@mui/material";
 import { Box, Grid } from "@mui/system";
 
 // import { useState } from "react";
@@ -27,11 +27,13 @@ const ClassesContainer: React.FC<ClassesProps> = () => {
     "Card View"
   );
   const [rows, setRows] = useState<Row[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [classesTable, setClassestable] = useState<any>();
   const { setExtraRightNavMenu } = useOutletContext<AppRouterProps>();
   const { setAuthedUser } = useAuthedContext();
   useEffect(() => {
     const fetchClasses = async () => {
+      setLoading(true);
       try {
         const response = await callApi<Response<any>>({
           query: getClasses(),
@@ -41,6 +43,8 @@ const ClassesContainer: React.FC<ClassesProps> = () => {
         setClassestable(response.data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -68,9 +72,24 @@ const ClassesContainer: React.FC<ClassesProps> = () => {
     };
   }, [classesTable]);
 
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          height: "-webkit-fill-available",
+          alignItems: "center",
+          minHeight: `calc(100dvh - 140px)`,
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
-    <Box>
-      {/* Tabs */}
+    <Box sx={{ minHeight: `calc(100dvh - 140px)` }}>
       <Box
         sx={{
           display: "flex",

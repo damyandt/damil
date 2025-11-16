@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { Box, Typography, Grid, IconButton } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Grid,
+  IconButton,
+  CircularProgress,
+} from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import NewsSection from "./NewsContainer";
@@ -16,21 +22,45 @@ const NewsPage = () => {
   const { t } = useLanguageContext();
   const [refresh, setRefresh] = useState<boolean>(false);
   const [newsList, setNewsItems] = useState<NewsItem[]>([]);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const { setAuthedUser } = useAuthedContext();
 
   useEffect(() => {
     const fetchNews = async () => {
-      const response = await callApi<Response<NewsItem[]>>({
-        query: getNews(),
-        auth: { setAuthedUser },
-      });
+      setLoading(true);
+      try {
+        const response = await callApi<Response<NewsItem[]>>({
+          query: getNews(),
+          auth: { setAuthedUser },
+        });
 
-      setNewsItems(response.data);
+        setNewsItems(response.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchNews();
   }, [setAuthedUser, refresh]);
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          height: "-webkit-fill-available",
+          alignItems: "center",
+          minHeight: `calc(100dvh - 140px)`,
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <Box sx={{ p: 4 }}>
       <Box

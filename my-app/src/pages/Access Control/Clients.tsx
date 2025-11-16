@@ -119,6 +119,7 @@ const clientCustomActions = [
       rowData: Row,
       setOpen: Dispatch<SetStateAction<boolean>>,
       setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>
+      // setRows: React.Dispatch<React.SetStateAction<Row[]>>
     ) => (
       <NewSubscriptionPlan
         rowData={rowData}

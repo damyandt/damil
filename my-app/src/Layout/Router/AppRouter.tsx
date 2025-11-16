@@ -27,9 +27,9 @@ import AcceptClients from "../../pages/Access Control/AcceptClients";
 import MemberSubscription from "../../pages/MemberView/MemberSubscription";
 import NewsPage from "../../pages/Clients/News/News";
 import BusinessSubscriptions from "../../pages/Configurations/BusinessSubscriptions";
-import TrainingsPage from "../../pages/Clients/Classes/TrainingsPage";
 import { Role } from "../../pages/usersPages/api/userTypes";
 import MembersClassesView from "../../pages/MemberView/Classes/MembersClassesView";
+import ClassesContainer from "../../pages/Clients/Classes/ClassesContainer";
 export const createAppRouter = (
   userType: Role,
   abonnement: "PRO" | "STARTER" | "GROWTH" | null
@@ -147,7 +147,7 @@ const allRoutes = (role: string, abonnement: string | null) => {
     },
     {
       path: "/DAMIL-Clients/Classes",
-      element: <TrainingsPage />,
+      element: <ClassesContainer />,
     },
 
     // Configurations
