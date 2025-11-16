@@ -10,7 +10,7 @@ import { Add } from "@mui/icons-material";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import NewsSection from "./NewsContainer";
 import CustomModal from "../../../components/MaterialUI/Modal";
-
+import { FeedOutlined } from "@mui/icons-material";
 import NewsForm from "./NewsForm";
 import { Response } from "../../../Global/Types/commonTypes";
 import callApi from "../../../API/callApi";
@@ -24,7 +24,7 @@ const NewsPage = () => {
   const [newsList, setNewsItems] = useState<NewsItem[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const { setAuthedUser } = useAuthedContext();
+  const { setAuthedUser, authedUser } = useAuthedContext();
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -62,21 +62,24 @@ const NewsPage = () => {
     );
   }
   return (
-    <Box sx={{ p: 4 }}>
-      <Box
-        display="flex"
-        justifyContent="flex-start"
-        alignItems="center"
-        gap={2}
-        mb={3}
-      >
-        <Typography variant="h4" fontWeight={600}>
-          {t("News Management")}
-        </Typography>
-        <IconButton onClick={() => setOpen(true)}>
-          <Add />
-        </IconButton>
-      </Box>
+    <Box sx={{ p: 2 }}>
+      {(authedUser.roles?.includes("Admin") ||
+        authedUser.roles?.includes("Staff")) && (
+        <Box
+          display="flex"
+          justifyContent="flex-start"
+          alignItems="center"
+          gap={2}
+          mb={3}
+        >
+          <Typography variant="h4" fontWeight={600}>
+            {t("News Management")}
+          </Typography>
+          <IconButton onClick={() => setOpen(true)}>
+            <Add />
+          </IconButton>
+        </Box>
+      )}
 
       <Grid container spacing={2}>
         <NewsSection
@@ -86,12 +89,21 @@ const NewsPage = () => {
             setRefresh((prev: boolean) => !prev);
           }}
         />
-
         {newsList.length === 0 && (
           <Grid size={12}>
-            <Box textAlign="center" mt={10}>
-              <Typography color="text.secondary">
-                {t("No news added yet.")}
+            <Box
+              textAlign="center"
+              mt={10}
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              gap={2}
+              color="text.secondary"
+            >
+              <FeedOutlined sx={{ fontSize: 60, opacity: 0.5 }} />
+              <Typography variant="h6">{t("No news available")}</Typography>
+              <Typography variant="body2">
+                {t("News will appear here once added.")}
               </Typography>
             </Box>
           </Grid>

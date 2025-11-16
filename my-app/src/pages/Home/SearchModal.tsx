@@ -47,7 +47,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const [searchType, setSearchType] = useState<
     "ID" | "Name" | "Email" | "Phone"
-  >("ID");
+  >("Name");
 
   useEffect(() => {
     if (!searchInput.trim()) {
@@ -63,11 +63,8 @@ const SearchModal: React.FC<SearchModalProps> = ({
           query: getMember(searchInput, searchType.toLowerCase()),
           auth: { setAuthedUser },
         });
-
-        if (response.data.length > 0) {
+        if (userDetails.data.length > 0) {
           setUsersFound(response.data);
-        } else {
-          setUsersFound([]);
         }
       } catch (err: any) {
         console.error(err);
@@ -136,12 +133,12 @@ const SearchModal: React.FC<SearchModalProps> = ({
             >
               {[
                 {
-                  name: t("ID"),
-                  value: "ID",
-                },
-                {
                   name: t("Name"),
                   value: "Name",
+                },
+                {
+                  name: t("ID"),
+                  value: "ID",
                 },
                 {
                   name: t("Email"),
@@ -161,7 +158,10 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 >
                   <Checkbox
                     checked={searchType === option.value}
-                    onChange={() => setSearchType(option.value as any)}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      setSearchType(option.value as any);
+                    }}
                     sx={{ mt: 1 }}
                   />
                   <Typography variant="caption">{option.name}</Typography>

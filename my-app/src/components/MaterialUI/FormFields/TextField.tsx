@@ -55,13 +55,10 @@ const TextField: React.FC<TextFieldProps> = ({
           },
         },
       }}
-      // InputLabelProps={{
-      //   shrink: numberField ? true : undefined,
-      // }}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
-          e.preventDefault(); // ✅ Prevent form submission or unwanted action
-          e.stopPropagation(); // ✅ Optional: block global handlers
+          e.preventDefault();
+          e.stopPropagation();
           onEnterFunc?.();
         }
       }}

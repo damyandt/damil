@@ -18,7 +18,7 @@ const DraggableContainer = styled(Paper)(() => ({
   backgroundColor: "rgba(135, 135, 135, 0.69)",
   borderRadius: "40px",
   boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
-  zIndex: 9,
+  zIndex: 100000000,
   touchAction: "none",
   userSelect: "none",
 }));

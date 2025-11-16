@@ -102,9 +102,10 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         auth: { setAuthedUser },
       });
       setTenant(tenantInfo.data);
-      setLoadingTenant(false);
     } catch (err) {
       console.error("Tenant fetch error", err);
+    } finally {
+      setLoadingTenant(false);
     }
   };
 

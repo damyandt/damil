@@ -5,7 +5,7 @@ import CellRenderer from "../../../components/MaterialUI/Table/CellRenderer";
 import Button from "../../../components/MaterialUI/Button";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import { useAuthedContext } from "../../../context/AuthContext";
-import { Response } from "../../../Global/Types/commonTypes";
+import { Response, Row } from "../../../Global/Types/commonTypes";
 import callApi from "../../../API/callApi";
 import { postJoinOrLeaveClass } from "./API/postQueries";
 import Alert from "../../../components/MaterialUI/Alert";
@@ -16,7 +16,7 @@ const ClassDetails = ({
   isJoined,
   handleDetailsClose,
 }: {
-  cls: Class;
+  cls: Class | Row;
   isJoined: boolean;
   handleDetailsClose: () => void;
 }) => {

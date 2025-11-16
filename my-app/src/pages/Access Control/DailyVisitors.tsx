@@ -118,13 +118,14 @@ const clientCustomActions = [
     renderContent: (
       rowData: Row,
       setOpen: Dispatch<SetStateAction<boolean>>,
-      setRefreshTable: React.Dispatch<React.SetStateAction<boolean>>
+      _: React.Dispatch<React.SetStateAction<boolean>>,
+      setFinalRows: React.Dispatch<React.SetStateAction<Row[]>>
     ) => (
       <NewSubscriptionPlan
         rowData={rowData}
         setOpen={setOpen}
         enumEndpoints={["memberships", "enums/Employment"]}
-        refreshFunc={() => setRefreshTable((prev: boolean) => !prev)}
+        setFinalRows={setFinalRows}
       />
     ),
   },

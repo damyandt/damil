@@ -56,13 +56,19 @@ export const NAV_DAMIL_CLASSES: LeftNavMenu = {
   list: [
     {
       text: "Classes",
-      url: "Member/Classes",
+      url: "Classes",
       Icon: ClassOutlined,
       disabled: false,
     },
     {
+      text: "News",
+      url: "News",
+      Icon: ArticleOutlinedIcon,
+      disabled: false,
+    },
+    {
       text: "Subscription",
-      url: "Member/Subscription",
+      url: "Subscription",
       Icon: PaidIcon,
       disabled: false,
     },

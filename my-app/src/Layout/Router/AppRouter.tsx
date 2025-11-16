@@ -28,7 +28,6 @@ import MemberSubscription from "../../pages/MemberView/MemberSubscription";
 import NewsPage from "../../pages/Clients/News/News";
 import BusinessSubscriptions from "../../pages/Configurations/BusinessSubscriptions";
 import { Role } from "../../pages/usersPages/api/userTypes";
-import MembersClassesView from "../../pages/MemberView/Classes/MembersClassesView";
 import ClassesContainer from "../../pages/Clients/Classes/ClassesContainer";
 export const createAppRouter = (
   userType: Role,
@@ -80,11 +79,15 @@ const allRoutes = (role: string, abonnement: string | null) => {
         ),
     },
     {
-      path: "Member/Classes",
-      element: <MembersClassesView />,
+      path: "Classes",
+      element: <ClassesContainer />,
     },
     {
-      path: "Member/Subscription",
+      path: "News",
+      element: <NewsPage />,
+    },
+    {
+      path: "Subscription",
       element: <MemberSubscription />,
     },
     {

@@ -1,10 +1,8 @@
 import { CircularProgress, Tab, Tabs, Typography } from "@mui/material";
 import { Box, Grid } from "@mui/system";
-
-// import { useState } from "react";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import ClassCard from "./ClassCard";
-import { Class } from "./API/classes";
+// import { Class } from "./API/classes";
 import CalendarView from "./CalenderView";
 import { useEffect, useState } from "react";
 import TableComponent from "../../../components/MaterialUI/Table/Table";
@@ -15,13 +13,9 @@ import { getClasses } from "./API/getQueries";
 import RightMenu from "../../../components/MaterialUI/Table/RightMenu";
 import { useOutletContext } from "react-router-dom";
 import { AppRouterProps } from "../../../Layout/layoutVariables";
-// import { dataForTable } from "./mockData";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 
-interface ClassesProps {
-  // classes: Class[];
-}
-
-const ClassesContainer: React.FC<ClassesProps> = () => {
+const ClassesContainer = () => {
   const { t } = useLanguageContext();
   const [tab, setTab] = useState<"Card View" | "Calender View" | "Table View">(
     "Card View"
@@ -30,7 +24,7 @@ const ClassesContainer: React.FC<ClassesProps> = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [classesTable, setClassestable] = useState<any>();
   const { setExtraRightNavMenu } = useOutletContext<AppRouterProps>();
-  const { setAuthedUser } = useAuthedContext();
+  const { setAuthedUser, authedUser } = useAuthedContext();
   useEffect(() => {
     const fetchClasses = async () => {
       setLoading(true);
@@ -52,20 +46,18 @@ const ClassesContainer: React.FC<ClassesProps> = () => {
   }, []);
 
   useEffect(() => {
-    // if (smMediaQuery) {
-    //   setExtraRightNavMenu(null);
-    // } else {
-    setExtraRightNavMenu(
-      <RightMenu
-        title={t("Classes")}
-        setRows={setRows}
-        columns={classesTable?.columns ?? []}
-        configurations={classesTable?.config}
-        addNew={true}
-        createUrl="trainings"
-      />
-    );
-    // }
+    (authedUser.roles?.includes("Admin") ||
+      authedUser.roles?.includes("Staff")) &&
+      setExtraRightNavMenu(
+        <RightMenu
+          title={t("Classes")}
+          setRows={setRows}
+          columns={classesTable?.columns ?? []}
+          configurations={classesTable?.config}
+          addNew={true}
+          createUrl="trainings"
+        />
+      );
 
     return () => {
       setExtraRightNavMenu(null);
@@ -89,7 +81,7 @@ const ClassesContainer: React.FC<ClassesProps> = () => {
   }
 
   return (
-    <Box sx={{ minHeight: `calc(100dvh - 140px)` }}>
+    <Box sx={{ minHeight: `calc(100dvh - 140px)`, padding: 2 }}>
       <Box
         sx={{
           display: "flex",
@@ -113,19 +105,31 @@ const ClassesContainer: React.FC<ClassesProps> = () => {
       {/* Class cards */}
       {tab === "Card View" && (
         <Grid container spacing={2}>
-          {classesTable?.rows?.length === 0 ? (
+          {rows.length === 0 ? (
             <Grid size={12}>
-              <Typography
-                variant="body1"
+              <Box
                 textAlign="center"
+                mt={10}
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                gap={2}
                 color="text.secondary"
               >
-                {t("No upcoming classes.")}
-              </Typography>
+                <CalendarMonthOutlinedIcon
+                  sx={{ fontSize: 60, opacity: 0.5 }}
+                />
+                <Typography variant="h6">
+                  {t("No classes available")}
+                </Typography>
+                <Typography variant="body2">
+                  {t("Classes will appear here once added.")}
+                </Typography>
+              </Box>
             </Grid>
           ) : (
-            classesTable?.rows.map((cls: Class, index: number) => {
-              const originalIndex = classesTable?.rows.indexOf(cls);
+            rows.map((cls: Row, index: number) => {
+              const originalIndex = rows.indexOf(cls);
               return (
                 <ClassCard
                   key={index}
@@ -139,9 +143,7 @@ const ClassesContainer: React.FC<ClassesProps> = () => {
           )}
         </Grid>
       )}
-      {tab === "Calender View" && (
-        <CalendarView classes={classesTable?.rows || []} />
-      )}
+      {tab === "Calender View" && <CalendarView classes={rows || []} />}
       {tab === "Table View" && (
         <TableComponent
           configurations={classesTable?.config || {}}

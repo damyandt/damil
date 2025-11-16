@@ -41,14 +41,15 @@ interface NewSubscriptionPlanProps {
   rowData: Row;
   enumEndpoints: string[];
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  refreshFunc?: () => void;
+  // refreshFunc?: () => void;
+  setFinalRows: React.Dispatch<React.SetStateAction<Row[]>>;
 }
 
 const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
   rowData,
   setOpen,
-  refreshFunc,
   enumEndpoints,
+  setFinalRows,
 }) => {
   const { t } = useLanguageContext();
   const { setAuthedUser, preferences } = useAuthedContext();
@@ -91,11 +92,19 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
     fetchUser();
   }, []);
 
-  const handleChangSubscription = (field: string, value: string): void => {
+  const handleChangeSubscription = (field: string, value: string): void => {
     setSubscriptionData((prev: any) => ({
       ...prev,
       [field]: value,
     }));
+  };
+  const handleUpdateRow = (updatedRow: any) => {
+    if (!setFinalRows) return;
+    setFinalRows((prev: Row[]) =>
+      prev.map((row: Row) =>
+        row.id === updatedRow.id ? { ...row, ...updatedRow } : row
+      )
+    );
   };
 
   const handleSubmit = async () => {
@@ -141,18 +150,17 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
       setStep((prev: number) => (prev += 1));
     } else if (step === 2) {
       try {
-        await callApi<Response<any>>({
+        const response = await callApi<Response<any>>({
           query: postSubscription(subscriptionData, rowData.id),
           auth: { setAuthedUser },
         });
         setOpen(false);
-        refreshFunc?.();
+        handleUpdateRow(response.data);
         setAlert(t("Subscription plan added successfully!"));
         setAlertSeverity("success");
         addMessage(t("Subscription plan added successfully!"), "success");
       } catch (error) {
         console.error(error);
-
         setAlert(t("Failed to add subscription plan. Please try again."));
         setAlertSeverity("error");
       }
@@ -211,7 +219,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
                 error={!!errors["subscriptionPlan"]}
                 helperText={errors["subscriptionPlan"]}
                 onChange={(e) =>
-                  handleChangSubscription("subscriptionPlan", e.target.value)
+                  handleChangeSubscription("subscriptionPlan", e.target.value)
                 }
                 fullWidth
               >
@@ -246,7 +254,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
                 error={!!errors["employment"]}
                 helperText={errors["employment"]}
                 onChange={(e) =>
-                  handleChangSubscription("employment", e.target.value)
+                  handleChangeSubscription("employment", e.target.value)
                 }
                 fullWidth
               >
@@ -273,7 +281,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
                   helperText={errors["allowedVisits"]}
                   type="number"
                   onChange={(e) =>
-                    handleChangSubscription("allowedVisits", e.target.value)
+                    handleChangeSubscription("allowedVisits", e.target.value)
                   }
                   inputProps={{ min: 1 }}
                   fullWidth

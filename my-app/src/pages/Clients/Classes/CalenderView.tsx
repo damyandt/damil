@@ -4,9 +4,10 @@ import { Class } from "./API/classes";
 import CustomModal from "../../../components/MaterialUI/Modal";
 import { useLanguageContext } from "../../../context/LanguageContext";
 import ClassDetails from "./ClassDetails";
+import { Row } from "../../../Global/Types/commonTypes";
 
 interface CalendarViewProps {
-  classes: Class[];
+  classes: Class[] | Row[];
 }
 
 const hours = Array.from({ length: 16 }, (_, i) => i + 7); // 7:00–22:00
@@ -23,7 +24,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ classes }) => {
   });
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const [modalData, setModalData] = useState<{
-    data: Class | null;
+    data: Class | Row | null;
     open: boolean;
   }>({
     data: null,
@@ -280,7 +281,6 @@ const CalendarView: React.FC<CalendarViewProps> = ({ classes }) => {
           cls={modalData.data!}
           isJoined={modalData.data?.joined || false}
           handleDetailsClose={handleClose}
-          handleJoin={() => console.warn("da")}
         />
       </CustomModal>
     </>

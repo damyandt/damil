@@ -257,7 +257,16 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({
                 marginLeft: "1em",
               }}
             >
-              <Typography variant="body1" fontWeight={500}>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontWeight: 500,
+                  width: "11em",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
                 {authedUser?.firstName ||
                   authedUser?.username ||
                   authedUser?.email}{" "}

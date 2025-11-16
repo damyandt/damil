@@ -55,6 +55,7 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { addMessage } = useSnackbarContext();
   const [analyticsData, setAnalyticsData] = useState<any>(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState<boolean>(true);
   const { preferences, setAuthedUser, tenant } = useAuthedContext();
   const [openCheckIn, setOpenCheckIn] = useState<boolean>(false);
   const [selectedFilters, setSelectedFilters] = useState<any>(
@@ -90,6 +91,7 @@ const HomePage: React.FC = () => {
 
   const fetchAnalyticsData = async () => {
     try {
+      setAnalyticsLoading(true);
       const response = await callApi<Response<any>>({
         query: getAnalyticsForHomePage(),
         auth: { setAuthedUser },
@@ -97,6 +99,8 @@ const HomePage: React.FC = () => {
       setAnalyticsData(response.data.ratios);
     } catch (error) {
       console.error(error);
+    } finally {
+      +setAnalyticsLoading(false);
     }
   };
 
@@ -320,6 +324,19 @@ const HomePage: React.FC = () => {
             </Button>
           </Grid>
         </Grid>
+        {/* {tenantLoading || analyticsLoading ? (
+          <Box
+            sx={{
+              width: "100%",
+              minHeight: 400, // optional, default minimum height
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <CircularProgress size={40} />
+          </Box>
+        ) : ( */}
         {tenant?.abonnement === "PRO" && (
           <Grid container spacing={3} pt={3}>
             <Grid size={12}>
@@ -345,73 +362,73 @@ const HomePage: React.FC = () => {
               </Button>
             </Grid>
             <Grid size={12}>
-              <Grid container spacing={2}>
-                {selectedFilters?.map((filter: string, index: number) => {
-                  const [field, value] = filter.split(" - ");
+              <Grid container spacing={2} justifyContent={"center"}>
+                {analyticsLoading ? (
+                  <Grid
+                    size={{ xs: 6, sm: 6, md: 3 }}
+                    sx={{
+                      cursor: "pointer",
+                      aspectRatio: 1 / 1,
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <CircularProgress size={40} />
+                  </Grid>
+                ) : (
+                  selectedFilters?.map((filter: string, index: number) => {
+                    const [field, value] = filter.split(" - ");
 
-                  return analyticsData ? (
-                    <Grid
-                      size={{ xs: 6, sm: 6, md: 3 }}
-                      key={index}
-                      sx={{ cursor: "pointer", aspectRatio: 1 / 1 }}
-                    >
-                      <Box
-                        sx={{
-                          px: 0,
-                          borderRadius: "50%",
-                          textAlign: "center",
-                          transition: "transform 0.3s ease",
-                          alignContent: "center",
-                          cursor: "pointer",
-                          height: "100%",
-                          "&:hover": {
-                            transform: "scale(0.97)",
-                          },
-                        }}
-                        onClick={() =>
-                          navigate(
-                            `/DAMIL-Access-Control/All-Clients/${field}=${value}`
-                          )
-                        }
-                      >
-                        <GaugeChartHome
-                          data={[
-                            {
-                              value: analyticsData[field]?.[value] ?? 0,
-                              name: descriptionMap(field, value, t).replaceAll(
-                                "_",
-                                " "
-                              ),
-                            },
-                          ]}
-                        />
-                      </Box>
-                    </Grid>
-                  ) : (
-                    <Grid
-                      size={{ xs: 12, sm: 6, md: 3 }}
-                      key={index}
-                      sx={{ cursor: "pointer", aspectRatio: 1 / 1 }}
-                    >
-                      <CircularProgress size={40} />
-                    </Grid>
-                  );
-                })}
-                {/* <Grid size={12}>
-                <Box
-                  sx={{
-                    p: 2,
-
-                    boxShadow: `inset ${theme.palette.customColors?.shodow}`,
-                    borderRadius: "20px",
-                  }}
-                >
-                  <ChartDisplay />
-                </Box>
-              </Grid> */}
+                    return (
+                      analyticsData && (
+                        <Grid
+                          size={{ xs: 6, sm: 6, md: 3 }}
+                          key={index}
+                          sx={{ cursor: "pointer", aspectRatio: 1 / 1 }}
+                        >
+                          <Box
+                            sx={{
+                              px: 0,
+                              borderRadius: "50%",
+                              textAlign: "center",
+                              transition: "transform 0.3s ease",
+                              alignContent: "center",
+                              cursor: "pointer",
+                              height: "100%",
+                              "&:hover": {
+                                transform: "scale(0.97)",
+                              },
+                            }}
+                            onClick={() =>
+                              navigate(
+                                `/DAMIL-Access-Control/All-Clients/${field}=${value}`
+                              )
+                            }
+                          >
+                            <GaugeChartHome
+                              data={[
+                                {
+                                  value: analyticsData[field]?.[value] ?? 0,
+                                  name: descriptionMap(
+                                    field,
+                                    value,
+                                    t
+                                  ).replaceAll("_", " "),
+                                },
+                              ]}
+                            />
+                          </Box>
+                        </Grid>
+                      )
+                    );
+                  })
+                )}
               </Grid>
             </Grid>
           </Grid>
+          // )
         )}
       </Box>
 

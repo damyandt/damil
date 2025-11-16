@@ -62,6 +62,7 @@ const Checkbox: React.FC<ICheckboxProps> = ({
     <DefaultCheckbox
       css={[size === "small" && styles.smallCheckbox]}
       size={size}
+      onChange={(e) => e.stopPropagation()}
       {...props}
     />
   );
