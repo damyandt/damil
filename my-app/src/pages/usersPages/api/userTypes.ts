@@ -4,6 +4,12 @@ export type Abonnement = ["STARTER", "GROWTH", "PRO", null];
 export type AbonnementDuration = ["monthly", "annual", null];
 export type Role = "Member" | "Admin" | "Administrator" | "Staff";
 export type RolesTypes = ["Member", "Admin", "Administrator", "Staff"];
+export type SubscriptionStatus =
+  | "ACTIVE"
+  | "INACTIVE"
+  | "EXPIRED"
+  | "CANCELLED";
+export type Employment = "STUDENT" | "REGULAR" | "RETIRED" | "UNEMPLOYED";
 
 export type Roles = RolesTypes[number];
 
@@ -20,6 +26,17 @@ export interface Business {
   membersCount?: number;
 }
 
+export interface MemberResponse {
+  subscriptionPlan?: string | null;
+  subscriptionStatus?: SubscriptionStatus;
+  subscriptionStartDate?: string | Dayjs | null;
+  subscriptionEndDate?: string | Dayjs | null;
+  allowedVisits?: number;
+  remainingVisits?: number;
+  lastCheckInAt?: string | Dayjs | null;
+  employment?: Employment;
+}
+
 export interface User {
   id?: number;
   firstName?: string;
@@ -28,12 +45,16 @@ export interface User {
   email: string;
   gender?: Gender;
   roles: Array<Roles>;
-  birthDate?: Dayjs | null;
-  createdAt?: Dayjs | null;
-  updatedAt?: Dayjs | null;
+  birthDate?: Dayjs | string | null;
+  createdAt?: Dayjs | string | null;
+  updatedAt?: Dayjs | string | null;
   phone?: string;
   address?: string;
   city?: string;
+  passwordChanged?: boolean;
+  enabled?: boolean;
+  memberResponse?: MemberResponse | null;
+  employeeResponse?: any | null;
 }
 
 export interface AdminDataRegister {

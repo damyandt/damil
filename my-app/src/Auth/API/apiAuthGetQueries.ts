@@ -10,14 +10,18 @@ export const getQueryUserTenant = (): Query => ({
   method: "GET",
 });
 
-export const postQueryTokenRefresh = (input: any): Query => ({
+export const postQueryTokenRefresh = (input: { token: string }): Query => ({
   endpoint: "auth/refresh_token",
   method: "POST",
   variables: input,
 });
 
-export const updateCredentials = (input: any): Query => ({
-  endpoint: "api/v1/auth/change-password",
+export const updateCredentials = (input: {
+  newPassword: string;
+  oldPassword: string;
+  confirmPassword: string;
+}): Query => ({
+  endpoint: "auth/change-password",
   method: "PUT",
   variables: input,
 });

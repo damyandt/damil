@@ -71,6 +71,7 @@ const AccountCredentials = () => {
         query: updateCredentials({
           oldPassword,
           newPassword: newPassword,
+          confirmPassword: confirmPassword,
         }),
         auth: { setAuthedUser },
       });

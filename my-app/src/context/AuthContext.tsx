@@ -21,6 +21,8 @@ interface UserContextType {
   authedUserLoading: boolean;
   tenantLoading: boolean;
   showIncompleteModal: boolean;
+  showChangePasswordModal: boolean;
+  setShowChangePasswordModal: React.Dispatch<React.SetStateAction<boolean>>;
   snoozeModal: (minutes?: number) => void;
   preferences: PreferencesType;
   tenant: any;
@@ -42,6 +44,8 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
   const [loadingTenant, setLoadingTenant] = useState<boolean>(false);
   const [refreshUserData, setRefreshUserData] = useState<boolean>(false);
   const [showIncompleteModal, setShowIncompleteModal] =
+    useState<boolean>(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] =
     useState<boolean>(false);
   const storedMode = localStorage.getItem("themeMode");
   const defaultMode: PaletteMode =
@@ -96,7 +100,6 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
 
   const fetchTenant = async () => {
     try {
-      setLoadingTenant(true);
       const tenantInfo = await callApi<any>({
         query: getQueryUserTenant(),
         auth: { setAuthedUser },
@@ -116,7 +119,11 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         authedUser.roles?.includes("Admin") ||
         authedUser.roles?.includes("Staff")
       ) {
+        setLoadingTenant(true);
         fetchTenant();
+      } else {
+        // If user doesn't need tenant data, mark tenant loading as complete
+        setLoadingTenant(false);
       }
     }
   }, [userSignedIn]);
@@ -127,19 +134,28 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
     } else if (authedUser.email !== "error" && !userSignedIn) {
       setUserSignedIn(true);
     }
-  }, [authedUser?.id]);
+    // Show change password modal if passwordChanged is false
+    if (authedUser && authedUser.passwordChanged === false) {
+      setShowChangePasswordModal(true);
+    } else {
+      setShowChangePasswordModal(false);
+    }
+  }, [authedUser?.id, authedUser?.passwordChanged, userSignedIn]);
 
   useEffect(() => {
     (async () => {
       try {
         if (!authedUser?.id) {
           setLoading(true);
+          setLoadingTenant(true);
           await checkIfUserIsSignedIn();
         }
       } catch (err) {
         console.error("Authed user error", err);
+        setLoadingTenant(false);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     })();
   }, [userSignedIn]);
 
@@ -194,6 +210,8 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         authedUserLoading: loading,
         tenantLoading: loadingTenant,
         showIncompleteModal,
+        showChangePasswordModal,
+        setShowChangePasswordModal,
         snoozeModal,
         preferences,
         setRefreshUserData,

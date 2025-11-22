@@ -124,7 +124,8 @@ const theme = (mode: PaletteMode, mainColor: string) => {
       MuiCssBaseline: {
         styleOverrides: {
           body: {
-            backgroundColor: "#FFFFFF",
+            backgroundColor: (theme: Theme) =>
+              theme.palette.customColors?.themeBackground,
           },
         },
       },

@@ -125,10 +125,11 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
       );
     } else if (activeStep === 3) {
       try {
-        await callApi<Response<any>>({
+        const response = await callApi<Response<any>>({
           query: postSubscription(subscriptionData, id),
           auth: { setAuthedUser },
         });
+        handleUpdateRow(response.data);
       } catch (error) {
         setErrors(error.validationErrors);
       }
@@ -136,6 +137,29 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
       setModalTitle(null);
     }
     setLoading(false);
+  };
+  const handleUpdateRow = (updatedRow: any) => {
+    if (!setFinalRows) return;
+    setFinalRows((prev: Row[]) =>
+      prev.map((row: Row) =>
+        row.id === updatedRow.id
+          ? {
+              ...row,
+              subscriptionStatus: updatedRow.memberResponse.subscriptionStatus,
+              allowedVisits: updatedRow.memberResponse.allowedVisits || 0,
+              employment: updatedRow.memberResponse.employment || "STUDENT",
+              lastCheckInAt: updatedRow.memberResponse.lastCheckInAt || null,
+              remainingVisits: updatedRow.memberResponse.remainingVisits || 0,
+              subscriptionEndDate:
+                updatedRow.memberResponse.subscriptionEndDate || null,
+              subscriptionPlan:
+                updatedRow.memberResponse.subscriptionPlan || null,
+              subscriptionStartDate:
+                updatedRow.memberResponse.subscriptionStartDate || null,
+            }
+          : row
+      )
+    );
   };
 
   const handleBack = () => {
@@ -173,6 +197,21 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
 
       const optionsMap: EnumMap = {};
 
+      // Fetch memberships and employment options needed for subscription
+      const additionalEndpoints = ["memberships", "enums/Employment"];
+      for (const url of additionalEndpoints) {
+        try {
+          const response = await callApi<Response<Enum[]>>({
+            query: getQueryOptions(url),
+            auth: { setAuthedUser },
+          });
+          optionsMap[url] = response.data;
+        } catch (error) {
+          console.error("Error fetching options for", url, error);
+        }
+      }
+
+      // Fetch column-specific options
       for (const col of columns) {
         const isDropdown = col.dropDownConfig?.url;
         const isEnum = col.enumConfig?.url;
@@ -289,7 +328,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
               <TextField
                 select
                 label={t("Subcription Plan")}
-                value={formData.subscriptionPlan}
+                value={subscriptionData.subscriptionPlan}
                 onChange={(e) =>
                   handleChangSubscription("subscriptionPlan", e.target.value)
                 }
@@ -310,7 +349,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                     {t("Set Up PLans")}
                   </MenuItem>
                 ) : (
-                  options["subscriptionPlan"].map(
+                  options["memberships"].map(
                     (option: { title: string; value: string | number }) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.title}
@@ -324,7 +363,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
               <TextField
                 select
                 label={t("Employment")}
-                value={formData.subscriptionPlan}
+                value={subscriptionData.employment}
                 onChange={(e) =>
                   handleChangSubscription("employment", e.target.value)
                 }
@@ -332,10 +371,10 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 helperText={errors["employment"]}
                 fullWidth
               >
-                {!options["employment"] ? (
+                {!options["enums/Employment"] ? (
                   <MenuItem value="loading">{t("Loading...")}</MenuItem>
                 ) : (
-                  options["employment"].map(
+                  options["enums/Employment"].map(
                     (option: { title: string; value: string | number }) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.title}
@@ -350,7 +389,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
                 <TextField
                   select
                   label={t("Allowed Visits")}
-                  value={formData.allowedVisits}
+                  value={subscriptionData.allowedVisits}
                   type="number"
                   onChange={(e) =>
                     handleChangSubscription("allowedVisits", e.target.value)
@@ -368,6 +407,7 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
             )}
           </Grid>
         );
+      // ["memberships", "enums/Employment"]
       case 2:
         return (
           <Box

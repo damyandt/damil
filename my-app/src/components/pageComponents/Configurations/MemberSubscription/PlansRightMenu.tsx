@@ -8,7 +8,7 @@ import AddNewPlansPaper from "./AddNewPlanPaper";
 import { Enum, Response } from "../../../../Global/Types/commonTypes";
 import DefinePricesForm from "../../../../pages/Configurations/DefinePricesSubPlans";
 import callApi from "../../../../API/callApi";
-import { postPlans } from "../../../../pages/Configurations/API/getQueries";
+import { postPlans } from "../../../../pages/Configurations/API/postQueries";
 import { useAuthedContext } from "../../../../context/AuthContext";
 
 interface PlansRightMenuProps {

@@ -22,14 +22,15 @@ import {
   getCurrentSubscriptionPlans,
   getSubscriptionPlans,
   getSubscriptionPlansTable,
-  postPlans,
 } from "./API/getQueries";
+
 import { AppRouterProps } from "../../Layout/layoutVariables";
 import { useOutletContext } from "react-router-dom";
 import PlansRightMenu from "../../components/pageComponents/Configurations/MemberSubscription/PlansRightMenu";
 import AddNewPlansPaper from "../../components/pageComponents/Configurations/MemberSubscription/AddNewPlanPaper";
 import AssignmentTurnedIn from "@mui/icons-material/AssignmentTurnedIn";
 import DefinePricesForm from "./DefinePricesSubPlans";
+import { postPlans } from "./API/postQueries";
 
 const SubscriptionPlans = () => {
   const { t } = useLanguageContext();

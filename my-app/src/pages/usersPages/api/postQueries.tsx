@@ -1,4 +1,5 @@
 import { Query } from "../../../API/callApi";
+import { User } from "./userTypes";
 
 export const postLogin = (input: any): Query => ({
   endpoint: `auth/login`,
@@ -18,24 +19,27 @@ export const postRegister = (info: {
   },
 });
 
-export const validateEmail = (input: any): Query => ({
+export const validateEmail = (input: { email: string }): Query => ({
   endpoint: `auth/validate_email`,
   method: "POST",
   variables: input,
 });
 
-export const codeVerification = (input: any): Query => ({
+export const codeVerification = (input: {
+  verificationCode: string;
+  email: string;
+}): Query => ({
   endpoint: `auth/verify`,
   method: "POST",
   variables: input,
 });
 
-export const codeVerificationResend = (input: any): Query => ({
+export const codeVerificationResend = (input: { email: string }): Query => ({
   endpoint: `auth/verification-code/${input.email}`,
   method: "POST",
 });
 
-export const updateProfile = (input: any): Query => ({
+export const updateProfile = (input: Partial<User>): Query => ({
   endpoint: `users`,
   method: "PATCH",
   variables: input,
@@ -47,7 +51,13 @@ export const savePreferences = (input: any): Query => ({
   variables: input,
 });
 
-export const stripePaymentIntent = (input: any): Query => ({
+export const stripePaymentIntent = (input: {
+  tenantId: string;
+  plan: string;
+  amount: number;
+  currency: string;
+  abonnementDuration: string;
+}): Query => ({
   endpoint: `stripe/create-checkout-session`,
   method: "POST",
   variables: input,

@@ -102,7 +102,22 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
     if (!setFinalRows) return;
     setFinalRows((prev: Row[]) =>
       prev.map((row: Row) =>
-        row.id === updatedRow.id ? { ...row, ...updatedRow } : row
+        row.id === updatedRow.id
+          ? {
+              ...row,
+              subscriptionStatus: updatedRow.memberResponse.subscriptionStatus,
+              allowedVisits: updatedRow.memberResponse.allowedVisits || 0,
+              employment: updatedRow.memberResponse.employment || "STUDENT",
+              lastCheckInAt: updatedRow.memberResponse.lastCheckInAt || null,
+              remainingVisits: updatedRow.memberResponse.remainingVisits || 0,
+              subscriptionEndDate:
+                updatedRow.memberResponse.subscriptionEndDate || null,
+              subscriptionPlan:
+                updatedRow.memberResponse.subscriptionPlan || null,
+              subscriptionStartDate:
+                updatedRow.memberResponse.subscriptionStartDate || null,
+            }
+          : row
       )
     );
   };
