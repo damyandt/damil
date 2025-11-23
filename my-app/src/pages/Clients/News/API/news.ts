@@ -1,7 +1,7 @@
 import { Role } from "../../../usersPages/api/userTypes";
 
 export interface NewsItem {
-  newsId?: number | null;
+  newsId?: string | null;
   title: string;
   content: string;
   importance: "LOW" | "MEDIUM" | "HIGH";
@@ -11,5 +11,5 @@ export interface NewsItem {
   targetSpecific: boolean;
   recipientsIds: number[];
   status?: "DRAFT" | "PUBLISHED" | "DELETED";
-  authorId?: number;
+  authorId?: string;
 }

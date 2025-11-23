@@ -13,11 +13,11 @@ export const editNewsItem = (formData: NewsItem): Query => ({
   variables: formData,
 });
 
-export const deleteNewsItem = (newsId: number): Query => ({
+export const deleteNewsItem = (newsId: string): Query => ({
   endpoint: `news/${newsId}`,
   method: "DELETE",
 });
-export const postJoinOrLeaveClass = (id: number, join: boolean): Query => ({
+export const postJoinOrLeaveClass = (id: string, join: boolean): Query => ({
   endpoint: `trainings/${join ? "join" : "cancel"}/${id}`,
   method: "POST",
 });

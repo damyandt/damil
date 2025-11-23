@@ -47,7 +47,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
 }) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const { _, ...rest } = (selectedRow ?? {}) as {
-    id?: string | number;
+    id?: string;
     [key: string]: any;
   };
   const { addMessage } = useSnackbarContext();

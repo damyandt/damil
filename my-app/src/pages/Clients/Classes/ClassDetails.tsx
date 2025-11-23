@@ -23,7 +23,7 @@ const ClassDetails = ({
   const [alert, setAlert] = useState<string | null>(null);
   const { setAuthedUser, authedUser } = useAuthedContext();
   const { t } = useLanguageContext();
-  const handleJoin = async (id: number, join: boolean) => {
+  const handleJoin = async (id: string, join: boolean) => {
     try {
       await callApi<Response<any>>({
         query: postJoinOrLeaveClass(id, join),

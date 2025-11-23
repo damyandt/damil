@@ -14,7 +14,7 @@ export type Employment = "STUDENT" | "REGULAR" | "RETIRED" | "UNEMPLOYED";
 export type Roles = RolesTypes[number];
 
 export interface Business {
-  id?: number;
+  id?: string;
   stripeAccountId?: string;
   name?: string;
   businessEmail: string;
@@ -38,7 +38,7 @@ export interface MemberResponse {
 }
 
 export interface User {
-  id?: number;
+  id?: string;
   firstName?: string;
   lastName?: string;
   username?: string;

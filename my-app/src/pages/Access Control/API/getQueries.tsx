@@ -59,7 +59,7 @@ export const getPrice = (
 });
 
 export const getPeriodVisitors = (
-  id: string | number,
+  id: string,
   startDate: string,
   endDate: string
 ): Query => ({
@@ -72,7 +72,7 @@ export const getClientVisits = (id: string): Query => ({
   method: "GET",
 });
 
-export const getQRCode = (id: any): Query => ({
+export const getQRCode = (id: string): Query => ({
   endpoint: `qr/${id}`,
   method: "GET",
 });

@@ -63,7 +63,7 @@ export const stripePaymentIntent = (input: {
   variables: input,
 });
 
-export const selfAdding = (input: any, id: number): Query => ({
+export const selfAdding = (input: any, id: string): Query => ({
   endpoint: `access-requests/${id}`,
   method: "POST",
   variables: input,

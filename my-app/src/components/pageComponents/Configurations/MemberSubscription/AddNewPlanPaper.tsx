@@ -79,8 +79,8 @@ const AddNewPlansPaper = ({
                 key={plan.value}
                 control={
                   <Checkbox
-                    checked={selectedPlans.includes(plan.value)}
-                    onChange={() => handlePlanToggle(plan.value)}
+                    checked={selectedPlans.includes(plan.value.toString())}
+                    onChange={() => handlePlanToggle(plan.value.toString())}
                   />
                 }
                 label={
