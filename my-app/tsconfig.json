@@ -23,6 +23,6 @@
     "useUnknownInCatchVariables": false,
     "incremental": true
   },
-  "include": ["src/**/*", "eslint.config.js"],
+  "include": ["src/**/*", "eslint.config.js", "src", "vite.config.js"],
   "exclude": ["node_modules", "build", "dist"]
 }

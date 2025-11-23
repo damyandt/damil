@@ -155,6 +155,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         setLoadingTenant(false);
       } finally {
         setLoading(false);
+        // setLoadingTenant(false);
       }
     })();
   }, [userSignedIn]);
@@ -192,6 +193,8 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
       });
 
       return;
+    } else {
+      setLoadingTenant(false);
     }
   };
 
