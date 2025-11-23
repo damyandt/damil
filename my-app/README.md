@@ -1,12 +1,76 @@
-# React + Vite
+# Damilsoft
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript application with Material UI, i18n, authentication, and custom business logic.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Fast Vite-powered development
+- Modular React components
+- Material UI design system
+- Internationalization (i18n) with `react-i18next`
+- Authentication and user context
+- API integration and custom hooks
+- ESLint, Prettier, and TypeScript for code quality
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
+
+- Node.js >= 18
+- npm or yarn
+
+### Installation
+
+```bash
+(sudo) npm install
+```
+
+### Scripts
+
+| Script | Description | (add sudo in the beggining of the script for macOS)
+| `npm run dev` | Start the Vite development server with hot module reload.  
+| `npm run build` | Build the app for production (outputs to `dist/`).  
+| `npm run preview` | Preview the production build locally.  
+| `npm run lint` | Run ESLint on all files in the project.  
+| `npm run update-translations` | Extract translation keys from code and update translation files using i18next-parser.
+| `npm run validate` | Run ESLint on all source files and fail if there are any warnings.  
+| `npm run check_libraries` | Check for unused dependencies in the project using depcheck.
+
+### Project Structure
+
+```
+my-app/
+├── public/           # Static assets
+├── src/              # Source code
+│   ├── components/   # Reusable UI components
+│   ├── context/      # React context providers
+│   ├── pages/        # App pages
+│   ├── API/          # API calls
+│   ├── Global/       # Global styles, types, utils
+│   ├── Layout/       # App layout and navigation
+│   ├── locales/      # i18n translation files
+│   └── main.tsx      # App entry point
+├── vite.config.js    # Vite configuration
+├── tsconfig.json     # TypeScript configuration
+├── package.json      # Project metadata and scripts
+└── README.md         # Project documentation
+```
+
+## Internationalization (i18n)
+
+- All user-facing text is wrapped with `t("...")` for translation.
+- Translation files are in `src/locales/` (e.g. `src/locales/en/translation.json`).
+- To add a new language, create a folder in `locales/` and add a `translation.json`.
+
+## Authentication
+
+- User context and authentication logic is in `src/context/AuthContext.tsx`.
+
+## Customization
+
+- Update theme colors in `src/Global/Styles/font.ts` and `src/Global/Styles/theme.ts`.
+- Add new pages in `src/pages/` and register routes in `src/Layout/Router/AppRouter.tsx`.
+
+## License
+
+MIT
