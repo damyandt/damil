@@ -25,7 +25,7 @@ interface GoalMembersGaugeChartProps {
 
 const GoalMembersGaugeChart: React.FC<GoalMembersGaugeChartProps> = ({
   value,
-  height,
+  // height,
 }) => {
   const { t } = useLanguageContext();
   const option: echarts.EChartsCoreOption = {
@@ -94,7 +94,11 @@ const GoalMembersGaugeChart: React.FC<GoalMembersGaugeChartProps> = ({
   };
 
   return (
-    <BaseChart echarts={echarts} option={option} height={`${height}dvh`} />
+    <BaseChart
+      echarts={echarts}
+      option={option}
+      // height={`${height}dvh`}
+    />
   );
 };
 

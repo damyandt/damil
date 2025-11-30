@@ -88,7 +88,11 @@ const GaugeChartHome: React.FC<GaugeChartHomeProps> = ({ data }) => {
   };
   return (
     <div style={{ width: "100%", height: "100%", cursor: "pointer" }}>
-      <BaseChart echarts={echarts} option={option} height="100%" />
+      <BaseChart
+        echarts={echarts}
+        option={option}
+        //  height="100%"
+      />
     </div>
   );
 };

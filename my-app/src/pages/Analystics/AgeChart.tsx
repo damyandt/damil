@@ -23,7 +23,7 @@ interface GAgeChartProps {
   height: number;
 }
 
-const AgeDistributionChart: React.FC<GAgeChartProps> = ({ height }) => {
+const AgeDistributionChart: React.FC<GAgeChartProps> = ({}) => {
   const { t } = useLanguageContext();
   const option: echarts.EChartsCoreOption = {
     grid: {
@@ -92,7 +92,11 @@ const AgeDistributionChart: React.FC<GAgeChartProps> = ({ height }) => {
   };
 
   return (
-    <BaseChart echarts={echarts} option={option} height={`${height}dvh`} />
+    <BaseChart
+      echarts={echarts}
+      option={option}
+      //  height={`${height}dvh`}
+    />
   );
 };
 

@@ -1,34 +1,96 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography, MenuItem, useTheme, Divider } from "@mui/material";
 import Button from "../../components/MaterialUI/Button";
-import TextField from "../../components/MaterialUI/FormFields/TextField";
 import { useLanguageContext } from "../../context/LanguageContext";
+import { useAuthedContext } from "../../context/AuthContext";
+import callApi from "../../API/callApi";
+import { Enum, EnumMap, Response } from "../../Global/Types/commonTypes";
+import { getBuyMemberSubscription } from "./API/getQueries";
+import TextField from "../../components/MaterialUI/FormFields/TextField";
+import { useSnackbarContext } from "../../context/SnackbarContext";
+import { getPrice, getQueryOptions } from "../Access Control/API/getQueries";
 
 const MemberSubscription = () => {
   const theme = useTheme();
-
+  const { authedUser, setAuthedUser, tenant, preferences } = useAuthedContext();
+  const { addMessage } = useSnackbarContext();
   const { t } = useLanguageContext();
   const [currentSubscription, setCurrentSubscription] = useState<any>(null);
   const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [employmentStatus, setEmploymentStatus] = useState<string>("");
+  const [options, setOptions] = useState<EnumMap>({});
+  const enumEndpoints = ["memberships", "enums/Employment"];
+  useEffect(() => {
+    const fetchAllOptions = async () => {
+      if (!enumEndpoints) return;
 
-  const handlePurchase = () => {
+      const optionsMap: EnumMap = {};
+      for (const url of enumEndpoints) {
+        try {
+          const response = await callApi<Response<Enum[]>>({
+            query: getQueryOptions(url ?? ""),
+            auth: { setAuthedUser },
+          });
+          optionsMap[url] = response.data;
+        } catch (error) {
+          console.error("Error fetching options for", url, error);
+        }
+      }
+
+      setOptions(optionsMap);
+    };
+
+    fetchAllOptions();
+  }, []);
+
+  const handlePurchase = async () => {
     if (!selectedPlan || !employmentStatus) {
-      alert("Please select both a plan and your employment status.");
       return;
     }
+    let price;
+    try {
+      const response = await callApi<Response<any>>({
+        query: getPrice(selectedPlan, employmentStatus),
+        auth: { setAuthedUser },
+      });
+      price = response.data.price;
+    } catch (error) {
+      console.error("Error purchasing subscription:", error);
+      addMessage(error.message, "error");
+    }
 
-    setCurrentSubscription({
-      type: selectedPlan,
+    const payload = {
+      userId: authedUser.id,
+      email: authedUser.email,
+      name: `${authedUser.firstName} ${authedUser.lastName}`,
+      subscriptionPlan: selectedPlan,
+      amount: price * 100,
+      currency: preferences.currency || "EUR",
       employment: employmentStatus,
-      startDate: new Date().toISOString(),
-      expiresOn:
-        selectedPlan === "Monthly"
-          ? "2025-11-10"
-          : selectedPlan === "Annual"
-          ? "2026-10-10"
-          : "2025-12-10",
-    });
+    };
+    try {
+      const response = await callApi<Response<any>>({
+        query: getBuyMemberSubscription(payload, tenant.stripeAccountId),
+        auth: { setAuthedUser },
+      });
+      window.location.href = response.data.url;
+      // console.log(response);
+    } catch (error: any) {
+      console.error("Subscription purchase failed:", error.message);
+      addMessage(error.message, "error");
+    }
+
+    // setCurrentSubscription({
+    //   type: selectedPlan,
+    //   employment: employmentStatus,
+    //   startDate: new Date().toISOString(),
+    //   expiresOn:
+    //     selectedPlan === "Monthly"
+    //       ? "2025-11-10"
+    //       : selectedPlan === "Annual"
+    //       ? "2026-10-10"
+    //       : "2025-12-10",
+    // });
   };
 
   return (
@@ -40,7 +102,7 @@ const MemberSubscription = () => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        textAlign: "center",
+        // textAlign: "center",
         color: theme.palette.text.primary,
         p: { xs: 2, sm: 4 },
       }}
@@ -106,29 +168,45 @@ const MemberSubscription = () => {
           >
             <TextField
               select
+              fullWidth
+              value={selectedPlan}
               label={t("Plan Type")}
               onChange={(e) => {
                 setSelectedPlan(e.target.value);
               }}
             >
-              {["Monthly", "Quarterly", "Annual"].map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
+              {!options["memberships"] ? (
+                <MenuItem value="loading">{t("Loading...")}</MenuItem>
+              ) : (
+                options["memberships"].map(
+                  (option: { title: string; value: string | number }) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.title}
+                    </MenuItem>
+                  )
+                )
+              )}
             </TextField>
             <TextField
               select
+              fullWidth
+              value={employmentStatus}
               label={t("Employment Status")}
               onChange={(e) => {
                 setEmploymentStatus(e.target.value);
               }}
             >
-              {["Regular", "Student", "Handicap", "Senior"].map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
+              {!options["enums/Employment"] ? (
+                <MenuItem value="loading">{t("Loading...")}</MenuItem>
+              ) : (
+                options["enums/Employment"].map(
+                  (option: { title: string; value: string | number }) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.title}
+                    </MenuItem>
+                  )
+                )
+              )}
             </TextField>
 
             <Button

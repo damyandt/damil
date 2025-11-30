@@ -15,7 +15,7 @@ import { Business } from "../../../pages/usersPages/api/userTypes";
 
 const BusinessDetails = () => {
   const { t } = useLanguageContext();
-  const { setRefreshUserData, tenant } = useAuthedContext();
+  const { setRefreshUserData, tenant, authedUser } = useAuthedContext();
   const [saved, setSaved] = useState<boolean>(false);
   const { setHasUnsavedChanges } = useNavigationGuard();
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -83,22 +83,29 @@ const BusinessDetails = () => {
         <Typography variant="h4" gutterBottom alignSelf={"center"} margin={0}>
           {t("Business Info")}
         </Typography>
-        <CustomTooltip title={editMode ? t("Save") : t("Edit")} placement="top">
-          {editMode ? (
-            <IconButton onClick={handleSaveChanges}>
-              <SaveIcon fontSize="small" />
-            </IconButton>
-          ) : (
-            <IconButton onClick={() => setEditMode((prev) => !prev)}>
-              <EditIcon fontSize="small" />
-            </IconButton>
-          )}
-        </CustomTooltip>
-        <Fade in={saved}>
-          <IconButton sx={{ cursor: "default" }}>
-            <DoneIcon fontSize="small" color="success" />
-          </IconButton>
-        </Fade>
+        {authedUser.roles?.includes("Admin") && (
+          <>
+            <CustomTooltip
+              title={editMode ? t("Save") : t("Edit")}
+              placement="top"
+            >
+              {editMode ? (
+                <IconButton onClick={handleSaveChanges}>
+                  <SaveIcon fontSize="small" />
+                </IconButton>
+              ) : (
+                <IconButton onClick={() => setEditMode((prev) => !prev)}>
+                  <EditIcon fontSize="small" />
+                </IconButton>
+              )}
+            </CustomTooltip>
+            <Fade in={saved}>
+              <IconButton sx={{ cursor: "default" }}>
+                <DoneIcon fontSize="small" color="success" />
+              </IconButton>
+            </Fade>
+          </>
+        )}
       </Box>
 
       <Box sx={{ minHeight: 200 }}>
@@ -107,7 +114,11 @@ const BusinessDetails = () => {
           {info.map((col) => (
             <Grid size={{ xs: 12, sm: 6 }} key={col.field}>
               <TextField
-                disabled={col.field === "businessEmail" || !editMode}
+                disabled={
+                  col.field === "businessEmail" ||
+                  !editMode ||
+                  !authedUser.roles?.includes("Admin")
+                }
                 fullWidth
                 type={col.field === "businessEmail" ? "email" : "text"}
                 label={col.label}
@@ -117,24 +128,6 @@ const BusinessDetails = () => {
             </Grid>
           ))}
         </Grid>
-        {/* // ) : (
-        //   <Grid container spacing={3}>
-        //     {info.map((col) => (
-        //       <Grid size={6} key={col.field}>
-        //         <Typography variant="subtitle2" color="text.secondary">
-        //           {col.label}
-        //         </Typography>
-        //         <CellRenderer
-        //           fontWeight={400}
-        //           key={col.field}
-        //           value={formData ? formData[col.field] || "" : ""}
-        //           dataType="string"
-        //           table={false}
-        //         />
-        //       </Grid>
-        //     ))}
-        //   </Grid>
-        // )} */}
       </Box>
     </Box>
   );

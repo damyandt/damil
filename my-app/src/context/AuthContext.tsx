@@ -10,6 +10,10 @@ import { PreferencesType, Response } from "../Global/Types/commonTypes";
 import { getPreferences } from "../pages/usersPages/api/getQueries";
 import { PaletteMode } from "@mui/material";
 import { User } from "../pages/usersPages/api/userTypes";
+import {
+  defaultHomeAnalytics,
+  incompleteModalFields,
+} from "./authContextTypes";
 
 export type GetQueryUsersGetCurrentUserSnippet = { user: User };
 
@@ -56,12 +60,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
     mode: defaultMode,
     currency: "BGN",
     language: "bg",
-    homeFilters: [
-      "gender - MALE",
-      "employment - REGULAR",
-      "employment - STUDENT",
-      "gender - MALE",
-    ],
+    homeFilters: defaultHomeAnalytics,
   });
 
   const fetchUserData = async () => {
@@ -90,8 +89,15 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
           auth: { setAuthedUser },
         });
 
-        preferencesInfo.data.settings &&
+        // If settings is missing, null, or has empty homeFilters, set defaults
+        if (preferencesInfo.data.settings.homeFilters.length >= 0) {
+          setPreferences((prev) => ({
+            ...prev,
+            homeFilters: defaultHomeAnalytics,
+          }));
+        } else {
           setPreferences(preferencesInfo.data.settings);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -117,7 +123,8 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
       fetchPreferences();
       if (
         authedUser.roles?.includes("Admin") ||
-        authedUser.roles?.includes("Staff")
+        authedUser.roles?.includes("Staff") ||
+        authedUser.roles?.includes("Member")
       ) {
         setLoadingTenant(true);
         fetchTenant();
@@ -134,7 +141,7 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
     } else if (authedUser.email !== "error" && !userSignedIn) {
       setUserSignedIn(true);
     }
-    // Show change password modal if passwordChanged is false
+
     if (authedUser && authedUser.passwordChanged === false) {
       setShowChangePasswordModal(true);
     } else {
@@ -155,20 +162,16 @@ const AuthContext = ({ children }: AuthContextProps): React.ReactElement => {
         setLoadingTenant(false);
       } finally {
         setLoading(false);
-        // setLoadingTenant(false);
       }
     })();
   }, [userSignedIn]);
 
   useEffect(() => {
-    if (authedUser) {
-      let hasEmptyFields =
-        Object.values(authedUser).some(
-          (val: any) => val === "" || val === null
-        ) ||
-        Object.values(preferences).some(
-          (val: any) => val === "" || val === null
-        );
+    if (authedUser.email !== "error" && userSignedIn) {
+      let hasEmptyFields = incompleteModalFields.some(
+        (key) => !(authedUser as User)[key] || (authedUser as any)[key] === ""
+      );
+
       const snoozeUntil = localStorage.getItem("incompleteProfileSnooze");
       const now = Date.now();
 

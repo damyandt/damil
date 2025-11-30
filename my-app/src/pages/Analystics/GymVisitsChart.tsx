@@ -28,7 +28,7 @@ interface VisitsProps {
   height: number;
 }
 
-const GymVisitsChart: React.FC<VisitsProps> = ({ height }) => {
+const GymVisitsChart: React.FC<VisitsProps> = ({}) => {
   const chartRef = useRef<any>(null);
   const { t } = useLanguageContext();
   const drilldownData = [
@@ -285,7 +285,7 @@ const GymVisitsChart: React.FC<VisitsProps> = ({ height }) => {
       echarts={echarts}
       onEvents={onEvents}
       option={option}
-      height={`${height}dvh`}
+      // height={`${height}dvh`}
     />
   );
 };

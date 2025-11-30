@@ -25,11 +25,16 @@ const ProfilePage = () => {
   const theme = useTheme();
   const { authedUser, tenant } = useAuthedContext();
   const [hovered, setHovered] = useState<boolean>(false);
-  const [selectedTab, setSelectedTab] = useState<number>(0);
+  const [selectedTab, setSelectedTab] = useState<
+    "account" | "preferences" | "subscription" | "business" | "card"
+  >("account");
   const [slideIn, setSlideIn] = useState(true);
   const { requestActionConfirmation, requestNavigation } = useNavigationGuard();
 
-  const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (
+    e: React.SyntheticEvent,
+    newValue: "account" | "preferences" | "subscription" | "business" | "card"
+  ) => {
     e.preventDefault();
 
     const performTabChange = () => {
@@ -142,16 +147,15 @@ const ProfilePage = () => {
               },
             }}
           >
-            <Tab label={t("Account Details")} />
-            <Tab label={t("Preferences")} />
+            <Tab value="account" label={t("Account Details")} />
+            <Tab value="preferences" label={t("Preferences")} />
             {!authedUser?.roles?.includes("Member") && (
-              <Tab label={t("Subscription")} />
+              <Tab value="subscription" label={t("Subscription")} />
             )}
-            {!authedUser?.roles?.includes("Member") && (
-              <Tab label={t("Business Details")} />
-            )}
+
+            <Tab value="business" label={t("Business Details")} />
             {authedUser?.roles?.includes("Admin") && (
-              <Tab label={t("Card Details")} />
+              <Tab value="card" label={t("Card Details")} />
             )}
           </Tabs>
 
@@ -173,12 +177,12 @@ const ProfilePage = () => {
               unmountOnExit
             >
               <Box key={selectedTab} justifyContent={"center"} display={"flex"}>
-                {selectedTab === 0 && (
+                {selectedTab === "account" && (
                   <AccountDetails />
                   // <AccountDetails />
                 )}
-                {selectedTab === 1 && <PreferencesDetails />}
-                {selectedTab === 2 && (
+                {selectedTab === "preferences" && <PreferencesDetails />}
+                {selectedTab === "subscription" && (
                   <Grid size={{ xs: 12 }} width={"100%"}>
                     <Box
                       p={4}
@@ -250,8 +254,8 @@ const ProfilePage = () => {
                     </Box>
                   </Grid>
                 )}
-                {selectedTab === 3 && <BusinessDetails />}
-                {selectedTab === 4 && <CardDetails />}
+                {selectedTab === "business" && <BusinessDetails />}
+                {selectedTab === "card" && <CardDetails />}
               </Box>
             </Slide>
           </Grid>

@@ -135,15 +135,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step, setStep }) => {
         }),
         auth: null,
       });
-      const responceLogin = await callApi<any>({
-        query: postLogin({
-          email: admin.email,
-          password: admin.password,
-        }),
+      const responce = await callApi<any>({
+        query: postLogin({ email: admin.email, password: admin.password }),
         auth: null,
       });
 
-      const refresh_token = responceLogin.refreshToken;
+      const refresh_token = responce.data.refreshToken;
       const refreshCookie: SetCookieParams = {
         name: COOKIE_REFRESH_TOKEN,
         value: refresh_token,

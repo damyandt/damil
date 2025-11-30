@@ -40,15 +40,15 @@ const planData = {
 
 const PlanDetails: React.FC<PlanDetailsProps> = ({ type, period, price }) => {
   const { headline, description, icon } = planData[type];
-  const { tenant } = useAuthedContext();
-  const { setAuthedUser } = useAuthedContext();
+
+  const { setAuthedUser, tenant, preferences } = useAuthedContext();
   const redirect = async () => {
     try {
       const input = {
         tenantId: tenant.id,
         plan: type,
         amount: price * 100,
-        currency: "usd",
+        currency: preferences.currency || "EUR",
         abonnementDuration: period,
       };
 
@@ -57,7 +57,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({ type, period, price }) => {
         auth: { setAuthedUser },
       });
 
-      const url = res.url;
+      const url = res.data.url;
       window.location.href = url;
     } catch (error) {
       console.error("Failed", error);

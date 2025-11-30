@@ -81,7 +81,7 @@ const ClassesContainer = () => {
   }
 
   return (
-    <Box sx={{ minHeight: `calc(100dvh - 140px)`, padding: 2 }}>
+    <Box sx={{ minHeight: `calc(100dvh - 140px)` }}>
       <Box
         sx={{
           display: "flex",

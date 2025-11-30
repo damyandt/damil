@@ -1,10 +1,6 @@
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { LeftNavList } from "../layoutVariables";
 import BallotOutlinedIcon from "@mui/icons-material/BallotOutlined";
-import CardMembershipIcon from "@mui/icons-material/CardMembership";
-import PieChartIcon from "@mui/icons-material/PieChart";
-import FlagIcon from "@mui/icons-material/Flag";
-import BarChartIcon from "@mui/icons-material/BarChart";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
@@ -117,30 +113,30 @@ export const NAV_DAMIL_ANALYTICS: LeftNavMenu = {
           Icon: DashboardIcon,
           disabled: false,
         },
-        {
-          text: "Visits",
-          url: "/DAMIL-Analytics/Visits",
-          Icon: BarChartIcon,
-          disabled: false,
-        },
-        {
-          text: "Monthly Goal",
-          url: "/DAMIL-Analytics/Goal",
-          Icon: FlagIcon,
-          disabled: false,
-        },
-        {
-          text: "Age Breakdown",
-          url: "/DAMIL-Analytics/Ages",
-          Icon: PieChartIcon,
-          disabled: false,
-        },
-        {
-          text: "Memberships",
-          url: "/DAMIL-Analytics/Memberships",
-          Icon: CardMembershipIcon,
-          disabled: false,
-        },
+        // {
+        //   text: "Visits",
+        //   url: "/DAMIL-Analytics/Visits",
+        //   Icon: BarChartIcon,
+        //   disabled: false,
+        // },
+        // {
+        //   text: "Monthly Goal",
+        //   url: "/DAMIL-Analytics/Goal",
+        //   Icon: FlagIcon,
+        //   disabled: false,
+        // },
+        // {
+        //   text: "Age Breakdown",
+        //   url: "/DAMIL-Analytics/Ages",
+        //   Icon: PieChartIcon,
+        //   disabled: false,
+        // },
+        // {
+        //   text: "Memberships",
+        //   url: "/DAMIL-Analytics/Memberships",
+        //   Icon: CardMembershipIcon,
+        //   disabled: false,
+        // },
       ],
     },
   ],

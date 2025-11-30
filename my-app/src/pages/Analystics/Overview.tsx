@@ -1,83 +1,71 @@
-import React from "react";
-import { Box, Grid } from "@mui/material";
-import GymVisitsChart from "./GymVisitsChart";
-import Memberships from "./Memberships";
-import GoalMembersGaugeChart from "./Goal";
-import AgeDistributionChart from "./AgeChart";
+import Dashboard from "./Dashboard";
 
-const OverviewPage: React.FC = () => {
-  return (
-    <Grid container spacing={2}>
-      <Grid size={4}>
-        <Box
-          sx={{
-            border: `1px solid #bcbcbcb0`,
-            borderRadius: "20px",
-            paddingX: 3,
-          }}
-        >
-          <GoalMembersGaugeChart value={68} height={55} />
-        </Box>
-      </Grid>
-      <Grid size={4}>
-        <Box
-          sx={{
-            border: `1px solid #bcbcbcb0`,
-            borderRadius: "20px",
-            paddingX: 3,
-          }}
-        >
-          <AgeDistributionChart height={55} />
-        </Box>
-      </Grid>
-      <Grid size={4}>
-        <Box
-          sx={{
-            border: `1px solid #bcbcbcb0`,
-            borderRadius: "20px",
-            paddingX: 3,
-          }}
-        >
-          <GoalMembersGaugeChart value={38} height={55} />
-        </Box>
-      </Grid>
-      <Grid size={6}>
-        <Box
-          sx={{
-            border: `1px solid #bcbcbcb0`,
-            borderRadius: "20px",
-            paddingX: 3,
-          }}
-        >
-          <Memberships />
-        </Box>
-      </Grid>
-      <Grid
-        size={6}
-        sx={{ display: "flex", flexDirection: "column", gap: "1em" }}
-      >
-        <Box
-          sx={{
-            border: `1px solid #bcbcbcb0`,
-            borderRadius: "20px",
-            paddingX: 3,
-          }}
-        >
-          <GoalMembersGaugeChart value={68} height={50} />
-        </Box>
+const option1 = {
+  series: [
+    {
+      type: "chord",
+      label: { show: true },
+      minAngle: 30,
+      data: [
+        { name: "A" },
+        { name: "B" },
+        { name: "C" },
+        { name: "D" },
+        { name: "F" },
+        { name: "E" },
+      ],
+      links: [
+        { source: "A", target: "B", value: 40 },
+        { source: "B", target: "C", value: 20 },
+        { source: "E", target: "A", value: 5 },
+      ],
+    },
+  ],
+};
 
-        <Box
-          sx={{
-            border: `1px solid #bcbcbcb0`,
-            borderRadius: "20px",
-            paddingX: 3,
-          }}
-        >
-          <GymVisitsChart height={35} />
-        </Box>
-      </Grid>
-    </Grid>
-  );
+const option2 = {
+  xAxis: { type: "category", data: ["Sun", "Mon", "Tue"] },
+  yAxis: { type: "value" },
+  series: [{ data: [820, 932, 901], type: "line", label: { show: true } }],
+};
+
+const option3 = {
+  xAxis: { type: "category", data: ["A", "B", "C"] },
+  yAxis: { type: "value" },
+  series: [{ data: [120, 200, 150], type: "bar", label: { show: true } }],
+};
+
+const option4 = {
+  series: [
+    {
+      name: "Nightingale Chart",
+      type: "pie",
+      label: { show: true },
+      center: ["50%", "50%"],
+      roseType: "area",
+      itemStyle: {
+        borderRadius: 8,
+      },
+      data: [
+        { value: 40, name: "rose 1" },
+        { value: 38, name: "rose 2" },
+        { value: 32, name: "rose 3" },
+        { value: 30, name: "rose 4" },
+        { value: 28, name: "rose 5" },
+      ],
+    },
+  ],
+};
+
+const charts = [
+  { name: "Sales Revenue", option: option1 },
+  { name: "User Growth", option: option2 },
+  { name: "Traffic Sources", option: option3 },
+  { name: "Nightingale Chart", option: option4 },
+];
+
+const OverviewPage = () => {
+  return <Dashboard title="Overview" charts={charts} />;
 };
 
 export default OverviewPage;

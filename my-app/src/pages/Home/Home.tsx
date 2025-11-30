@@ -58,13 +58,16 @@ const HomePage: React.FC = () => {
   const [analyticsLoading, setAnalyticsLoading] = useState<boolean>(true);
   const { preferences, setAuthedUser, tenant } = useAuthedContext();
   const [openCheckIn, setOpenCheckIn] = useState<boolean>(false);
-  const [selectedFilters, setSelectedFilters] = useState<any>(
-    preferences.homeFilters ?? [
-      "Gender - MALE",
-      "Status - ACTIVE",
-      "Employment - REGULAR",
-      "Plan - MONTHLY",
-    ]
+  const [selectedFilters, setSelectedFilters] = useState<string[]>(
+    preferences.homeFilters
+    // preferences.homeFilters?.length > 0
+    //   ? preferences.homeFilters
+    //   : [
+    //       "employment - STUDENT",
+    //       "employment - REGULAR",
+    //       "subscriptionStatus - INACTIVE",
+    //       "subscriptionStatus - ACTIVE",
+    //     ]
   );
   const [openFilterConfig, setOpenFilterConfig] = useState<boolean>(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);

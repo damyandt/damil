@@ -14,7 +14,7 @@ export const postRegister = (info: {
   endpoint: `auth/register`,
   method: "POST",
   variables: {
-    tenantDto: info.tenantDto,
+    tenantRequest: info.tenantDto,
     userDto: info.userDto,
   },
 });
