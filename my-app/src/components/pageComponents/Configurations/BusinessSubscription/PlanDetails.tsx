@@ -40,8 +40,8 @@ const planData = {
 
 const PlanDetails: React.FC<PlanDetailsProps> = ({ type, period, price }) => {
   const { headline, description, icon } = planData[type];
-
   const { setAuthedUser, tenant, preferences } = useAuthedContext();
+
   const redirect = async () => {
     try {
       const input = {
@@ -57,7 +57,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({ type, period, price }) => {
         auth: { setAuthedUser },
       });
 
-      const url = res.data.url;
+      const url = res.data;
       window.location.href = url;
     } catch (error) {
       console.error("Failed", error);
