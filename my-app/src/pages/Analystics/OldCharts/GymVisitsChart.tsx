@@ -10,8 +10,8 @@ import {
   GraphicComponent,
 } from "echarts/components";
 import { CanvasRenderer } from "echarts/renderers";
-import BaseChart from "../../components/pageComponents/BaseChart";
-import { useLanguageContext } from "../../context/LanguageContext";
+import BaseChart from "../../../components/pageComponents/BaseChart";
+import { useLanguageContext } from "../../../context/LanguageContext";
 
 echarts.use([
   BarChart,

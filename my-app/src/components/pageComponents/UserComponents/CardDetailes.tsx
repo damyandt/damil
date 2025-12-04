@@ -20,7 +20,7 @@ const CardDetails = () => {
       query: getLink(data),
       auth: { setAuthedUser },
     });
-    setLink(response.data.url);
+    setLink(response.data);
   };
 
   useEffect(() => {

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Box, Grid, MenuItem, Select } from "@mui/material";
-import GymVisitsChart from "../Analystics/GymVisitsChart";
-import AgeDistributionChart from "../Analystics/AgeChart";
-import GoalMembersGaugeChart from "../Analystics/Goal";
-import Memberships from "../Analystics/Memberships";
+import GymVisitsChart from "../Analystics/OldCharts/GymVisitsChart";
+import AgeDistributionChart from "../Analystics/OldCharts/AgeChart";
+import GoalMembersGaugeChart from "../Analystics/OldCharts/Goal";
+import Memberships from "../Analystics/OldCharts/Memberships";
 import { useLanguageContext } from "../../context/LanguageContext";
 
 const ChartDisplay = () => {

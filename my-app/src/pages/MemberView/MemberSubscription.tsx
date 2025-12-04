@@ -73,7 +73,7 @@ const MemberSubscription = () => {
         query: getBuyMemberSubscription(payload, tenant.stripeAccountId),
         auth: { setAuthedUser },
       });
-      window.location.href = response.data.url;
+      window.location.href = response.data;
       // console.log(response);
     } catch (error: any) {
       console.error("Subscription purchase failed:", error.message);

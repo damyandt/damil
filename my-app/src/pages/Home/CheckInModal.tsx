@@ -75,7 +75,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
     debounceRef.current = setTimeout(async () => {
       try {
         const response: Response<Array<Partial<User>>> = await callApi<any>({
-          query: getMember(searchInput, searchType.toLowerCase()),
+          query: getMember(searchInput, searchType?.toLowerCase()),
           auth: { setAuthedUser },
         });
 
@@ -90,7 +90,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
   const handleNext = async () => {
     try {
       const response: Response<Array<Partial<User>>> = await callApi<any>({
-        query: getMember(searchInput, searchType.toLowerCase()),
+        query: getMember(searchInput, searchType?.toLowerCase()),
         auth: { setAuthedUser },
       });
 
@@ -326,7 +326,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                   table={false}
                 />
               </Grid>
-              {userDetails?.[0]?.subscriptionStatus.toLowerCase() !==
+              {userDetails?.[0]?.memberResponse?.subscriptionStatus?.toLowerCase() !==
                 "inactive" && (
                 <Grid size={4}>
                   <Typography variant="subtitle2">
@@ -335,7 +335,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
 
                   <CellRenderer
                     key={t("Subscription Plan")}
-                    value={userDetails?.[0]?.subscriptionPlan}
+                    value={userDetails?.[0]?.memberResponse?.subscriptionPlan}
                     dataType={"enum"}
                     table={false}
                   />
@@ -348,12 +348,12 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                 </Typography>
                 <CellRenderer
                   key={t("Subscription Status")}
-                  value={userDetails?.[0]?.subscriptionStatus}
+                  value={userDetails?.[0]?.memberResponse?.subscriptionStatus}
                   dataType={"enum"}
                   table={false}
                 />
               </Grid>
-              {userDetails?.[0]?.subscriptionStatus.toLowerCase() !==
+              {userDetails?.[0]?.memberResponse?.subscriptionStatus?.toLowerCase() !==
                 "inactive" && (
                 <>
                   <Grid size={4}>
@@ -362,7 +362,9 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                     </Typography>
                     <CellRenderer
                       key={t("Start Date")}
-                      value={userDetails?.[0]?.subscriptionStartDate}
+                      value={
+                        userDetails?.[0]?.memberResponse?.subscriptionStartDate
+                      }
                       dataType={"date"}
                       table={false}
                     />
@@ -371,7 +373,9 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                     <Typography variant="subtitle2">{t("End Date")}</Typography>
                     <CellRenderer
                       key={t("Start Date")}
-                      value={userDetails?.[0]?.subscriptionEndDate}
+                      value={
+                        userDetails?.[0]?.memberResponse?.subscriptionEndDate
+                      }
                       dataType={"date"}
                       table={false}
                     />
@@ -395,7 +399,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
                   {t("Back")}
                 </Button>
               </Grid>
-              {userDetails?.[0]?.subscriptionStatus.toLowerCase() ===
+              {userDetails?.[0]?.memberResponse?.subscriptionStatus?.toLowerCase() ===
               "inactive" ? (
                 <Grid>
                   <Button
@@ -480,29 +484,30 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
         width="lg"
       >
         <NewSubscriptionPlan
-          rowData={userDetails ? userDetails[0] : null}
-          setOpen={setOpenBuyPlan}
-          enumEndpoints={["memberships", "enums/Employment"]}
-          refreshFunc={async () => {
-            const response: Response<Array<Partial<User>>> = await callApi<any>(
-              {
-                query: getMember(userDetails[0].id, "id"),
-                auth: { setAuthedUser },
-              }
-            );
+          {...({
+            rowData: userDetails ? userDetails[0] : null,
+            setOpen: setOpenBuyPlan,
+            enumEndpoints: ["memberships", "enums/Employment"],
+            refreshFunc: async () => {
+              const response: Response<Array<Partial<User>>> =
+                await callApi<any>({
+                  query: getMember(userDetails[0].id, "id"),
+                  auth: { setAuthedUser },
+                });
 
-            if (response.data.length > 0) {
-              setUserDetails(response.data);
-              setErrors({});
-            } else {
-              setUserDetails([]);
-              setErrors({
-                search: t(
-                  `Can't find user with ${searchType} - ${searchInput}`
-                ),
-              });
-            }
-          }}
+              if (response.data.length > 0) {
+                setUserDetails(response.data);
+                setErrors({});
+              } else {
+                setUserDetails([]);
+                setErrors({
+                  search: t(
+                    `Can't find user with ${searchType} - ${searchInput}`
+                  ),
+                });
+              }
+            },
+          } as any)}
         />
       </CustomModal>
     </>

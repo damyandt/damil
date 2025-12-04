@@ -1,5 +1,5 @@
-import BaseChart from "../../components/pageComponents/BaseChart";
-import { useLanguageContext } from "../../context/LanguageContext";
+import BaseChart from "../../../components/pageComponents/BaseChart";
+import { useLanguageContext } from "../../../context/LanguageContext";
 
 // Data as arrays of [height, weight]
 const maleData = [

@@ -3,10 +3,12 @@ import * as echarts from "echarts/core";
 import { GaugeChart } from "echarts/charts";
 import { TitleComponent, TooltipComponent } from "echarts/components";
 import { CanvasRenderer } from "echarts/renderers";
-import BaseChart from "../../components/pageComponents/BaseChart";
+
 import { darken, lighten, useTheme } from "@mui/material";
-import { shiftHue } from "../Home/Home";
+
 import { useMediaQuery } from "@mui/system";
+import { shiftHue } from "../../Home/Home";
+import BaseChart from "../../../components/pageComponents/BaseChart";
 
 echarts.use([GaugeChart, TitleComponent, TooltipComponent, CanvasRenderer]);
 type Data = {

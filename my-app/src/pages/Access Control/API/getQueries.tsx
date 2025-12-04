@@ -16,7 +16,6 @@ export const getMember = (
   searchType: any = "id"
 ): Query => {
   let endpoint = "members/search?";
-
   switch (searchType) {
     case "id":
       endpoint += `id=${searchQuery}`;

@@ -16,7 +16,8 @@ const GlobalBarcodeScanner: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
         if (buffer.current.length > 0) {
-          getUserInfo(buffer.current);
+          // console.log("Scanned code:", buffer.current);
+          getUserInfo(buffer.current.toString());
           setOpen(true);
           buffer.current = "";
         }
@@ -32,11 +33,13 @@ const GlobalBarcodeScanner: React.FC = () => {
   }, []);
 
   const getUserInfo = async (code: string) => {
+    // console.log("Fetching user info for code:", code);
     try {
       const userDetails: any = await callApi<any>({
         query: getMember(code, "qrToken"),
         auth: { setAuthedUser },
       });
+
       setOpen(true);
       setInfo(userDetails.data);
     } catch (error) {

@@ -1,9 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout";
-import GymVisitsChart from "../../pages/Analystics/GymVisitsChart";
-import GoalMembersGaugeChart from "../../pages/Analystics/Goal";
-import AgeDistributionChart from "../../pages/Analystics/AgeChart";
-import Memberships from "../../pages/Analystics/Memberships";
+// import GymVisitsChart from "../../pages/Analystics/GymVisitsChart";
+// import GoalMembersGaugeChart from "../../pages/Analystics/Goal";
+// import AgeDistributionChart from "../../pages/Analystics/AgeChart";
+// import Memberships from "../../pages/Analystics/Memberships";
 import OverviewPage from "../../pages/Analystics/Overview";
 import ClientsPage from "../../pages/Access Control/Clients";
 import DailyVisitors from "../../pages/Access Control/DailyVisitors";
@@ -94,22 +94,22 @@ const allRoutes = (role: string, abonnement: string | null) => {
       path: "/DAMIL-Analytics/Overview",
       element: <OverviewPage />,
     },
-    {
-      path: "/DAMIL-Analytics/Visits",
-      element: <GymVisitsChart height={92} />,
-    },
-    {
-      path: "/DAMIL-Analytics/Goal",
-      element: <GoalMembersGaugeChart value={68} height={92} />,
-    },
-    {
-      path: "/DAMIL-Analytics/Ages",
-      element: <AgeDistributionChart height={92} />,
-    },
-    {
-      path: "/DAMIL-Analytics/Memberships",
-      element: <Memberships />,
-    },
+    // {
+    //   path: "/DAMIL-Analytics/Visits",
+    //   element: <GymVisitsChart height={92} />,
+    // },
+    // {
+    //   path: "/DAMIL-Analytics/Goal",
+    //   element: <GoalMembersGaugeChart value={68} height={92} />,
+    // },
+    // {
+    //   path: "/DAMIL-Analytics/Ages",
+    //   element: <AgeDistributionChart height={92} />,
+    // },
+    // {
+    //   path: "/DAMIL-Analytics/Memberships",
+    //   element: <Memberships />,
+    // },
 
     // Access Control
     {

@@ -23,7 +23,7 @@ import SearchModal from "./SearchModal";
 import tinycolor from "tinycolor2";
 import { useLanguageContext } from "../../context/LanguageContext";
 import FiltersModal from "./FiltersModal";
-import GaugeChartHome from "../Analystics/GuageChart";
+import GaugeChartHome from "../Analystics/OldCharts/GuageChart";
 import callApi from "../../API/callApi";
 import { Response } from "../../Global/Types/commonTypes";
 import { getAnalyticsForHomePage } from "./API/getQueries";

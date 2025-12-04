@@ -5,6 +5,12 @@ import "react-resizable/css/styles.css";
 import ChartWidget from "./ChartWidget";
 import { Box, Typography } from "@mui/material";
 import { defaultLayout } from "./analyticsTypes";
+import AddChartModal, { ChartType } from "./AddChartModal";
+import Button from "../../components/MaterialUI/Button";
+// import callApi from "../../API/callApi";
+// import { getClientsTable } from "../Access Control/API/getQueries";
+// import { useAuthedContext } from "../../context/AuthContext";
+import { useLanguageContext } from "../../context/LanguageContext";
 
 type ChartConfig = {
   name: string;
@@ -21,22 +27,69 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const Dashboard = ({
   title = "Dashboard",
-  charts,
+  charts: initialCharts,
   chartKeys,
 }: DashboardProps) => {
+  const { t } = useLanguageContext();
+  // const { setAuthedUser } = useAuthedContext();
+  const [charts, setCharts] = useState<ChartConfig[]>(initialCharts);
   const keys = chartKeys || charts.map((_, idx) => `chart${idx + 1}`);
   const [layouts, setLayouts] = useState<Layouts>({
     lg: keys.map((key, idx) => defaultLayout(key, idx)),
   });
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleAddChart = (chartConfig: {
+    name: string;
+    type: ChartType;
+    data: any;
+  }) => {
+    // Build chart option based on type and data
+    let option: any = {};
+    if (chartConfig.type === "bar" || chartConfig.type === "line") {
+      option = {
+        xAxis: { type: "category", data: chartConfig.data.x || [] },
+        yAxis: { type: "value" },
+        series: [{ data: chartConfig.data.y || [], type: chartConfig.type }],
+      };
+    } else if (chartConfig.type === "pie") {
+      option = {
+        series: [{ type: "pie", data: chartConfig.data.data || [] }],
+      };
+    } else if (chartConfig.type === "gauge") {
+      option = {
+        series: [{ type: "gauge", data: chartConfig.data.data || [] }],
+      };
+    } else if (chartConfig.type === "scatter") {
+      option = {
+        xAxis: {},
+        yAxis: {},
+        series: [{ type: "scatter", data: chartConfig.data.data || [] }],
+      };
+    }
+    setCharts([{ name: chartConfig.name, option }, ...charts]);
+    setLayouts({
+      lg: [...keys, `chart${charts.length + 1}`].map((key, idx) =>
+        defaultLayout(key, idx)
+      ),
+    });
+  };
 
   return (
     <Box>
-      <Typography
-        variant="h3"
-        sx={{ fontWeight: "bold", mb: 2, textAlign: "center" }}
-      >
+      <Typography variant="h3" sx={{ fontWeight: "bold", textAlign: "center" }}>
         {title}
       </Typography>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <Button variant="contained" onClick={() => setModalOpen(true)}>
+          {t("Add Chart")}
+        </Button>
+      </Box>
+      <AddChartModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={handleAddChart}
+      />
       <Box sx={{ minHeight: "100%" }}>
         <ResponsiveGridLayout
           className="layout"
