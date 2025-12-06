@@ -39,12 +39,14 @@ import {
 import { useNavigate } from "react-router-dom";
 
 interface ClientsCreateFormProps {
+  getEndpoint: string;
   columns: Column[];
   setModalTitle: React.Dispatch<React.SetStateAction<string | null>>;
   setFinalRows: any;
 }
 
 const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
+  getEndpoint,
   setModalTitle,
   columns,
   setFinalRows,
@@ -69,6 +71,17 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
   ) => {
     setPaymentMethod(newMethod);
   };
+  const getNewRows = async () => {
+    try {
+      const newTableResponse = await callApi<any>({
+        query: { endpoint: getEndpoint, method: "GET" },
+        auth: { setAuthedUser },
+      });
+      setFinalRows(newTableResponse.data.rows);
+    } catch (error) {
+      console.error("Error fetching new rows:", error);
+    }
+  };
 
   const handleNext = async () => {
     setLoading(true);
@@ -78,7 +91,13 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
           query: postMember(formData),
           auth: { setAuthedUser },
         });
-        setFinalRows((prev: Row[]) => [...prev, response.data]);
+
+        // const newTableResponse = await callApi<any>({
+        //   query: { endpoint: getEndpoint, method: "GET" },
+        //   auth: { setAuthedUser },
+        // });
+        // setFinalRows(newTableResponse.data.rows);
+        // setFinalRows((prev: Row[]) => [...prev, response.data]);
 
         setId(response.data.id);
         setActiveStep((prevActiveStep) =>
@@ -87,6 +106,8 @@ const ClientsCreateForm: React.FC<ClientsCreateFormProps> = ({
       } catch (error) {
         setErrors(error.validationErrors);
         return setLoading(false);
+      } finally {
+        getNewRows();
       }
     } else if (activeStep === 1) {
       const newErrors: any = {}; // keep previous errors

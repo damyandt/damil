@@ -17,6 +17,7 @@ import {
   Row,
 } from "../../Global/Types/commonTypes";
 import { useSnackbarContext } from "../../context/SnackbarContext";
+import { sortRows } from "../MaterialUI/Table/Table";
 
 interface CreateFormProps {
   columns?: Column[];
@@ -31,6 +32,7 @@ interface CreateFormProps {
   configurations?: Configuration;
   removeButtons?: boolean;
   setFinalRows: any;
+  getQuery: Query;
 }
 
 const CreateForm: React.FC<CreateFormProps> = ({
@@ -43,7 +45,8 @@ const CreateForm: React.FC<CreateFormProps> = ({
   setAnchorEl,
   configurations,
   removeButtons = false,
-  setActiveStep,
+  // setActiveStep,
+  getQuery,
 }) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const { _, ...rest } = (selectedRow ?? {}) as {
@@ -103,17 +106,24 @@ const CreateForm: React.FC<CreateFormProps> = ({
       setModalTitle?.(null);
     }
   };
-  const handleUpdateRow = (updatedRow: any) => {
-    if (!setFinalRows) return;
-    setFinalRows((prev: Row[]) =>
-      prev.map((row: Row) =>
-        row.id === updatedRow.id ? { ...row, ...updatedRow } : row
-      )
-    );
-  };
-  const handleAddRow = (newRow: Row) => {
-    if (!setFinalRows) return;
-    setFinalRows((prev: Row[]) => [...prev, newRow]);
+
+  const getNewRows = async () => {
+    try {
+      const newTableResponse = await callApi<any>({
+        query: getQuery,
+        auth: { setAuthedUser },
+      });
+
+      setFinalRows(
+        sortRows(
+          newTableResponse.data.rows,
+          configurations?.sortable,
+          columns || []
+        )
+      );
+    } catch (error) {
+      console.error("Error fetching new rows:", error);
+    }
   };
 
   const getQueryOptions = (url: string): Query => ({
@@ -152,25 +162,27 @@ const CreateForm: React.FC<CreateFormProps> = ({
         variables: { ...payload },
       };
 
-      const response = await callApi<Response<any>>({
+      await callApi<Response<any>>({
         query,
         auth: { setAuthedUser },
       });
 
       setStatus("success");
-      selectedRow && handleUpdateRow?.(response.data);
-      !selectedRow && handleAddRow(response.data);
-      setActiveStep
-        ? setActiveStep((prev: number) => prev + 1)
-        : setTimeout(() => {
-            handleClose();
-            addMessage("User updated successfully", "success");
-          }, 1000);
     } catch (error) {
       console.error("Error creating item:", error);
       setStatus("error");
       addMessage(error.message, "error");
       setErrors(error.validationErrors || {});
+    }
+
+    try {
+      await getNewRows();
+      setTimeout(() => {
+        handleClose();
+        addMessage("User updated successfully", "success");
+      }, 1000);
+    } catch (err) {
+      console.error("Error creating item:", err);
     } finally {
       setLoading(false);
     }

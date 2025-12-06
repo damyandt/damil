@@ -97,6 +97,11 @@ const DailyVisitors = () => {
               "YYYY-MM-DD"
             )} - ${endDate.format("YYYY-MM-DD")})`}
             customActions={clientCustomActions}
+            getQuery={getPeriodVisitors(
+              authedUser.id || "",
+              startDate.format("YYYY-MM-DD"),
+              endDate.format("YYYY-MM-DD")
+            )}
           />
         </Box>
       )}

@@ -8,11 +8,13 @@ import ClientsCreateForm from "./ClientsCreateForm";
 import { Row } from "../../../Global/Types/commonTypes";
 
 interface ClientsRightMenuProps {
+  getEndpoint: string;
   columns: any;
   setRows: React.Dispatch<React.SetStateAction<Row[]>>;
 }
 
 const ClientsRightMenu: React.FC<ClientsRightMenuProps> = ({
+  getEndpoint,
   columns,
   setRows,
 }) => {
@@ -43,6 +45,7 @@ const ClientsRightMenu: React.FC<ClientsRightMenuProps> = ({
         width={"lg"}
       >
         <ClientsCreateForm
+          getEndpoint={getEndpoint}
           setFinalRows={setRows}
           columns={columns}
           setModalTitle={setModalTitle}

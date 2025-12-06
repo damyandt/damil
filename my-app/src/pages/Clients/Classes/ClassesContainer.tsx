@@ -56,6 +56,7 @@ const ClassesContainer = () => {
           configurations={classesTable?.config}
           addNew={true}
           createUrl="trainings"
+          getQuery={getClasses()}
         />
       );
 
@@ -104,7 +105,7 @@ const ClassesContainer = () => {
 
       {/* Class cards */}
       {tab === "Card View" && (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} p={0.5}>
           {rows.length === 0 ? (
             <Grid size={12}>
               <Box
@@ -129,14 +130,14 @@ const ClassesContainer = () => {
             </Grid>
           ) : (
             rows.map((cls: Row, index: number) => {
-              const originalIndex = rows.indexOf(cls);
+              // const originalIndex = rows.indexOf(cls);
               return (
                 <ClassCard
                   key={index}
                   isJoined={cls.joined}
                   cls={cls}
-                  setJoinedClasses={false}
-                  originalIndex={originalIndex}
+                  // setJoinedClasses={false}
+                  // originalIndex={originalIndex}
                 />
               );
             })
@@ -149,8 +150,8 @@ const ClassesContainer = () => {
           configurations={classesTable?.config || {}}
           columns={classesTable?.columns || []}
           rows={rows || []}
-          // setRefreshTable={setRefreshTable}
           title={t("Subscription Plans")}
+          getQuery={getClasses()}
         />
       )}
     </Box>

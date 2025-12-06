@@ -68,13 +68,13 @@ const MemberSubscription = () => {
       currency: preferences.currency || "EUR",
       employment: employmentStatus,
     };
+
     try {
       const response = await callApi<Response<any>>({
         query: getBuyMemberSubscription(payload, tenant.stripeAccountId),
         auth: { setAuthedUser },
       });
       window.location.href = response.data;
-      // console.log(response);
     } catch (error: any) {
       console.error("Subscription purchase failed:", error.message);
       addMessage(error.message, "error");

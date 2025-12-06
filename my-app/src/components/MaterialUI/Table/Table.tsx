@@ -38,7 +38,7 @@ import {
 import ColumnVisibilityModal from "./ColumnVisibility";
 import Button from "../Button";
 import { DeleteUndo } from "./actions/DeleteAction";
-// import CustomSnackbar from "../FormFields/Snackbar";
+import { Query } from "../../../API/callApi";
 
 export type TableProps = {
   columns: Column[] | [];
@@ -47,6 +47,7 @@ export type TableProps = {
   title: string;
   customActions?: any;
   setRefreshTable?: React.Dispatch<React.SetStateAction<boolean>>;
+  getQuery: Query;
 };
 
 const TableComponent = ({
@@ -56,6 +57,7 @@ const TableComponent = ({
   title,
   customActions,
   setRefreshTable,
+  getQuery,
 }: TableProps) => {
   const theme = useTheme();
   const { t } = useLanguageContext();
@@ -86,44 +88,27 @@ const TableComponent = ({
   );
 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  let sortedRows = [...(filteredRows || [])];
-  if (configurations?.sortable?.field) {
-    const { field, desc } = configurations.sortable;
 
-    const columnDef = columns.find((col: Column) => col.field === field);
-    const colType = columnDef?.type || "string";
-
-    sortedRows.sort((a: Row, b: Row) => {
-      const valA = a[field];
-      const valB = b[field];
-
-      switch (colType) {
-        case "date": {
-          const timeA = valA ? new Date(valA).getTime() : 0;
-          const timeB = valB ? new Date(valB).getTime() : 0;
-          return desc ? timeB - timeA : timeA - timeB;
-        }
-        case "number":
-          return desc
-            ? Number(valB) - Number(valA)
-            : Number(valA) - Number(valB);
-
-        default:
-          return desc
-            ? valB?.toString().localeCompare(valA?.toString())
-            : valA?.toString().localeCompare(valB?.toString());
-      }
-    });
-  }
-
-  const paginatedRows = sortedRows.slice(
+  const paginatedRows = filteredRows.slice(
     (page - 1) * rowsPerPage,
     page * rowsPerPage
   );
 
   useEffect(() => {
-    setFinalRows(paginatedRows);
+    if (configurations?.sortable?.field) {
+      setFinalRows(sortRows(paginatedRows, configurations.sortable, columns));
+    } else {
+      setFinalRows(paginatedRows);
+    }
   }, [rows, searchQuery, page, rowsPerPage, configurations?.sortable]);
+
+  useEffect(() => {
+    if (configurations?.sortable?.field) {
+      setFinalRows((prev: Row[]) =>
+        sortRows(prev, configurations.sortable, columns)
+      );
+    }
+  }, [finalRows.length, configurations?.sortable]);
 
   const isRowDeleting = (id: string) => !!deleteQueue[id];
 
@@ -370,6 +355,7 @@ const TableComponent = ({
                               key={col.field}
                               value={row[col.field]}
                               dataType={col.type}
+                              displayName={col?.displayName}
                               table={true}
                             />
                           </TableCell>
@@ -512,6 +498,7 @@ const TableComponent = ({
         customActions={customActions}
         setFinalRows={setFinalRows}
         setRefreshtable={setRefreshTable}
+        getQuery={getQuery}
       />
       <PaginationControls
         currentPage={page}
@@ -529,3 +516,34 @@ const TableComponent = ({
 };
 
 export default TableComponent;
+
+export const sortRows = (
+  rowsToSort: Row[],
+  sortConfig: Configuration["sortable"],
+  columns: Column[]
+): Row[] => {
+  if (!sortConfig || !sortConfig.field) return rowsToSort;
+
+  const { field, desc } = sortConfig;
+  const columnDef = columns.find((col: Column) => col.field === field);
+  const colType = columnDef?.type || "string";
+
+  return [...rowsToSort].sort((a: Row, b: Row) => {
+    const valA = a[field];
+    const valB = b[field];
+
+    switch (colType) {
+      case "date": {
+        const timeA = valA ? new Date(valA).getTime() : 0;
+        const timeB = valB ? new Date(valB).getTime() : 0;
+        return desc ? timeB - timeA : timeA - timeB;
+      }
+      case "number":
+        return desc ? Number(valB) - Number(valA) : Number(valA) - Number(valB);
+      default:
+        return desc
+          ? valB?.toString().localeCompare(valA?.toString())
+          : valA?.toString().localeCompare(valB?.toString());
+    }
+  });
+};

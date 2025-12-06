@@ -19,6 +19,7 @@ export type Column = {
   field: string;
   header: string;
   type: ColumnType;
+  displayName?: string;
   align?: "left" | "center" | "right";
   width?: number;
   dropDownConfig?: {
@@ -50,7 +51,8 @@ export type ColumnType =
   | "custom"
   | "enum"
   | "dropdown"
-  | "phone";
+  | "phone"
+  | "object";
 
 export type Configuration = {
   sortable?: {

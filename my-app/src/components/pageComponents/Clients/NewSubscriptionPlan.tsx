@@ -595,7 +595,7 @@ const NewSubscriptionPlan: React.FC<NewSubscriptionPlanProps> = ({
     );
   };
 
-  return rowData.subscriptionStatus.toLowerCase() === "inactive" || renew ? (
+  return rowData?.subscriptionStatus?.toLowerCase() === "inactive" || renew ? (
     <InactiveForm />
   ) : (
     <ActiveForm />

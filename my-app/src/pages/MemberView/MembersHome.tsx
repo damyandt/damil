@@ -18,6 +18,7 @@ import { NewsItem } from "../Clients/News/API/news";
 import callApi from "../../API/callApi";
 import { Response } from "../../Global/Types/commonTypes";
 import { getNews } from "../Clients/News/API/getQueries";
+import { getClasses } from "../Clients/Classes/API/getQueries";
 
 const MembersHome = () => {
   const { authedUser } = useAuthedContext();
@@ -25,8 +26,9 @@ const MembersHome = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
   const primary = theme.palette.primary.main;
-  const [joinedClasses, setJoinedClasses] = useState<number[]>([0, 1, 2]);
+  // const [joinedClasses, setJoinedClasses] = useState<number[]>([0, 1, 2]);
   const [newsList, setNewsItems] = useState<NewsItem[]>([]);
+  const [classes, setClasses] = useState<any[]>([]);
   const { setAuthedUser } = useAuthedContext();
   const subscription = {
     name: "Monthly",
@@ -50,11 +52,20 @@ const MembersHome = () => {
 
       setNewsItems(response.data);
     };
+    const fetchClasses = async () => {
+      const response = await callApi<Response<any>>({
+        query: getClasses(),
+        auth: { setAuthedUser },
+      });
+
+      setClasses(response.data?.rows);
+    };
 
     fetchNews();
+    fetchClasses();
   }, [setAuthedUser]);
 
-  const displayedClasses = newsList.filter((_, i) => joinedClasses.includes(i));
+  const displayedClasses = classes?.filter((cls) => cls.joined);
   return (
     <Box
       sx={{
@@ -149,7 +160,7 @@ const MembersHome = () => {
           </Typography>
 
           <Typography variant="body1" color="text.secondary">
-            {t("Count")}:{" "}
+            {t("Count")}:
             <Typography component="span" color="info" fontWeight={600}>
               {displayedClasses.length}
             </Typography>
@@ -170,15 +181,15 @@ const MembersHome = () => {
           </Grid>
         ) : (
           displayedClasses.map((cls: any, index: any) => {
-            const originalIndex = newsList.indexOf(cls);
+            // const originalIndex = newsList.indexOf(cls);
 
             return (
               <ClassCard
                 key={index}
                 isJoined={true}
                 cls={cls}
-                setJoinedClasses={setJoinedClasses}
-                originalIndex={originalIndex}
+                // setJoinedClasses={setJoinedClasses}
+                // originalIndex={originalIndex}
               />
             );
           })

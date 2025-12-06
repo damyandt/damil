@@ -19,10 +19,13 @@ import {
   useRoleStyles,
   useStatusStyles,
 } from "../../../Global/Styles/cellStyles";
+import CustomModal from "../Modal";
+import Button from "../Button";
 type CellRendererProps = {
   value: any;
   dataType: ColumnType;
   table: boolean;
+  displayName?: string;
   fontWeight?: number;
   ellipsis?: boolean;
   sx?: any;
@@ -34,19 +37,21 @@ const CellRenderer = ({
   table,
   fontWeight = 350,
   ellipsis = true,
-  sx = {}, // default empty object
+  sx = {},
+  displayName,
 }: CellRendererProps) => {
   const { t } = useLanguageContext();
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
-  let displayValue: React.ReactNode = String(value);
+  const [modalOpen, setModalOpen] = useState(false);
   const textRef = useRef<HTMLSpanElement>(null);
   const [isOverflowed, setIsOverflowed] = useState(false);
   const roleStyles: EnumIconsMap = useRoleStyles();
   const genderStyles: EnumIconsMap = useGenderStyles();
-
   const iconTagStyles: EnumIconsMap = { ...roleStyles, ...genderStyles };
   const statusStyles: EnumIconsMap = useStatusStyles();
+
+  let displayValue: React.ReactNode = String(value);
 
   useEffect(() => {
     if (!ellipsis) {
@@ -67,6 +72,12 @@ const CellRenderer = ({
     height: "fit-content",
     padding: table ? "0 0 0 1em" : 0,
     borderBottom: "none",
+  };
+
+  const getNestedValue = (obj: any, path: string): any => {
+    return path
+      .split(".")
+      .reduce((acc, key) => (acc ? acc[key] : undefined), obj);
   };
 
   switch (dataType) {
@@ -136,7 +147,6 @@ const CellRenderer = ({
         </Box>
       );
       break;
-
     case "datetime": {
       const isISODate =
         typeof value === "string" &&
@@ -171,6 +181,65 @@ const CellRenderer = ({
         </Box>
       );
       break;
+    }
+
+    case "object": {
+      let title: string = "-";
+      if (displayName && typeof value === "object" && value !== null) {
+        title = getNestedValue(value, displayName);
+      }
+      // style.cursor = "pointer";
+
+      return (
+        <>
+          <Box
+            component="span"
+            sx={style}
+            onClick={(e: any) => {
+              e.stopPropagation();
+              if (
+                dataType === "object" &&
+                typeof value === "object" &&
+                value !== null
+              ) {
+                setModalOpen(true);
+              }
+            }}
+          >
+            {title}
+          </Box>
+          <CustomModal
+            open={modalOpen}
+            onClose={(e: any) => {
+              e.stopPropagation();
+              setModalOpen(false);
+            }}
+            title={getNestedValue(value, displayName || "")}
+          >
+            <Box>
+              <Box
+                style={{
+                  fontSize: 14,
+                  whiteSpace: "pre-wrap",
+                  wordBreak: "break-word",
+                }}
+              >
+                {JSON.stringify(value, null, 2)}
+              </Box>
+              <Box sx={{ mt: 2, textAlign: "right" }}>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModalOpen(false);
+                  }}
+                >
+                  Close
+                </Button>
+              </Box>
+            </Box>
+          </CustomModal>
+        </>
+      );
     }
 
     case "dropdown":
@@ -258,14 +327,12 @@ const CellRenderer = ({
       }
       break;
     }
-
     case "custom":
       style = {
         fontStyle: "italic",
         color: "#999",
       };
       break;
-
     default:
       break;
   }
@@ -277,6 +344,7 @@ const CellRenderer = ({
       </Box>
     );
   }
+
   if (value === null || value === undefined) {
     const nullColor = isDark
       ? theme.palette.grey[400]
@@ -329,15 +397,17 @@ const CellRenderer = ({
   );
 
   return (
-    <Box component="div" sx={{ ...style, width: "100%", height: "auto" }}>
-      {ellipsis && isOverflowed ? (
-        <CustomTooltip title={String(value)} arrow placement="top">
-          {textElement}
-        </CustomTooltip>
-      ) : (
-        textElement
-      )}
-    </Box>
+    <>
+      <Box component="div" sx={{ ...style, width: "100%", height: "auto" }}>
+        {ellipsis && isOverflowed ? (
+          <CustomTooltip title={String(value)} arrow placement="top">
+            {textElement}
+          </CustomTooltip>
+        ) : (
+          textElement
+        )}
+      </Box>
+    </>
   );
 };
 

@@ -118,6 +118,7 @@ const SubscriptionPlans = () => {
             rows={tableData?.rows || []}
             setRefreshTable={setRefreshTable}
             title={t("Subscription Plans")}
+            getQuery={getSubscriptionPlansTable()}
           />
         </Box>
       ) : (

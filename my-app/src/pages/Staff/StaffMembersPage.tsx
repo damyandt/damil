@@ -38,6 +38,7 @@ const StaffPage = () => {
         configurations={tableData?.config}
         addNew={true}
         createUrl="employees"
+        getQuery={getStaffMembers()}
         setRows={setRows}
       />
     );
@@ -84,6 +85,7 @@ const StaffPage = () => {
             configurations={tableData?.config}
             setRefreshTable={setRefreshTable}
             title={t("All Staff Members")}
+            getQuery={getStaffMembers()}
           />
         </Box>
       )}

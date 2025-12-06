@@ -70,6 +70,7 @@ const AcceptClients = () => {
             setRefreshTable={setRefreshTable}
             title={t("Accept New Clients")}
             customActions={clientCustomActions}
+            getQuery={getClientsTable(filter)}
           />
         </Box>
       )}

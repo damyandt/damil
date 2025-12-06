@@ -19,25 +19,25 @@ import ClassDetails from "./ClassDetails";
 const ClassCard = ({
   isJoined,
   cls,
-  setJoinedClasses,
-  originalIndex,
-}: {
+}: // setJoinedClasses,
+// originalIndex,
+{
   isJoined: boolean;
   cls: any;
-  setJoinedClasses: any;
-  originalIndex: number;
+  // setJoinedClasses: any;
+  // originalIndex: number;
 }) => {
   const { t } = useLanguageContext();
   const theme = useTheme();
   const [openDetails, setOpenDetails] = useState(false);
 
-  const handleJoin = (index: number) => {
-    setJoinedClasses((prev: any) =>
-      prev.includes(index)
-        ? prev.filter((i: any) => i !== index)
-        : [...prev, index]
-    );
-  };
+  // const handleJoin = (index: number) => {
+  // setJoinedClasses((prev: any) =>
+  //   prev.includes(index)
+  //     ? prev.filter((i: any) => i !== index)
+  //     : [...prev, index]
+  // );
+  // };
 
   const handleDetailsOpen = () => setOpenDetails(true);
   const handleDetailsClose = () => setOpenDetails(false);
@@ -83,7 +83,7 @@ const ClassCard = ({
               <IconButton
                 size="small"
                 color={isJoined ? "primary" : "default"}
-                onClick={() => handleJoin(originalIndex)}
+                // onClick={() => handleJoin(originalIndex)}
               >
                 <EventAvailableIcon fontSize="small" />
               </IconButton>

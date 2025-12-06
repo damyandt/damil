@@ -11,6 +11,7 @@ import {
   Row,
   TableAction,
 } from "../../../Global/Types/commonTypes";
+import { Query } from "../../../API/callApi";
 
 type MenuActionsProps = {
   setDeleteQueue: Dispatch<SetStateAction<DeleteQueueType>>;
@@ -26,6 +27,7 @@ type MenuActionsProps = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   customActions?: any;
+  getQuery: Query;
 };
 
 export const MenuActions = ({
@@ -42,6 +44,7 @@ export const MenuActions = ({
   open,
   setOpen,
   customActions,
+  getQuery,
 }: MenuActionsProps) => {
   const handleMenuClose = () => {
     setAnchorEl(null);
@@ -94,6 +97,7 @@ export const MenuActions = ({
             setAnchorEl={setAnchorEl}
             setFinalRows={setFinalRows}
             configurations={configurations || {}}
+            getQuery={getQuery}
           />
         </MenuItem>
       )}

@@ -41,7 +41,7 @@ const NewsForm = ({ setOpen, data, triggerRefetch }: NewsFormProps) => {
       publicationType: "ALL",
       targetRoles: ["Member", "Staff"],
       targetSpecific: false,
-      recipientsIds: [0],
+      recipientsIds: [],
     }
   );
   const firstRender = useRef<boolean>(true);
