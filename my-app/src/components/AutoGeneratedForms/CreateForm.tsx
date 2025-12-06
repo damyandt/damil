@@ -18,6 +18,7 @@ import {
 } from "../../Global/Types/commonTypes";
 import { useSnackbarContext } from "../../context/SnackbarContext";
 import { sortRows } from "../MaterialUI/Table/Table";
+import dayjs from "dayjs";
 
 interface CreateFormProps {
   columns?: Column[];
@@ -172,7 +173,7 @@ const CreateForm: React.FC<CreateFormProps> = ({
       console.error("Error creating item:", error);
       setStatus("error");
       addMessage(error.message, "error");
-      setErrors(error.validationErrors || {});
+      return setErrors(error.validationErrors || {});
     }
 
     try {
@@ -338,13 +339,14 @@ const CreateForm: React.FC<CreateFormProps> = ({
                         return (
                           <DateTimePicker
                             label={t(col.header)}
-                            value={value}
+                            value={value ? dayjs(value) : null}
                             onChange={(newValue: any) =>
                               handleChange(col.field, newValue)
                             }
+                            enableAccessibleFieldDOMStructure={false}
                             slots={{ textField: TextField }}
                             slotProps={{
-                              textField: { size: "small", fullWidth: true },
+                              textField: { fullWidth: true },
                             }}
                           />
                         );
